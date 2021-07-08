@@ -10,7 +10,7 @@ makedocs(;
     sitename="UnfoldMakie.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://behinger.github.io/UnfoldMakie.jl",
+        canonical="https://unfoldtoolbox.github.io/UnfoldMakie.jl",
         assets=String[],
     ),
     pages=[
@@ -19,6 +19,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/behinger/UnfoldMakie.jl",
+    repo="github.com/unfoldtoolbox/UnfoldMakie.jl",
     devbranch="main",
 )
