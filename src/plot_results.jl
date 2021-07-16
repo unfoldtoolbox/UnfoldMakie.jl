@@ -18,14 +18,12 @@ function plot_results(results::DataFrame;y=:estimate,color=:term,layout=:group,s
         
     m = mapping(color=color,col=layout)
     m_li = mapping(:colname_basis,y)
-    m_se = mapping(:colname_basis,y,:se_low,:se_high)
+    m_se = mapping(:colname_basis,:se_low,:se_high)
 
 
     basic =  visual(Lines) * m_li
-    
     if stderror
-    basic = basic + visual(Band,alpha=0.5)*m_se
-    
+        basic = basic + visual(Band,alpha=0.5)*m_se
     end
     basic = basic*data(results)
        
