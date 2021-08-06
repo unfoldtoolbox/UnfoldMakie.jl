@@ -21,6 +21,7 @@ plot_results(results)
 
 ### With StandardErrors
 ```@example
+se_solver = solver=(x,y)->Unfold.solver_default(x,y,stderror=true)
 m,results = Unfold.fit(UnfoldLinearModel,bfDict,evts,data,solver=se_solver)
 plot_results(results,stderror=true)
 ```
