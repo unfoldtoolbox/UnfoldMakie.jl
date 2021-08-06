@@ -11,6 +11,8 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Unfold = "181c99d8-e21b-4ff3-b70b-c233eddec679"
 
 [compat]
+Makie = "0.14"
+
 DataFrames = "1"
 AlgebraOfGraphics = "0.5"
 julia = "1.5"
