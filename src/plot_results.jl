@@ -2,32 +2,26 @@ using AlgebraOfGraphics
 using Makie
 using DataFrames
 
-#---
-#Plots.plot(m::Unfold.UnfoldModel)  = plot_results(m.results)
-
-
-plot(m::Unfold.UnfoldModel) = plot_results(Unfold.condense_long)
-function plot_results(results::DataFrame;y=:estimate,color=:term,layout=:group,stderror=false,pvalue = DataFrame(:from=>[],:to=>[],:pval=>[]))
+function plot_results(results::DataFrame;y=:estimate,color=:coefname,col=:basisname,row=:group,stderror=false,pvalue = DataFrame(:from=>[],:to=>[],:pval=>[]))
     results = deepcopy(results)
-    results.group[isnothing.(results.group)] .= :fixef
 
-    results.stderror[isnothing.(results.stderror)] .= 0.
+    # replace missing/nothing valuess
+    results.group = results.group .|> a -> isnothing(a) ? :fixef : a
+    results.stderror = results.stderror .|> a -> isnothing(a) ? 0. : a
+    
+
     results[!,:se_low]  = results[:,y] .- results.stderror
     results[!,:se_high] = results[:,y] .+ results.stderror
     
 
-    if length(unique(results.group)) == 1
-        # there was a bug that layout didnt work if there was only one column. You can sporadicly try to lift this and check whether it works
-        m = mapping(color=color)
-    else
-    m = mapping(color=color,col=layout)
-    end
-    m_li = mapping(:colname_basis,y)
-    m_se = mapping(:colname_basis,:se_low,:se_high)
+    m = mapping(color=color,col=col,row=row)
 
-
+    m_li = mapping(:time,y)
+    
     basic =  visual(Lines) * m_li
+    
     if stderror
+        m_se = mapping(:time,:se_low,:se_high)
         basic = basic + visual(Band,alpha=0.5)*m_se
     end
     basic = basic*data(results)
@@ -43,7 +37,7 @@ function plot_results(results::DataFrame;y=:estimate,color=:term,layout=:group,s
         p[!,layout] .= :fixef
 
         # rename to match the res-dataframe
-        p[!,:term] = p.coefname
+        p[!,:coefname] = p.coefname
 
         # probably not needed
         #p[!,:colname_basis] .= results.colname_basis[1]
@@ -69,5 +63,3 @@ function plot_results(results::DataFrame;y=:estimate,color=:term,layout=:group,s
 end
 
 
-#using SparseArrays
-#Plots.heatmap(X::SparseMatrixCSC) = heatmap(Matrix(X))

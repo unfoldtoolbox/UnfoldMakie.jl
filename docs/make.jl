@@ -6,7 +6,7 @@ DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive=
 makedocs(;
     modules=[UnfoldMakie],
     authors="Benedikt Ehinger",
-    repo="https://github.com/behinger/UnfoldMakie.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
     sitename="UnfoldMakie.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
