@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>- · UnfoldMakie.jl</title><script data-outdated-warner src="../assets/warner.js"></script><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/plot_results/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">UnfoldMakie.jl</a></span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>-</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>-</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/behinger/UnfoldMakie.jl/blob/master/docs/src/plot_results.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h2 id="Setup"><a class="docs-heading-anchor" href="#Setup">Setup</a><a id="Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Setup" title="Permalink"></a></h2><pre><code class="language-">using Unfold
+using UnfoldMakie
+using StatsModels
+using MixedModels
+using DataFrames
+using CairoMakie
+
+
+include(joinpath(dirname(pathof(Unfold)), &quot;../test/test_utilities&quot;) ) # to load data
+data, evts = loadtestdata(&quot;test_case_3b&quot;);
+basisfunction = firbasis(τ=(-0.4,.8),sfreq=50,name=&quot;stimulus&quot;)
+f  = @formula 0~1+conditionA+continuousA
+
+bfDict = Dict(Any=&gt;(f,basisfunction))
+
+m = fit(UnfoldModel,bfDict,evts,data); 
+results = coeftable(m)</code></pre><h3 id="Default-Plot"><a class="docs-heading-anchor" href="#Default-Plot">Default Plot</a><a id="Default-Plot-1"></a><a class="docs-heading-anchor-permalink" href="#Default-Plot" title="Permalink"></a></h3><pre><code class="language-">plot_results(results)</code></pre><h3 id="With-StandardErrors"><a class="docs-heading-anchor" href="#With-StandardErrors">With StandardErrors</a><a id="With-StandardErrors-1"></a><a class="docs-heading-anchor-permalink" href="#With-StandardErrors" title="Permalink"></a></h3><pre><code class="language-">se_solver = solver=(x,y)-&gt;Unfold.solver_default(x,y,stderror=true)
+m = Unfold.fit(UnfoldModel,bfDict,evts,data.+10 .*rand(length(data)),solver=se_solver)
+
+results = coeftable(m)
+plot_results(results,stderror=true)</code></pre><h3 id="Two-different-events"><a class="docs-heading-anchor" href="#Two-different-events">Two different events</a><a id="Two-different-events-1"></a><a class="docs-heading-anchor-permalink" href="#Two-different-events" title="Permalink"></a></h3><pre><code class="language-">
+data, evts = loadtestdata(&quot;test_case_4b&quot;);
+bf1 = firbasis(τ=(-0.4,.8),sfreq=50,name=&quot;stimulusA&quot;)
+bf2 = firbasis(τ=(-0.2,1.2),sfreq=50,name=&quot;stimulusB&quot;)
+
+f  = @formula 0~1
+bfDict = Dict(&quot;eventA&quot;=&gt;(f,bf1),
+              &quot;eventB&quot;=&gt;(f,bf2))
+
+results = coeftable(fit(UnfoldModel,bfDict,evts,data,solver=se_solver,eventcolumn=&quot;type&quot;))
+
+plot_results(results,stderror=true)</code></pre></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Wednesday 3 November 2021 11:29">Wednesday 3 November 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
