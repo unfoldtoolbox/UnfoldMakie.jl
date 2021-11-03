@@ -18,13 +18,13 @@ labels = labels[ix]
 data2 = randn(size(positions,1)) .* 30
 data = (1:size(positions,1))
 
+using TimerOutputs
 to2 = TimerOutput()
+fi = Figure()
 @time for k = 1:20
-        if k == 1 
-            @timeit to2 "1" fi,to= UnfoldMakie.topoplot(data,positions=positions)
-        else
+
              @timeit to2 "$(k)" UnfoldMakie.topoplot(data,positions=positions,fig=fi[1,k])
              #to= merge(to,to2)
-        end
+        
         
 end
