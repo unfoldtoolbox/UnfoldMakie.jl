@@ -7,16 +7,18 @@ version = "0.1.1"
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Unfold = "181c99d8-e21b-4ff3-b70b-c233eddec679"
 
 [compat]
+AlgebraOfGraphics = "0.5"
+DataFrames = "1"
 Makie = "0.15"
 StatsBase = "0.33"
-DataFrames = "1"
-AlgebraOfGraphics = "0.5"
+Unfold = "0.3"
 julia = "1.5"
-Unfold= "0.3"
+
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
