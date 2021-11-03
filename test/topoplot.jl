@@ -28,3 +28,7 @@ fi = Figure()
         
         
 end
+
+##---- Unfold plots
+
+topoplot(1:63,positions)

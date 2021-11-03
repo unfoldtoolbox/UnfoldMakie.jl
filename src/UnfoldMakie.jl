@@ -11,6 +11,8 @@ include("topoplot.jl")
 export plot_results
 export plot
 export topoplot
+export topoplot!
+export Topoplot
 # Write your package code here.
 
 end
