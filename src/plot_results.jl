@@ -2,11 +2,6 @@ using AlgebraOfGraphics
 using Makie
 using DataFrames
 
-#---
-#Plots.plot(m::Unfold.UnfoldModel)  = plot_results(m.results)
-
-
-plot(m::Unfold.UnfoldModel) = plot_results(Unfold.condense_long)
 function plot_results(results::DataFrame;y=:estimate,color=:coefname,col=:basisname,row=:group,stderror=false,pvalue = DataFrame(:from=>[],:to=>[],:pval=>[]))
     results = deepcopy(results)
 
@@ -68,5 +63,3 @@ function plot_results(results::DataFrame;y=:estimate,color=:coefname,col=:basisn
 end
 
 
-#using SparseArrays
-#Plots.heatmap(X::SparseMatrixCSC) = heatmap(Matrix(X))
