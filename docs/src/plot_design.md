@@ -17,7 +17,7 @@ ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8)))
 designmatrix!(ufMass, evts)
 ```
 
-### Default Plot
+## Plot Designmatrix
 ```@example main
 plot(designmatrix(ufMass))
 ```
@@ -34,12 +34,14 @@ plot(designmatrix(ufMass),standardize=false)
 ```
 
 
-### Timeexpanded plot
+## Plot Timeexpanded Designmatric
 To see the result of the timeexpanded designmatrix, we can simply call plot on an Timeexpanded UnfoldObject
 ```@example main
 bfDict = Dict(Any=>(f,basisfunction))
 ufCont = UnfoldLinearModelContinuousTime(bfDict)
-designmatrix!(ufCont, evts)
+designmatrix!(ufCont, evts) # add the designmatrix but don't fit
 
 plot(designmatrix(ufCont))
 ```
+
+Currently there is no easy way to get the non-timeexpanded designmatrix from a `UnfoldLinearModelContinuousTime`
