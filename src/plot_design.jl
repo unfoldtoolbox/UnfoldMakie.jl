@@ -1,7 +1,7 @@
 
 using Makie
 import Makie.plot
-using StatsBase
+using Statistics
 using SparseArrays
 function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
 
@@ -23,11 +23,8 @@ function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
     fig, ax, hm = heatmap(designmat',axis=(xticks=(1:length(labels),labels),xticklabelrotation = pi/8),)
     Colorbar(fig[1,2],hm)
     
+    if isa(designmat, SparseMatrixCSC)
+        ax.yreversed = true
+    end
     return fig
-end
-
-function plot2(X::Unfold.DesignMatrix;standardize=true,sort=false)
-
-    # plot events on top
-    hline!()
 end
