@@ -15,6 +15,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "DesignMatrices" => "plot_design.md",
+        "Results (ERP-Style)" => "plot_results.md",
+
     ],
 )
 
