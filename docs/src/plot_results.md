@@ -18,12 +18,12 @@ m = fit(UnfoldModel,bfDict,evts,data);
 results = coeftable(m); nothing
 ```
 
-### Default Plot
+## Default Plot
 ```@example main
 plot_results(results)
 ```
 
-### With StandardErrors
+## With StandardErrors
 ```@example main
 se_solver = solver=(x,y)->Unfold.solver_default(x,y,stderror=true)
 m = Unfold.fit(UnfoldModel,bfDict,evts,data.+10 .*rand(length(data)),solver=se_solver)
@@ -32,7 +32,7 @@ results = coeftable(m)
 plot_results(results,stderror=true)
 ```
 
-### Two different events
+## Two different events
 ```@example main
 
 data, evts = loadtestdata("test_case_4b");
