@@ -1,7 +1,7 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
 authors = ["Benedikt Ehinger"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
@@ -12,11 +12,11 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Unfold = "181c99d8-e21b-4ff3-b70b-c233eddec679"
 
 [compat]
-AlgebraOfGraphics = "0.5, 0.6"
+AlgebraOfGraphics = "0.6"
 DataFrames = "1"
 Makie = "0.15"
 Unfold = "0.3"
-julia = "1.5"
+julia = "1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
