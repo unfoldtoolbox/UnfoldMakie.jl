@@ -12,7 +12,7 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Unfold = "181c99d8-e21b-4ff3-b70b-c233eddec679"
 
 [compat]
-AlgebraOfGraphics = "0.5"
+AlgebraOfGraphics = "0.5, 0.6"
 DataFrames = "1"
 Makie = "0.15"
 Unfold = "0.3"
