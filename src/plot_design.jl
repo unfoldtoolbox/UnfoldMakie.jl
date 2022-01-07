@@ -11,7 +11,7 @@ function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
         designmat[isinf.(designmat)] .= 1.
     end
     if sort
-        designmat = Base.sort(designmat,dims=1)
+        designmat = Base.sortslices(designmat,dims=1)
     end
     labels = Unfold.get_coefnames(X)
 
