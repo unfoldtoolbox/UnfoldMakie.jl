@@ -7,14 +7,14 @@
 #    function topoplot!(data;kwargs...)
 #        topoplot(Makie.current_figure(),data;kwargs...)
 #    end
-    plot_topoplot(data;kwargs...) = plot_topoplot(Figure(),data;kwargs...)
+plot_topoplot(data;kwargs...) = plot_topoplot(Figure(),data;kwargs...)
 
 
 
-    # define AoG recipe
-    @recipe(Topoplot, data) do scene
-        l_theme = default_theme(scene, Lines)
-        Theme(
+## define AoG recipe
+@recipe(Topoplot, data) do scene
+    l_theme = default_theme(scene, Lines)
+    Theme(
             positions= defaultLocations(),
             colormap= ColorSchemes.vik,
             sensors = true,
@@ -22,61 +22,64 @@
             levels = 5,
             #colorrange=get(l_theme.attributes, :colorrange, automatic),
         )
-    end
+end
 
 
-    function Makie.plot!(p::Topoplot)
-        UnfoldMakie.plot_topoplot(p,p[:data],positions=p[:positions],sensors=p[:sensors],colormap=p[:colormap])
-        p
-    end
+function Makie.plot!(p::Topoplot)
+    UnfoldMakie.plot_topoplot(p,p[:data],positions=p[:positions],sensors=p[:sensors],colormap=p[:colormap])
+    p
+end
 
+#--- topoplot transformation
 
-    function plot_topoplot(h,data;positions=defaultLocations(),levels=5,labels=nothing,s=10^6,sensors=true,colormap= ColorSchemes.vik)
-        to =TimerOutput()
-        
-        diameter = 1
-        @timeit to "posMap" X,Y = position_to_2d(positions)
-        @timeit to "grid" xg,yg,v = generate_topoplot_grid(X,Y,data;s=s)
-        
-        # remove everything in a circle (should be ellipse at some point)
-        ix = sqrt.([i.^2+j.^2 for i in yg, j in xg]).> (diameter./2)
-        v[ix] .= NaN
-        #@show fig
-        #fig[1,1]# = Axis(fig)#,label = false, ticklabels = false, ticks = false, grid = false, minorgrid = false, minorticks = false)
-        #ax = Axis(fig)
-        #ax = Makie.current_axis()
-        ax = h
-        #@timeit to "axis" ax = fig[1,1] = Axis(fig, aspect=AxisAspect(1), title="")
-        
-        @timeit to "heatmap" heatmap!(ax,yg,xg,v,colormap=colormap)
-        @timeit to "contour" contour!(ax,yg,xg,Float64.(v),linewidth=3,colormap=colormap,levels=levels)
-        if to_value(sensors)
-            @timeit to "scatter" draw_sensors(ax,X,Y)
-        end
-        @timeit to "earNose" draw_earNose(ax,diameter=diameter)
-        
-        @timeit to "labels" draw_labels(ax,X,Y,labels)
-        
-        #@timeit to "hidedecorations" hidedecorations!(ax)
-        #@timeit to "hidespines"  hidespines!(ax)
+#--- Actual Topoplot Function
+function plot_topoplot(h,data;positions=defaultLocations(),levels=5,labels=nothing,s=10^6,sensors=true,colormap= ColorSchemes.vik)
+    to =TimerOutput()
     
-        ax,to
+    diameter = 1
+    @timeit to "posMap" X,Y = position_to_2d(positions)
+    @timeit to "grid" xg,yg,v = generate_topoplot_grid(X,Y,data;s=s)
+    
+    # remove everything in a circle (should be ellipse at some point)
+    ix = sqrt.([i.^2+j.^2 for i in yg, j in xg]).> (diameter./2)
+    v[ix] .= NaN
+    #@show fig
+    #fig[1,1]# = Axis(fig)#,label = false, ticklabels = false, ticks = false, grid = false, minorgrid = false, minorticks = false)
+    #ax = Axis(fig)
+    #ax = Makie.current_axis()
+    ax = h
+    #@timeit to "axis" ax = fig[1,1] = Axis(fig, aspect=AxisAspect(1), title="")
+    
+    @timeit to "heatmap" heatmap!(ax,yg,xg,v,colormap=colormap)
+    @timeit to "contour" contour!(ax,yg,xg,Float64.(v),linewidth=3,colormap=colormap,levels=levels)
+    if to_value(sensors)
+        @timeit to "scatter" draw_sensors(ax,X,Y)
     end
+    @timeit to "earNose" draw_earNose(ax,diameter=diameter)
+    
+    @timeit to "labels" draw_labels(ax,X,Y,labels)
+    
+    #@timeit to "hidedecorations" hidedecorations!(ax)
+    #@timeit to "hidespines"  hidespines!(ax)
 
-    function draw_sensors(ax,X,Y)
-        scatter!(ax,X,Y,markersize=3,color="white",strokewidth=3,strokecolor="black") # add electrodes
-   end
+    ax,to
+end
 
-   function draw_labels(ax,X,Y,::Nothing)
-    # in case of empty labels
-   end
-   function draw_labels(ax,X,Y,labels)
-	#text!(ax, [("$(l)", Point2f0(Y[i],X[i])) for (i,l) in enumerate(labels)]) # add labels
-	pos = [(x,y) for (x,y) in zip(X,Y)]
-	
+function draw_sensors(ax,X,Y)
+    scatter!(ax,X,Y,markersize=3,color="white",strokewidth=3,strokecolor="black") # add electrodes
+end
 
-	text!(ax,labels,position=pos,align=(:center,:center))
-	
+function draw_labels(ax,X,Y,::Nothing)
+# in case of empty labels
+end
+
+function draw_labels(ax,X,Y,labels)
+#text!(ax, [("$(l)", Point2f0(Y[i],X[i])) for (i,l) in enumerate(labels)]) # add labels
+pos = [(x,y) for (x,y) in zip(X,Y)]
+
+
+text!(ax,labels,position=pos,align=(:center,:center))
+
 end
  position_to_2d(positions::Observable) = position_to_2d(to_value(positions))
 function position_to_2d(positions::Matrix{T}) where {T<:Number}
@@ -106,8 +109,9 @@ function generate_topoplot_grid(X,Y,data;s =10^6 )
 	
 	# s = smoothing parameter, kx/ky = spline order; for some reason s has to be increadible large...
     
-	spl = Spline2D(X, Y,to_value(data),kx=3,ky=3,s=s) 
-			v = evalgrid(spl,yg,xg) # evaluate the spline at the grid locs
+    spl = Spline2D(X, Y,to_value(data),kx=3,ky=3,s=s) 
+
+    v   = evalgrid(spl,yg,xg) # evaluate the spline at the grid locs
 	
 	
 	# Would love to use Interpolations.jl, but their 2dsplines only work on a regular grid (as of v0.9)
