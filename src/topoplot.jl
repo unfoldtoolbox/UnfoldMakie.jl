@@ -3,11 +3,15 @@
 	using GeometryTypes
 	using Statistics
 	using TimerOutputs
-	
+    using AlgebraOfGraphics
+    using CategoricalArrays
+    using PyMNE
 #    function topoplot!(data;kwargs...)
 #        topoplot(Makie.current_figure(),data;kwargs...)
 #    end
 plot_topoplot(data;kwargs...) = plot_topoplot(Figure(),data;kwargs...)
+
+
 
 
 
@@ -20,49 +24,87 @@ plot_topoplot(data;kwargs...) = plot_topoplot(Figure(),data;kwargs...)
             sensors = true,
             labels = nothing,
             levels = 5,
+            interpolation_method = spline2d_mne
             #colorrange=get(l_theme.attributes, :colorrange, automatic),
         )
 end
 
 
 function Makie.plot!(p::Topoplot)
-    UnfoldMakie.plot_topoplot(p,p[:data],positions=p[:positions],sensors=p[:sensors],colormap=p[:colormap])
+    UnfoldMakie.plot_topoplot(p,p[:data],positions=p[:positions],sensors=p[:sensors],colormap=p[:colormap],interpolation_method=p[:interpolation_method])
+
+    #function update_plot(data)
+    #    v = @lift(spline2d_mne(X,Y,xg,yg,$data;s=10^6) )
+    #end
+    #Makie.Observables.onany(update_plot, p[:data])
+
     p
 end
 
-#--- topoplot transformation
+
+#--- topoplot series
+# plot_topoplot_series
+# expects data to contain :time column, groups according to Δbin binsizes, plots topoplot series
+# channels have to be in column :channel
+plot_topoplot_series(data::DataFrame;Δbin,kwargs...) = plot_topoplot_series(data,Δbin;kwargs...)
+#plot_topoplot_series(data::DataFrame,args...;kwargs...) = plot_topoplot_series(data,Δbin;kwargs...)
+
+function plot_topoplot_series(data::DataFrame,Δbin;y=:estimate,topoplotCfg=NamedTuple(),mappingCfg=(layout=:time,),combinefun=mean)
+
+    
+    # cannot be made easier right now, but Simon promised a simpler solution "soonish"
+    axisOptions = (aspect = 1,xgridvisible=false,xminorgridvisible=false,xminorticksvisible=false,xticksvisible=false,xticklabelsvisible=false,xlabelvisible=false,ygridvisible=false,yminorgridvisible=false,yminorticksvisible=false,yticksvisible=false,yticklabelsvisible=false,ylabelvisible=false,
+leftspinevisible = false,rightspinevisible = false,topspinevisible = false,bottomspinevisible=false,)
+
+    data_mean = topoplot_timebin(data,Δbin;y=y,fun=combinefun)
+    #@info data_mean
+    
+    AlgebraOfGraphics.data(data_mean)*mapping(y;mappingCfg...)*visual(Topoplot;topoplotCfg...)|>x->draw(x,axis=axisOptions)
+
+end
+
+
+function topoplot_timebin(df,Δbin;y=:estimate,fun=mean)
+	    tmin = minimum(df.time)
+		tmax = maximum(df.time)
+        
+		bins = range(start=tmin+Δbin/2,step=Δbin,stop=tmax-Δbin/2)
+        df = deepcopy(df) # cut seems to change stuff inplace
+		df.time = cut(df.time,bins,extend=true)
+
+        df_m = combine(groupby(df,[:time,:channel]),y=>fun)
+        rename!(df_m,names(df_m)[end]=>y) # remove the _fun part of the new column
+        return df_m
+
+end;
 
 #--- Actual Topoplot Function
-function plot_topoplot(h,data;positions=defaultLocations(),levels=5,labels=nothing,s=10^6,sensors=true,colormap= ColorSchemes.vik)
-    to =TimerOutput()
-    
-    diameter = 1
-    @timeit to "posMap" X,Y = position_to_2d(positions)
-    @timeit to "grid" xg,yg,v = generate_topoplot_grid(X,Y,data;s=s)
-    
-    # remove everything in a circle (should be ellipse at some point)
-    ix = sqrt.([i.^2+j.^2 for i in yg, j in xg]).> (diameter./2)
-    v[ix] .= NaN
-    #@show fig
-    #fig[1,1]# = Axis(fig)#,label = false, ticklabels = false, ticks = false, grid = false, minorgrid = false, minorticks = false)
-    #ax = Axis(fig)
-    #ax = Makie.current_axis()
-    ax = h
-    #@timeit to "axis" ax = fig[1,1] = Axis(fig, aspect=AxisAspect(1), title="")
-    
-    @timeit to "heatmap" heatmap!(ax,yg,xg,v,colormap=colormap)
-    @timeit to "contour" contour!(ax,yg,xg,Float64.(v),linewidth=3,colormap=colormap,levels=levels)
-    if to_value(sensors)
-        @timeit to "scatter" draw_sensors(ax,X,Y)
-    end
-    @timeit to "earNose" draw_earNose(ax,diameter=diameter)
-    
-    @timeit to "labels" draw_labels(ax,X,Y,labels)
-    
-    #@timeit to "hidedecorations" hidedecorations!(ax)
-    #@timeit to "hidespines"  hidespines!(ax)
+function plot_topoplot(h,data;positions=defaultLocations(),levels=5,labels=nothing,s=10^6,sensors=true,colormap= ColorSchemes.vik,interpolation_method=spline2d_mne)
+        diameter = 1
+        
+        X,Y = position_to_2d(positions)
+        xg,yg = generate_topoplot_xy(X,Y)
 
-    ax,to
+        v = @lift(spline2d_mne(X,Y,xg,yg,$data;s=10^6) )
+        #@info v
+        #xg,yg,v = generate_topoplot_grid(X,Y,data;method = spline2d_mne,s=10^6) 
+        
+        # remove everything in a circle (should be ellipse at some point)
+        ix = sqrt.([i.^2+j.^2 for i in yg, j in xg]).> (diameter./2)
+        v.val[ix] .= NaN
+
+        ax = h
+        heatmap!(ax,yg,xg,v,colormap=colormap)
+         
+        
+        contour!(ax,yg,xg,v,linewidth=3,colormap=colormap,levels=levels)
+        if to_value(sensors)
+            draw_sensors(ax,X,Y)
+        end
+        draw_earNose(ax,diameter=diameter)
+        draw_labels(ax,X,Y,labels)
+        
+        ax
 end
 
 function draw_sensors(ax,X,Y)
@@ -95,9 +137,24 @@ function position_to_2d(positions::Vector{T}) where {T}
     return X,Y
 end
 
-function generate_topoplot_grid(X,Y,data;s =10^6 )
+function spline2d_dierckx(X,Y,xg,yg,data;s=10^6,kwargs...)
+    spl = Spline2D(X, Y,to_value(data),kx=3,ky=3,s=s) 
+
+    return evalgrid(spl,yg,xg) # evaluate the spline at the grid locs
+end
+function spline2d_mne(X,Y,xg,yg,data;kwargs...)
+
+        interp = PyMNE.viz.topomap._GridData([X Y], "head", [0,0], [1,1], "mean")
+        #@info data
+        interp.set_values(to_value(data))
+        
+        # the xg' * ones is a shorthand for np.meshgrid
+        return interp.set_locations(xg' .* ones(length(yg)),ones(length(xg))' .* yg)()
+end
+function generate_topoplot_xy(X,Y)
 
 	# get extrema and extend
+    # this is for the axis view, i.e. whitespace left/right
 	by = 0.4
 	xlim = extrema(X) .+ abs.(extrema(X)).*[-by, by]
 	ylim = extrema(Y).+ abs.(extrema(Y)).*[-by, by]
@@ -108,18 +165,18 @@ function generate_topoplot_grid(X,Y,data;s =10^6 )
 	yg = range(ylim[1],stop=ylim[2], step=0.005)
 	
 	# s = smoothing parameter, kx/ky = spline order; for some reason s has to be increadible large...
+    return xg,yg
+end
+	
+        
     
-    spl = Spline2D(X, Y,to_value(data),kx=3,ky=3,s=s) 
-
-    v   = evalgrid(spl,yg,xg) # evaluate the spline at the grid locs
-	
-	
 	# Would love to use Interpolations.jl, but their 2dsplines only work on a regular grid (as of v0.9)
 			#interp_cubic = LinearInterpolation((X, Y), data)
 			#v=interp_cubic.(xg, yg)
 	
-			return xg,yg,v
-end
+
+
+
 
 function draw_earNose(ax;diameter = 0.2)
 
