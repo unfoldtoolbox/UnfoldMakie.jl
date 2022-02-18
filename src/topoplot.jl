@@ -47,8 +47,28 @@ end
 # expects data to contain :time column, groups according to Δbin binsizes, plots topoplot series
 # channels have to be in column :channel
 plot_topoplot_series(data::DataFrame;Δbin,kwargs...) = plot_topoplot_series(data,Δbin;kwargs...)
-#plot_topoplot_series(data::DataFrame,args...;kwargs...) = plot_topoplot_series(data,Δbin;kwargs...)
+"""
+ plot_topoplot_series(data::DataFrame,Δbin;y=:estimate,topoplotCfg=NamedTuple(),mappingCfg=(layout=:time,),combinefun=mean)
 
+plot a series of topoplot. The function automatically takes the `combinefun=mean` over the :time column of `data` in `Δbin` steps.
+
+`data` need column :time and :channel, and column `y=:estimate`
+
+Further specifications via topoplotCfg for the topoplot recipe (XXX how to do ref?). In most cases user should provide the electrode positions via
+    `topoplotCFG = (positions=pos,)` # note the trailling comma to make it a tuple
+
+    `mappingCfg` is for the mapping command of AOG, typical usages would be `mappingCfg=(col=:time,row=:condition,)` to layout the plot. Topoplot modification via topoplotCfg as it is a visual
+     
+
+# Examples
+Desc
+```julia-repl
+julia> data = DataFrame(:estimate=>repeat(1:63,100),:time=>repeat(1:20,5*63),:channel=>repeat(1:63,100)) # fake data
+julia> pos = [(1:63)./63 .* (sin.(range(-2*pi,2*pi,63))) (1:63)./63 .* cos.(range(-2*pi,2*pi,63))].*0.5 .+0.5 # fake electrode positions
+julia> plot_topoplot_series(data,5;topoplotCfg=(positions=pos,))
+```
+
+"""
 function plot_topoplot_series(data::DataFrame,Δbin;y=:estimate,topoplotCfg=NamedTuple(),mappingCfg=(layout=:time,),combinefun=mean)
 
     
