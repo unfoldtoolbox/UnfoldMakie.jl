@@ -2,7 +2,6 @@
 ```@example main
 using Unfold
 using UnfoldMakie
-using StatsModels # can be removed in Unfold v0.3.5
 using DataFrames
 using CairoMakie
 

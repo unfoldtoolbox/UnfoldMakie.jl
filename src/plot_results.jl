@@ -7,7 +7,8 @@ function plot_results(results::DataFrame;y=nothing,
     col=:basisname,
     row=:group,
     stderror=false,
-    pvalue = DataFrame(:from=>[],:to=>[],:pval=>[]),kwargs...)
+    pvalue = DataFrame(:from=>[],:to=>[]),
+    kwargs...)
 
     results = deepcopy(results)
 
@@ -30,15 +31,15 @@ function plot_results(results::DataFrame;y=nothing,
     # check if mappings exist
     
     if string(color) ∉ names(results)
-        color != :coefname ? @warn("user specified color=$color not found in DataFrame, ignoring it") : nothing
+        color != :coefname ? @error("user specified color=$color not found in DataFrame") : nothing
         color = 1
     end
     if string(col) ∉ names(results)
-        col != :basisname ? @warn("user specified col=$col not found in DataFrame, ignoring it") : nothing
+        col != :basisname ? @error("user specified col=$col not found in DataFrame") : nothing
         col = 1
     end
     if string(row) ∉ names(results)
-        row != :group ? @warn("user specified row=$row not found in DataFrame, ignoring it") : nothing
+        row != :group ? error("user specified row=$row not found in DataFrame") : nothing
         row = 1
     end
 
@@ -63,19 +64,47 @@ function plot_results(results::DataFrame;y=nothing,
         p = deepcopy(pvalue)
 
         # for now, add them to the fixed effect
-        p[!,layout] .= :fixef
+        if "group" ∉  names(p)
+            # group not specified using first
+            if "group" ∈  names(results)
+                p[!,:group] .= results[1,:group]
+                if length(unique(results.group))>1
+                    @warn "multiple groups found, choosing first one"
+                end
+            else
+                p[!,:group] .= 1
+            end
+        end
+        
 
         # rename to match the res-dataframe
-        p[!,:coefname] = p.coefname
- 
-        un = unique(p.coefname)
+
+        shouldHave = hcat(col,row,color)
+        shouldHave = shouldHave[shouldHave.!=1] # remove defaults as defined above
+        if ~isempty(kwargs)
+             shouldHave = hcat(shouldHave,(values(kwargs)))
+        end
+        shouldHave = string.(shouldHave)
+        
+        for k in shouldHave
+            if k ∉ names(p)
+                p[!,k] .= results[1,k]
+            end
+
+        end
+
+        @show color
+        @show p
+        un = unique(p[!,color])
+        # define an index to dodge the lines vertically
+        p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
+
         scaleY = [minimum(results.estimate),maximum(results.estimate)]
         stepY = scaleY[2]-scaleY[1]
         posY = stepY*-0.05+scaleY[1]
-        Δt = diff(results.colname_basis[1:2])[1]
+        Δt = diff(results.time[1:2])[1]
         Δy = 0.01
-        p[!,:color] .=  [findfirst(un .== x) for x in p.coefname]
-        p[!,:segments] = [Rect(Vec(x,posY+stepY*(Δy*(n-1))),Vec(y-x+Δt,0.5*Δy*stepY)) for (x,y,n) in zip(p.from,p.to,p.color)]
+        p[!,:segments] = [Makie.Rect(Makie.Vec(x,posY+stepY*(Δy*(n-1))),Makie.Vec(y-x+Δt,0.5*Δy*stepY)) for (x,y,n) in zip(p.from,p.to,p.sigindex)]
 
         basic =  basic + (data(p)*mapping(:segments)*visual(Poly))
     end
