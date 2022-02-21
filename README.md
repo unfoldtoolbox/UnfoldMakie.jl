@@ -9,6 +9,6 @@
 Plotting library for [Unfold](https://github.com/unfoldtoolbox/unfold.jl/)
 
 
-See [documentation](https://unfoldtoolbox.github.io/UnfoldMakie.jl/stable) to get started. 
+See [documentation](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev) to get started. 
 
 Currently supports plotting designmatrices `plot(designmatrix(uf))` and results `plot_results(coeftable(uf))`.
