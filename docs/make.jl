@@ -1,6 +1,16 @@
 using UnfoldMakie
 using Documenter
 
+using Literate
+using Glob
+
+# literate
+GENERATED = joinpath(@__DIR__, "src")
+SOURCE_FILES = Glob.glob("*/*.jl", GENERATED)
+foreach(fn -> Literate.markdown(fn, GENERATED), SOURCE_FILES)
+
+
+
 DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive=true)
 
 makedocs(;
@@ -15,6 +25,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "DesignMatrices" => "plot_design.md",
+        "Results (ERP-Style)" => "plot_results.md",
+
     ],
 )
 
