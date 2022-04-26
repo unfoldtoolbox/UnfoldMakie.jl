@@ -9,7 +9,7 @@
 #    function topoplot!(data;kwargs...)
 #        topoplot(Makie.current_figure(),data;kwargs...)
 #    end
-plot_topoplot(data;kwargs...) = plot_topoplot(Figure(),data;kwargs...)
+plot_topoplot(data;kwargs...) = plot_topoplot(Axis(Figure()),data;kwargs...)
 
 
 
