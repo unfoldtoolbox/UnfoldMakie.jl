@@ -24,14 +24,14 @@ plot_topoplot(data;kwargs...) = plot_topoplot(Axis(Figure()),data;kwargs...)
             sensors = true,
             labels = nothing,
             levels = 5,
-            interpolation_method = spline2d_mne
+#	    interpolation_method = spline2d_mne
             #colorrange=get(l_theme.attributes, :colorrange, automatic),
         )
 end
 
 
 function Makie.plot!(p::Topoplot)
-    UnfoldMakie.plot_topoplot(p,p[:data],positions=p[:positions],sensors=p[:sensors],colormap=p[:colormap],interpolation_method=p[:interpolation_method])
+	UnfoldMakie.plot_topoplot(p,p[:data],positions=p[:positions],sensors=p[:sensors],colormap=p[:colormap])#,interpolation_method=p[:interpolation_method])
 
     #function update_plot(data)
     #    v = @lift(spline2d_mne(X,Y,xg,yg,$data;s=10^6) )
@@ -99,15 +99,16 @@ function topoplot_timebin(df,Δbin;y=:estimate,fun=mean)
 end;
 
 
-#plot_topoplot(h,data::Vector;kwargs...) = plot_topoplot(h,Observable(data);kwargs...) # convert to an observable, not sure if this is best practice ;)
+plot_topoplot(h,data::Vector;kwargs...) = plot_topoplot(h,Observable(data);kwargs...) # convert to an observable, not sure if this is best practice ;)
 #--- Actual Topoplot Function
-function plot_topoplot(h,data;positions=defaultLocations(),levels=5,labels=nothing,sensors=true,colormap= ColorSchemes.vik,interpolation_method=spline2d_mne)
+function plot_topoplot(h,data::Observable;positions=defaultLocations(),levels=5,labels=nothing,sensors=true,colormap= ColorSchemes.vik,interpolation_method=spline2d_mne)
         diameter = 1
-@show "hello"        
+@show "hello2"        
         X,Y = position_to_2d(positions)
         xg,yg = generate_topoplot_xy(X,Y)
 
         v = @lift(interpolation_method(X,Y,xg,yg,$data) )
+	#v = @lift(spline2d_mne(X,Y,xg,yg,$data))
         #@info v
         #xg,yg,v = generate_topoplot_grid(X,Y,data;method = spline2d_mne,s=10^6) 
         
@@ -177,7 +178,7 @@ function generate_topoplot_xy(X,Y)
 
 	# get extrema and extend
     # this is for the axis view, i.e. whitespace left/right
-	by = 0.4
+	by = 0.6
 	xlim = extrema(X) .+ abs.(extrema(X)).*[-by, by]
 	ylim = extrema(Y).+ abs.(extrema(Y)).*[-by, by]
 
