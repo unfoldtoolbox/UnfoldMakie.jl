@@ -103,7 +103,6 @@ plot_topoplot(h,data::Vector;kwargs...) = plot_topoplot(h,Observable(data);kwarg
 #--- Actual Topoplot Function
 function plot_topoplot(h,data::Observable;positions=defaultLocations(),levels=5,labels=nothing,sensors=true,colormap= ColorSchemes.vik,interpolation_method=spline2d_mne)
         diameter = 1
-@show "hello2"        
         X,Y = position_to_2d(positions)
         xg,yg = generate_topoplot_xy(X,Y)
 
