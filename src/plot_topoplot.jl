@@ -99,11 +99,11 @@ function topoplot_timebin(df,Δbin;y=:estimate,fun=mean)
 end;
 
 
-plot_topoplot(h,data::Vector;kwargs...) = plot_topoplot(h,Observable(data);kwargs...) # convert to an observable, not sure if this is best practice ;)
+#plot_topoplot(h,data::Vector;kwargs...) = plot_topoplot(h,Observable(data);kwargs...) # convert to an observable, not sure if this is best practice ;)
 #--- Actual Topoplot Function
-function plot_topoplot(h,data::Observable;positions=defaultLocations(),levels=5,labels=nothing,sensors=true,colormap= ColorSchemes.vik,interpolation_method=spline2d_mne)
+function plot_topoplot(h,data;positions=defaultLocations(),levels=5,labels=nothing,sensors=true,colormap= ColorSchemes.vik,interpolation_method=spline2d_mne)
         diameter = 1
-        
+@show "hello"        
         X,Y = position_to_2d(positions)
         xg,yg = generate_topoplot_xy(X,Y)
 
