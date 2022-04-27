@@ -9,6 +9,7 @@ CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Dierckx = "39dd38d3-220a-591b-8e3c-4c3a8c710a94"
+DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 GeometryTypes = "4d00f742-c7ba-57c2-abde-4428a4b178cb"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 PyMNE = "6c5003b2-cbe8-491c-a0d1-70088e6a0fd6"
@@ -24,6 +25,7 @@ DataFrames = "1"
 Makie = "0.15, 0.16"
 Unfold = "0.3"
 julia = "1"
+
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
