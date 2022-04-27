@@ -226,7 +226,9 @@ Spline Interpolation based on PyMNE's `_GridData`. This is not good practice, as
 Also this is slow. If someone wants to take a deep dive, some kind of irregular grid interpoation would be very helpful here.
 
     
-Would love to use Interpolations.jl, but their 2dsplines only work on a regular grid (as of v0.9)
+Would love to use Interpolations.jl, but their 2dsplines only work on a regular grid (as of v0.13)
+https://github.com/JuliaMath/Interpolations.jl/issues/118
+
 #interp_cubic = LinearInterpolation((X, Y), data)
 #v=interp_cubic.(xg, yg)
 
@@ -269,7 +271,11 @@ end
         
 
 
+"""
+$(TYPEDSIGNATURES)
 
+Draw ear and nose, copied from stackoverflow
+"""
 
 
 function draw_earNose(ax;diameter = 0.2)
@@ -289,7 +295,11 @@ function draw_earNose(ax;diameter = 0.2)
 			lines!(ax,-ear_x,ear_y,linewidth=3,color=:black) # left
 end
 
+"""
+$(TYPEDSIGNATURES)
 
+Draw the circle, there is a long discussion on MNE where to put the circle (tldr; as seen from above or at the ears/EAR)
+"""
 function circleFun(;center = (0,0),diameter = 1, npoints = 100)
     r = diameter / 2
     tt = range(0,stop=2*π,length = npoints)
@@ -298,7 +308,13 @@ function circleFun(;center = (0,0),diameter = 1, npoints = 100)
     return (xx, yy)
   end
 
-  
+
+
+  """
+$(TYPEDSIGNATURES)
+
+This is a stub and likely will go away sooner or later.
+"""
 function defaultLocations()
 
     defaultlocs = """
