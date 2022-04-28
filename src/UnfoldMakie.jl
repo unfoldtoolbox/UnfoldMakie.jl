@@ -3,6 +3,7 @@ module UnfoldMakie
 using Makie
 using AlgebraOfGraphics
 using Unfold
+using DocStringExtensions # for Docu
 
 
 include("plot_design.jl")
