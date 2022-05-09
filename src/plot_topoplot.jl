@@ -148,8 +148,10 @@ function plot_topoplot(h,data::Observable,positions=defaultLocations();levels=5,
         ax = h
         heatmap!(ax,yg,xg,v,colormap=colormap)
          
-        
-        isnothing(levels) | contour!(ax,yg,xg,v,linewidth=3,colormap=colormap,levels=levels)
+   
+        if !isnothing(levels)
+        contour!(ax,yg,xg,v,linewidth=3,colormap=colormap,levels=levels)
+        end
 
         if to_value(sensors)
             draw_sensors(ax,X,Y)
