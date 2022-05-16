@@ -135,6 +135,37 @@ results_plot = @subset(results_onesubject,:channel .==22)
 plot_results(results_plot,group=:channel,layout=:channel)
 end
 
+# ╔═╡ 98026af7-d875-43f3-a3cb-3109faef5822
+md"""
+## Topoplots
+"""
+
+# ╔═╡ 3cee30ae-cf25-4684-bd49-c64b0b96b4e6
+begin
+	mon = PyMNE.channels.make_standard_montage("standard_1020")
+	raw.set_channel_types(Dict("HEOG_left"=>"eog","HEOG_right"=>"eog","VEOG_lower"=>"eog"))
+	raw.set_montage(mon,match_case=false)
+	
+	pos = PyMNE.channels.make_eeg_layout(get_info(raw)).pos
+end;
+
+# ╔═╡ 5f0f2708-f2d9-4a72-a528-185837a43e06
+# potentially still buggy: The sensor-positions are flipped 90°
+plot_topoplot_series(@subset(results_onesubject,:coefname.=="(Intercept)",:channel .<=30),0.2,topoplotCfg=(positions=collect(pos[:,[2,1]]),))
+
+
+# ╔═╡ 6ee180df-4340-45a2-bb1e-37aad7953875
+# maybe this should be the default
+# note the bad time on top :S
+plot_topoplot_series(@subset(results_onesubject,:coefname.=="(Intercept)",:channel .<=30),0.2,topoplotCfg=(sensors=false,positions=collect(pos[:,[2,1]]),),mappingCfg=(col=:time,))
+
+# ╔═╡ f0f752d8-7f2d-4a49-8763-53df2cff6126
+# multi-coeffiecients dont work, because the aggregation is on groupby (channel)
+plot_topoplot_series(@subset(results_onesubject,:channel .<=30),0.2,topoplotCfg=(sensors=false,positions=collect(pos[:,[2,1]]),),mappingCfg=(col=:time,row=:coefficient))
+
+# ╔═╡ 7da4df51-589a-4eb5-8f1f-f77ab65cf10a
+@subset(results_onesubject,:coefname.=="(Intercept)")
+
 # ╔═╡ Cell order:
 # ╠═4c7907ad-bc25-4188-ade7-fa69e6fc719d
 # ╠═29fca132-7f60-4caa-805f-155babb6832d
@@ -150,3 +181,9 @@ end
 # ╠═975382de-5f24-4e9e-87f6-a7f7ba93ff8e
 # ╟─62632f86-5792-49c3-a229-376211deae64
 # ╠═41e1b735-4c19-4e6d-8681-ef0f893aec87
+# ╠═98026af7-d875-43f3-a3cb-3109faef5822
+# ╠═3cee30ae-cf25-4684-bd49-c64b0b96b4e6
+# ╠═5f0f2708-f2d9-4a72-a528-185837a43e06
+# ╠═6ee180df-4340-45a2-bb1e-37aad7953875
+# ╠═f0f752d8-7f2d-4a49-8763-53df2cff6126
+# ╠═7da4df51-589a-4eb5-8f1f-f77ab65cf10a
