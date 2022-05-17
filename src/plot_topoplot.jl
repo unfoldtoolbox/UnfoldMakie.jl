@@ -105,7 +105,8 @@ function topoplot_timebin(df,Δbin;y=:estimate,fun=mean)
         df = deepcopy(df) # cut seems to change stuff inplace
 		df.time = cut(df.time,bins,extend=true)
 
-        df_m = combine(groupby(df,[:time,:channel]),y=>fun)
+        #df_m = combine(groupby(df,[:time,:channel]),y=>fun)
+        df_m = combine(groupby(df,Not(y)),y=>fun)
         rename!(df_m,names(df_m)[end]=>y) # remove the _fun part of the new column
         return df_m
 
