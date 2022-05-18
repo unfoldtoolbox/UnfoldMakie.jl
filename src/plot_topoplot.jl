@@ -136,22 +136,21 @@ function plot_topoplot(h,data::Observable,positions=defaultLocations();levels=5,
         diameter = 1
         X,Y = position_to_2d(positions)
         xg,yg = generate_topoplot_xy(X,Y)
-
-        v = @lift(interpolation_method(X,Y,xg,yg,$data) )
+        v = @lift(interpolation_method(Y,X,yg,xg,$data) )
 	#v = @lift(spline2d_mne(X,Y,xg,yg,$data))
         #@info v
         #xg,yg,v = generate_topoplot_grid(X,Y,data;method = spline2d_mne,s=10^6) 
         
         # remove everything in a circle (should be ellipse at some point)
-        ix = sqrt.([i.^2+j.^2 for i in yg, j in xg]).> (diameter./2)
+        ix = sqrt.([i.^2+j.^2 for i in xg, j in yg]).> (diameter./2)
         v.val[ix] .= NaN
 
         ax = h
         heatmap!(ax,xg,yg,v,colormap=colormap)
          
-   
+        
         if !isnothing(levels)
-        contour!(ax,xg,yg,v,linewidth=3,colormap=colormap,levels=levels)
+        #contour!(ax,xg,yg,v,linewidth=3,colormap=colormap,levels=levels)
         end
 
         if to_value(sensors)
@@ -219,7 +218,7 @@ note !!!
 function spline2d_dierckx(X,Y,xg,yg,data;s=10^6,kwargs...)
     spl = Spline2D(X, Y,to_value(data),kx=3,ky=3,s=s) 
 
-    return evalgrid(spl,yg,xg) # evaluate the spline at the grid locs
+    return evalgrid(spl,xg,yg) # evaluate the spline at the grid locs
 end
 
 """
@@ -237,7 +236,7 @@ https://github.com/JuliaMath/Interpolations.jl/issues/118
 
 """
 function spline2d_mne(X,Y,xg,yg,data;kwargs...)
-
+        
         interp = PyMNE.viz.topomap._GridData([X Y], "head", [0,0], [1,1], "mean")
         #@info data
         interp.set_values(to_value(data))
@@ -255,15 +254,13 @@ Generate x/y grid for interpolation
 - `stepsize` the stepsize used to generate the grid; larger should be faster
 """
 function generate_topoplot_xy(X,Y;	by = 0.6,stepsize=0.005)
-
+  
 	# get extrema and extend
     # this is for the axis view, i.e. whitespace left/right
 
 	xlim = extrema(X) .+ abs.(extrema(X)).*[-by, by]
 	ylim = extrema(Y).+ abs.(extrema(Y)).*[-by, by]
-
-
-	# generate and evaluate a grid
+    # generate and evaluate a grid
 	xg = range(xlim[1],stop=xlim[2],  step=stepsize)
 	yg = range(ylim[1],stop=ylim[2], step=stepsize)
 
