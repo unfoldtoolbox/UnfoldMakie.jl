@@ -16,7 +16,7 @@ end
 # ╠═╡ show_logs = false
 # install packages
 begin
-Pkg.add.(["DataFramesMeta","JLD2","StatsModels","Unfold","PyMNE","CairoMakie", "CSV","DataFrames","StatsBase","FileIO","AlgebraOfGraphics"])
+Pkg.add.(["DataFramesMeta","JLD2","StatsModels","Unfold","PyMNE","CairoMakie", "CSV","DataFrames","StatsBase","FileIO","AlgebraOfGraphics","MixedModels","CategoricalArrays"])
 
 	
 	
@@ -106,6 +106,23 @@ begin
 	
 end
 
+# ╔═╡ 9c17bcfb-9106-4b67-948c-94aa31662418
+   let # We are fitting only one channel!
+	   
+	   using MixedModels, CategoricalArrays
+	   	lmm_formula = @formula 0 ~ 1 + category + zerocorr(1+category|subject)
+	evt_lmm = deepcopy(evt_e)
+	@transform!(evt_lmm,:subject=categorical(:subject))
+
+   lmm = Unfold.fit(UnfoldModel, 
+						lmm_formula, 
+	   					evt_lmm,
+						dat_e[1:1,:,:], 
+						times, 
+						contrasts=contrasts);
+	   plot_results(coeftable(lmm))
+   end
+
 # ╔═╡ 343f3c15-7f48-4e25-84d5-f4ef01d35db7
 md"""## Designmatrix"""
 
@@ -122,6 +139,12 @@ results_plot = @subset(results_onesubject,:coefname .== "(Intercept)",:channel .
 plot_results(results_plot,color=:channel,layout=:channel)
 end
 
+# ╔═╡ 3ba4d6bc-ffaa-456e-8d85-334d60ebbd77
+let
+results_plot = @subset(results_allSubjects,:coefname .== "(Intercept)",:channel .==1)
+plot_results(results_plot,color=:subject)
+end
+
 # ╔═╡ 62632f86-5792-49c3-a229-376211deae64
 md"""
 ## Lineplot
@@ -132,7 +155,54 @@ ManyFactors
 let # let (against begin) makes a local environment, not sharing the modifications / results wiht outside scripts. Beware of field assignments x.blub = "1,2,3" will overwrite x.blub, x = [1,2,3] will not overwrite global x, but make a copy
 	
 results_plot = @subset(results_onesubject,:channel .==22)
-plot_results(results_plot,group=:channel,layout=:channel)
+plot_results(results_plot,stderror=true)
+end
+
+# ╔═╡ a92e775f-eede-4a0f-a404-8ed61abe6804
+md"## P-value significance"
+
+# ╔═╡ 5840f82c-8e0f-4bbe-8e83-6e79eae11823
+pathof(UnfoldMakie)
+
+# ╔═╡ c0e53025-7f23-4520-b22c-d271b8c528a9
+let 
+pvals = DataFrame(
+			from=[0.1,0.3],
+			to=[0.5,0.7],
+			coefname=["(Intercept)","category: face"] # if coefname not specified, line should be black
+		) 
+	
+
+	#pvals = DataFrame(from=[0.1],to=[0.5])
+results_plot = @subset(results_onesubject,:channel .==22)
+plot_results(results_plot,pvalue=pvals)
+end
+
+# ╔═╡ cb396666-93d7-41e3-b958-55df52fc516e
+md"""## Linear Mixed Models
+The "rows" is one potential way to display multiple groups ala fixef / ranef.
+
+See the next example for multiple events as well
+"""
+
+# ╔═╡ 35094a17-2be0-4d57-8846-3ed31a04e689
+md"""
+## Multiple basisfunctions
+It is possible to have multiple events to cut your data to
+
+As this is not 100% implemented for mass-univariate non-deconvolution models (i.e. you could concatenate different LMMs) I refer to this tutorial https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/plot_results/
+
+But just to show what I mean, let's do a trickery doo
+"""
+
+# ╔═╡ 3c607414-0760-48ab-961c-ab74d6df6522
+let
+	r1 = @subset(results_onesubject,:channel .==22)
+	r2 = @subset(results_onesubject,:channel .==25)
+	r1.basisname .= "eventA"
+	r2.basisname .= "eventB"
+	results_plot = vcat(r1,r2)
+	plot_results(results_plot)
 end
 
 # ╔═╡ 98026af7-d875-43f3-a3cb-3109faef5822
@@ -179,8 +249,16 @@ plot_topoplot_series(@subset(results_onesubject,:channel .<=30),0.2,topoplotCfg=
 # ╠═7cbe5fcb-4440-4a96-beca-733ddcb07861
 # ╟─d329586a-fd05-4729-a0c3-4700ee22a498
 # ╠═975382de-5f24-4e9e-87f6-a7f7ba93ff8e
+# ╠═3ba4d6bc-ffaa-456e-8d85-334d60ebbd77
 # ╟─62632f86-5792-49c3-a229-376211deae64
 # ╠═41e1b735-4c19-4e6d-8681-ef0f893aec87
+# ╠═a92e775f-eede-4a0f-a404-8ed61abe6804
+# ╠═5840f82c-8e0f-4bbe-8e83-6e79eae11823
+# ╠═c0e53025-7f23-4520-b22c-d271b8c528a9
+# ╠═cb396666-93d7-41e3-b958-55df52fc516e
+# ╠═9c17bcfb-9106-4b67-948c-94aa31662418
+# ╟─35094a17-2be0-4d57-8846-3ed31a04e689
+# ╠═3c607414-0760-48ab-961c-ab74d6df6522
 # ╠═98026af7-d875-43f3-a3cb-3109faef5822
 # ╠═3cee30ae-cf25-4684-bd49-c64b0b96b4e6
 # ╠═5f0f2708-f2d9-4a72-a528-185837a43e06
