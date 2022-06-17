@@ -18,7 +18,7 @@ mutable struct PlotConfig
     data::NamedTuple
     setAnyValues::Function
     setLegendValues::Function
-    getCollumns::Function
+    filterCollumns::Function
 
     "plot types: :lineplot, :designmatrix, :topolot"
     function PlotConfig(pltType)
@@ -60,7 +60,7 @@ mutable struct PlotConfig
             return this
         end
 
-        this.getCollumns = function (data)
+        this.filterCollumns = function (data)
             list = collect(values(this.data))
             function isCollumn(value) string(value) ∈ names(data) end
             return this.data[keys(this.data)[isCollumn.(list)]]
