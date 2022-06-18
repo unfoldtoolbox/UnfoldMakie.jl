@@ -5,7 +5,6 @@ using ..PlotConfigs
 
 function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     pvalue = DataFrame(:from=>[],:to=>[]))
-    
     results = deepcopy(results)
     @show names(results)
     @show config.data
@@ -19,7 +18,7 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
 
-    plotEquation = visual(Lines) * data(results) * mapping(config.data.x, config.data.y;config.getCollumns(results)...)
+    plotEquation = visual(Lines) * data(results) * mapping(config.data.x, config.data.y;config.filterCollumns(results)...)
     mainPlot = draw!(f[1, 1], plotEquation)
 
     #legend!(f[1, 1], f[2, 1], "Channels", orientation = :horizontal, tellwidth = false, tellheight = true, nbanks=2)
