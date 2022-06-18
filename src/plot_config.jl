@@ -28,6 +28,8 @@ mutable struct PlotConfig
         this.data = (
             color=:blue
             ,notatype=:none
+            ,x=:time
+            ,y=nothing
         )
 
         # standard values for each plotType
