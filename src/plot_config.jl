@@ -34,12 +34,17 @@ mutable struct PlotConfig
 
         # standard values for ALL plots
         this.extraData = (
-            x=:time,
-            y=:estimate,
+            
             showLegend=true,
         )
+
         this.visualData = NamedTuple()
-        this.mappingData = NamedTuple()
+
+        this.mappingData = (
+            x=:time,
+            y=:estimate,
+        )
+        
         this.legendData = NamedTuple()
         
         # setter for ANY values for Data
