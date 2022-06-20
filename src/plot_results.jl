@@ -7,8 +7,6 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     pvalue = DataFrame(:from=>[],:to=>[]))
     results = deepcopy(results)
     @show names(results)
-    # @show config.mappingData
-    f = Figure()
     
     if isnothing(config.extraData.y)
         config.extraData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
@@ -16,9 +14,8 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     if "group" ∈  names(results)
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
-    @show config.extraData
     plotEquation = visual(Lines) * data(results) * mapping(config.extraData.x, config.extraData.y; config.filterCollumns(results)...)
-    mainPlot = draw!(f[1, 1], plotEquation)
+    
 
     #legend!(f[1, 1], f[2, 1], "Channels", orientation = :horizontal, tellwidth = false, tellheight = true, nbanks=2)
 
@@ -42,10 +39,13 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     #plt->draw(plt, legend=(position=:top,)=>nonnumeric)
 
     if(config.extraData.showLegend)
-        legend!(f[2, 1], mainPlot; config.legendData...)
+        return draw(plotEquation, legend=config.legendData)
+    else  
+        f = Figure()
+        draw!(f[1, 1], plotEquation)
+        return f
     end
-
-    return f #draw(mainPlot, legend=config.data)
+    
 end
 
 
