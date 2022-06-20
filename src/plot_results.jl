@@ -14,7 +14,7 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     if "group" ∈  names(results)
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
-    plotEquation = visual(Lines) * data(results) * mapping(config.extraData.x, config.extraData.y; config.filterCollumns(results)...)
+    plotEquation = visual(Lines) * data(results) * mapping(config.extraData.x, config.extraData.y; config.mappingData...)
     
 
     #legend!(f[1, 1], f[2, 1], "Channels", orientation = :horizontal, tellwidth = false, tellheight = true, nbanks=2)

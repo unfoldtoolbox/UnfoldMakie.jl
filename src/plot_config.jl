@@ -26,7 +26,7 @@ mutable struct PlotConfig
     setMappingValues::Function
     setLegendValues::Function
 
-    filterCollumns::Function
+    resolveMappings::Function
 
     "plot types: :lineplot, :designmatrix, :topolot"
     function PlotConfig(pltType)
@@ -81,16 +81,17 @@ mutable struct PlotConfig
         end
 
 
-
-
-
-
-
-        this.filterCollumns = function (results)
-            list = collect(values(this.mappingData))
-            function isCollumn(value) string(value) ∈ names(results) end
-            return this.mappingData[keys(this.mappingData)[isCollumn.(list)]]
+        this.resolveMappings = function (plotData)
+            function isCollumn(col)
+                string(col) ∈ names(plotData)
+            end
+            function getAvailable(choices)
+                choices[keys(choices)[isCollumn.(collect(choices))]]
+            end
+            return map(val -> isa(val, Tuple) ? getAvailable(val)[1] : val, this.mappingData)
         end
+
+
 
         return this
     end
