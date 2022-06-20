@@ -7,18 +7,17 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     pvalue = DataFrame(:from=>[],:to=>[]))
     results = deepcopy(results)
     @show names(results)
-    @show config.data
-
+    # @show config.mappingData
     f = Figure()
     
-    if isnothing(y)
-        y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
+    if isnothing(config.extraData.y)
+        config.extraData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
     end
     if "group" ∈  names(results)
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
-
-    plotEquation = visual(Lines) * data(results) * mapping(config.data.x, config.data.y;config.filterCollumns(results)...)
+    @show config.extraData
+    plotEquation = visual(Lines) * data(results) * mapping(config.extraData.x, config.extraData.y; config.filterCollumns(results)...)
     mainPlot = draw!(f[1, 1], plotEquation)
 
     #legend!(f[1, 1], f[2, 1], "Channels", orientation = :horizontal, tellwidth = false, tellheight = true, nbanks=2)
@@ -30,7 +29,7 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     #colors = [:red, :green, :blue, :orange]
 
     #collect(zip(groups, labels, colors)) .|> d -> lines!(d[1].time, d[1].estimate, label=d[2], color=d[3])
-
+    # Legend();
     # Legend inside
     # axislegend(position = :rb)
     # Legend beneath
@@ -42,8 +41,8 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     # data( @subset(results_all,:basisname .== "other")) * mapping(:time,:estimate,color=:subject=>nonnumeric,layout=:coefname=>nonnumeric)*visual(Lines)|>draw
     #plt->draw(plt, legend=(position=:top,)=>nonnumeric)
 
-    if(config.data.showLegend)
-        legend!(f[2, 1], mainPlot; config.data...)
+    if(config.extraData.showLegend)
+        legend!(f[2, 1], mainPlot; config.legendData...)
     end
 
     return f #draw(mainPlot, legend=config.data)

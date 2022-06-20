@@ -29,7 +29,7 @@ function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
     return fig
 end
 
-function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
+function plot_designTest(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
 
     designmat = Unfold.get_Xs(X);
     if standardize
@@ -46,15 +46,15 @@ function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
     end
     # plot Designmatrix
-    f = Figure()
+    axisSettings =  merge(config.visualData.axis, (;xticks=(1:length(labels),labels)))
+    fig, ax, hm = heatmap(designmat',axis=axisSettings)
     
-    plotEquation = visual(Heatmap) * data(results) * mapping(designmat' ;config.filterCollumns(results)...)
-    mainPlot = draw!(f[1, 1], plotEquation)
-
+    
     Colorbar(fig[1,2],hm)
-    
+        
     if isa(designmat, SparseMatrixCSC)
         ax.yreversed = true
     end
+
     return fig
 end
