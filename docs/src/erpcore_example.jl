@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.4
+# v0.19.9
 
 using Markdown
 using InteractiveUtils
@@ -220,18 +220,22 @@ begin
 end;
 
 # ╔═╡ 5f0f2708-f2d9-4a72-a528-185837a43e06
+let
 # potentially still buggy: The sensor-positions are flipped 90°
-plot_topoplot_series(@subset(results_onesubject,:coefname.=="(Intercept)",:channel .<=30),0.2,topoplotCfg=(positions=collect(pos[:,[2,1]]),))
+plot_topoplot_series(@subset(results_onesubject,:coefname.=="(Intercept)",:channel .<=30),0.2,topoplotCfg=(positions=pos,))
 
+end
 
 # ╔═╡ 6ee180df-4340-45a2-bb1e-37aad7953875
 # maybe this should be the default
 # note the bad time on top :S
-plot_topoplot_series(@subset(results_onesubject,:coefname.=="(Intercept)",:channel .<=30),0.2,topoplotCfg=(sensors=false,positions=collect(pos[:,[2,1]]),),mappingCfg=(col=:time,))
+plot_topoplot_series(@subset(results_onesubject,:coefname.=="(Intercept)",:channel .<=30),0.2,topoplotCfg=(sensors=false,positions=pos,),mappingCfg=(col=:time,))
+
+# ╔═╡ baf1fec8-fa1e-4b97-9570-c1f791f37f24
+results_onesubject
 
 # ╔═╡ f0f752d8-7f2d-4a49-8763-53df2cff6126
-# multi-coeffiecients dont work, because the aggregation is on groupby (channel)
-plot_topoplot_series(@subset(results_onesubject,:channel .<=30),0.2,topoplotCfg=(sensors=false,positions=collect(pos[:,[2,1]]),),mappingCfg=(col=:time,row=:coefficient))
+plot_topoplot_series(@subset(results_onesubject,:channel .<=30),0.2,topoplotCfg=(sensors=false,positions=pos,),mappingCfg=(col=:time,row=:coefname))
 
 # ╔═╡ 7da4df51-589a-4eb5-8f1f-f77ab65cf10a
 @subset(results_onesubject,:coefname.=="(Intercept)")
@@ -263,5 +267,6 @@ plot_topoplot_series(@subset(results_onesubject,:channel .<=30),0.2,topoplotCfg=
 # ╠═3cee30ae-cf25-4684-bd49-c64b0b96b4e6
 # ╠═5f0f2708-f2d9-4a72-a528-185837a43e06
 # ╠═6ee180df-4340-45a2-bb1e-37aad7953875
+# ╠═baf1fec8-fa1e-4b97-9570-c1f791f37f24
 # ╠═f0f752d8-7f2d-4a49-8763-53df2cff6126
 # ╠═7da4df51-589a-4eb5-8f1f-f77ab65cf10a

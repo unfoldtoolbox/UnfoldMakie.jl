@@ -77,7 +77,7 @@ function plot_topoplot_series(data::DataFrame,Δbin;y=:estimate,topoplotCfg=Name
     axisOptions = (aspect = 1,xgridvisible=false,xminorgridvisible=false,xminorticksvisible=false,xticksvisible=false,xticklabelsvisible=false,xlabelvisible=false,ygridvisible=false,yminorgridvisible=false,yminorticksvisible=false,yticksvisible=false,yticklabelsvisible=false,ylabelvisible=false,
 leftspinevisible = false,rightspinevisible = false,topspinevisible = false,bottomspinevisible=false,)
 
-    data_mean = topoplot_timebin(data,Δbin;y=y,fun=combinefun)
+data_mean = topoplot_timebin(data,Δbin;y=y,fun=combinefun,grouping=values(mappingCfg))
     #@info data_mean
     
     AlgebraOfGraphics.data(data_mean)*mapping(y;mappingCfg...)*visual(Topoplot;topoplotCfg...)|>x->draw(x,axis=axisOptions)
@@ -97,7 +97,7 @@ Split/Combine dataframe according to equally spaced time-bins
 - `fun` function to combine, default is `mean`
 
 """
-function topoplot_timebin(df,Δbin;y=:estimate,fun=mean)
+function topoplot_timebin(df,Δbin;y=:estimate,fun=mean,grouping=[])
 	    tmin = minimum(df.time)
 		tmax = maximum(df.time)
         
@@ -105,8 +105,8 @@ function topoplot_timebin(df,Δbin;y=:estimate,fun=mean)
         df = deepcopy(df) # cut seems to change stuff inplace
 		df.time = cut(df.time,bins,extend=true)
 
-        #df_m = combine(groupby(df,[:time,:channel]),y=>fun)
-        df_m = combine(groupby(df,Not(y)),y=>fun)
+        df_m = combine(groupby(df,unique([:time,:channel, grouping...])),y=>fun)
+        #df_m = combine(groupby(df,Not(y)),y=>fun)
         rename!(df_m,names(df_m)[end]=>y) # remove the _fun part of the new column
         return df_m
 
