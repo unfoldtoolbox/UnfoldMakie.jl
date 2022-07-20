@@ -9,11 +9,15 @@ using .PlotConfigs
 
 include("plot_results.jl")
 include("plot_design.jl")
+include("plot_topo.jl")
+include("topoColor.jl")
 
 export PlotConfig
 export plot_lineTest
 export plot_designTest
 export plot_results
+
+# export plot_topoTest
 export plot
 # Write your package code here.
 

@@ -3,49 +3,54 @@ using Makie
 using DataFrames
 using ..PlotConfigs
 
+
+
+
 function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     pvalue = DataFrame(:from=>[],:to=>[]))
     results = deepcopy(results)
-    @show names(results)
-    
+    # @show names(results)
+
     # if isnothing(config.mappingData.y)
     #     config.mappingData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
     # end
     if "group" ∈  names(results)
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
-    plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
-    
 
-    #legend!(f[1, 1], f[2, 1], "Channels", orientation = :horizontal, tellwidth = false, tellheight = true, nbanks=2)
+    colors = getTopoColor(results, config.visualData)
 
-    #labels = unique(results[:,:coefname])
-
-    #groups = labels .|> coefname -> filter(:coefname => n -> n == coefname, results)
-
-    #colors = [:red, :green, :blue, :orange]
-
-    #collect(zip(groups, labels, colors)) .|> d -> lines!(d[1].time, d[1].estimate, label=d[2], color=d[3])
-    # Legend();
-    # Legend inside
-    # axislegend(position = :rb)
-    # Legend beneath
-    # Legend(f[2, 1], ax, "Channels", orientation = :horizontal, tellwidth = false, tellheight = true, nbanks=2)
-    # Legend next to
-    # Legend(f[1, 2], ax, "Channels", orientation = :vertical, tellwidth = true, tellheight = false)
-
-    # USEFULL SNIPPET
-    # data( @subset(results_all,:basisname .== "other")) * mapping(:time,:estimate,color=:subject=>nonnumeric,layout=:coefname=>nonnumeric)*visual(Lines)|>draw
-    #plt->draw(plt, legend=(position=:top,)=>nonnumeric)
-
-    if(config.extraData.showLegend)
-        return draw(plotEquation, legend=config.legendData)
-    else  
-        f = Figure()
-        draw!(f[1, 1], plotEquation)
-        return f
+    # Categorical mapping
+    # convert color column into string, so no wrong grouping happens
+    if config.extraData.categoricalColor && (:color ∈ keys(config.mappingData))
+        config.mappingData = merge(config.mappingData,(;color=config.mappingData.color=>nonnumeric))
     end
+    # converts group column into string
+    if config.extraData.categoricalGroup && (:group ∈ keys(config.mappingData))
+        config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
+    end
+
     
+    # colors = [colorant"#E24A33", colorant"#348ABD"]
+    # show(results.positions)
+    
+    plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
+    show(colors)
+    Legend()
+    Colorbar()
+
+    f = Figure()
+    drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+    # set f[] position depending on position
+    if (config.extraData.showLegend)
+
+        legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
+
+        legend!(legendPosition, drawing; config.legendData...)
+        colorbar!(legendPosition, drawing; config.colorbarData...)
+    end
+
+    return f
 end
 
 
