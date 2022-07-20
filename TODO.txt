@@ -1,0 +1,49 @@
+
+
+QUESTIONS:
+	CHECK DEFAULT TEMPLATES testing Documentation help from forum (help, help_attributes work. But the info has to be written somwehere)
+	Question about Pull request frequency
+	ERP images, how and with what data. Are they Heatmaps?
+	
+
+DONE - Default :channel to be categorical
+	half-categorical if needed
+
+
+
+DONE - Butterfly plots new color scale
+
+FIX Legend/Colorbar
+	colorbar! and legend! functions are very strict with their input
+	we split both configs and made "position" an extra value
+	SOME PROBLEM with nonnumeric, color=... is directly in mapping for now
+
+
+Mapping.color is only the collumn
+	We need to give the actual colors. Maybe we have to create our own mapping
+	eig überall colorArray and pallets
+	New idea with custom mapping
+
+
+
+Topolots should be officially released on 4.7
+	Topolots as coloscale/Colorlegend
+
+Parallel coordinates plot
+	hlines
+	https://makie.juliaplots.org/dev/examples/plotting_functions/hvlines/#example_14190056973592732823
+
+
+
+
+
+
+
+
+DONE - Legend position attribute should automatically set 
+    DONE - tellwidth = true, tellheight = false
+    DONE - Orientation
+	DONE - Colorbar buggy with position
+
+DONE - Make stringify color optional
+DONE - Fixed Butterfly grouping

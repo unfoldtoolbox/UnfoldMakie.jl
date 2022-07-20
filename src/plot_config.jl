@@ -19,12 +19,13 @@ mutable struct PlotConfig
     visualData::NamedTuple
     mappingData::NamedTuple
     legendData::NamedTuple
-    
+    colorbarData::NamedTuple
     
     setExtraValues::Function
     setVisualValues::Function
     setMappingValues::Function
     setLegendValues::Function
+    setColorbarValues::Function
 
     resolveMappings::Function
 
@@ -34,21 +35,47 @@ mutable struct PlotConfig
 
         # standard values for ALL plots
         this.extraData = (
-            
-            showLegend=true,
+            # vars to make scolumns nonnumerical
+            categoricalColor=true,
+            categoricalGroup=true,
+            legendShow=true,
+            legendPosition=:right,
         )
-
-        this.visualData = NamedTuple()
-
+        this.visualData = (
+            positions=:pos,
+            labels=:labels,
+        )
         this.mappingData = (
             x=:time,
             y=:estimate,
+        ) 
+        this.legendData = (;
+            orientation = :vertical,
+            tellwidth = true,
+            tellheight = false
         )
-        
-        this.legendData = NamedTuple()
+        this.colorbarData = (;
+            vertical = true,
+            tellwidth = true,
+            tellheight = false
+        )
         
         # setter for ANY values for Data
         this.setExtraValues = function (;kwargs...)
+            # position affects multiple values in legendData
+            kwargsVals = values(kwargs)
+            if haskey(kwargsVals, :legendPosition)
+                if kwargsVals.legendPosition == :right
+                    sdtLegVal = (;tellwidth = true, tellheight = false, orientation = :vertical)
+                    sdtBarVal = (;tellwidth = true, tellheight = false)
+                elseif kwargsVals.legendPosition == :bottom
+                    sdtLegVal = (;tellwidth = false, tellheight = true, orientation = :horizontal)
+                    sdtBarVal = (;tellwidth = false, tellheight = true, vertical=false, flipaxis=false)
+                end
+                this.legendData = merge(this.legendData, sdtLegVal)
+                this.colorbarData = merge(this.colorbarData, sdtBarVal)
+            end
+
             this.extraData = merge(this.extraData, kwargs)
             return this
         end
@@ -61,7 +88,13 @@ mutable struct PlotConfig
             return this
         end
         this.setLegendValues = function (;kwargs...)
+            
             this.legendData = merge(this.legendData, kwargs)
+            return this
+        end
+        this.setColorbarValues = function (;kwargs...)
+            
+            this.colorbarData = merge(this.colorbarData, kwargs)
             return this
         end
             
@@ -93,7 +126,7 @@ mutable struct PlotConfig
             function getAvailable(choices)
                 choices[keys(choices)[isCollumn.(collect(choices))]]
             end
-            return map(val -> isa(val, Tuple) ? getAvailable(val)[1] : val, this.mappingData)
+            this.mappingData = map(val -> isa(val, Tuple) ? getAvailable(val)[1] : val, this.mappingData)
         end
 
 
