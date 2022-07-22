@@ -1,5 +1,6 @@
 using UnfoldMakie
 using Documenter
+using DocStringExtensions
 
 using Literate
 using Glob
