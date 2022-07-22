@@ -11,12 +11,12 @@ using Statistics
 using SparseArrays
 
 
+# Work in progress
 function getTopoColor(results, visualData)
     visualVals = values(visualData)
 
     # we get the actual Positions
     # if haskey(visualVals, :positions)
-        
     
     # # we only get the label names
     # elseif haskey(visualVals, :labels)
@@ -29,10 +29,6 @@ function getTopoColor(results, visualData)
 
     # return unique(results.positions .|> pos -> (pos=>posToColor(pos)))
     return unique(zip(results.labels, results.positions) .|> data -> (data[1]=>posToColor(data[2])))
-    
-
-
-
 end
 
 
