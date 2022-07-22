@@ -28,7 +28,7 @@ makedocs(;
         "Home" => "index.md",
         "DesignMatrices" => "plot_design.md",
         "Results (ERP-Style)" => "plot_results.md",
-        "Styling" => " plot_results_styling.md",
+        "Styling" => "plot_results_styling.md",
     ],
 )
 

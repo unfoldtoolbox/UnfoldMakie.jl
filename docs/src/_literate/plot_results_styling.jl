@@ -27,7 +27,7 @@ plot_results(results,linestyle=:coefname)
 # You can provide a dataframe with columns (must): `:from`,`:to`,future versions might allow a `:pvalue` column
 pvals =  DataFrame( :from=>[0.1,0.,-0.1],
                     :to=>[0.5,0.3,0.6],
-#                    :pvalue=>[0.01,0.01,0.001], # optional
+                    :pvalue=>[0.01,0.01,0.001], # optional
                     :coefname=>["(Intercept)","conditionA","continuousA"])
 
 plot_results(results,pvalue=pvals)
