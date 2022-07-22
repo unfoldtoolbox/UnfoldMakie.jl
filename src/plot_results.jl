@@ -5,10 +5,11 @@ using ..PlotConfigs
 
 
 
-
-function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
+""" Plot line plot  """
+function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     pvalue = DataFrame(:from=>[],:to=>[]))
     results = deepcopy(results)
+    f = Figure()
     # @show names(results)
 
     # if isnothing(config.mappingData.y)
@@ -23,23 +24,29 @@ function plot_lineTest(results::DataFrame, config::PlotConfig;y=nothing,
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
     if config.extraData.categoricalColor && (:color ∈ keys(config.mappingData))
+        # if color is used, use upper line
+        # results[!, config.mappingData.color] = results[!, config.mappingData.color] .|> c -> string(c)
         config.mappingData = merge(config.mappingData,(;color=config.mappingData.color=>nonnumeric))
     end
     # converts group column into string
     if config.extraData.categoricalGroup && (:group ∈ keys(config.mappingData))
+        # if color is used, use upper line
+        # results[!, config.mappingData.group] = results[!, config.mappingData.group] .|> c -> string(c)
         config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
     end
-
-    
-    # colors = [colorant"#E24A33", colorant"#348ABD"]
-    # show(results.positions)
     
     plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
-    show(colors)
-    Legend()
-    Colorbar()
 
-    f = Figure()
+    # show(colors)
+    
+    # remove border
+    axixOptions = (;);
+    if !config.extraData.border
+        axixOptions = (topspinevisible=false,rightspinevisible=false,)
+    end
+    
+    # drawing = draw!(f[1,1],plotEquation; axis=axixOptions)
+    # if palettes=(color=colors,), nonnumeric columns crash program
     drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
     # set f[] position depending on position
     if (config.extraData.showLegend)

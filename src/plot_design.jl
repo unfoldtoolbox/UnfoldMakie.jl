@@ -4,8 +4,8 @@ import Makie.plot
 using Statistics
 using SparseArrays
 
-
-function plot_designTest(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
+""" Plot design matrix  """
+function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
     
     designmat = Unfold.get_Xs(X);
     if standardize
@@ -39,7 +39,7 @@ end
 
 
 
-
+""" Legacy  """
 function plot(X::Unfold.DesignMatrix;standardize=true,sort=false)
     designmat = Unfold.get_Xs(X);
     if standardize

@@ -40,6 +40,7 @@ mutable struct PlotConfig
             categoricalGroup=true,
             legendShow=true,
             legendPosition=:right,
+            border=false,
         )
         this.visualData = (
             positions=:pos,
@@ -88,12 +89,10 @@ mutable struct PlotConfig
             return this
         end
         this.setLegendValues = function (;kwargs...)
-            
             this.legendData = merge(this.legendData, kwargs)
             return this
         end
         this.setColorbarValues = function (;kwargs...)
-            
             this.colorbarData = merge(this.colorbarData, kwargs)
             return this
         end
@@ -118,7 +117,7 @@ mutable struct PlotConfig
 
         end
 
-
+        # removes all varaibles from mappingData which aren't collumns in input plotData
         this.resolveMappings = function (plotData)
             function isCollumn(col)
                 string(col) ∈ names(plotData)

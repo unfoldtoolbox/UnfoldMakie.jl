@@ -1,10 +1,74 @@
 
+Line Plots
+	Updated Pluto file ->
+		Error Line
+		PValues
+		facettes
+
+Design Matrix
+	Timestamps not at *every* step, but only at intervalls
+
+Butterfly Plots
+	ToploPlot Legend
+	
+
+
+ERP images
+	ask Vladimir for his work in erp images
+
+
+Parralel Coordinate Plots
+	Ask Vladimir about his prototype
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+Dokumentation
+	Same as Unforld.jl
+
+
+
+
+
+
+
 
 QUESTIONS:
 	CHECK DEFAULT TEMPLATES testing Documentation help from forum (help, help_attributes work. But the info has to be written somwehere)
 	Question about Pull request frequency
+	
 	ERP images, how and with what data. Are they Heatmaps?
 	
+	/// If palettes is used in the draw function, => nonnumeric doesn't work anymore
+		-> issue bei algebra of
+	/// was soll in die Doku
+		-> ähnlich wie unfold doku. Settings just reference
+	/// was ist das Ziel an programm
+	
+	Pluto nochmal runterladen
+	vladimir Mikheev <Vladimir.Mikheev@vis.uni-stuttgart.de>
+
+	https://jkrumbiegel.com/MakieLayout.jl/stable/faq/
+	
+	colorscale mit erster wert weiß, dann 
+	
+What we've done:
+	issue - color palettes problem
+	DOEN -- border
+	Can you overlap plots?
+		&& in comments
 
 DONE - Default :channel to be categorical
 	half-categorical if needed
@@ -32,6 +96,13 @@ Topolots should be officially released on 4.7
 Parallel coordinates plot
 	hlines
 	https://makie.juliaplots.org/dev/examples/plotting_functions/hvlines/#example_14190056973592732823
+
+
+
+
+
+	can zou make dots bigger/no border
+
 
 
 
