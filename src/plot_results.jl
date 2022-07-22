@@ -1,6 +1,67 @@
 using AlgebraOfGraphics
 using Makie
 using DataFrames
+using ..PlotConfigs
+
+
+
+""" Plot line plot  """
+function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
+    pvalue = DataFrame(:from=>[],:to=>[]))
+    results = deepcopy(results)
+    f = Figure()
+    # @show names(results)
+
+    # if isnothing(config.mappingData.y)
+    #     config.mappingData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
+    # end
+    if "group" ∈  names(results)
+        results.group = results.group .|> a -> isnothing(a) ? :fixef : a
+    end
+
+    colors = getTopoColor(results, config.visualData)
+
+    # Categorical mapping
+    # convert color column into string, so no wrong grouping happens
+    if config.extraData.categoricalColor && (:color ∈ keys(config.mappingData))
+        # if color is used, use upper line
+        # results[!, config.mappingData.color] = results[!, config.mappingData.color] .|> c -> string(c)
+        config.mappingData = merge(config.mappingData,(;color=config.mappingData.color=>nonnumeric))
+    end
+    # converts group column into string
+    if config.extraData.categoricalGroup && (:group ∈ keys(config.mappingData))
+        # if color is used, use upper line
+        # results[!, config.mappingData.group] = results[!, config.mappingData.group] .|> c -> string(c)
+        config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
+    end
+    
+    config.setMappingValues(color=:labels)
+
+    plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
+
+    # show(colors)
+    
+    # remove border
+    axixOptions = (;);
+    if !config.extraData.border
+        axixOptions = (topspinevisible=false,rightspinevisible=false,)
+    end
+    
+    # drawing = draw!(f[1,1],plotEquation; axis=axixOptions)
+    # if palettes=(color=colors,), nonnumeric columns crash program
+    drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+    # set f[] position depending on position
+    if (config.extraData.showLegend)
+
+        legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
+
+        legend!(legendPosition, drawing; config.legendData...)
+        colorbar!(legendPosition, drawing; config.colorbarData...)
+    end
+
+    return f
+end
+
 
 function plot_results(results::DataFrame;y=nothing,
     color=:coefname,
@@ -46,7 +107,7 @@ function plot_results(results::DataFrame;y=nothing,
     m = mapping(color=color,col=col,row=row;kwargs...)
 
     m_li = mapping(:time,y)
-    
+
     basic =  visual(Lines) * m_li
     
     if stderror

@@ -4,12 +4,21 @@ using Makie
 using AlgebraOfGraphics
 using Unfold
 
+include("plot_config.jl")
+using .PlotConfigs
 
-include("plot_design.jl")
 include("plot_results.jl")
+include("plot_design.jl")
+include("topoColor.jl")
 
+export PlotConfig
+# our plot functions
+export plot_line
+export plot_design
+
+# legacy plot functions
 export plot_results
 export plot
-# Write your package code here.
+
 
 end
