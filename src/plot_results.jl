@@ -35,6 +35,8 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
     end
     
+    config.setMappingValues(color=:labels)
+
     plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
 
     # show(colors)
