@@ -5,6 +5,7 @@ using ..PlotConfigs
 using TopoPlots
 using ColorSchemes
 
+
 """ Plot line plot  """
 function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     pvalue = DataFrame(:from=>[],:to=>[]))
@@ -18,8 +19,8 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
 
-    positions, colors = getTopoColor(results, config)
-
+    allPositions, colors = getTopoColor(results, config)
+    # return allPositions
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
     if config.extraData.categoricalColor && (:color ∈ keys(config.mappingData))
@@ -34,22 +35,26 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
     end
     
-    config.setMappingValues(color=:labels)
 
     plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
 
     
-   
+    
     
     # remove border
     axixOptions = (;);
     if !config.extraData.border
         axixOptions = (topspinevisible=false,rightspinevisible=false,)
     end
-    
+    if (config.extraData.topoLegend)
+        
+        topoplotLegend(f, allPositions)
+    end
     # drawing = draw!(f[1,1],plotEquation; axis=axixOptions)
     # if palettes=(color=colors,), nonnumeric columns crash program
+    # return colors
     drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+
     # set f[] position depending on position
     if (config.extraData.showLegend)
         legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
@@ -58,13 +63,9 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         colorbar!(legendPosition, drawing; config.colorbarData...)
     end
     
-    if (config.extraData.topoLegend)
-        
-        test, positions = TopoPlots.example_data()
-        topoplotLegend(f, positions)
-    end
 
     return f
+    
 end
 
 
@@ -183,7 +184,7 @@ function plot_results(results::DataFrame;y=nothing,
 end
 
 
-function topoplotLegend(f, positions)
+function topoplotLegend(f, allPositions)
     axisSettings = (topspinevisible=false,
         rightspinevisible=false,
         bottomspinevisible=false,
@@ -194,17 +195,21 @@ function topoplotLegend(f, positions)
         yticklabelsvisible=false,
         xticksvisible=false,
         yticksvisible=false)
+    
+    data, positions = TopoPlots.example_data()
+    
+    allPositions = unique(allPositions)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
-    specialColors = ColorScheme(vcat(RGBA(1,1,1.),[posToColor(pos) for pos in positions]...))
-
-    axis = Axis(f, bbox = BBox(100, 0, 0, 100); axisSettings...)
+    specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
     
-    return eeg_topoplot!(axis, 1:length(positions), # go from 1:npos
-        string.(1:length(positions)); 
-        positions=positions,
+    axis = Axis(f, bbox = BBox(500, 0, 0, 500); axisSettings...)
+
+    return eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
+        string.(1:length(allPositions)); 
+        positions=allPositions,
         interpolation=NullInterpolator(), # inteprolator that returns only 0
-        colorrange = (0,length(positions)), # add the 0 for the white-first color
+        colorrange = (0,length(allPositions)), # add the 0 for the white-first color
         colormap= specialColors)
 end
 
