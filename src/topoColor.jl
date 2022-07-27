@@ -9,22 +9,38 @@ using Makie
 import Makie.plot
 using Statistics
 using SparseArrays
-
+using GeometryBasics
 
 # Work in progress
 function getTopoColor(results, config)
     # test
-    results.positions = results[:, :channel] .|> c -> (0.1*c,1/c)
+    results.position = results[:, :channel] .|> c -> (0.1+0.01*c,0.1-0.1*c)
+    allPositions = Point{2, Float32}[]
 
-    allPositions = []
+    function customLabelPipe(position)
+        push!(allPositions, Point{2, Float32}(position[1], position[2]))
+        return string(position)
+    end
+
+    function positionPipe(position)
+        
+        return (position=>posToColor(position))
+    end
+
+    function labelPipe(label)
+        position = getLabelPos(label)
+        push!(allPositions, Point{2, Float32}(position[1], position[2]))
+        return (label=>posToColor(position))
+    end
+
 
     if !(config.extraData.topoPositions === nothing)
-        config.mappingData.color = config.extraData.topoPositions
-
-        mapping = unique(results[:, config.extraData.topoPositions] .|> positionPipe)
-
+        config.mappingData = merge(config.mappingData, (;color=:customLabels))
+        # create own label data column
+        results.customLabels = results[:, config.extraData.topoPositions] .|> customLabelPipe
+        mapping = unique(zip(results.customLabels, results[:, config.extraData.topoPositions]) .|> data -> (data[1]=>posToColor(data[2])))
     elseif !(config.extraData.topoLabel === nothing)
-        config.mappingData.color = config.extraData.topoLabel
+        config.mappingData = merge(config.mappingData, (;color=config.extraData.topoLabel))
 
         mapping = unique(results[:, config.extraData.topoLabel] .|> labelPipe)
 
@@ -35,16 +51,7 @@ function getTopoColor(results, config)
 
     return allPositions, mapping
 
-    function positionPipe(position)
-        push!(allPositions, position)
-        return (position=>posToColor(position))
-    end
-
-    function labelPipe(label)
-        position = getLabelPos(label)
-        push!(allPositions, position)
-        return (label=>posToColor(position))
-    end
+    
 
 end
 
