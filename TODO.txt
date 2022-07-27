@@ -10,8 +10,10 @@ Design Matrix
 
 Butterfly Plots
 	ToploPlot Legend
-	
-
+	https://github.com/JuliaPlots/AlgebraOfGraphics.jl/issues/329
+	https://ilias3.uni-stuttgart.de/ilias.php?baseClass=ilRepositoryGUI&cmd=viewThread&cmdClass=ilobjforumgui&target=true&pos_pk=526810&thr_pk=149878&ref_id=2931597#526810
+	https://makie.juliaplots.org/v0.15/documentation/layoutables/#specifying_a_boundingbox_directly
+	https://jkrumbiegel.com/MakieLayout.jl/stable/faq/
 
 ERP images
 	ask Vladimir for his work in erp images
