@@ -22,8 +22,8 @@ function getTopoColor(results, visualData)
     # elseif haskey(visualVals, :labels)
     # end
     
-    results.labels = results.channel .|> c -> string(c)
-    results.positions = results.channel .|> c -> Vec2(0.5,1/c)
+    results.labels = results[:, config.mappingData.color] .|> c -> string(c)
+    results.positions = results[:, config.mappingData.color] .|> c -> Vec2(0.5,1/c)
 
     positions = [];
 
