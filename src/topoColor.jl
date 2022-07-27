@@ -12,23 +12,40 @@ using SparseArrays
 
 
 # Work in progress
-function getTopoColor(results, visualData)
-    visualVals = values(visualData)
+function getTopoColor(results, config)
+    # test
+    results.positions = results[:, :channel] .|> c -> (0.1*c,1/c)
 
-    # we get the actual Positions
-    # if haskey(visualVals, :positions)
-    
-    # # we only get the label names
-    # elseif haskey(visualVals, :labels)
-    # end
-    
-    results.labels = results[:, config.mappingData.color] .|> c -> string(c)
-    results.positions = results[:, config.mappingData.color] .|> c -> Vec2(0.5,1/c)
+    allPositions = []
 
-    positions = [];
+    if !(config.extraData.topoPositions === nothing)
+        config.mappingData.color = config.extraData.topoPositions
 
-    # return unique(results.positions .|> pos -> (pos=>posToColor(pos)))
-    return positions, unique(zip(results.labels, results.positions) .|> data -> (data[1]=>posToColor(data[2])))
+        mapping = unique(results[:, config.extraData.topoPositions] .|> positionPipe)
+
+    elseif !(config.extraData.topoLabel === nothing)
+        config.mappingData.color = config.extraData.topoLabel
+
+        mapping = unique(results[:, config.extraData.topoLabel] .|> labelPipe)
+
+    else
+        show("cry")
+
+    end
+
+    return allPositions, mapping
+
+    function positionPipe(position)
+        push!(allPositions, position)
+        return (position=>posToColor(position))
+    end
+
+    function labelPipe(label)
+        position = getLabelPos(label)
+        push!(allPositions, position)
+        return (label=>posToColor(position))
+    end
+
 end
 
 
