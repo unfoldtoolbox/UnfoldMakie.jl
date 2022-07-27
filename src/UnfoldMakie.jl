@@ -9,6 +9,7 @@ using .PlotConfigs
 
 include("plot_results.jl")
 include("plot_design.jl")
+include("eegPositions.jl")
 include("topoColor.jl")
 
 export PlotConfig
