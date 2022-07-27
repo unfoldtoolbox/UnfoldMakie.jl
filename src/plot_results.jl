@@ -18,7 +18,7 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
 
-    positions, colors = getTopoColor(results, config.visualData)
+    positions, colors = getTopoColor(results, config)
 
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
