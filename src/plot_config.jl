@@ -29,7 +29,7 @@ mutable struct PlotConfig
 
     resolveMappings::Function
 
-    "plot types: :lineplot, :designmatrix, :topolot"
+    "plot types: :lineplot, :designmatrix, :topolot, :butterfly"
     function PlotConfig(pltType)
         this = new()
 
@@ -38,9 +38,13 @@ mutable struct PlotConfig
             # vars to make scolumns nonnumerical
             categoricalColor=true,
             categoricalGroup=true,
+            showLegend=true,
             legendShow=true,
             legendPosition=:right,
             border=false,
+            topoLegend=false,
+            topoLabel=nothing,
+            topoPositions=nothing
         )
         this.visualData = (
             positions=:pos,
@@ -115,6 +119,11 @@ mutable struct PlotConfig
             )
         elseif (pltType == :topolot)
 
+        elseif (pltType == :butterfly)
+            this.setExtraValues(
+                topoLegend = true,
+                showLegend = false
+            )
         end
 
         # removes all varaibles from mappingData which aren't collumns in input plotData

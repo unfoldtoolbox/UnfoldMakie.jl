@@ -2,8 +2,8 @@ using AlgebraOfGraphics
 using Makie
 using DataFrames
 using ..PlotConfigs
-
-
+using TopoPlots
+using ColorSchemes
 
 """ Plot line plot  """
 function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
@@ -11,7 +11,6 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     results = deepcopy(results)
     f = Figure()
     # @show names(results)
-
     # if isnothing(config.mappingData.y)
     #     config.mappingData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
     # end
@@ -19,7 +18,7 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
 
-    colors = getTopoColor(results, config.visualData)
+    positions, colors = getTopoColor(results, config.visualData)
 
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
@@ -37,7 +36,8 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     
     plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
 
-    # show(colors)
+    
+   
     
     # remove border
     axixOptions = (;);
@@ -50,11 +50,16 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
     # set f[] position depending on position
     if (config.extraData.showLegend)
-
         legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
 
         legend!(legendPosition, drawing; config.legendData...)
         colorbar!(legendPosition, drawing; config.colorbarData...)
+    end
+    
+    if (config.extraData.topoLegend)
+        
+        test, positions = TopoPlots.example_data()
+        topoplotLegend(f, positions)
     end
 
     return f
@@ -176,3 +181,38 @@ function plot_results(results::DataFrame;y=nothing,
 end
 
 
+function topoplotLegend(f, positions)
+    axisSettings = (topspinevisible=false,
+        rightspinevisible=false,
+        bottomspinevisible=false,
+        leftspinevisible=false,
+        xgridvisible=false,
+        ygridvisible=false,
+        xticklabelsvisible=false,
+        yticklabelsvisible=false,
+        xticksvisible=false,
+        yticksvisible=false)
+
+    # colorscheme where first entry is 0, and exactly length(positions)+1 entries
+    specialColors = ColorScheme(vcat(RGBA(1,1,1.),[posToColor(pos) for pos in positions]...))
+
+    axis = Axis(f, bbox = BBox(100, 0, 0, 100); axisSettings...)
+    
+    return eeg_topoplot!(axis, 1:length(positions), # go from 1:npos
+        string.(1:length(positions)); 
+        positions=positions,
+        interpolation=NullInterpolator(), # inteprolator that returns only 0
+        colorrange = (0,length(positions)), # add the 0 for the white-first color
+        colormap= specialColors)
+end
+
+struct NullInterpolator <: TopoPlots.Interpolator
+        
+end
+
+function (ni::NullInterpolator)(
+        xrange::LinRange, yrange::LinRange,
+        positions::AbstractVector{<: Point{2}}, data::AbstractVector{<:Number})
+
+    return zeros(length(xrange),length(yrange))
+end
