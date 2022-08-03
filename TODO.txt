@@ -1,5 +1,7 @@
 
 Line Plots
+	https://github.com/JuliaPlots/AlgebraOfGraphics.jl/issues/329
+		-> Mapping of colors does not interpolate in Legend
 	Updated Pluto file ->
 		Error Line
 		PValues
@@ -10,23 +12,20 @@ Design Matrix
 
 Butterfly Plots
 	ToploPlot Legend
-	https://github.com/JuliaPlots/AlgebraOfGraphics.jl/issues/329
-	https://ilias3.uni-stuttgart.de/ilias.php?baseClass=ilRepositoryGUI&cmd=viewThread&cmdClass=ilobjforumgui&target=true&pos_pk=526810&thr_pk=149878&ref_id=2931597#526810
 	https://makie.juliaplots.org/v0.15/documentation/layoutables/#specifying_a_boundingbox_directly
 	https://jkrumbiegel.com/MakieLayout.jl/stable/faq/
+	-> DONE, but positions have a bug inside TopoPlots
+	-> Issue for this problem
+
+Topolots hinzufügen
 
 ERP images
 	ask Vladimir for his work in erp images
+	"inspire" ourself from his code
 
 
 Parralel Coordinate Plots
 	Ask Vladimir about his prototype
-
-
-
-
-
-	
 
 
 

@@ -20,6 +20,7 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     end
 
     allPositions, colors = getTopoColor(results, config)
+    
     # return allPositions
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
@@ -41,19 +42,17 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     
     
     
-    # remove border
-    axixOptions = (;);
-    if !config.extraData.border
-        axixOptions = (topspinevisible=false,rightspinevisible=false,)
-    end
-    if (config.extraData.topoLegend)
-        
+    if (config.extraData.topoLegend)    
         topoplotLegend(f, allPositions)
     end
-    # drawing = draw!(f[1,1],plotEquation; axis=axixOptions)
+
     # if palettes=(color=colors,), nonnumeric columns crash program
-    # return colors
     drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+    
+    # remove border
+    if !config.extraData.border
+        hidespines!(current_axis(), :t, :r)
+    end
 
     # set f[] position depending on position
     if (config.extraData.showLegend)
@@ -184,33 +183,28 @@ function plot_results(results::DataFrame;y=nothing,
 end
 
 
-function topoplotLegend(f, allPositions)
-    axisSettings = (topspinevisible=false,
-        rightspinevisible=false,
-        bottomspinevisible=false,
-        leftspinevisible=false,
-        xgridvisible=false,
-        ygridvisible=false,
-        xticklabelsvisible=false,
-        yticklabelsvisible=false,
-        xticksvisible=false,
-        yticksvisible=false)
-    
-    data, positions = TopoPlots.example_data()
+function topoplotLegend(f, allPositions)    
+    # for testing
+    # data, positions = TopoPlots.example_data()
     
     allPositions = unique(allPositions)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
     
-    axis = Axis(f, bbox = BBox(500, 0, 0, 500); axisSettings...)
-
-    return eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
+    axis = Axis(f, bbox = BBox(78, 0, 0, 78))
+    
+    topoplot = eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
         string.(1:length(allPositions)); 
         positions=allPositions,
         interpolation=NullInterpolator(), # inteprolator that returns only 0
         colorrange = (0,length(allPositions)), # add the 0 for the white-first color
         colormap= specialColors)
+
+    hidedecorations!(current_axis())
+    hidespines!(current_axis())
+
+    return topoplot;
 end
 
 struct NullInterpolator <: TopoPlots.Interpolator

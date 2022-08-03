@@ -13,12 +13,13 @@ using GeometryBasics
 
 # Work in progress
 function getTopoColor(results, config)
-    # test
-    results.position = results[:, :channel] .|> c -> (0.1+0.01*c,0.1-0.1*c)
-    allPositions = Point{2, Float32}[]
-
+    # for testing
+    # results.position = results[:, :channel] .|> c -> ("C" * string(c))
+    # show(results.position)
+    
+    allPositions = Point2f[]
     function customLabelPipe(position)
-        push!(allPositions, Point{2, Float32}(position[1], position[2]))
+        push!(allPositions, Point2f(position[1], position[2]))
         return string(position)
     end
 
@@ -29,7 +30,7 @@ function getTopoColor(results, config)
 
     function labelPipe(label)
         position = getLabelPos(label)
-        push!(allPositions, Point{2, Float32}(position[1], position[2]))
+        push!(allPositions, Point2f(position[1], position[2]))
         return (label=>posToColor(position))
     end
 
@@ -45,8 +46,8 @@ function getTopoColor(results, config)
         mapping = unique(results[:, config.extraData.topoLabel] .|> labelPipe)
 
     else
-        show("cry")
-
+        # no custom color column
+        mapping = nothing
     end
 
     return allPositions, mapping
