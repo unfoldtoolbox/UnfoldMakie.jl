@@ -44,7 +44,8 @@ mutable struct PlotConfig
             border=false,
             topoLegend=false,
             topoLabel=nothing,
-            topoPositions=nothing
+            topoPositions=nothing,
+            xTicks=nothing,
         )
         this.visualData = (
             positions=:pos,
