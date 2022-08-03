@@ -8,14 +8,15 @@ Line Plots
 		facettes
 
 Design Matrix
-	Timestamps not at *every* step, but only at intervalls
+	DONE // Timestamps not at *every* step, but only at intervalls
+
 
 Butterfly Plots
 	ToploPlot Legend
 	https://makie.juliaplots.org/v0.15/documentation/layoutables/#specifying_a_boundingbox_directly
 	https://jkrumbiegel.com/MakieLayout.jl/stable/faq/
-	-> DONE, but positions have a bug inside TopoPlots
-	-> Issue for this problem
+	DONE // -> positions have a bug inside TopoPlots
+	DONE // -> Issue for this problem
 
 Topolots hinzufügen
 
@@ -26,11 +27,6 @@ ERP images
 
 Parralel Coordinate Plots
 	Ask Vladimir about his prototype
-
-
-
-
-
 
 
 
