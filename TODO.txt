@@ -13,6 +13,7 @@ Design Matrix
 
 Butterfly Plots
 	ToploPlot Legend
+		-> testen ob alle punkt positionen die richtigen farben bekommen
 	https://makie.juliaplots.org/v0.15/documentation/layoutables/#specifying_a_boundingbox_directly
 	https://jkrumbiegel.com/MakieLayout.jl/stable/faq/
 	DONE // -> positions have a bug inside TopoPlots
