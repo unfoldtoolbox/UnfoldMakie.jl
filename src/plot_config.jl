@@ -1,9 +1,4 @@
 
-using Makie
-import Makie.plot
-using Statistics
-using SparseArrays
-
 module PlotConfigs
 
 function filterTup(tuple)
@@ -46,6 +41,9 @@ mutable struct PlotConfig
             topoLabel=nothing,
             topoPositions=nothing,
             xTicks=nothing,
+            xLabel=nothing,
+            yLabel=nothing,
+            legendLabel=nothing            
         )
         this.visualData = (
             positions=:pos,
