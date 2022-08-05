@@ -22,7 +22,6 @@ Topolots hinzufügen
 
 ERP images
 	ask Vladimir for his work in erp images
-	"inspire" ourself from his code
 
 
 Parralel Coordinate Plots
@@ -30,6 +29,8 @@ Parralel Coordinate Plots
 
 
 
+jede plot funtion als ausrufenzeischen version mit f als input
+plot_line!(f, data, config)
 
 
 Dokumentation
