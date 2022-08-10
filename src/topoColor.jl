@@ -1,16 +1,3 @@
-using AlgebraOfGraphics
-using DataFrames
-using AlgebraOfGraphics: to_string
-using CategoricalArrays
-using Colors
-using ..PlotConfigs
-
-using Makie
-import Makie.plot
-using Statistics
-using SparseArrays
-using GeometryBasics
-
 # Work in progress
 function getTopoColor(results, config)
     # for testing

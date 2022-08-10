@@ -1,3 +1,7 @@
+colors
+	https://makie.juliaplots.org/stable/documentation/colors/
+
+
 
 Line Plots
 	https://github.com/JuliaPlots/AlgebraOfGraphics.jl/issues/329
@@ -9,7 +13,7 @@ Line Plots
 
 Design Matrix
 	DONE // Timestamps not at *every* step, but only at intervalls
-
+	ASK about sorting
 
 Butterfly Plots
 	ToploPlot Legend

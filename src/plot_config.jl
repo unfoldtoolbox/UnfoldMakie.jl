@@ -46,8 +46,11 @@ mutable struct PlotConfig
             legendLabel=nothing            
         )
         this.visualData = (
+            # topoPos
             positions=:pos,
+            # topoLabels
             labels=:labels,
+            # colormap=:haline,
         )
         this.mappingData = (
             x=:time,
@@ -123,6 +126,8 @@ mutable struct PlotConfig
                 topoLegend = true,
                 showLegend = false
             )
+        elseif (pltType == :erp)
+
         end
 
         # removes all varaibles from mappingData which aren't collumns in input plotData

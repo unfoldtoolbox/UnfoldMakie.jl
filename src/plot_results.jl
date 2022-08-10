@@ -1,10 +1,5 @@
-using AlgebraOfGraphics
-using Makie
 using DataFrames
-using ..PlotConfigs
 using TopoPlots
-using ColorSchemes
-
 
 """ Plot line plot  """
 function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
