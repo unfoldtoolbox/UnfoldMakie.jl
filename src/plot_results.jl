@@ -44,6 +44,7 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
 
     # if palettes=(color=colors,), nonnumeric columns crash program
     drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+    # drawing = draw!(f[1,1],plotEquation; colormap=:grays)
     
     # remove border
     if !config.extraData.border
