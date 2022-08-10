@@ -178,11 +178,14 @@ function plot_results(results::DataFrame;y=nothing,
     
 end
 
-function getEEGMatrix(positions)
-    middle = mean(positions)
-    radius, _ = findmax(x-> norm(x .- middle), positions)
-    radF = 0.5/radius
-    return Makie.Mat4f(radF, 0, 0, 0, 0, radF, 0, 0, 0, 0, 1, 0, 0.5-middle[1]*radF, 0.5-middle[2]*radF, 0, 1)
+function eegHeadMatrix(positions, center, radius)
+    oldCenter = mean(positions)
+    oldRadius, _ = findmax(x-> norm(x .- oldCenter), positions)
+    radF = radius/oldRadius
+    return Makie.Mat4f(radF, 0, 0, 0,
+                       0, radF, 0, 0,
+                       0, 0, 1, 0,
+                       center[1]-oldCenter[1]*radF, center[2]-oldCenter[2]*radF, 0, 1)
 end
 
 function topoplotLegend(f, allPositions)    
@@ -191,7 +194,7 @@ function topoplotLegend(f, allPositions)
     
     allPositions = unique(allPositions)
 
-    topoMatrix = getEEGMatrix(allPositions)
+    topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
