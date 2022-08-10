@@ -1,5 +1,6 @@
 using DataFrames
 using TopoPlots
+using LinearAlgebra
 
 """ Plot line plot  """
 function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
@@ -177,6 +178,12 @@ function plot_results(results::DataFrame;y=nothing,
     
 end
 
+function getEEGMatrix(positions)
+    middle = mean(positions)
+    radius, _ = findmax(x-> norm(x .- middle), positions)
+    radF = 0.5/radius
+    return Makie.Mat4f(radF, 0, 0, 0, 0, radF, 0, 0, 0, 0, 1, 0, 0.5-middle[1]*radF, 0.5-middle[2]*radF, 0, 1)
+end
 
 function topoplotLegend(f, allPositions)    
     # for testing
@@ -184,17 +191,22 @@ function topoplotLegend(f, allPositions)
     
     allPositions = unique(allPositions)
 
+    topoMatrix = getEEGMatrix(allPositions)
+
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
     
     axis = Axis(f, bbox = BBox(78, 0, 0, 78))
     
+	xlims!(low = -0.2, high = 1.2)
+	ylims!(low = -0.2, high = 1.2)
     topoplot = eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
         string.(1:length(allPositions)); 
         positions=allPositions,
         interpolation=NullInterpolator(), # inteprolator that returns only 0
         colorrange = (0,length(allPositions)), # add the 0 for the white-first color
-        colormap= specialColors)
+        colormap= specialColors,
+        head = (color=:black, linewidth=1, model = topoMatrix))
 
     hidedecorations!(current_axis())
     hidespines!(current_axis())

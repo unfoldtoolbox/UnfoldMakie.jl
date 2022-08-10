@@ -353,5 +353,6 @@ standard_1005_2D = Dict([
 ])
 
 function getLabelPos(label)
-    return standard_1005_2D[label]
+    #change value range from [-1,1] to [0,1]
+    return (standard_1005_2D[label][1]/2.0+0.5, standard_1005_2D[label][2]/2.0+0.5)
 end
