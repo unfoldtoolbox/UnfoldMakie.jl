@@ -184,9 +184,9 @@ end
 
 function getEEGMatrix(positions)
     middle = mean(positions)
-    radius, idx = findmax(x-> norm(x .- middle), positions)
-    radF = 1/radius
-    return Makie.Mat4f(radF, 0, 0, 0, 0, radF, 0, 0, 0, 0, 1, 0, -middle[1]*radF, -middle[2]*radF, 0, 1)
+    radius, _ = findmax(x-> norm(x .- middle), positions)
+    radF = 0.5/radius
+    return Makie.Mat4f(radF, 0, 0, 0, 0, radF, 0, 0, 0, 0, 1, 0, 0.5-middle[1]*radF, 0.5-middle[2]*radF, 0, 1)
 end
 
 function topoplotLegend(f, allPositions)    
@@ -202,15 +202,15 @@ function topoplotLegend(f, allPositions)
     
     axis = Axis(f, bbox = BBox(78, 0, 0, 78))
     
-	xlims!(low = -1.3, high = 1.3)
-	ylims!(low = -1.3, high = 1.3)
+	xlims!(low = -0.2, high = 1.2)
+	ylims!(low = -0.2, high = 1.2)
     topoplot = eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
         string.(1:length(allPositions)); 
         positions=allPositions,
         interpolation=NullInterpolator(), # inteprolator that returns only 0
         colorrange = (0,length(allPositions)), # add the 0 for the white-first color
         colormap= specialColors,
-        head = (color=:black, linewidth=3, model = topoMatrix))
+        head = (color=:black, linewidth=1, model = topoMatrix))
 
     hidedecorations!(current_axis())
     hidespines!(current_axis())

@@ -56,12 +56,11 @@ function getTopoColor(results, config)
 
 end
 
-
 function posToColor(pos)
     cx = 0.5 - pos[1]
     cy = 0.5 - pos[2]
     rx = cx * 0.7071068 + cy * 0.7071068
     ry = cx * -0.7071068 + cy * 0.7071068
-    b = 1.0 - sqrt(2*(rx*rx+ry*ry))
-    return RGB(0.5 - rx, 0.5 - ry, b)
+    b = 1.0 - (2*sqrt(cx^2+cy^2))^2
+    return RGB(0.5 - rx*1.414, 0.5 - ry*1.414, b)
 end
