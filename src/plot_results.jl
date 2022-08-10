@@ -197,7 +197,7 @@ function topoplotLegend(f, allPositions)
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
     
-    axis = Axis(f, bbox = BBox(78, 0, 0, 78))
+    axis = Axis(f, bbox = BBox(0, 78, 0, 78))
     
 	xlims!(low = -0.2, high = 1.2)
 	ylims!(low = -0.2, high = 1.2)
