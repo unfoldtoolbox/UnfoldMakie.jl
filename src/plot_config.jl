@@ -43,7 +43,9 @@ mutable struct PlotConfig
             xTicks=nothing,
             xLabel=nothing,
             yLabel=nothing,
-            legendLabel=nothing            
+            legendLabel=nothing,
+            meanPlot=false,
+            sortData=false,
         )
         this.visualData = (
             # topoPos
@@ -127,7 +129,9 @@ mutable struct PlotConfig
                 showLegend = false
             )
         elseif (pltType == :erp)
-
+            this.setExtraValues(
+                sortData = true,
+            )
         end
 
         # removes all varaibles from mappingData which aren't collumns in input plotData
