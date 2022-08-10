@@ -1,8 +1,6 @@
-
-using Makie
-import Makie.plot
 using Statistics
 using SparseArrays
+
 
 """ Plot design matrix  """
 function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
@@ -16,10 +14,10 @@ function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,
     end
     labels = Unfold.get_coefnames(X)
     
-
-    if (config.extraData.xTicks !== nothing)
+    lLength = length(labels)
+    # only change xTicks if we want less then all
+    if (config.extraData.xTicks !== nothing && config.extraData.xTicks < lLength)
         @assert(config.extraData.xTicks >= 0,"xTicks shouldn't be negative")
-        lLength = length(labels)
         # sections between xTicks
         sectionSize = (lLength-2)/(config.extraData.xTicks-1)
         newLabels = []
