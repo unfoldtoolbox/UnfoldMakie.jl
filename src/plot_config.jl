@@ -43,6 +43,7 @@ mutable struct PlotConfig
             sortData=false,
             # ylims=(;low = 2000, high = 8000), # can't be a standart
             stderror=false,
+            pvalue=[],
         )
         this.visualData = (
             # topoPos
@@ -153,10 +154,10 @@ export PlotConfig
 end
 
 
-# TODO maybe uselsess
-# function filterNamesOutTuple(inputTuple, filterNames)
-#     function isInName(col)
-#         !(col ∈ filterNames)
-#     end
-#     return inputTuple[keys(inputTuple)[isInName.(collect(keys(inputTuple)))]]
-# end
+# filters out the entries with the given names from the tuple
+function filterNamesOutTuple(inputTuple, filterNames)
+    function isInName(col)
+        !(col ∈ filterNames)
+    end
+    return inputTuple[keys(inputTuple)[isInName.(collect(keys(inputTuple)))]]
+end

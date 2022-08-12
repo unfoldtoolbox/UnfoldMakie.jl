@@ -40,12 +40,11 @@ function plot_line(results::DataFrame, config::PlotConfig)
         # results[!, config.mappingData.group] = results[!, config.mappingData.group] .|> c -> string(c)
         config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
     end
-    # return config.mappingData
-    # mapping
-    
-    # return filterNamesOutTuple(config.mappingData, (:x,:y))
-    xy_mapp = mapping(config.mappingData.x, config.mappingData.y)
 
+    # pValues will break if x and y are included in this step
+    mapp = mapping(;filterNamesOutTuple(config.mappingData, (:x, :y))...)
+    
+    xy_mapp = mapping(config.mappingData.x, config.mappingData.y)
 
     basic = visual(Lines) * xy_mapp
     if config.extraData.stderror
@@ -55,10 +54,13 @@ function plot_line(results::DataFrame, config::PlotConfig)
     
     basic = basic * data(results)
 
-    mapp = mapping(;config.mappingData...)
-    show("test")
+    # add the pvalues
+    if !isempty(config.extraData.pvalue)
+        basic =  basic + addPvalues(results, config)
+    end
+    
     plotEquation = basic * mapp
-
+    # return plotEquation
     
     # add topoLegend if topoPlot Legend active
     if (config.extraData.topoLegend)    
@@ -67,7 +69,6 @@ function plot_line(results::DataFrame, config::PlotConfig)
     else
         drawing = draw!(f[1,1],plotEquation)
     end
-    
     # if palettes=(color=colors,), nonnumeric columns crash program
     # drawing = draw!(f[1,1],plotEquation; colormap=:grays)
     
@@ -186,19 +187,17 @@ function plot_results(results::DataFrame;y=nothing,
 
         end
 
-        @show color
-        @show p
+        @show shouldHave
         un = unique(p[!,color])
         # define an index to dodge the lines vertically
         p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
-
+        
         scaleY = [minimum(results.estimate),maximum(results.estimate)]
         stepY = scaleY[2]-scaleY[1]
         posY = stepY*-0.05+scaleY[1]
         Δt = diff(results.time[1:2])[1]
         Δy = 0.01
         p[!,:segments] = [Makie.Rect(Makie.Vec(x,posY+stepY*(Δy*(n-1))),Makie.Vec(y-x+Δt,0.5*Δy*stepY)) for (x,y,n) in zip(p.from,p.to,p.sigindex)]
-
         basic =  basic + (data(p)*mapping(:segments)*visual(Poly))
     end
 
@@ -259,3 +258,51 @@ function (ni::NullInterpolator)(
     return zeros(length(xrange),length(yrange))
 end
 
+function addPvalues(results, config)
+    p = deepcopy(config.extraData.pvalue)
+
+    # for now, add them to the fixed effect
+    if "group" ∉  names(p)
+        # group not specified using first
+        if "group" ∈  names(results)
+            p[!,:group] .= results[1,:group]
+            if length(unique(results.group))>1
+                @warn "multiple groups found, choosing first one"
+            end
+        else
+            p[!,:group] .= 1
+        end
+    end
+    
+
+    # rename to match the res-dataframe
+
+    shouldHave = hcat(config.mappingData.col, config.mappingData.row, config.mappingData.color)
+    shouldHave = shouldHave[shouldHave.!=1] # remove defaults as defined above
+    if ~isempty(config.mappingData)
+        # TODO
+        #  shouldHave = hcat(shouldHave,(values(config.mappingData...)))
+    end
+    shouldHave = string.(shouldHave)
+    
+    for k in shouldHave
+        if k ∉ names(p)
+            p[!,k] .= results[1,k]
+        end
+
+    end
+    # return shouldHave
+    @show color
+    @show p
+    un = unique(p[!,config.mappingData.color])
+    # define an index to dodge the lines vertically
+    p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
+
+    scaleY = [minimum(results.estimate),maximum(results.estimate)]
+    stepY = scaleY[2]-scaleY[1]
+    posY = stepY*-0.05+scaleY[1]
+    Δt = diff(results.time[1:2])[1]
+    Δy = 0.01
+    p[!,:segments] = [Makie.Rect(Makie.Vec(x,posY+stepY*(Δy*(n-1))),Makie.Vec(y-x+Δt,0.5*Δy*stepY)) for (x,y,n) in zip(p.from,p.to,p.sigindex)]
+    return (data(p)*mapping(:segments)*visual(Poly))
+end
