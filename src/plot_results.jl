@@ -3,10 +3,10 @@ using TopoPlots
 using LinearAlgebra
 
 """ Plot line plot  """
-function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
-    pvalue = DataFrame(:from=>[],:to=>[]))
+function plot_line(results::DataFrame, config::PlotConfig)
     results = deepcopy(results)
     f = Figure()
+    
     # @show names(results)
     # if isnothing(config.mappingData.y)
     #     config.mappingData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
@@ -14,9 +14,18 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
     if "group" ∈  names(results)
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
     end
-
-    allPositions, colors = getTopoColor(results, config)
     
+    if "stderror" ∈  names(results) && config.extraData.stderror
+        results.stderror = results.stderror .|> a -> isnothing(a) ? 0. : a
+        results[!,:se_low]  = results[:,config.mappingData.y] .- results.stderror
+        results[!,:se_high] = results[:,config.mappingData.y] .+ results.stderror
+    end
+    
+    # Get topocolors if topoPlot Legend active
+    if (config.extraData.topoLegend) 
+        allPositions, colors = getTopoColor(results, config)
+    end
+
     # return allPositions
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
@@ -31,19 +40,35 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         # results[!, config.mappingData.group] = results[!, config.mappingData.group] .|> c -> string(c)
         config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
     end
+    # return config.mappingData
+    # mapping
     
+    # return filterNamesOutTuple(config.mappingData, (:x,:y))
+    xy_mapp = mapping(config.mappingData.x, config.mappingData.y)
 
-    plotEquation = visual(Lines) * data(results) * mapping(config.mappingData.x, config.mappingData.y; config.mappingData...)
+
+    basic = visual(Lines) * xy_mapp
+    if config.extraData.stderror
+        m_se = mapping(config.mappingData.x,:se_low,:se_high)
+        basic = basic + visual(Band,alpha=0.5)*m_se
+    end
+    
+    basic = basic * data(results)
+
+    mapp = mapping(;config.mappingData...)
+    show("test")
+    plotEquation = basic * mapp
 
     
-    
-    
+    # add topoLegend if topoPlot Legend active
     if (config.extraData.topoLegend)    
         topoplotLegend(f, allPositions)
+        drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+    else
+        drawing = draw!(f[1,1],plotEquation)
     end
-
+    
     # if palettes=(color=colors,), nonnumeric columns crash program
-    drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
     # drawing = draw!(f[1,1],plotEquation; colormap=:grays)
     
     # remove border
@@ -59,6 +84,11 @@ function plot_line(results::DataFrame, config::PlotConfig;y=nothing,
         colorbar!(legendPosition, drawing; config.colorbarData...)
     end
     
+    # label
+    ax = current_axis()
+    ax.xlabel = config.extraData.xlabel === nothing ? string(config.mappingData.x) : config.extraData.xlabel
+    ax.ylabel = config.extraData.ylabel === nothing ? string(config.mappingData.y) : config.extraData.ylabel
+
 
     return f
     
@@ -80,7 +110,7 @@ function plot_results(results::DataFrame;y=nothing,
     if isnothing(y)
         y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
     end
-
+    
     # replace missing/nothing values
     if "group" ∈  names(results)
         results.group = results.group .|> a -> isnothing(a) ? :fixef : a
@@ -228,3 +258,4 @@ function (ni::NullInterpolator)(
 
     return zeros(length(xrange),length(yrange))
 end
+
