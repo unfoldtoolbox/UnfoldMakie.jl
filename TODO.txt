@@ -1,6 +1,7 @@
 colors
 	https://makie.juliaplots.org/stable/documentation/colors/
 
+Add custom labels everywhere
 
 
 Line Plots
@@ -16,21 +17,21 @@ Design Matrix
 	ASK about sorting
 
 Butterfly Plots
-	ToploPlot Legend
-		-> testen ob alle punkt positionen die richtigen farben bekommen
-	https://makie.juliaplots.org/v0.15/documentation/layoutables/#specifying_a_boundingbox_directly
-	https://jkrumbiegel.com/MakieLayout.jl/stable/faq/
 	DONE // -> positions have a bug inside TopoPlots
 	DONE // -> Issue for this problem
 
 Topolots hinzufügen
 
 ERP images
-	ask Vladimir for his work in erp images
-
+	DONE // ask Vladimir for his work in erp images
+	Maybe add customization for mean plot
+	Maybe move mean plot exactly under real plot
+	select 2000-6000 trials after sorting 
+	Smoothing
 
 Parralel Coordinate Plots
-	Ask Vladimir about his prototype
+	DONE // Ask Vladimir about his prototype
+	
 
 
 
