@@ -51,9 +51,9 @@ begin
     Pkg.resolve()
 end
 ```
-Use backslash `\` for the folder path. 
+Use slash `/` for the folder path. 
 
-## TODO INSTRUCTIONS
+## TODO: INSTRUCTIONS
 
 Add missing "documentation environment"
 https://github.com/unfoldtoolbox/Unfold.jl/blob/main/docs/src/tutorials/installation.md

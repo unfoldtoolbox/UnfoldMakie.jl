@@ -3,11 +3,6 @@ module PlotConfigs
 
 using GeometryBasics
 
-function filterTup(tuple)
-    list = collect(values(tuple))
-    return tuple[keys(tuple)[.!isnothing.(list)]]
-end
-
 """
 This struct contains all the configurations of a plot
 """
@@ -43,19 +38,20 @@ mutable struct PlotConfig
             topoLabel=nothing,
             topoPositions=nothing,
             xTicks=nothing,
-            xLabel=nothing,
-            yLabel=nothing,
+            xlabel=nothing,
+            ylabel=nothing,
             legendLabel=nothing,
             meanPlot=false,
             sortData=false,
-            # ylims=(;low = 2000, high = 8000),
+            # ylims=(;low = 2000, high = 8000), # can't be a standart
+            stderror=false,
         )
         this.visualData = (
             # topoPos
             positions=:pos,
             # topoLabels
             labels=:labels,
-            # colormap=:haline,
+            # colormap=:haline, # can't be a standart
         )
         this.mappingData = (
             x=:time,
@@ -171,3 +167,12 @@ end
 export PlotConfig
 
 end
+
+
+# TODO maybe uselsess
+# function filterNamesOutTuple(inputTuple, filterNames)
+#     function isInName(col)
+#         !(col ∈ filterNames)
+#     end
+#     return inputTuple[keys(inputTuple)[isInName.(collect(keys(inputTuple)))]]
+# end
