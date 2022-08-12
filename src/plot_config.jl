@@ -46,6 +46,7 @@ mutable struct PlotConfig
             legendLabel=nothing,
             meanPlot=false,
             sortData=false,
+            # ylims=(;low = 2000, high = 8000),
         )
         this.visualData = (
             # topoPos

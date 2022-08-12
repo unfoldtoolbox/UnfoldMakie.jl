@@ -4,9 +4,11 @@ function plot_erp(data::Matrix{Float64},config::PlotConfig)
     f = Figure()
     ax = Axis(f[1:4,1])
 
+    # xlims!(low = -0.2, high = 1.2)
+    ylims!(config.extraData.ylims...)
+    
     if config.extraData.sortData
         ix = sortperm([a[1] for a in argmax(data, dims=1)][1,:])   # ix - trials sorted by time of maximum spike
-        # sort_x = [[a[1] for a in argmax(data,dims=2)]...]
         hm = heatmap!(ax,(data[:,ix]); config.visualData...)
     else
         hm = heatmap!(ax,(data[:,:]); config.visualData...)
