@@ -1,6 +1,8 @@
 
 module PlotConfigs
 
+using GeometryBasics
+
 function filterTup(tuple)
     list = collect(values(tuple))
     return tuple[keys(tuple)[.!isnothing.(list)]]
@@ -122,8 +124,22 @@ mutable struct PlotConfig
                     xticklabelrotation=pi/8,
                 ),
             )
-        elseif (pltType == :topolot)
-
+        elseif (pltType == :topoplot)
+            this.setExtraValues(
+                type=:topoplot,
+                contours=(color=:white, linewidth=2),
+                label_scatter=true,
+                label_text=true,
+                bounding_geometry=Rect,
+            )
+        elseif (pltType == :eegtopoplot)
+            this.setExtraValues(
+                type=:eegtopoplot,
+                contours=(color=:white, linewidth=2),
+                label_scatter=true,
+                label_text=true,
+                bounding_geometry=Circle,
+            )
         elseif (pltType == :butterfly)
             this.setExtraValues(
                 topoLegend = true,
