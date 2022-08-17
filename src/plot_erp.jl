@@ -4,8 +4,7 @@ function plot_erp(data::Matrix{Float64},config::PlotConfig)
     f = Figure()
     ax = Axis(f[1:4,1])
 
-    # xlims!(low = -0.2, high = 1.2)
-    ylims!(config.extraData.ylims...)
+    
     
     if config.extraData.sortData
         ix = sortperm([a[1] for a in argmax(data, dims=1)][1,:])   # ix - trials sorted by time of maximum spike
@@ -21,8 +20,12 @@ function plot_erp(data::Matrix{Float64},config::PlotConfig)
     # show(hm)
     # image(f[1:4,1],data[:,ix]; config.visualData...)
     # ax = current_axis()
-    ax.xlabel = config.extraData.xlabel
-    ax.ylabel = config.extraData.ylabel
+    ax.xlabel = config.extraData.xlabel === nothing ? string(config.mappingData.x) : config.extraData.xlabel
+    ax.ylabel = config.extraData.ylabel === nothing ? string(config.mappingData.y) : config.extraData.ylabel
+
+    if config.extraData.ylims !== nothing
+        ylims!(config.extraData.ylims...)
+    end
 
     # Colorbar(f[:, 2],hm; config.colorbarData..., config.visualData.colormap)
     Colorbar(f[:, 2], hm; config.colorbarData...) 

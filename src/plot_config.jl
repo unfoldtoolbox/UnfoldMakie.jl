@@ -43,7 +43,7 @@ mutable struct PlotConfig
             legendLabel=nothing,
             meanPlot=false,
             sortData=false,
-            # ylims=(;low = 2000, high = 8000), # can't be a standart
+            ylims=nothing,
             stderror=false,
             pvalue=[],
         )
@@ -52,7 +52,7 @@ mutable struct PlotConfig
             positions=:pos,
             # topoLabels
             labels=:labels,
-            # colormap=:haline, # can't be a standart
+            colormap=:haline, # can't be a standart (Or can it?.. :thinking:)
         )
         this.mappingData = (
             x=:time,
@@ -61,7 +61,8 @@ mutable struct PlotConfig
         this.legendData = (;
             orientation = :vertical,
             tellwidth = true,
-            tellheight = false
+            tellheight = false,
+            position = :rc,
         )
         this.colorbarData = (;
             vertical = true,
@@ -143,6 +144,10 @@ mutable struct PlotConfig
                 showLegend = false
             )
         elseif (pltType == :erp)
+            this.setExtraValues(
+                sortData = true,
+            )
+        elseif (pltType == :paracoord)
             this.setExtraValues(
                 sortData = true,
             )

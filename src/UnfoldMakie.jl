@@ -14,6 +14,7 @@ include("plot_results.jl")
 include("plot_design.jl")
 include("plot_topo.jl")
 include("plot_erp.jl")
+include("plot_paraCoord.jl")
 
 include("eegPositions.jl")
 include("topoColor.jl")
@@ -25,6 +26,7 @@ export plot_design
 export plot_erp
 export plot_eeg_topo
 export plot_topo
+export plot_paraCoord
 
 # legacy plot functions
 export plot_results
