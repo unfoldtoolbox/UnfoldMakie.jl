@@ -1,4 +1,4 @@
-## [Get Test Data](@id test_data)
+## [Load Data](@id test_data)
 
 In case you do not have data to visualize line plots, you can follow along this step to get data.
 
@@ -12,7 +12,8 @@ data, evts = loadtestdata("test_case_3b");
 basisfunction = firbasis(τ=(-0.4,.8),sfreq=50,name="stimulus")
 f  = @formula 0~1+conditionA+continuousA
 ```
-
+Here we used the FIR basisfunction.
+For more information on basisfunctions see the [Unfold.jl documentation](https://unfoldtoolbox.github.io/Unfold.jl/dev/explanations/basisfunctions/).
 
 ### Test Data erpcore-N170.jld2
 [](https://figshare.com/articles/dataset/N170_Single_Subject_ERPCore/19762960)
