@@ -7,14 +7,13 @@ Add custom labels everywhere
 Line Plots
 	https://github.com/JuliaPlots/AlgebraOfGraphics.jl/issues/329
 		-> Mapping of colors does not interpolate in Legend
-	Updated Pluto file ->
-		Error Line
-		PValues
-		facettes
+		DONE // Error Line
+		DONE // PValues
+		ASK VLAD // facettes
 
 Design Matrix
 	DONE // Timestamps not at *every* step, but only at intervalls
-	ASK about sorting
+	maybe tell a way to increase picture size to capture the whole text
 
 Butterfly Plots
 	DONE // -> positions have a bug inside TopoPlots
@@ -24,13 +23,14 @@ Topolots hinzufügen
 
 ERP images
 	DONE // ask Vladimir for his work in erp images
+	DONE // Maybe move mean plot exactly under real plot
+	DONE // select 2000-6000 trials after sorting 
 	Maybe add customization for mean plot
-	Maybe move mean plot exactly under real plot
-	select 2000-6000 trials after sorting 
-	Smoothing
+	ASK VLAD // Smoothing
 
 Parralel Coordinate Plots
 	DONE // Ask Vladimir about his prototype
+	Currently in work
 	
 
 
