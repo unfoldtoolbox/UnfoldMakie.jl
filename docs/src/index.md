@@ -3,7 +3,8 @@
 This is the documentation of the UnfoldMakie module for the Julia programming language. 
 
 ## Background
-
+UnfoldMakie aims to allow users to generate different types of visualizations. 
+Building on the Unfold and Makie Modules, it also grants users customizability through an input config.
 
 ## Tutorials
 
@@ -19,12 +20,17 @@ These include:
 - [ERP Images](@id erpi_vis)
 - [Topo Plots](@id tp_vis)
 - ! [Parallel Coordinate Plots](@id pcp_vis)
-- ! [Scatter Plot Matrices](@id spm_vis)
 
 
 
-## notes
+## Notes
 
+### Idea Topics:
+- Vis Config
+- How to Popular EEG visualizations
+
+
+### from Unfold Documentation
 You might want to start with **tutorials** such as the [installation tutorial](@ref install_instruct). 
 
 in installation.md - "add UnfoldMakie" does not yet add our fork
