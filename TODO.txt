@@ -20,7 +20,7 @@ Butterfly Plots
 	DONE // -> positions have a bug inside TopoPlots
 	DONE // -> Issue for this problem
 
-Topolots hinzufügen
+DONE Topolots hinzufügen
 
 ERP images
 	DONE // ask Vladimir for his work in erp images
