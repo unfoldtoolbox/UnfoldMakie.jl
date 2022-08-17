@@ -122,21 +122,20 @@ mutable struct PlotConfig
                     xticklabelrotation=pi/8,
                 ),
             )
-        elseif (pltType == :topoplot)
+        elseif (pltType == :topoplot || pltType == :eegtopoplot)
             this.setExtraValues(
                 type=:topoplot,
                 contours=(color=:white, linewidth=2),
                 label_scatter=true,
                 label_text=true,
-                bounding_geometry=Rect,
+                border=true,
+                xlabel="",
+                ylabel="",
+                showLegend=false,
+                bounding_geometry=(pltType == :topoplot) ? Rect : Circle,
             )
-        elseif (pltType == :eegtopoplot)
-            this.setExtraValues(
-                type=:eegtopoplot,
-                contours=(color=:white, linewidth=2),
-                label_scatter=true,
-                label_text=true,
-                bounding_geometry=Circle,
+            this.setVisualValues(
+                topodata=:topodata
             )
         elseif (pltType == :butterfly)
             this.setExtraValues(

@@ -16,7 +16,7 @@ using DataFramesMeta
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
 ### Data
-In case you do not already have data, look at the [Get Test Data](@ref test_data) section. 
+In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 Use the test data of `erpcore-N170.jld2`.
 

@@ -14,7 +14,7 @@ using CairoMakie
 ```
 
 ### Data
-In case you do not already have data, look at the [Get Test Data](@ref test_data) section. 
+In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 When using test data of the `Unfold` module, use the following code for further pre-processing:
 ```@example main
