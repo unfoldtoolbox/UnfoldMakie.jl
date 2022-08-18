@@ -80,7 +80,7 @@ function plot_line(results::DataFrame, config::PlotConfig)
     # set f[] position depending on position
     if (config.extraData.showLegend)
         legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
-
+        @show config.legendData
         legend!(legendPosition, drawing; config.legendData...)
         colorbar!(legendPosition, drawing; config.colorbarData...)
     end
@@ -292,8 +292,6 @@ function addPvalues(results, config)
 
     end
     # return shouldHave
-    @show color
-    @show p
     un = unique(p[!,config.mappingData.color])
     # define an index to dodge the lines vertically
     p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]

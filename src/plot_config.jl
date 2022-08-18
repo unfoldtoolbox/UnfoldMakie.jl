@@ -61,8 +61,7 @@ mutable struct PlotConfig
         this.legendData = (;
             orientation = :vertical,
             tellwidth = true,
-            tellheight = false,
-            position = :rc,
+            tellheight = false
         )
         this.colorbarData = (;
             vertical = true,
@@ -149,6 +148,9 @@ mutable struct PlotConfig
         elseif (pltType == :paracoord)
             this.setExtraValues(
                 sortData = true,
+            )
+            this.setLegendValues(
+                position = :rc
             )
         end
 
