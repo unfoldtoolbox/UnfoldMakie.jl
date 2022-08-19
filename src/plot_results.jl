@@ -308,10 +308,12 @@ function addPvalues(results, config)
 
     shouldHave = hcat(config.mappingData.col, config.mappingData.row, config.mappingData.color)
     shouldHave = shouldHave[shouldHave.!=1] # remove defaults as defined above
-    if ~isempty(config.mappingData)
-        # TODO
-        #  shouldHave = hcat(shouldHave,(values(config.mappingData...)))
-    end
+    
+    # was present in the example, but crashes the code if executed
+    # if ~isempty(config.mappingData)
+    #     shouldHave = hcat(shouldHave, values(config.mappingData))
+    # end
+    
     shouldHave = string.(shouldHave)
     
     for k in shouldHave

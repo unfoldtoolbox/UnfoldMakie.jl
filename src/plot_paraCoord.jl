@@ -2,8 +2,11 @@ using LinearAlgebra
 using Pipe
 using PyMNE
 
-function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig, raw)
+function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing)
     
+    premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
+
+
     channels = [10, 11, 14, 28, 29] #[2, 3, 17, 18, 19] 
     data = @pipe dataFrame |> 
         filter(x -> x.channel in channels, _) |>
@@ -14,11 +17,8 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig, raw)
 
     colormap = cgrad(config.visualData.colormap, (catLeng < 2) ? 2 : catLeng, categorical = true)
     colors = Dict{String,RGBA{Float64}}()
-    @show colors
     # get a colormap for each category
     for i in eachindex(categories)
-        @show i
-        @show colormap[i]
         setindex!(colors, colormap[i], categories[i])
     end
 
@@ -84,9 +84,11 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig, raw)
     ax.xlabel = "Channels";    ax.ylabel = "Timestamps"
     x = Array(10:90:380)
     y = fill(105, 5)
-
     
-    channelNames = raw.ch_names[channels] 
+    channelNames = premadeNames[channels] 
+
+    @show raw.ch_names
+    @show channels
 
     ax = Axis(f[1, 1])
     text!(x, y, text = channelNames, align = (:center, :center), 
