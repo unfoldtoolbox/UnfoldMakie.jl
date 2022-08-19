@@ -2,11 +2,13 @@
 module PlotConfigs
 
 using GeometryBasics
+using Makie
 
 """
 This struct contains all the configurations of a plot
 """
 mutable struct PlotConfig
+    plotType::Any
     extraData::NamedTuple
     visualData::NamedTuple
     mappingData::NamedTuple
@@ -25,13 +27,13 @@ mutable struct PlotConfig
     function PlotConfig(pltType)
         this = new()
 
+        this.plotType = pltType
         # standard values for ALL plots
         this.extraData = (
             # vars to make scolumns nonnumerical
             categoricalColor=true,
             categoricalGroup=true,
             showLegend=true,
-            legendShow=true,
             legendPosition=:right,
             border=false,
             topoLegend=false,
@@ -47,12 +49,8 @@ mutable struct PlotConfig
             stderror=false,
             pvalue=[],
         )
-        this.visualData = (
-            # topoPos
-            positions=:pos,
-            # topoLabels
-            labels=:labels,
-            colormap=:haline, # can't be a standart (Or can it?.. :thinking:)
+        this.visualData = (;
+            colormap=:haline,
         )
         this.mappingData = (
             x=:time,
@@ -107,9 +105,6 @@ mutable struct PlotConfig
             
         # standard values for each plotType
         if (pltType == :lineplot)
-            this.setExtraValues(
-                type=:lineplot,
-            )
             this.setMappingValues(
                 col=:basisname,
                 row=:group,
@@ -123,19 +118,23 @@ mutable struct PlotConfig
             )
         elseif (pltType == :topoplot || pltType == :eegtopoplot)
             this.setExtraValues(
-                type=:topoplot,
-                contours=(color=:white, linewidth=2),
-                label_scatter=true,
-                label_text=true,
                 border=true,
                 xlabel="",
                 ylabel="",
                 showLegend=false,
-                bounding_geometry=(pltType == :topoplot) ? Rect : Circle,
             )
             this.setVisualValues(
-                topodata=:topodata
+                contours=(color=:white, linewidth=2),
+                label_scatter=true,
+                label_text=true,
+                bounding_geometry=(pltType == :topoplot) ? Rect : Circle,
             )
+            this.setMappingValues(
+                topodata=:topodata,
+                positions=:pos,
+                labels=:labels,
+            )
+            this.setColorbarValues(colormap = Makie.Reverse(:RdBu))
         elseif (pltType == :butterfly)
             this.setExtraValues(
                 topoLegend = true,

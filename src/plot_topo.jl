@@ -16,13 +16,13 @@ function plot_topo(config::PlotConfig, topodata; positions=nothing, labels=nothi
         positions = (labels .|> (x -> Point2f(getLabelPos(x)[1], getLabelPos(x)[2])))
     end
 
-    if config.extraData.type == :eegtopoplot
-        drawing = eeg_topoplot!(axis, topodata, labels; positions, config.extraData...)
+    if config.plotType == :eegtopoplot
+        eeg_topoplot!(axis, topodata, labels; positions, config.visualData...)
     else
-        drawing = topoplot!(axis, topodata, positions; labels, config.extraData...)
+        topoplot!(axis, topodata, positions; labels, config.visualData...)
     end
 
-    applyLayoutSettings(config)
+    applyLayoutSettings(config; fig=f)
 
     return f
 end
@@ -31,26 +31,27 @@ function plot_topo(config::PlotConfig, results::DataFrame=nothing)
     results = deepcopy(results)
     f = Figure()
 
-    if string(config.visualData.positions) ∉ names(results)
-        results[!,config.visualData.positions] = results[!,config.visualData.labels] .|> (x -> Point2f(getLabelPos(x)[1], getLabelPos(x)[2]))
+    if string(config.mappingData.positions) ∉ names(results)
+        results[!,config.mappingData.positions] = results[!,config.mappingData.labels] .|> (x -> Point2f(getLabelPos(x)[1], getLabelPos(x)[2]))
     end
 
-    topodata = results[:,config.visualData.topodata]
-    positions = results[:,config.visualData.positions]
-    labels = (string(config.visualData.labels) ∈ names(results)) ? results[:,config.visualData.labels] : nothing
+    topodata = results[:,config.mappingData.topodata]
+    positions = results[:,config.mappingData.positions]
+    labels = (string(config.mappingData.labels) ∈ names(results)) ? results[:,config.mappingData.labels] : nothing
 
-    if config.extraData.type == :eegtopoplot
-        eeg_topoplot(f[1, 1], topodata, labels; positions, config.extraData...)
+    if config.plotType == :eegtopoplot
+        eeg_topoplot(f[1, 1], topodata, labels; positions, config.visualData...)
     else
-        topoplot(f[1, 1], topodata, positions; labels, config.extraData...)
+        topoplot(f[1, 1], topodata, positions; labels, config.visualData...)
     end
 
-    applyLayoutSettings(config)
+
+    applyLayoutSettings(config; fig=f)
 
     return f
 end
 
-function applyLayoutSettings(config::PlotConfig; drawing = nothing)
+function applyLayoutSettings(config::PlotConfig; fig = nothing, drawing = nothing)
     # remove border
     if !config.extraData.border
         hidespines!(current_axis(), :t, :r)
@@ -60,8 +61,10 @@ function applyLayoutSettings(config::PlotConfig; drawing = nothing)
     if (config.extraData.showLegend)
         if isnothing(drawing)
             @printf "Legends not supported for this Plot"
+            Colorbar(fig[1, 2]; config.colorbarData...)
+            # Legend(fig[1, 2]; config.legendData...)
         else
-            legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
+            legendPosition = config.extraData.legendPosition == :right ? fig[1, 2] : fig[2, 1];
 
             legend!(legendPosition, drawing[1].val; config.legendData...)
             colorbar!(legendPosition, drawing[1].val; config.colorbarData...)
