@@ -26,7 +26,8 @@ ERP images
 	DONE // Maybe move mean plot exactly under real plot
 	DONE // select 2000-6000 trials after sorting 
 	Maybe add customization for mean plot
-	ASK VLAD // Smoothing
+	Smoothing Kernel in Vlads code (new library)
+
 
 Parralel Coordinate Plots
 	DONE // Ask Vladimir about his prototype
