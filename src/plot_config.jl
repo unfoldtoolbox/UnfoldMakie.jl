@@ -46,6 +46,7 @@ mutable struct PlotConfig
             ylims=nothing,
             stderror=false,
             pvalue=[],
+            erpBlur=100,
         )
         this.visualData = (
             # topoPos
