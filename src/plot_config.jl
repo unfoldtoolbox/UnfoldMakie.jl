@@ -136,6 +136,7 @@ mutable struct PlotConfig
                 border=true,
                 showLegend=false,
                 showAxisLabels=false,
+                useColorbar = true,
             )
             this.setVisualValues(
                 contours=(color=:white, linewidth=2),
@@ -150,7 +151,6 @@ mutable struct PlotConfig
                 topodata=:topodata,
                 positions=:pos,
                 labels=:labels,
-                useColorbar = true,
             )
             this.setColorbarValues(colormap = Makie.Reverse(:RdBu))
         elseif (pltType == :butterfly)

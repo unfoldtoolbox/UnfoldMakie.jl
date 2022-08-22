@@ -29,15 +29,17 @@ function plot_erp(data::Matrix{Float64},config::PlotConfig)
 
     applyLayoutSettings(config; fig = f, hm = hm, ax = ax, plotArea = (4,1))
 
-    # hidespines!(ax, :t, :r)
     if config.extraData.meanPlot
         # UserInput
         axisOffset = (config.layoutData.showLegend && config.layoutData.legendPosition == :bottom) ? 1 : 0
         lines(f[5+axisOffset,1],mean(data,dims=2)[:,1])
-        ax2 = current_axis()
-        ax2.xlabel = config.extraData.xlabel === nothing ? string(config.mappingData.x) : config.extraData.xlabel
-        ax2.ylabel = config.colorbarData.label === nothing ? "" : config.colorbarData.label
-        hidespines!(ax2, :t, :r)
+        config2 = deepcopy(config)
+        config2.setLayoutValues(
+            showLegend = false,
+            ylabel = config.colorbarData.label === nothing ? "" : config.colorbarData.label,
+            ylims = nothing
+        )
+        applyLayoutSettings(config2; fig = f)
     end
 
     return f
