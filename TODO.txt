@@ -10,6 +10,8 @@ Line Plots
 		DONE // Error Line
 		DONE // PValues
 		ASK VLAD // facettes
+		rename plot_results.jl file, rename results variable in plot_line?
+		"if topoLegend" combine both codeblocks into one?
 
 Design Matrix
 	DONE // Timestamps not at *every* step, but only at intervalls
@@ -42,6 +44,7 @@ plot_line!(f, data, config)
 
 Dokumentation
 	Same as Unforld.jl
+	adapt documentation regarding plot config
 
 
 default values for mappings/dataframe-collumns

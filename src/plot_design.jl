@@ -2,7 +2,41 @@ using Statistics
 using SparseArrays
 
 
-""" Plot design matrix  """
+""" 
+    plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
+
+Plot a designmatrix. 
+## Arguments:
+- `X::Unfold.DesignMatrix`: data for the designmatrix being visualized.
+- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `standardize=true`: boolean indicating, whether the designmatrix should be standardized.
+Default is true. Standardization is performed by elementwise division of the designmatrix 
+with the sample standard deviation of the designmatrix.
+- `sort=false`: boolean indicating, whether the designmatrix should be sorted.
+Default is false. Sorting is performed with `Base.sortslices`.
+
+## Behavior:
+### `config.extraData.xTicks`:
+Indicating the number of labels on the x-axis.
+Behavior if specified in configuration:
+- xTicks = 0: no labels are placed.
+- xTicks = 1: first possible label is placed.
+- xTicks = 2: first and last possible labels are placed.
+- 2 < xTicks < number of labels: xTicks-2 labels are placed 
+between the first and last.
+- xTicks ≥ number of labels: all labels are placed.
+### ? `config.visualData.axis`: 
+TODO: wait for config completion!
+### `config.extraData.showLegend`:
+Indicating whether a colorbar of the Makie module should be shown as a legend.
+### TODO: more?
+
+## Return Value:
+The figure corresponding to the first heatmap return of the Makie module. 
+A colorbar is included as a legend if set in the configuration 
+(config.extraData.showLegend = true).
+
+"""
 function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
     designmat = Unfold.get_Xs(X);
     if standardize
