@@ -152,7 +152,6 @@ mutable struct PlotConfig
                 positions=:pos,
                 labels=:labels,
             )
-            this.setColorbarValues(colormap = Makie.Reverse(:RdBu))
         elseif (pltType == :butterfly)
             this.setExtraValues(topoLegend = true)
             this.setLayoutValues(showLegend = false)
