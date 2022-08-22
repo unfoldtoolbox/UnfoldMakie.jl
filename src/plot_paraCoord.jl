@@ -3,23 +3,28 @@ using Pipe
 using PyMNE
 
 function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing)
-    
+
     premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
+    # colormap border (prevents from using outer parts of color map)
+    bord = 1
 
-
-    channels = [10, 11, 14, 28, 29] #[2, 3, 17, 18, 19] 
+    channels = [2, 2, 8] 
+    chaLeng = length(channels)
     data = @pipe dataFrame |> 
         filter(x -> x.channel in channels, _) |>
-        select(_, Not([:basisname, :condition])) 
+        # TODOcustom collumn exclude?
+        select(_, Not([])) 
+        # select(_, Not([:basisname, :condition])) 
 
     categories = unique(dataFrame.category)
     catLeng = length(categories)
 
-    colormap = cgrad(config.visualData.colormap, (catLeng < 2) ? 2 : catLeng, categorical = true)
+    colormap = cgrad(config.visualData.colormap, (catLeng < 2) ? 2 + (bord*2) : catLeng + (bord*2), categorical = true)
     colors = Dict{String,RGBA{Float64}}()
+
     # get a colormap for each category
     for i in eachindex(categories)
-        setindex!(colors, colormap[i], categories[i])
+        setindex!(colors, colormap[i+bord], categories[i])
     end
 
     n = length(channels) # number of axis
@@ -55,21 +60,31 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing
             endpoints = Point2f[(offset + x, offset), (offset + x, offset + height)],
             ticklabelalign = (:right, :center), labelvisible = false)
     end
-
-    # Draw colored line through all channels for each time entry
+    # @show limits
+    
+    
+    
+    # Draw colored line through all channels for each time entry 
     for time in unique(data.time) 
-        tmp1 = filter(x -> (x.time == time),  data) #1 timepoint, 10 rows (2 conditions, 5 channels) 
+        tmp1 = filter(x -> (x.time == time),  data) #1 timepoint, 10 rows (2 conditions, 5 channels)
         for cat in categories
+            # df with the order of the channels
+            dfInOrder = data[[],:]
             tmp2 = filter(x -> (x.category == cat),  tmp1)
-            values = map(1:n, tmp2.yhat, limits) do q, d, l # axes, data
+            
+            # create new dataframe with the right order
+            for cha in channels
+                append!(dfInOrder,filter(x -> (x.channel == cha),  tmp2))
+            end
+            
+            values = map(1:n, dfInOrder.yhat, limits) do q, d, l # axes, data, limis
                 x = (q - 1) / (n - 1) * width
-                Point2f(offset + x, (d - l[1]) ./ (l[2] - l[1]) * height + offset) 
-                
-                    end
+                Point2f(offset + x, (d - l[1]) ./ (l[2] - l[1]) * height + offset)
+                end
             lines!(f.scene, values; color = colors[cat])
         end
     end 
-    
+
     ax = f[1, 1] = Axis(f.scene)
 
     # helper, cuz without them they wouldn#t have an entry in legend
@@ -81,22 +96,22 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing
     hidespines!(ax) 
     hidedecorations!(ax, label = false) 
 
-    ax.xlabel = "Channels";    ax.ylabel = "Timestamps"
-    x = Array(10:90:380)
-    y = fill(105, 5)
-    
-    channelNames = premadeNames[channels] 
+    ax.xlabel = "Channels";
+    ax.ylabel = "Timestamps"
+    # the width of the plot is set, so the labels have to be placed evenly
+    x = Array(10:(380-10)/(chaLeng-1):380)
+    # height of plot
+    y = fill(105, chaLeng)
 
-    @show raw.ch_names
-    @show channels
+    channelNames = premadeNames[channels] 
 
     ax = Axis(f[1, 1])
     text!(x, y, text = channelNames, align = (:center, :center), 
         offset = (0, 0), 
         color = :blue)
         
-    text!(x, fill(5, 5),  text = string.(round.(l_low, digits=1)))
-    text!(x, fill(95, 5),  text = string.(round.(l_up, digits=1)))
+    text!(x, fill(5, chaLeng),  text = string.(round.(l_low, digits=1)))
+    text!(x, fill(95, chaLeng),  text = string.(round.(l_up, digits=1)))
     #println(string.(round.(l_low, digits=2)))
     Makie.xlims!(low = -20, high = 440)
     Makie.ylims!(low = 0, high = 110)
