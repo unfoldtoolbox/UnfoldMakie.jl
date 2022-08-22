@@ -16,12 +16,12 @@ using CairoMakie
 ### Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
-When using test data of the `Unfold` module, use the following code for further pre-processing:
+When you followed the tutorial, using test data of the `Unfold` module, use the following code for further pre-processing:
 ```@example main
 ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8)))
 designmatrix(ufMass, evts)
 ```
-When using test data of the file `erpcore-N170.jld2`, use the following code:
+When you followed the tutorial, using test data of the file `erpcore-N170.jld2`, use the following code:
 ```@example main
 designmatrix(mres)
 ```

@@ -4,7 +4,7 @@ This is the documentation of the UnfoldMakie module for the Julia programming la
 
 ## Background
 UnfoldMakie aims to allow users to generate different types of visualizations. 
-Building on the Unfold and Makie Modules, it also grants users customizability through an input config.
+Building on the `Unfold` and `Makie` Modules, it also grants users customizability through an input config.
 
 ## Tutorials
 
@@ -28,6 +28,9 @@ These include:
 ### Idea Topics:
 - Vis Config
 - How to Popular EEG visualizations
+- [function documentation](https://julia-doc.readthedocs.io/en/latest/manual/documentation/) 
+- [BE doc example](https://unfoldtoolbox.github.io/Unfold.jl/dev/references/types/)
+- [documenter](https://juliadocs.github.io/Documenter.jl/stable/)
 
 
 ### from Unfold Documentation

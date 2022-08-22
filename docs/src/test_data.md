@@ -1,6 +1,7 @@
 ## [Load Data](@id test_data)
 
-In case you do not have data to visualize line plots, you can follow along this step to get data.
+In case you do not have data to visualize line plots, you can follow along this step to get data. You can also use this as a reference on how to load your own data. 
+With the exception of example data for topoplots which can be found in [General Topo Plot Visualization](@ref tp_vis), information on how to load example data for other types of visualizations are detailed here.
 
 ### Test Data from the Unfold Module
 The `Unfold` module offers some test data (useful e. g. for designmatrix visualization). 
@@ -34,7 +35,7 @@ evt_e = presaved_data["df_e_all"]
 Note that if you have not placed the file in the same directory as your project, you need to specify the directory in the `p_all` variable.
 Use slash `/` for the folder path. 
 
-As the data is quite expansive, we do some pre-processing in order to be able to more easily use it:
+As UnfoldMakie uses data of a type in line with the Unfold module, we have to process the data now such that it can be used:
 ```@example main
 # times vector (from-to)
 times = range(-0.3, length=size(dat_e,2), step=1 ./ 128)
