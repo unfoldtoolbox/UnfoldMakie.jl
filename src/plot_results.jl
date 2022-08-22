@@ -72,24 +72,7 @@ function plot_line(results::DataFrame, config::PlotConfig)
     # if palettes=(color=colors,), nonnumeric columns crash program
     # drawing = draw!(f[1,1],plotEquation; colormap=:grays)
     
-    # remove border
-    if !config.extraData.border
-        hidespines!(current_axis(), :t, :r)
-    end
-
-    # set f[] position depending on position
-    if (config.extraData.showLegend)
-        legendPosition = config.extraData.legendPosition == :right ? f[1, 2] : f[2, 1];
-        @show config.legendData
-        legend!(legendPosition, drawing; config.legendData...)
-        colorbar!(legendPosition, drawing; config.colorbarData...)
-    end
-    
-    # label
-    ax = current_axis()
-    ax.xlabel = config.extraData.xlabel === nothing ? string(config.mappingData.x) : config.extraData.xlabel
-    ax.ylabel = config.extraData.ylabel === nothing ? string(config.mappingData.y) : config.extraData.ylabel
-
+    applyLayoutSettings(config; fig = f, drawing = drawing)
 
     return f
     

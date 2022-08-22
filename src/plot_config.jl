@@ -10,12 +10,14 @@ This struct contains all the configurations of a plot
 mutable struct PlotConfig
     plotType::Any
     extraData::NamedTuple
+    layoutData::NamedTuple
     visualData::NamedTuple
     mappingData::NamedTuple
     legendData::NamedTuple
     colorbarData::NamedTuple
     
     setExtraValues::Function
+    setLayoutValues::Function
     setVisualValues::Function
     setMappingValues::Function
     setLegendValues::Function
@@ -49,6 +51,16 @@ mutable struct PlotConfig
             stderror=false,
             pvalue=[],
             erpBlur=100,
+        )
+        this.layoutData = (;
+            showLegend=true,
+            legendPosition=:right,
+            showAxisLabels=true,
+            border=false,
+            xlabel=nothing,
+            ylabel=nothing,
+            ylims=nothing,
+            xlims=nothing,
         )
         this.visualData = (;
             colormap=:haline,
@@ -87,6 +99,24 @@ mutable struct PlotConfig
             this.extraData = merge(this.extraData, kwargs)
             return this
         end
+        this.setLayoutValues = function (;kwargs...)
+            # position affects multiple values in legendData
+            kwargsVals = values(kwargs)
+            if haskey(kwargsVals, :legendPosition)
+                if kwargsVals.legendPosition == :right
+                    sdtLegVal = (;tellwidth = true, tellheight = false, orientation = :vertical)
+                    sdtBarVal = (;tellwidth = true, tellheight = false)
+                elseif kwargsVals.legendPosition == :bottom
+                    sdtLegVal = (;tellwidth = false, tellheight = true, orientation = :horizontal)
+                    sdtBarVal = (;tellwidth = false, tellheight = true, vertical=false, flipaxis=false)
+                end
+                this.legendData = merge(this.legendData, sdtLegVal)
+                this.colorbarData = merge(this.colorbarData, sdtBarVal)
+            end
+
+            this.layoutData = merge(this.layoutData, kwargs)
+            return this
+        end
         this.setVisualValues = function (;kwargs...)
             this.visualData = merge(this.visualData, kwargs)
             return this
@@ -118,32 +148,36 @@ mutable struct PlotConfig
                 ),
             )
         elseif (pltType == :topoplot || pltType == :eegtopoplot)
-            this.setExtraValues(
+            this.setLayoutValues(
                 border=true,
-                xlabel="",
-                ylabel="",
                 showLegend=false,
+                showAxisLabels=false,
             )
             this.setVisualValues(
                 contours=(color=:white, linewidth=2),
                 label_scatter=true,
                 label_text=true,
                 bounding_geometry=(pltType == :topoplot) ? Rect : Circle,
+                colormap=Reverse(:RdBu),
             )
             this.setMappingValues(
+                x=:xPos,
+                y=:yPos,
                 topodata=:topodata,
                 positions=:pos,
                 labels=:labels,
             )
             this.setColorbarValues(colormap = Makie.Reverse(:RdBu))
         elseif (pltType == :butterfly)
-            this.setExtraValues(
-                topoLegend = true,
-                showLegend = false
-            )
+            this.setExtraValues(topoLegend = true)
+            this.setLayoutValues(showLegend = false)
         elseif (pltType == :erp)
             this.setExtraValues(
                 sortData = true,
+            )
+            this.setLayoutValues(
+                border=false,
+                showAxisLabels=true,
             )
         elseif (pltType == :paracoord)
             this.setExtraValues(

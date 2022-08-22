@@ -26,20 +26,14 @@ function plot_erp(data::Matrix{Float64},config::PlotConfig)
     # show(hm)
     # image(f[1:4,1],data[:,ix]; config.visualData...)
     # ax = current_axis()
-    ax.xlabel = config.extraData.xlabel === nothing ? string(config.mappingData.x) : config.extraData.xlabel
-    ax.ylabel = config.extraData.ylabel === nothing ? string(config.mappingData.y) : config.extraData.ylabel
 
-    if config.extraData.ylims !== nothing
-        ylims!(config.extraData.ylims...)
-        # xlims!(0,0.8)
-    end
+    applyLayoutSettings(config; fig = f, hm = hm, ax = ax, plotArea = (4,1))
 
-    Colorbar(f[:, 2], hm; config.colorbarData...)
-
-    hidespines!(ax, :t, :r)
+    # hidespines!(ax, :t, :r)
     if config.extraData.meanPlot
         # UserInput
-        lines(f[5,1],mean(data,dims=2)[:,1])
+        axisOffset = (config.layoutData.showLegend && config.layoutData.legendPosition == :bottom) ? 1 : 0
+        lines(f[5+axisOffset,1],mean(data,dims=2)[:,1])
         ax2 = current_axis()
         ax2.xlabel = config.extraData.xlabel === nothing ? string(config.mappingData.x) : config.extraData.xlabel
         ax2.ylabel = config.colorbarData.label === nothing ? "" : config.colorbarData.label
