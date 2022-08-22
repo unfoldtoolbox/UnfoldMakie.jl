@@ -1,7 +1,11 @@
 function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, drawing = nothing, ax = nothing, plotArea = (1, 1))
     # remove border
+    if isnothing(ax)
+        ax = current_axis()
+    end
+
     if !config.layoutData.border
-        hidespines!(isnothing(ax) ? current_axis() : ax, :t, :r)
+        hidespines!(ax, :t, :r)
     end
 
     # set f[] position depending on position
@@ -11,10 +15,14 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
         else
             legendPosition = config.layoutData.legendPosition == :right ? fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]];
             if isnothing(drawing)
-                if isnothing(hm)
-                    Colorbar(legendPosition; config.colorbarData...)
+                if(config.layoutData.useColorbar)
+                    if isnothing(hm)
+                        Colorbar(legendPosition; config.colorbarData...)
+                    else
+                        Colorbar(legendPosition, hm; config.colorbarData...)
+                    end
                 else
-                    Colorbar(legendPosition, hm; config.colorbarData...)
+                    axislegend(ax; config.legendData...)
                 end
             else
                 legend!(legendPosition, drawing; config.legendData...)
@@ -25,7 +33,6 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
     
     # # label
     if config.layoutData.showAxisLabels
-        ax = current_axis()
         ax.xlabel = config.layoutData.xlabel === nothing ? string(config.mappingData.x) : config.layoutData.xlabel
         ax.ylabel = config.layoutData.ylabel === nothing ? string(config.mappingData.y) : config.layoutData.ylabel
     end

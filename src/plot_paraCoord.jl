@@ -91,13 +91,12 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing
     for cat in categories
         lines!(ax, 1, 1, 1, label = cat, color = colors[cat])
     end
-    axislegend(ax; config.legendData...)
 
     hidespines!(ax) 
     hidedecorations!(ax, label = false) 
 
-    ax.xlabel = "Channels";
-    ax.ylabel = "Timestamps"
+    applyLayoutSettings(config; fig = f, ax = ax)
+
     # the width of the plot is set, so the labels have to be placed evenly
     x = Array(10:(380-10)/(chaLeng-1):380)
     # height of plot

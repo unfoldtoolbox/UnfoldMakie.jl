@@ -35,19 +35,13 @@ mutable struct PlotConfig
             # vars to make scolumns nonnumerical
             categoricalColor=true,
             categoricalGroup=true,
-            showLegend=true,
-            legendPosition=:right,
-            border=false,
             topoLegend=false,
             topoLabel=nothing,
             topoPositions=nothing,
             xTicks=nothing,
-            xlabel=nothing,
-            ylabel=nothing,
             legendLabel=nothing,
             meanPlot=false,
             sortData=false,
-            ylims=nothing,
             stderror=false,
             pvalue=[],
             erpBlur=100,
@@ -61,6 +55,7 @@ mutable struct PlotConfig
             ylabel=nothing,
             ylims=nothing,
             xlims=nothing,
+            useColorbar=false,
         )
         this.visualData = (;
             colormap=:haline,
@@ -82,20 +77,6 @@ mutable struct PlotConfig
         
         # setter for ANY values for Data
         this.setExtraValues = function (;kwargs...)
-            # position affects multiple values in legendData
-            kwargsVals = values(kwargs)
-            if haskey(kwargsVals, :legendPosition)
-                if kwargsVals.legendPosition == :right
-                    sdtLegVal = (;tellwidth = true, tellheight = false, orientation = :vertical)
-                    sdtBarVal = (;tellwidth = true, tellheight = false)
-                elseif kwargsVals.legendPosition == :bottom
-                    sdtLegVal = (;tellwidth = false, tellheight = true, orientation = :horizontal)
-                    sdtBarVal = (;tellwidth = false, tellheight = true, vertical=false, flipaxis=false)
-                end
-                this.legendData = merge(this.legendData, sdtLegVal)
-                this.colorbarData = merge(this.colorbarData, sdtBarVal)
-            end
-
             this.extraData = merge(this.extraData, kwargs)
             return this
         end
@@ -147,6 +128,9 @@ mutable struct PlotConfig
                     xticklabelrotation=pi/8,
                 ),
             )
+            this.setLayoutValues(
+                useColorbar = true
+            )
         elseif (pltType == :topoplot || pltType == :eegtopoplot)
             this.setLayoutValues(
                 border=true,
@@ -166,6 +150,7 @@ mutable struct PlotConfig
                 topodata=:topodata,
                 positions=:pos,
                 labels=:labels,
+                useColorbar = true,
             )
             this.setColorbarValues(colormap = Makie.Reverse(:RdBu))
         elseif (pltType == :butterfly)
@@ -178,6 +163,7 @@ mutable struct PlotConfig
             this.setLayoutValues(
                 border=false,
                 showAxisLabels=true,
+                useColorbar = true,
             )
         elseif (pltType == :paracoord)
             this.setExtraValues(
@@ -185,6 +171,10 @@ mutable struct PlotConfig
             )
             this.setLegendValues(
                 position = :rc
+            )
+            this.setLayoutValues(
+                xlabel = "Channels",
+                ylabel = "Timestamps",
             )
         end
 
