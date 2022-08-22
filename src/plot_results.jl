@@ -2,7 +2,36 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 
-""" Plot line plot  """
+"""
+    plot_line(results::DataFrame, config::PlotConfig)
+
+Plot a line plot.
+## Arguments:
+- `results::DataFrame`: data for the line plot being visualized.
+- `config::PlotConfig`: data of the configuration being applied to the visualization.
+
+## Behavior:
+### `config.extraData.stderror`: 
+Indicating whether the data estimates should be complemented 
+with lower and higher estimates based on the stderror. 
+Lower estimates is gained by pointwise subtraction of the stderror from the estimates. 
+Higher estimates is gained by pointwise addition of the stderror to the estimates. 
+Both estimates are then included in the mapping.
+### `config.extraData.categoricalColor`:
+Indicates whether it should be categorized based on color. 
+Every line will get its discrete enty in the legend.
+### `config.extraData.categoricalGroup`:
+Indicates whether it should be categorized based on group.
+The legend is a colorbar.
+Should not be set in conjunction with `config.extraData.categoricalColor`.
+### `config.extraData.topoLegend`:
+
+
+
+
+## Return Value:
+
+"""
 function plot_line(results::DataFrame, config::PlotConfig)
     results = deepcopy(results)
     f = Figure()
