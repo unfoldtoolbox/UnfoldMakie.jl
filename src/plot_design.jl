@@ -58,18 +58,11 @@ function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,
     axisSettings =  merge(config.visualData.axis, (;xticks=(1:length(labels),labels)))
     fig, ax, hm = heatmap(designmat',axis=axisSettings)
     
-    if config.extraData.showLegend
-        Colorbar(fig[1,2],hm; config.colorbarData...)
-    end
-
     if isa(designmat, SparseMatrixCSC)
         ax.yreversed = true
     end
-    
-    # # remove border
-    # if !config.extraData.border
-    #     hidespines!(current_axis(), :t, :r)
-    # end
+
+    applyLayoutSettings(config; fig = fig, hm = hm)
 
     return fig
 end

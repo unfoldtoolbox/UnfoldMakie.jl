@@ -16,6 +16,7 @@ include("plot_topo.jl")
 include("plot_erp.jl")
 include("plot_paraCoord.jl")
 
+include("layoutHelper.jl")
 include("eegPositions.jl")
 include("topoColor.jl")
 
