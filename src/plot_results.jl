@@ -75,7 +75,7 @@ function plot_line(results::DataFrame, config::PlotConfig)
     
     xy_mapp = mapping(config.mappingData.x, config.mappingData.y)
 
-    basic = visual(Lines) * xy_mapp
+    basic = visual(Lines; config.visualData...) * xy_mapp
     if config.extraData.stderror
         m_se = mapping(config.mappingData.x,:se_low,:se_high)
         basic = basic + visual(Band,alpha=0.5)*m_se

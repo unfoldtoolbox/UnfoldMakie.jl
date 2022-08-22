@@ -17,7 +17,7 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
             if isnothing(drawing)
                 if(config.layoutData.useColorbar)
                     if isnothing(hm)
-                        Colorbar(legendPosition; config.colorbarData...)
+                        Colorbar(legendPosition; colormap=config.visualData.colormap, config.colorbarData...)
                     else
                         Colorbar(legendPosition, hm; config.colorbarData...)
                     end

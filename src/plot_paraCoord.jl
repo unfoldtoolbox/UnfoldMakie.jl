@@ -81,7 +81,7 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing
                 x = (q - 1) / (n - 1) * width
                 Point2f(offset + x, (d - l[1]) ./ (l[2] - l[1]) * height + offset)
                 end
-            lines!(f.scene, values; color = colors[cat])
+            lines!(f.scene, values; color = colors[cat], config.visualData...)
         end
     end 
 

@@ -90,7 +90,7 @@ function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,
     end
     # plot Designmatrix
     axisSettings =  merge(config.visualData.axis, (;xticks=(1:length(labels),labels)))
-    fig, ax, hm = heatmap(designmat',axis=axisSettings)
+    fig, ax, hm = heatmap(designmat',axis=axisSettings; config.visualData...)
     
     if isa(designmat, SparseMatrixCSC)
         ax.yreversed = true
