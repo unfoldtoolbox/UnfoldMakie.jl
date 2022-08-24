@@ -2,6 +2,21 @@ using LinearAlgebra
 using Pipe
 using PyMNE
 
+"""
+    function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
+
+Plot a PCP (parallel coordinates plot).
+## Arguments:
+- `plotData::DataFrame`: data for the PCP being visualized.
+- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `channels::Vector{Int64}=[]`: vector for all axes used in the PCP.
+
+## Behavior: TODO?
+### `config.extraData.-`:
+
+## Return Value:
+The figure displaying the PCP.
+"""
 function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
     plot_paraCoord!(Figure(), plotData, config; channels)
 end

@@ -6,7 +6,22 @@ using TopoPlots
 using ColorSchemes
 
 
-""" Plot TopoPlots  """
+"""
+    plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothing)
+
+Plot a topo plot.
+## Arguments:
+- `plotData`: data for the topo plot being visualized.
+- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `positions=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
+- `labels=nothing`: labels used if `plotData` is no DataFrame.
+
+## Behavior: TODO?
+### `config.extraData.-`:
+
+## Return Value:
+The figure displaying the topo plot.
+"""
 function plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothing)
     plot_topo!(Figure(), plotData, config; positions, labels)
 end
