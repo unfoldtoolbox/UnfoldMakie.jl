@@ -17,20 +17,25 @@ with lower and higher estimates based on the stderror.
 Lower estimates is gained by pointwise subtraction of the stderror from the estimates. 
 Higher estimates is gained by pointwise addition of the stderror to the estimates. 
 Both estimates are then included in the mapping.
+Default is `false`.
 ### `config.extraData.categoricalColor`:
 Indicates whether it should be categorized based on color. 
-Every line will get its discrete enty in the legend.
+Every line will get its discrete entry in the legend.
+Default is `true`.
 ### `config.extraData.categoricalGroup`:
 Indicates whether it should be categorized based on group.
 The legend is a colorbar.
+Default is `true`.
 Should not be set in conjunction with `config.extraData.categoricalColor`.
 ### `config.extraData.topoLegend`:
-
-
-
+Indicating whether a topo plot is used as a legend.
+Default is `false`.
+### `config.extraData.pvalue`: TODO
+An array of p-values. If array not empty, complement data by adding p-values.
+Default is an empty array.
 
 ## Return Value:
-
+The figure displaying the line plot.
 """
 function plot_line(plotData::DataFrame, config::PlotConfig)
     plot_line!(Figure(), plotData, config)

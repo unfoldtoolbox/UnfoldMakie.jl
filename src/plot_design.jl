@@ -35,7 +35,6 @@ Indicating whether a colorbar of the Makie module should be shown as a legend.
 The figure corresponding to the first heatmap return of the Makie module. 
 A colorbar is included as a legend if set in the configuration 
 (config.extraData.showLegend = true).
-
 """
 function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
     return plot_design!(Figure(), plotData, config)
