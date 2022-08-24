@@ -127,6 +127,10 @@ mutable struct PlotConfig
             this.setLayoutValues(
                 useColorbar = true
             )
+            this.setLayoutValues(
+                xlabel="",
+                ylabel="",
+            )
         elseif (pltType == :topoplot || pltType == :eegtopoplot)
             this.setLayoutValues(
                 border=true,
