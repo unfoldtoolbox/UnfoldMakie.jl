@@ -2,20 +2,24 @@ using LinearAlgebra
 using Pipe
 using PyMNE
 
-function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; channels=[])
+function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels=[])
+    plot_paraCoord!(Figure(), plotData, config; channels)
+end
+
+function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels=[])
 
     premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
     # colormap border (prevents from using outer parts of color map)
     bord = 1
 
     chaLeng = length(channels)
-    data = @pipe dataFrame |> 
+    data = @pipe plotData |> 
         filter(x -> x.channel in channels, _) |>
         # TODOcustom collumn exclude?
         select(_, Not([])) 
         # select(_, Not([:basisname, :condition])) 
 
-    categories = unique(dataFrame.category)
+    categories = unique(plotData.category)
     catLeng = length(categories)
 
     colormap = cgrad(config.visualData.colormap, (catLeng < 2) ? 2 + (bord*2) : catLeng + (bord*2), categorical = true)
@@ -30,7 +34,6 @@ function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; channels=[])
     k = 20
 
     # axes
-    f = Figure()
     width = 600;   height = 400 ;   offset = 90;   
     limits = [] ; l_low = [] ; l_up = []
     
