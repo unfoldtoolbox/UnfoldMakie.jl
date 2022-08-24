@@ -3,11 +3,11 @@ using SparseArrays
 
 
 """ 
-    plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
+    plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
 
 Plot a designmatrix. 
 ## Arguments:
-- `X::Unfold.DesignMatrix`: data for the designmatrix being visualized.
+- `plotData::Unfold.DesignMatrix`: data for the designmatrix being visualized.
 - `config::PlotConfig`: data of the configuration being applied to the visualization.
 - `standardize=true`: boolean indicating, whether the designmatrix should be standardized.
 Default is true. Standardization is performed by elementwise division of the designmatrix 
@@ -36,8 +36,12 @@ The figure corresponding to the first heatmap return of the Makie module.
 A colorbar is included as a legend if set in the configuration 
 (config.extraData.showLegend = true).
 """
-function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
-    designmat = Unfold.get_Xs(X);
+function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
+    return plot_design!(Figure(), plotData, config)
+end
+
+function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMatrix,config::PlotConfig)
+    designmat = Unfold.get_Xs(plotData);
     if config.extraData.standardizeData
         designmat = designmat ./ std(designmat,dims=1)
         designmat[isinf.(designmat)] .= 1.
@@ -45,7 +49,7 @@ function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,
     if config.extraData.sortData
         designmat = Base.sortslices(designmat,dims=1)
     end
-    labels = Unfold.get_coefnames(X)
+    labels = Unfold.get_coefnames(plotData)
     
     lLength = length(labels)
     # only change xTicks if we want less then all
@@ -84,18 +88,18 @@ function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,
     
     # @show labels
     if isa(designmat, SparseMatrixCSC)
-        @assert(config.extraData.sortData,"Sorting does not make sense for timeexpanded designmatrices")
+        @assert(!config.extraData.sortData,"Sorting does not make sense for timeexpanded designmatrices")
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
     end
     # plot Designmatrix
-    axisSettings =  merge(config.visualData.axis, (;xticks=(1:length(labels),labels)))
-    fig, ax, hm = heatmap(designmat',axis=axisSettings; config.visualData...)
+    ax = Axis(f[1, 1], xticklabelrotation=pi/8, xticks=(1:length(labels),labels))
+    hm = heatmap!(ax, designmat'; config.visualData...)
     
     if isa(designmat, SparseMatrixCSC)
         ax.yreversed = true
     end
 
-    applyLayoutSettings(config; fig = fig, hm = hm)
+    applyLayoutSettings(config; fig = f, hm = hm)
 
-    return fig
+    return f
 end
