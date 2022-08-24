@@ -124,11 +124,6 @@ mutable struct PlotConfig
                 color=:coefname
             )
         elseif (pltType == :designmatrix)
-            this.setVisualValues(
-                axis=(
-                    xticklabelrotation=pi/8,
-                ),
-            )
             this.setLayoutValues(
                 useColorbar = true
             )
