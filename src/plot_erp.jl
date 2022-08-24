@@ -5,7 +5,7 @@ using ImageFiltering
 
 Plot an ERP image.
 ## Arguments:
-- `data::Matrix{Float64}`: data for the ERP image being visualized.
+- `plotData::Matrix{Float64}`: data for the ERP image being visualized.
 - `config::PlotConfig`: data of the configuration being applied to the visualization.
 
 ## Behavior:
@@ -21,7 +21,7 @@ Indicating whether the plot should be a line plot using the mean of the data.
 Default is `false`.
 
 ## Return Value:
-The figure displaying an ERP image, or if `config.extraData.meanPlot = true` a line plot.
+The figure displaying the ERP image, or if `config.extraData.meanPlot = true` a line plot.
 """
 function plot_erp(plotData::Matrix{Float64},config::PlotConfig)
     return plot_erp!(Figure(), plotData, config)
