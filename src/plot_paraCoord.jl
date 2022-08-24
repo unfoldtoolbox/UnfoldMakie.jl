@@ -8,6 +8,8 @@ end
 
 function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
 
+    config.resolveMappings(plotData)
+    
     premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
     # colormap border (prevents from using outer parts of color map)
     bord = 1
