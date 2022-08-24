@@ -7,18 +7,18 @@ using Unfold
 using Colors
 using ColorSchemes
 
-include("plot_config.jl")
+include("plotconfig.jl")
 using .PlotConfigs
 
-include("plot_results.jl")
+include("plot_line.jl")
 include("plot_design.jl")
 include("plot_topo.jl")
 include("plot_erp.jl")
-include("plot_paraCoord.jl")
+include("plot_paracoord.jl")
 
-include("layoutHelper.jl")
-include("eegPositions.jl")
-include("topoColor.jl")
+include("layout_helper.jl")
+include("eeg_positions.jl")
+include("topo_color.jl")
 
 export PlotConfig
 # our plot functions
