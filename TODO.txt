@@ -1,53 +1,49 @@
-colors
-	https://makie.juliaplots.org/stable/documentation/colors/
-
-Add custom labels everywhere
-
 
 Line Plots
-	https://github.com/JuliaPlots/AlgebraOfGraphics.jl/issues/329
-		-> Mapping of colors does not interpolate in Legend
-		DONE // Error Line
-		DONE // PValues
-		ASK VLAD // facettes
+		MAYBE> // facettes
 		rename plot_results.jl file, rename results variable in plot_line?
 		"if topoLegend" combine both codeblocks into one?
+		is categorical color/group correct?
 
 Design Matrix
-	DONE // Timestamps not at *every* step, but only at intervalls
 	maybe tell a way to increase picture size to capture the whole text
 
 Butterfly Plots
-	DONE // -> positions have a bug inside TopoPlots
-	DONE // -> Issue for this problem
 
-DONE Topolots hinzufügen
+
+Topolots
+
+
 
 ERP images
-	DONE // ask Vladimir for his work in erp images
-	DONE // Maybe move mean plot exactly under real plot
-	DONE // select 2000-6000 trials after sorting 
-	Maybe add customization for mean plot
-	Smoothing Kernel in Vlads code (new library)
 
 
 Parralel Coordinate Plots
-	DONE // Ask Vladimir about his prototype
-	Currently in work
-	
-
-
-
-jede plot funtion als ausrufenzeischen version mit f als input
-plot_line!(f, data, config)
-
+	channel in function input mandatory?
 
 Dokumentation
-	Same as Unforld.jl
-	adapt documentation regarding plot config
+	Liste and zeug
+	Tutorials
+	Example
+
+jede plot funtion als ausrufenzeischen version mit f als input: plot_line!(f, data, config)
+	f als input und [x, y] posion in config
+
 
 
 default values for mappings/dataframe-collumns
+	Resolve methode benutzen
+
+
+
+LinePlot Matrix
+	MAYBE!
+
+
+
+
+colorMap examples: https://makie.juliaplots.org/stable/documentation/colors/
+
 
 
 

@@ -2,13 +2,12 @@ using LinearAlgebra
 using Pipe
 using PyMNE
 
-function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; labels=nothing)
+function plot_paraCoord(dataFrame::DataFrame, config::PlotConfig; channels=[])
 
     premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
     # colormap border (prevents from using outer parts of color map)
     bord = 1
 
-    channels = [2, 2, 8] 
     chaLeng = length(channels)
     data = @pipe dataFrame |> 
         filter(x -> x.channel in channels, _) |>

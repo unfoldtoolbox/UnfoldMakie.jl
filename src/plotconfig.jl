@@ -42,9 +42,10 @@ mutable struct PlotConfig
             legendLabel=nothing,
             meanPlot=false,
             sortData=false,
+            standardizeData=true,
             stderror=false,
             pvalue=[],
-            erpBlur=100,
+            erpBlur=10,
         )
         this.layoutData = (;
             showLegend=true,
