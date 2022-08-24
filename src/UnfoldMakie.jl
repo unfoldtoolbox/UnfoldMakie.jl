@@ -23,11 +23,15 @@ include("topo_color.jl")
 export PlotConfig
 # our plot functions
 export plot_line
+export plot_line!
 export plot_design
+export plot_design!
 export plot_erp
-export plot_eeg_topo
+export plot_erp!
 export plot_topo
+export plot_topo!
 export plot_paraCoord
+export plot_paraCoord!
 
 # legacy plot functions
 export plot_results
