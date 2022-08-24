@@ -3,11 +3,11 @@ using TopoPlots
 using LinearAlgebra
 
 """
-    plot_line(results::DataFrame, config::PlotConfig)
+    plot_line(plotData::DataFrame, config::PlotConfig)
 
 Plot a line plot.
 ## Arguments:
-- `results::DataFrame`: data for the line plot being visualized.
+- `plotData::DataFrame`: data for the line plot being visualized.
 - `config::PlotConfig`: data of the configuration being applied to the visualization.
 
 ## Behavior:
@@ -32,27 +32,30 @@ Should not be set in conjunction with `config.extraData.categoricalColor`.
 ## Return Value:
 
 """
-function plot_line(results::DataFrame, config::PlotConfig)
-    results = deepcopy(results)
-    f = Figure()
+function plot_line(plotData::DataFrame, config::PlotConfig)
+    plot_line!(Figure(), plotData, config)
+end
+
+function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
+    plotData = deepcopy(plotData)
     
-    # @show names(results)
+    # @show names(plotData)
     # if isnothing(config.mappingData.y)
-    #     config.mappingData.y = "estimate" ∈  names(results) ? :estimate : "yhat" ∈  names(results) ? :yhat : @error("please specify y-axis")
+    #     config.mappingData.y = "estimate" ∈  names(plotData) ? :estimate : "yhat" ∈  names(plotData) ? :yhat : @error("please specify y-axis")
     # end
-    if "group" ∈  names(results)
-        results.group = results.group .|> a -> isnothing(a) ? :fixef : a
+    if "group" ∈  names(plotData)
+        plotData.group = plotData.group .|> a -> isnothing(a) ? :fixef : a
     end
     
-    if "stderror" ∈  names(results) && config.extraData.stderror
-        results.stderror = results.stderror .|> a -> isnothing(a) ? 0. : a
-        results[!,:se_low]  = results[:,config.mappingData.y] .- results.stderror
-        results[!,:se_high] = results[:,config.mappingData.y] .+ results.stderror
+    if "stderror" ∈  names(plotData) && config.extraData.stderror
+        plotData.stderror = plotData.stderror .|> a -> isnothing(a) ? 0. : a
+        plotData[!,:se_low]  = plotData[:,config.mappingData.y] .- plotData.stderror
+        plotData[!,:se_high] = plotData[:,config.mappingData.y] .+ plotData.stderror
     end
     
     # Get topocolors if topoPlot Legend active
     if (config.extraData.topoLegend) 
-        allPositions, colors = getTopoColor(results, config)
+        allPositions, colors = getTopoColor(plotData, config)
     end
 
     # return allPositions
@@ -60,13 +63,13 @@ function plot_line(results::DataFrame, config::PlotConfig)
     # convert color column into string, so no wrong grouping happens
     if config.extraData.categoricalColor && (:color ∈ keys(config.mappingData))
         # if color is used, use upper line
-        # results[!, config.mappingData.color] = results[!, config.mappingData.color] .|> c -> string(c)
+        # plotData[!, config.mappingData.color] = plotData[!, config.mappingData.color] .|> c -> string(c)
         config.mappingData = merge(config.mappingData,(;color=config.mappingData.color=>nonnumeric))
     end
     # converts group column into string
     if config.extraData.categoricalGroup && (:group ∈ keys(config.mappingData))
         # if color is used, use upper line
-        # results[!, config.mappingData.group] = results[!, config.mappingData.group] .|> c -> string(c)
+        # plotData[!, config.mappingData.group] = plotData[!, config.mappingData.group] .|> c -> string(c)
         config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
     end
 
@@ -81,11 +84,11 @@ function plot_line(results::DataFrame, config::PlotConfig)
         basic = basic + visual(Band,alpha=0.5)*m_se
     end
     
-    basic = basic * data(results)
+    basic = basic * data(plotData)
 
     # add the pvalues
     if !isempty(config.extraData.pvalue)
-        basic =  basic + addPvalues(results, config)
+        basic =  basic + addPvalues(plotData, config)
     end
     
     plotEquation = basic * mapp
@@ -270,15 +273,15 @@ function (ni::NullInterpolator)(
     return zeros(length(xrange),length(yrange))
 end
 
-function addPvalues(results, config)
+function addPvalues(plotData, config)
     p = deepcopy(config.extraData.pvalue)
 
     # for now, add them to the fixed effect
     if "group" ∉  names(p)
         # group not specified using first
-        if "group" ∈  names(results)
-            p[!,:group] .= results[1,:group]
-            if length(unique(results.group))>1
+        if "group" ∈  names(plotData)
+            p[!,:group] .= plotData[1,:group]
+            if length(unique(plotData.group))>1
                 @warn "multiple groups found, choosing first one"
             end
         else
@@ -301,7 +304,7 @@ function addPvalues(results, config)
     
     for k in shouldHave
         if k ∉ names(p)
-            p[!,k] .= results[1,k]
+            p[!,k] .= plotData[1,k]
         end
 
     end
@@ -310,10 +313,10 @@ function addPvalues(results, config)
     # define an index to dodge the lines vertically
     p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
 
-    scaleY = [minimum(results.estimate),maximum(results.estimate)]
+    scaleY = [minimum(plotData.estimate),maximum(plotData.estimate)]
     stepY = scaleY[2]-scaleY[1]
     posY = stepY*-0.05+scaleY[1]
-    Δt = diff(results.time[1:2])[1]
+    Δt = diff(plotData.time[1:2])[1]
     Δy = 0.01
     p[!,:segments] = [Makie.Rect(Makie.Vec(x,posY+stepY*(Δy*(n-1))),Makie.Vec(y-x+Δt,0.5*Δy*stepY)) for (x,y,n) in zip(p.from,p.to,p.sigindex)]
     return (data(p)*mapping(:segments)*visual(Poly))
