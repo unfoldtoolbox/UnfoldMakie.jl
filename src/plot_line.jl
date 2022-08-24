@@ -43,6 +43,8 @@ end
 
 function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
     plotData = deepcopy(plotData)
+
+    config.resolveMappings(plotData)
     
     # @show names(plotData)
     # if isnothing(config.mappingData.y)
