@@ -37,7 +37,7 @@ A colorbar is included as a legend if set in the configuration
 (config.extraData.showLegend = true).
 
 """
-function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
+function plot_design(X::Unfold.DesignMatrix,config::PlotConfig)
     designmat = Unfold.get_Xs(X);
     if config.extraData.standardizeData
         designmat = designmat ./ std(designmat,dims=1)
@@ -85,7 +85,7 @@ function plot_design(X::Unfold.DesignMatrix,config::PlotConfig;standardize=true,
     
     # @show labels
     if isa(designmat, SparseMatrixCSC)
-        @assert(config.extraData.sortData,"Sorting does not make sense for timeexpanded designmatrices")
+        @assert(!config.extraData.sortData,"Sorting does not make sense for timeexpanded designmatrices")
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
     end
     # plot Designmatrix
