@@ -119,9 +119,11 @@ mutable struct PlotConfig
         # standard values for each plotType
         if (pltType == :lineplot)
             this.setMappingValues(
-                col=:basisname,
-                row=:group,
-                color=:coefname
+                x=(:x, :time),
+                y=(:y, :estimate, :yhat),
+                col=(:col, :basisname),
+                row=(:row, :group),
+                color=(:color, :coefname)
             )
         elseif (pltType == :designmatrix)
             this.setLayoutValues(
@@ -148,9 +150,9 @@ mutable struct PlotConfig
             this.setMappingValues(
                 x=:xPos,
                 y=:yPos,
-                topodata=:topodata,
-                positions=:pos,
-                labels=:labels,
+                topodata=(:topodata, :data, :y),
+                positions=(:pos, :positions, :position, :x),
+                labels=(:labels, :channel, :sensor),
             )
         elseif (pltType == :butterfly)
             this.setExtraValues(topoLegend = true)
@@ -188,8 +190,6 @@ mutable struct PlotConfig
             this.mappingData = map(val -> isa(val, Tuple) ? getAvailable(val)[1] : val, this.mappingData)
         end
 
-
-
         return this
     end
 end
@@ -197,7 +197,6 @@ end
 export PlotConfig
 
 end
-
 
 # filters out the entries with the given names from the tuple
 function filterNamesOutTuple(inputTuple, filterNames)

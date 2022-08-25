@@ -2,12 +2,29 @@ using LinearAlgebra
 using Pipe
 using PyMNE
 
+"""
+    function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
+
+Plot a PCP (parallel coordinates plot).
+## Arguments:
+- `plotData::DataFrame`: data for the PCP being visualized.
+- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `channels::Vector{Int64}=[]`: vector for all axes used in the PCP.
+
+## Behavior: TODO?
+### `config.extraData.-`:
+
+## Return Value:
+The figure displaying the PCP.
+"""
 function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
     plot_paraCoord!(Figure(), plotData, config; channels)
 end
 
 function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
 
+    config.resolveMappings(plotData)
+    
     premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
     # colormap border (prevents from using outer parts of color map)
     bord = 1

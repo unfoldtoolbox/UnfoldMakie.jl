@@ -3,19 +3,20 @@ using SparseArrays
 
 
 """ 
-    plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig;standardize=true,sort=false)
+    plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
 
 Plot a designmatrix. 
 ## Arguments:
 - `plotData::Unfold.DesignMatrix`: data for the designmatrix being visualized.
 - `config::PlotConfig`: data of the configuration being applied to the visualization.
-- `standardize=true`: boolean indicating, whether the designmatrix should be standardized.
-Default is true. Standardization is performed by elementwise division of the designmatrix 
-with the sample standard deviation of the designmatrix.
-- `sort=false`: boolean indicating, whether the designmatrix should be sorted.
-Default is false. Sorting is performed with `Base.sortslices`.
 
 ## Behavior:
+### `config.extraData.standardizeData`:
+Indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation.
+Default is `true`.
+### `config.extraData.sortData`:
+Indicating whether the data is sorted; using sortslices() of Base Julia. 
+Default is `false`.
 ### `config.extraData.xTicks`:
 Indicating the number of labels on the x-axis.
 Behavior if specified in configuration:
@@ -25,16 +26,9 @@ Behavior if specified in configuration:
 - 2 < xTicks < number of labels: xTicks-2 labels are placed 
 between the first and last.
 - xTicks ≥ number of labels: all labels are placed.
-### ? `config.visualData.axis`: 
-TODO: wait for config completion!
-### `config.extraData.showLegend`:
-Indicating whether a colorbar of the Makie module should be shown as a legend.
-### TODO: more?
 
 ## Return Value:
-The figure corresponding to the first heatmap return of the Makie module. 
-A colorbar is included as a legend if set in the configuration 
-(config.extraData.showLegend = true).
+The figure displaying the designmatrix by using the first heatmap return of the Makie module. 
 """
 function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
     return plot_design!(Figure(), plotData, config)
