@@ -23,6 +23,7 @@ Parralel Coordinate Plots
 	channel in function input mandatory?
 
 Dokumentation
+	function documentation: for all vis: explain applicable config? (not extra data)
 	Liste and zeug
 	Tutorials
 	Example
