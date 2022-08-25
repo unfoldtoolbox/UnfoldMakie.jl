@@ -24,6 +24,7 @@ Parralel Coordinate Plots
 
 Dokumentation
 	function documentation: for all vis: explain applicable config? (not extra data)
+	update other general vis, create for PCP
 	Liste and zeug
 	Tutorials
 	Example

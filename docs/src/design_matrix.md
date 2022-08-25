@@ -38,18 +38,21 @@ cDesign = PlotConfig(:designmatrix)
 ...---Some configurations are displayed below. 
 In case you want to display less labels on a specific axis, you can execute the following code:
 ```@example main
-cDesign.setExtraValues(xTicks=2)
+cDesign.setExtraValues(xTicks=5, sortData=true)
 ```
 In this example, the number of labels on the x-axis is set to 2.---...
 
 TODO more examples
 
 ### Plot Designmatrices
-This is how you finally plot the designmatrix.
+This is how you finally plot the designmatrix, when using data of the `Unfold` module.
 ```@example main
-plot_design(designmatrix(ufMass, evts), cDesign;sort=true)
+plot_design(designmatrix(ufMass, evts), cDesign)
 ```
-You can omit `sort=true` to get an unsorted designmatrix.
+This is how you finally plot the designmatrix, when using data of the `erpcore-N170.jld2` file.
+```@example main
+plot_design(designmatrix(mres), cDesign)
+```
 
 
 ## For Timeexpanded Designmatrices
