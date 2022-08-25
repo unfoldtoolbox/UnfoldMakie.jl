@@ -98,7 +98,7 @@ function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMat
     if isa(designmat, SparseMatrixCSC)
         ax.yreversed = true
     end
-
+    
     applyLayoutSettings(config; fig = f, hm = hm)
 
     return f

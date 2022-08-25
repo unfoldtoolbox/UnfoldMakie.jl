@@ -7,6 +7,7 @@ Line Plots
 
 Design Matrix
 	maybe tell a way to increase picture size to capture the whole text
+	-> didn|t find solution except rotating the text
 
 Butterfly Plots
 
