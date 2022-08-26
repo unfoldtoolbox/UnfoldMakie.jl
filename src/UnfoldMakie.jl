@@ -8,7 +8,6 @@ using Colors
 using ColorSchemes
 
 include("plotconfig.jl")
-using .PlotConfigs
 
 include("plot_line.jl")
 include("plot_design.jl")
