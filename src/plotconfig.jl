@@ -1,6 +1,4 @@
 
-module PlotConfigs
-
 using GeometryBasics
 using Makie
 
@@ -25,6 +23,9 @@ mutable struct PlotConfig
 
     # removes all varaibles from mappingData which aren't collumns in input plotData
     resolveMappings::Function
+
+    plot::Function
+    plot!::Function
 
     "plot types: :lineplot, :designmatrix, :topolot, :butterfly"
     function PlotConfig(pltType)
@@ -185,18 +186,42 @@ mutable struct PlotConfig
             function isCollumn(col)
                 string(col) ∈ names(plotData)
             end
-            function getAvailable(choices)
-                choices[keys(choices)[isCollumn.(collect(choices))]]
+            # filter collumns to only include the ones that are in plotData, or throw an error if none are
+            function getAvailable(key, choices)
+                available = choices[keys(choices)[isCollumn.(collect(choices))]]
+                length(available) >= 1 ? available :
+                    @error("default collumns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
             end
-            this.mappingData = map(val -> isa(val, Tuple) ? getAvailable(val)[1] : val, this.mappingData)
+            # have to use Dict here because NamedTuples break when trying to map them with keys/indices
+            mappingDict = Dict()
+            for (k,v) in pairs(this.mappingData)
+                mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v)[1] : v
+            end
+            this.mappingData = (;mappingDict...)
+        end
+
+        this.plot = function (plotData::Any; kwargs...)
+            this.plot!(Figure(), plotData; kwargs...)
+        end
+
+        this.plot! = function (f::Union{GridPosition, Figure}, plotData::Any; kwargs...)
+            if (this.plotType == :designmatrix)
+                plot_design!(f, plotData, this)
+            elseif (this.plotType == :erp)
+                plot_erp!(f, plotData, this)
+            elseif (this.plotType == :lineplot || this.plotType == :butterfly)
+                plot_line!(f, plotData, this)
+            elseif (this.plotType == :paracoord)
+                plot_paraCoord!(f, plotData, this; kwargs...)
+            elseif (this.plotType == :topoplot || this.plotType == :eegtopoplot)
+                plot_topo!(f, plotData, this; kwargs...)
+            else
+                @error "Unknown plot type, cannot use plot function."
+            end
         end
 
         return this
     end
-end
-
-export PlotConfig
-
 end
 
 # filters out the entries with the given names from the tuple
