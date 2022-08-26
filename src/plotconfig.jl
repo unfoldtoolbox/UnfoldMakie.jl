@@ -179,6 +179,12 @@ mutable struct PlotConfig
                 xlabel = "Channels",
                 ylabel = "Timestamps",
             )
+            this.setMappingValues(
+                channel=:channel,
+                category=:category,
+                time=:time,
+                yhat=:yhat,
+            )
         end
 
         # removes all varaibles from mappingData which aren't collumns in input plotData
