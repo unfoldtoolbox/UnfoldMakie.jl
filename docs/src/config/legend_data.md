@@ -1,0 +1,1 @@
+## [Config: Legend Data](@id config_legend)
