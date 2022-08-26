@@ -1,0 +1,1 @@
+## [Config: Visual Data](@id config_visual)

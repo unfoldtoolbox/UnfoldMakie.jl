@@ -4,7 +4,7 @@ Here we discuss general butterfly plot visualization.
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used Modules
-The following modules are necessary:
+The following modules are necessary for following this tutorial:
 ```@example main
 using Unfold
 using UnfoldMakie
@@ -27,6 +27,8 @@ results_plot_butter = @subset(results_onesubject,:coefname .== "(Intercept)",:ch
 
 
 ### Configurations for Butterfly Plots
+Here we look into possible options for configuring the butterfly plot visualization.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
 ```@example main
 cButter = PlotConfig(:butterfly)
         
@@ -35,10 +37,6 @@ cButter.setExtraValues(categoricalColor=false,
     legendPosition=:right,
     border=false,
     topoLabel=:position)
-        
-# cButter.setLegendValues()
-# cButter.setColorbarValues()
-# cButter.setMappingValues(color=:channel, group=:channel)
     
 # for testing add a column with labels
 results_plot_butter.position = results_plot_butter[:, :channel] .|> c -> ("C" * string(c))
