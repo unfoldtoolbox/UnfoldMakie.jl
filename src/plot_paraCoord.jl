@@ -22,22 +22,16 @@ function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vecto
 end
 
 function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
-
+    # colormap border (prevents from using outer parts of color map)
+    bord = 0
     config.resolveMappings(plotData)
     
     premadeNames = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
-    # colormap border (prevents from using outer parts of color map)
-    bord = 1
 
-    chaLeng = length(channels)
-    data = @pipe plotData |> 
-        filter(x -> x.channel in channels, _) |>
-        # TODOcustom collumn exclude?
-        select(_, Not([])) 
-        # select(_, Not([:basisname, :condition])) 
+    categories = unique(plotData[:,config.mappingData.category])
 
-    categories = unique(plotData.category)
     catLeng = length(categories)
+    chaLeng = length(channels)
 
     colormap = cgrad(config.visualData.colormap, (catLeng < 2) ? 2 + (bord*2) : catLeng + (bord*2), categorical = true)
     colors = Dict{String,RGBA{Float64}}()
@@ -56,8 +50,8 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     
     # get extrema for each channel
     for cha in channels
-        tmp = filter(x -> (x.channel == cha),  data) 
-        w = extrema.([tmp.yhat])
+        tmp = filter(x -> (x[config.mappingData.channel] == cha),  plotData) 
+        w = extrema.([tmp[:,config.mappingData.yhat]])
         append!(limits, w)
         append!(l_up, w[1][2])
         append!(l_low, w[1][1])
@@ -84,19 +78,19 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     
     
     # Draw colored line through all channels for each time entry 
-    for time in unique(data.time) 
-        tmp1 = filter(x -> (x.time == time),  data) #1 timepoint, 10 rows (2 conditions, 5 channels)
+    for time in unique(plotData[:,config.mappingData.time]) 
+        tmp1 = filter(x -> (x[config.mappingData.time] == time),  plotData) #1 timepoint, 10 rows (2 conditions, 5 channels)
         for cat in categories
             # df with the order of the channels
-            dfInOrder = data[[],:]
-            tmp2 = filter(x -> (x.category == cat),  tmp1)
+            dfInOrder = plotData[[],:]
+            tmp2 = filter(x -> (x[config.mappingData.category] == cat),  tmp1)
             
             # create new dataframe with the right order
             for cha in channels
-                append!(dfInOrder,filter(x -> (x.channel == cha),  tmp2))
+                append!(dfInOrder,filter(x -> (x[config.mappingData.channel] == cha),  tmp2))
             end
             
-            values = map(1:n, dfInOrder.yhat, limits) do q, d, l # axes, data, limis
+            values = map(1:n, dfInOrder[:,config.mappingData.yhat], limits) do q, d, l # axes, data, limis
                 x = (q - 1) / (n - 1) * width
                 Point2f(offset + x, (d - l[1]) ./ (l[2] - l[1]) * height + offset)
                 end
@@ -115,15 +109,18 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     hidedecorations!(ax, label = false) 
 
     applyLayoutSettings(config; fig = f, ax = ax)
-
+    
     # the width of the plot is set, so the labels have to be placed evenly
     x = Array(10:(380-10)/(chaLeng-1):380)
     # height of plot
     y = fill(105, chaLeng)
-
+    
     channelNames = premadeNames[channels] 
-
+    
     ax = Axis(f[1, 1])
+    
+
+
     text!(x, y, text = channelNames, align = (:center, :center), 
         offset = (0, 0), 
         color = :blue)
