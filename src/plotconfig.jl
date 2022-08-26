@@ -23,6 +23,7 @@ mutable struct PlotConfig
     setLegendValues::Function
     setColorbarValues::Function
 
+    # removes all varaibles from mappingData which aren't collumns in input plotData
     resolveMappings::Function
 
     "plot types: :lineplot, :designmatrix, :topolot, :butterfly"
