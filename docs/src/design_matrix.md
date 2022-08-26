@@ -4,7 +4,7 @@ Here we discuss general designmatrix visualization.
 Make sure you have looked into the [installation instructions](@ref install_instruct) section. 
 
 ### Include used modules
-The following modules are necessary:
+The following modules are necessary for following this tutorial:
 ```@example main
 using Unfold
 using UnfoldMakie
@@ -30,7 +30,7 @@ designmatrix(mres)
 
 ### Configurations for Designmatrices
 Here we look into possible options for configuring the designmatrix visualization.
-For more information on plot configurations in general, look at this section of the [documentation](@ref TODO). 
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
 The following code will result in the default configuration. 
 ```@example main
 cDesign = PlotConfig(:designmatrix)

@@ -4,7 +4,7 @@ Here we discuss general butterfly plot visualization.
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used Modules
-The following modules are necessary:
+The following modules are necessary for following this tutorial:
 ```@example main
 using Unfold
 using UnfoldMakie
@@ -25,7 +25,8 @@ Use the test data of `erpcore-N170.jld2`.
 Note that you do not need the pre-processing step detailed in that section.
 
 ### Configurations for ERP Images
-Here you can see a standard configuration.
+Here we look into possible options for configuring the ERP image visualization.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
 ```@example main
 erpConfig = PlotConfig(:erp)
 erpConfig.setExtraValues(;ylims = (low = 3650, high = 8000),
