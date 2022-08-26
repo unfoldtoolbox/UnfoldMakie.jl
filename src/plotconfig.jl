@@ -124,7 +124,7 @@ mutable struct PlotConfig
                 y=(:y, :estimate, :yhat),
                 col=(:col, :basisname),
                 row=(:row, :group),
-                color=(:color, :coefname)
+                color=(:color, :coefname),
             )
         elseif (pltType == :designmatrix)
             this.setLayoutValues(

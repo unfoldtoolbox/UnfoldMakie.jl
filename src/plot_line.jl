@@ -43,7 +43,7 @@ end
 
 function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
     plotData = deepcopy(plotData)
-
+    
     config.resolveMappings(plotData)
 
     # turn "nothing" from group columns into :fixef
@@ -163,6 +163,8 @@ end
 
 function addPvalues(plotData, config)
     p = deepcopy(config.extraData.pvalue)
+
+
 
     # for now, add them to the fixed effect
     if "group" ∉  names(p)
