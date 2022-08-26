@@ -25,10 +25,21 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "DesignMatrices" => "plot_design.md",
-        "Results (ERP-Style)" => "plot_results.md",
-
-
+        "Installation" => "tutorials/installation.md",
+        "Test Data" => "tutorials/test_data.md",
+        "Butterfly Plot" => "tutorials/butterfly_plot.md",
+        "Designmatrix" => "tutorials/design_matrix.md",
+        "ERP Image" => "tutorials/erp_image.md",
+        "Line Plot" => "tutorials/line_plot.md",
+        "Parallel Coordinates Plot" => "tutorials/para_coord.md",
+        "Topo Plot" => "tutorials/topo_plot.md",
+        "Plot Configuration" => "config/plot_config.md",
+        "Config Colorbar Data" => "config/colorbar_data.md",
+        "Config Extra Data" => "config/extra_data.md",
+        "Config Layout Data" => "config/layout_data.md",
+        "Config Legend Data" => "config/legend_data.md",
+        "Config Mapping Data" => "config/mapping_data.md",
+        "Config Visual Data" => "config/visual_data.md",
     ],
 )
 

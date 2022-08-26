@@ -14,14 +14,36 @@ You can find instructions for installation [here](@ref install_instruct).
 
 For each of the visualization types there is a tutorial on how to generate them. 
 These include:
-- [Designmatrices](@id dm_vis)
-- [Line Plots](@id lp_vis)
-- [Butterfly Plots](@id bfp_vis)
-- [ERP Images](@id erpi_vis)
-- [Topo Plots](@id tp_vis)
-- ! [Parallel Coordinate Plots](@id pcp_vis)
+- [Designmatrices](@ref dm_vis)
+- [Line Plots](@ref lp_vis)
+- [Butterfly Plots](@ref bfp_vis)
+- [ERP Images](@ref erpi_vis)
+- [Topo Plots](@ref tp_vis)
+- [Parallel Coordinate Plots](@ref pcp_vis)
 
-
+## Required Packages TODO: correct
+Everything was tested with Julia v1.7
+The following module in their respective versions are used:
+- AlgebraOfGraphics v0.6.9
+- CairoMakie
+- CategoricalArrays v0.10.6
+- ColorSchemes v3.19.0
+- Colors v0.12.8
+- DataFrames v1.3.4
+- Documenter v0.27.22
+- GeometryBasics v0.4.2
+- Glob v1.3.0
+- ImageFiltering
+- Literate v2.13.4
+- Makie v0.17.9
+- Pipe
+- PyMNE v0.1.2
+- TopoPlots v0.1.0
+- Unfold v0.3.11
+- LinearAlgebra 
+- Pkg
+- SparseArrays
+- Statistics
 
 ## Notes
 
@@ -38,6 +60,7 @@ You might want to start with **tutorials** such as the [installation tutorial](@
 
 in installation.md - "add UnfoldMakie" does not yet add our fork
 
+Documentation for [Unfold](https://unfoldtoolbox.github.io/Unfold.jl/dev/).
 Documentation for [UnfoldMakie](https://github.com/behinger/UnfoldMakie.jl).
 
 This is another one
