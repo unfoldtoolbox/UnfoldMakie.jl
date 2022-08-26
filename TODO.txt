@@ -20,8 +20,13 @@ Parralel Coordinate Plots
 
 Dokumentation
 	function documentation: for all vis: explain applicable config? (not extra data)
-	update other general vis, create for PCP
 	"title level" #, or ## ?
+	extra_data.md (complete + missing + correct + butterfly plot?!)
+	colorbar_data.md add restrictions? + complete
+	layout_data.md add restrictions? + complete
+	legend_data.md add restrictions? + complete
+	mapping_data.md add restrictions? + complete
+	visual_data.md add restrictions? + complete
 	Liste and zeug
 	Tutorials
 	Example
