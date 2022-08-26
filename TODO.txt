@@ -1,7 +1,6 @@
 
 Line Plots
 		MAYBE> // facettes
-		rename plot_results.jl file, rename results variable in plot_line?
 		"if topoLegend" combine both codeblocks into one?
 		is categorical color/group correct?
 
@@ -20,7 +19,7 @@ ERP images
 
 
 Parralel Coordinate Plots
-	channel in function input mandatory?
+
 
 Dokumentation
 	function documentation: for all vis: explain applicable config? (not extra data)
@@ -28,13 +27,11 @@ Dokumentation
 	Tutorials
 	Example
 
-jede plot funtion als ausrufenzeischen version mit f als input: plot_line!(f, data, config)
-	f als input und [x, y] posion in config
 
 
 
 default values for mappings/dataframe-collumns
-	Resolve methode benutzen
+	resolve mapping with specific error
 
 
 
