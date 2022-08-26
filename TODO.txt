@@ -3,8 +3,8 @@ Line Plots
 	MAYBE> // facettes
 	"if topoLegend" combine both codeblocks into one?
 	is categorical color/group correct?
+
 	
-	plotData[config.mappingData.stderror]
 
 Design Matrix
 	maybe tell a way to increase picture size to capture the whole text

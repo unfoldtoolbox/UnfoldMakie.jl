@@ -43,7 +43,7 @@ end
 
 function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
     plotData = deepcopy(plotData)
-
+    
     config.resolveMappings(plotData)
 
     # turn "nothing" from group columns into :fixef
@@ -96,9 +96,17 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     plotEquation = basic * mapp
 
     # add topoLegend if topoPlot Legend active
-    if (config.extraData.topoLegend)    
-        topoplotLegend(f, allPositions)
-        drawing = draw!(f[1,1],plotEquation; palettes=(color=colors,))
+    if (config.extraData.topoLegend)
+        legendRight = config.layoutData.legendPosition == :right
+        if config.layoutData.showLegend
+            axis = Axis(f[2,2], aspect = DataAspect())
+            topoplotLegend(axis, allPositions)
+            drawing = draw!(legendRight ? f[1:2,1] : f[1,1:2],plotEquation; palettes=(color=colors,))
+        else
+            axis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
+            topoplotLegend(axis, allPositions)
+            drawing = draw!(legendRight ? f[1:2,1] : f[1,1:2],plotEquation; palettes=(color=colors,))
+        end
     else
         drawing = draw!(f[1,1],plotEquation)
     end
@@ -121,7 +129,7 @@ function eegHeadMatrix(positions, center, radius)
                        center[1]-oldCenter[1]*radF, center[2]-oldCenter[2]*radF, 0, 1)
 end
 
-function topoplotLegend(f, allPositions)    
+function topoplotLegend(axis, allPositions)    
     # for testing
     # data, positions = TopoPlots.example_data()
     
@@ -131,8 +139,6 @@ function topoplotLegend(f, allPositions)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
-    
-    axis = Axis(f, bbox = BBox(0, 78, 0, 78))
     
 	xlims!(low = -0.2, high = 1.2)
 	ylims!(low = -0.2, high = 1.2)
@@ -163,6 +169,8 @@ end
 
 function addPvalues(plotData, config)
     p = deepcopy(config.extraData.pvalue)
+
+
 
     # for now, add them to the fixed effect
     if "group" ∉  names(p)
