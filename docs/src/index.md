@@ -21,11 +21,11 @@ These include:
 - [Topo Plots](@ref tp_vis)
 - [Parallel Coordinate Plots](@ref pcp_vis)
 
-## Required Packages TODO: correct
+## Required Packages TODO: correct?
 Everything was tested with Julia v1.7
 The following module in their respective versions are used:
 - AlgebraOfGraphics v0.6.9
-- CairoMakie
+- CairoMakie v0.8.9
 - CategoricalArrays v0.10.6
 - ColorSchemes v3.19.0
 - Colors v0.12.8
@@ -33,10 +33,10 @@ The following module in their respective versions are used:
 - Documenter v0.27.22
 - GeometryBasics v0.4.2
 - Glob v1.3.0
-- ImageFiltering
+- ImageFiltering v0.7.1
 - Literate v2.13.4
 - Makie v0.17.9
-- Pipe
+- Pipe v1.3.0
 - PyMNE v0.1.2
 - TopoPlots v0.1.0
 - Unfold v0.3.11
