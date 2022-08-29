@@ -22,7 +22,8 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
                         Colorbar(legendPosition, hm; config.colorbarData...)
                     end
                 else
-                    axislegend(ax; config.legendData...)
+                    # axislegend(ax; config.legendData...)
+                    Legend(legendPosition, ax; config.legendData...)
                 end
             else
                 legend!(legendPosition, drawing; config.legendData...)
