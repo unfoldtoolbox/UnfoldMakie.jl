@@ -59,3 +59,4 @@ function posToColor(pos)
     b = 1.0 - (2*sqrt(cx^2+cy^2))^2
     return RGB(0.5 - rx*1.414, 0.5 - ry*1.414, b)
 end
+

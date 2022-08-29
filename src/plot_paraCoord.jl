@@ -22,38 +22,31 @@ function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vecto
 end
 
 function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
-    aspectRatio = 1
     
-    width = 900
-    height = aspectRatio * width
+    # We didn't find a good formula to set these automatically
+    # have to be set manually for now
+    # if size of the plot-area changes the padding gets weird
+    aspect_ratio = config.extraData.pc_aspect_ratio
+    right_padding = config.extraData.pc_right_padding
+    left_padding = config.extraData.pc_left_padding
+    top_padding = config.extraData.pc_top_padding
+    bottom_padding = config.extraData.pc_bottom_padding
+    tick_label_size = config.extraData.pc_tick_label_size
     
-    # axis_bottom_offset = 50
-    # ch_label_offset = 14
-    # right_padding = 50
-    # upper_padding = 100
-    # left_padding = 50
+    # have to be set now to reduce weird behaviour
+    width = 500
+    height = aspect_ratio * width
+    ch_label_offset = 15
     
-    
-    axis_bottom_offset = max(height * 0.06,20)
-    ch_label_offset = 14
-    right_padding = max(width * 0.1, 60)
-    upper_padding = min(height * 0.7, 50)
-    left_padding = width * 0.1
-    
-    @show right_padding
-    @show left_padding
-    @show upper_padding
-    @show axis_bottom_offset
-
+    # axis for plot
     ax = Axis(f[1, 1]; config.axisData...)
     
     # colormap border (prevents from using outer parts of color map)
-    bord = 1
+    bord = 0
     
     config.resolveMappings(plotData)
     
     categories = unique(plotData[:,config.mappingData.category])
-    
     catLeng = length(categories)
     chaLeng = length(channels)
     
@@ -80,7 +73,7 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     # get extrema for each channel
     for cha in channels
         tmp = filter(x -> (x[config.mappingData.channel] == cha),  plotData) 
-        w = extrema.([tmp[:,config.mappingData.yhat]])
+        w = extrema.([tmp[:,config.mappingData.y]])
         append!(limits, w)
         append!(l_up, w[1][2])
         append!(l_low, w[1][1])
@@ -95,12 +88,18 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
         else
             switch = false
         end
-        Makie.LineAxis(ax.scene,  limits = limits[i], # maybe consider as unique axis????
-            spinecolor = :black, labelfont = "Arial", 
-            ticklabelfont = "Arial", spinevisible = true,  ticklabelsvisible = switch, 
-            minorticks = IntervalsBetween(2),  tickcolor = :red, 
-            endpoints = Point2f[(x_values[i], axis_bottom_offset), (x_values[i], y_values[i])],
-            ticklabelalign = (:right, :center), labelvisible = false)
+        Makie.LineAxis(ax.scene, 
+            limits = limits[i], # maybe consider as unique axis????
+            spinecolor = :black,
+            labelfont = "Arial", 
+            ticklabelfont = "Arial",
+            spinevisible = true, 
+            # ticklabelsvisible = switch, 
+            ticklabelsize = tick_label_size,
+            minorticks = IntervalsBetween(2), 
+            endpoints = Point2f[(x_values[i], bottom_padding), (x_values[i], y_values[i])],
+            ticklabelalign = (:right, :center),
+            labelvisible = false)
     end
     # @show limits
     
@@ -119,9 +118,9 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
                 append!(dfInOrder,filter(x -> (x[config.mappingData.channel] == cha),  tmp2))
             end
             
-            values = map(1:n, dfInOrder[:,config.mappingData.yhat], limits) do q, d, l # axes, data, limis
+            values = map(1:n, dfInOrder[:,config.mappingData.y], limits) do q, d, l # axes, data, limis
                 x = (q - 1) / (n - 1) * width
-                Point2f(x_values[q], (d - l[1]) ./ (l[2] - l[1]) * (y_values[q]-axis_bottom_offset) + axis_bottom_offset)
+                Point2f(x_values[q], (d - l[1]) ./ (l[2] - l[1]) * (y_values[q]-bottom_padding) + bottom_padding)
                 end
             lines!(ax.scene, values; color = colors[cat], config.visualData...)
         end
@@ -133,7 +132,7 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     
     # helper, cuz without them they wouldn#t have an entry in legend
     for cat in categories
-        lines!(ax, 1, 1, 1, label = "jhdfsghksdfjkhsdfjkghdfs", color = colors[cat])
+        lines!(ax, 1, 1, 1, label = cat, color = colors[cat])
     end
     
     applyLayoutSettings(config; fig = f)
@@ -143,18 +142,17 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
         offset = (0, ch_label_offset * 2), 
         color = :blue)
     # lower limit text
-    text!(x_values, fill(0, chaLeng), align = (:center, :bottom),  text = string.(round.(l_low, digits=1)))
+    text!(x_values, fill(0, chaLeng), align = (:right, :bottom),  text = string.(round.(l_low, digits=1)))
     # upper limit text
-    text!(x_values, y_values, align = (:center, :bottom), text = string.(round.(l_up, digits=1)))
+    text!(x_values, y_values, align = (:right, :bottom), text = string.(round.(l_up, digits=1)))
     #println(string.(round.(l_low, digits=2)))
     Makie.xlims!(low = 0, high = width + right_padding)
-    Makie.ylims!(low = 0, high = height + upper_padding)
+    Makie.ylims!(low = 0, high = height + top_padding)
 
     hidespines!(ax) 
     hidedecorations!(ax, label = false)
 
     # ensures the axis numbers aren't squished
     ax.aspect = DataAspect()
-    # ax.aspect = DataAspect()
     return f 
 end
