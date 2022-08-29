@@ -31,7 +31,7 @@ end
 function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},config::PlotConfig)
     # ix = [[a[1] for a in plotData]...]
 
-    ax = Axis(f[1:4,1])
+    ax = Axis(f[1:4,1]; config.axisData...)
 
     # make sure blur is never negative
     @show config.extraData.erpBlur
