@@ -48,6 +48,14 @@ mutable struct PlotConfig
             stderror=false,
             pvalue=[],
             erpBlur=10,
+
+            # paracoord fix-values
+            pc_aspect_ratio = 0.55,
+            pc_right_padding = 15,
+            pc_left_padding = 25,
+            pc_top_padding = 26,
+            pc_bottom_padding = 16,
+            pc_tick_label_size = 14,
         )
         this.layoutData = (;
             showLegend=true,
@@ -183,7 +191,6 @@ mutable struct PlotConfig
                 channel=:channel,
                 category=:category,
                 time=:time,
-                yhat=:yhat,
             )
         end
 
