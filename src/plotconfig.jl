@@ -13,6 +13,7 @@ mutable struct PlotConfig
     mappingData::NamedTuple
     legendData::NamedTuple
     colorbarData::NamedTuple
+    axisData::NamedTuple
     
     setExtraValues::Function
     setLayoutValues::Function
@@ -20,6 +21,7 @@ mutable struct PlotConfig
     setMappingValues::Function
     setLegendValues::Function
     setColorbarValues::Function
+    setAxisValues::Function
 
     # removes all varaibles from mappingData which aren't collumns in input plotData
     resolveMappings::Function
@@ -77,6 +79,11 @@ mutable struct PlotConfig
             tellwidth = true,
             tellheight = false
         )
+
+        this.axisData = (;
+            xlabel = "x label",
+            ylabel = "y label"
+        )
         
         # setter for ANY values for Data
         this.setExtraValues = function (;kwargs...)
@@ -117,14 +124,16 @@ mutable struct PlotConfig
             this.colorbarData = merge(this.colorbarData, kwargs)
             return this
         end
+        this.setAxisValues = function (;kwargs...)
+            this.axisData = merge(this.axisData, kwargs)
+            return this
+        end
             
         # standard values for each plotType
         if (pltType == :lineplot)
             this.setMappingValues(
                 x=(:x, :time),
                 y=(:y, :estimate, :yhat),
-                col=(:col, :basisname),
-                row=(:row, :group),
                 color=(:color, :coefname),
             )
         elseif (pltType == :designmatrix)
@@ -134,6 +143,9 @@ mutable struct PlotConfig
             this.setLayoutValues(
                 xlabel="",
                 ylabel="",
+            )
+            this.setAxisValues(
+                xticklabelrotation=pi/8
             )
         elseif (pltType == :topoplot || pltType == :eegtopoplot)
             this.setLayoutValues(
