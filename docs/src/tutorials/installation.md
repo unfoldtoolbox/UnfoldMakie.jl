@@ -14,7 +14,7 @@ If you do not yet have a project you can generate one.
 First you type `]` into the Julia console to switch from `julia` to `(@VERSION) pkg`. 
 Here you can generate a project by using the command: 
 
-```@example main
+```
 generate "FOLDER_PATH"
 ```
 
@@ -26,7 +26,7 @@ Note that the specific folder in which you want to generate the project does not
 Before you can add the necessary modules to use UnfoldMakie you have to activate your project in the `(@VERSION) pkg` environment. 
 The command is: 
 
-```@example main
+```
 activate "FOLDER_PATH"
 ```
 
@@ -37,14 +37,14 @@ Use backslash `\` for the folder path.
 When your project is activated you can add the module. 
 The command is: 
 
-```@example main
+```
 add UnfoldMakie
 ```
 
 ### Using the Project in a Notebook
 
 In case you want to use this generated project in a notebook (e.g. [Pluto](https://www.juliapackages.com/p/pluto) or [Jupyter](https://ipython.org/notebook.html)), you can activate this in the notebook in the following manner:
-```@example main
+```
 begin
     using Pkg
     Pkg.activate("FOLDER_PATH")
