@@ -38,7 +38,6 @@ makedocs(;
             "Topo Plot" => "tutorials/topo_plot.md",
         ],
         "Plot Configuration" => [
-            "Overview" => "config/plot_config.md",
             "Config Colorbar Data" => "config/colorbar_data.md",
             "Config Extra Data" => "config/extra_data.md",
             "Config Layout Data" => "config/layout_data.md",

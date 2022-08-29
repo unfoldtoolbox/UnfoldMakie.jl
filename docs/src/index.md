@@ -28,7 +28,7 @@ These visualizations are:
 - [Parallel Coordinate Plots](@ref pcp_vis)
 
 The `Plot Configuration` section contains an [overview](@ref plot_config) as well as all segments of the config, detailing their contained attributes.
-
+The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
 These segments are:
 - [Colorbar Data](@ref config_colorbar)
 - [Extra Data](@ref config_extra)
