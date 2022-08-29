@@ -1,14 +1,9 @@
 
 Line Plots
-	MAYBE> // facettes
-	"if topoLegend" combine both codeblocks into one?
-	is categorical color/group correct?
-
 	
 
 Design Matrix
-	maybe tell a way to increase picture size to capture the whole text
-	-> didn|t find solution except rotating the text
+	access axis for user
 
 Butterfly Plots
 
@@ -21,7 +16,7 @@ ERP images
 
 
 Parralel Coordinate Plots
-
+	f.scene removing.. hopefully
 
 Dokumentation
 	function documentation: for all vis: explain applicable config? (not extra data)
@@ -35,12 +30,6 @@ Dokumentation
 	Liste and zeug
 	Tutorials
 	Example
-
-
-
-
-default values for mappings/dataframe-collumns
-	resolve mapping with specific error
 
 
 
