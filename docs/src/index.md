@@ -37,6 +37,16 @@ These segments are:
 - [Mapping Data](@ref config_mapping)
 - [Visual Data](@ref config_visual)
 
+The `Visualization Options` section details the configuration options for all visualizations.
+
+These segments are:
+- [For Designmatrices](@ref o_dm_vis)
+- [For Line Plots](@ref o_lp_vis)
+- [For Butterfly Plots](@ref o_bfp_vis)
+- [For ERP Images](@ref o_erpi_vis)
+- [For Topo Plots](@ref o_tp_vis)
+- [For Parallel Coordinate Plots](@ref o_pcp_vis)
+
 ## Required Packages TODO: correct?
 Everything was tested with Julia v1.7.
 
