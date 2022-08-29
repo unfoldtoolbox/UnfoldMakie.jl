@@ -45,7 +45,7 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     @show upper_padding
     @show axis_bottom_offset
 
-    ax = Axis(f[1, 1])
+    ax = Axis(f[1, 1]; config.axisData...)
     
     # colormap border (prevents from using outer parts of color map)
     bord = 1
