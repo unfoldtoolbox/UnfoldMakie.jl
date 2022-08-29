@@ -356,3 +356,10 @@ function getLabelPos(label)
     #change value range from [-1,1] to [0,1]
     return (standard_1005_2D[label][1]/2.0+0.5, standard_1005_2D[label][2]/2.0+0.5)
 end
+
+
+label_in_channel_order = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2", "HEOG_left", "HEOG_right", "VEOG_lower"]
+
+function channelToLabel(channel)
+    return label_in_channel_order[channel]
+end

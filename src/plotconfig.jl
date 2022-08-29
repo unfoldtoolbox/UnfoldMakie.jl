@@ -184,9 +184,9 @@ mutable struct PlotConfig
             this.setExtraValues(
                 sortData = true,
             )
-            this.setLegendValues(
-                position = :rc
-            )
+            # this.setLegendValues(
+            #     position = :rc
+            # )
             this.setLayoutValues(
                 xlabel = "Channels",
                 ylabel = "Timestamps",
