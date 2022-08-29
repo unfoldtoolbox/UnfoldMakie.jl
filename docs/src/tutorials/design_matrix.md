@@ -5,7 +5,7 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 
 ### Include used modules
 The following modules are necessary for following this tutorial:
-```@example main
+```
 using Unfold
 using UnfoldMakie
 using StatsModels # can be removed in Unfold v0.3.5
@@ -17,72 +17,54 @@ using CairoMakie
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 When you followed the tutorial, using test data of the `Unfold` module, use the following code for further pre-processing:
-```@example main
+```
 ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8)))
 designmatrix(ufMass, evts)
 ```
 When you followed the tutorial, using test data of the file `erpcore-N170.jld2`, use the following code:
-```@example main
+```
 designmatrix(mres)
 ```
 
-## For Designmatrices
+## Plot Designmatrices
 
-### Configurations for Designmatrices
-Here we look into possible options for configuring the designmatrix visualization.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
 The following code will result in the default configuration. 
-```@example main
+```
 cDesign = PlotConfig(:designmatrix)
 ```
-...---Some configurations are displayed below. 
-In case you want to display less labels on a specific axis, you can execute the following code:
-```@example main
-cDesign.setExtraValues(xTicks=5, sortData=true)
-```
-In this example, the number of labels on the x-axis is set to 2.---...
+[Here](@ref o_dm_vis) we look into possible options for configuring the designmatrix visualization.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
 
-TODO more examples
-
-### Plot Designmatrices
 This is how you finally plot the designmatrix, when using data of the `Unfold` module.
-```@example main
+```
 plot_design(designmatrix(ufMass, evts), cDesign)
 ```
 This is how you finally plot the designmatrix, when using data of the `erpcore-N170.jld2` file.
-```@example main
+```
 plot_design(designmatrix(mres), cDesign)
 ```
 
 
-## For Timeexpanded Designmatrices
+## Plot Timeexpanded Designmatrices
 
-### Additional Adjustments
+In the code below, data of the `Unfold` module was used.
 To display a timeexpanded designmatrix we add the following code:
-```@example main
+```
 bfDict = Dict(Any=>(f,basisfunction))
 ufCont = UnfoldLinearModelContinuousTime(bfDict)
 ```
-
-### Configurations for Designmatrices
-Here we look into possible options for configuring the designmatrix visualization.
-For more information on plot configurations in general, look at this section of the [documentation](@ref TODO). 
 The following code will result in the default configuration.
-```@example main
+```
 cBugDesign = PlotConfig(:designmatrix)
 ```
+[Here](@ref o_dm_vis) we look into possible options for configuring the designmatrix visualization.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
 
-An especially useful configuration is limiting the number of labels on the x-axis. 
-In the following case to 12.
-```@example main
-cBugDesign.setExtraValues(xTicks=12)
-```
-
-### Plot Timeexpanded Designmatrices
 This is how you finally plot the timeexpanded designmatrix.
-```@example main
+```
 plot_design(designmatrix!(ufCont, evts), cBugDesign)
 ```
+Note that without further adjustments in the configuration, you may experience cluttering of labels.
 
 
 
