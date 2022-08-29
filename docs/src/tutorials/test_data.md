@@ -6,7 +6,7 @@ With the exception of example data for topoplots which can be found in [General 
 ### Test Data from the Unfold Module
 The `Unfold` module offers some test data (useful e. g. for designmatrix visualization). 
 In the following we load the data. 
-```@example main
+```
 include(joinpath(dirname(pathof(Unfold)), "../test/test_utilities.jl") ) # to load data
 
 data, evts = loadtestdata("test_case_3b");
@@ -20,12 +20,12 @@ For more information on basisfunctions see the [Unfold.jl documentation](https:/
 Download the `erpcore-N170.jld2` file from this [website](https://figshare.com/articles/dataset/erpcore-N170_jld2/19762705). 
 
 As we manually load data we use the following modules:
-```@example main
+```
 using FileIO
 using JLD2
 ```
 Now you can load the data as follows:
-```@example main
+```
 p_all = "erpcore-N170.jld2"
 presaved_data = load(p_all)
 dat_e = presaved_data["data_e_all"].* 1e6
@@ -35,7 +35,7 @@ Note that if you have not placed the file in the same directory as your project,
 Use slash `/` for the folder path. 
 
 As UnfoldMakie uses data of a type in line with the Unfold module, we have to process the data now such that it can be used:
-```@example main
+```
 # times vector (from-to)
 times = range(-0.3, length=size(dat_e,2), step=1 ./ 128)
 
