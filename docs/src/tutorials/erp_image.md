@@ -5,7 +5,7 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 
 ### Include used Modules
 The following modules are necessary for following this tutorial:
-```@example main
+```
 using Unfold
 using UnfoldMakie
 using StatsModels # can be removed in Unfold v0.3.5
@@ -24,25 +24,20 @@ In case you do not already have data, look at the [Load Data](@ref test_data) se
 Use the test data of `erpcore-N170.jld2`.
 Note that you do not need the pre-processing step detailed in that section.
 
-### Configurations for ERP Images
-Here we look into possible options for configuring the ERP image visualization.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
-```@example main
-erpConfig = PlotConfig(:erp)
-erpConfig.setExtraValues(;ylims = (low = 3650, high = 8000),
-	ylabel = "Sorted trials",
-	meanPlot = true)
-erpConfig.setColorbarValues(;label = "Voltage [µV]")
-erpConfig.setVisualValues(;colormap = Reverse("RdBu"), colorrange = (-40, 40))
-```
-
 ### Plot ERP Images
-This is how you finally plot the ERP image.
 
-```@example main
+The following code will result in the default configuration. 
+```
+erpConfig = PlotConfig(:erp)
+```
+[Here](@ref o_erpi_vis) we look into possible options for configuring the ERP image.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
+
+This is how you finally plot the ERP image.
+```
 plot_erp(dat_e[28,:,:], erpConfig)
 ```
 
 ## TODO: MORE CONFIG DETAILS ONCE FINISHED
 - is DataFramesMeta needed here?
-- Link to confii + more detail?
+- Link to config + more detail?

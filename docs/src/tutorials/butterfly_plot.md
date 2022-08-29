@@ -5,7 +5,7 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 
 ### Include used Modules
 The following modules are necessary for following this tutorial:
-```@example main
+```
 using Unfold
 using UnfoldMakie
 using StatsModels # can be removed in Unfold v0.3.5
@@ -21,31 +21,20 @@ In case you do not already have data, look at the [Load Data](@ref test_data) se
 Use the test data of `erpcore-N170.jld2`.
 
 We filter the data to make it more clearly represented:
-```@example main
+```
 results_plot_butter = @subset(results_onesubject,:coefname .== "(Intercept)",:channel .<7)
 ```
 
-
-### Configurations for Butterfly Plots
-Here we look into possible options for configuring the butterfly plot visualization.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
-```@example main
-cButter = PlotConfig(:butterfly)
-        
-cButter.setExtraValues(categoricalColor=false,
-    categoricalGroup=true,
-    legendPosition=:right,
-    border=false,
-    topoLabel=:position)
-    
-# for testing add a column with labels
-results_plot_butter.position = results_plot_butter[:, :channel] .|> c -> ("C" * string(c))
-```
-
 ### Plot Butterfly Plots
+
+The following code will result in the default configuration. 
+```
+cButter = PlotConfig(:butterfly)
+```
+[Here](@ref o_bfp_vis) we look into possible options for configuring the line plot visualization.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
+
 This is how you finally plot the butterfly plot.
-```@example main
+```
 plot_line(results_plot_butter, cButter)
 ```
-
-## TODO: MORE CONFIG DETAILS ONCE FINISHED

@@ -2,18 +2,24 @@
 
 This is the documentation of the UnfoldMakie module for the Julia programming language. 
 
-## Background
+## About
+
 UnfoldMakie aims to allow users to generate different types of visualizations. 
-Building on the `Unfold` and `Makie` Modules, it also grants users customizability through an input config.
+These include line plots, butterfly plots, designmatrices, parallel coordinates plots, ERP images and topo plots.
+Building on the `Unfold` and `Makie` Modules, it also grants users customizability through an input configuration on the plots.
 
-## Tutorials
+As is apparent considering the types of possible visualizations, these config options try to enable users to create plots, that are helpful in the subject area of computational EEG.
+One such example is the possibility of using a topo plot as a legend for a line plot.
 
-You can find instructions for installation [here](@ref install_instruct). 
+## Structure
 
-### General Visualizations
+For easy readability, the documentation is divided into sections users can inspect depending on their query.
 
-For each of the visualization types there is a tutorial on how to generate them. 
-These include:
+The `Tutorials: Setup` section contains all information to get started including [installation](@ref install_instruct) and how to aquire necessary [data](@ref test_data) for testing if the user has none.
+
+The `Tutorials: General Visualizations` section summarizes all possible basic visualizations and how users can generate them.
+
+These visualizations are:
 - [Designmatrices](@ref dm_vis)
 - [Line Plots](@ref lp_vis)
 - [Butterfly Plots](@ref bfp_vis)
@@ -21,8 +27,29 @@ These include:
 - [Topo Plots](@ref tp_vis)
 - [Parallel Coordinate Plots](@ref pcp_vis)
 
+The `Plot Configuration` section contains an [overview](@ref plot_config) as well as all segments of the config, detailing their contained attributes.
+The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
+These segments are:
+- [Colorbar Data](@ref config_colorbar)
+- [Extra Data](@ref config_extra)
+- [Layout Data](@ref config_layout)
+- [Legend Data](@ref config_legend)
+- [Mapping Data](@ref config_mapping)
+- [Visual Data](@ref config_visual)
+
+The `Visualization Options` section details the configuration options for all visualizations.
+
+These segments are:
+- [For Designmatrices](@ref o_dm_vis)
+- [For Line Plots](@ref o_lp_vis)
+- [For Butterfly Plots](@ref o_bfp_vis)
+- [For ERP Images](@ref o_erpi_vis)
+- [For Topo Plots](@ref o_tp_vis)
+- [For Parallel Coordinate Plots](@ref o_pcp_vis)
+
 ## Required Packages TODO: correct?
-Everything was tested with Julia v1.7
+Everything was tested with Julia v1.7.
+
 The following module in their respective versions are used:
 - AlgebraOfGraphics v0.6.9
 - CairoMakie v0.8.9
