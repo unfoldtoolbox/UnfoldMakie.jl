@@ -59,8 +59,11 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     end
     
     # Get topocolors if topoPlot Legend active
-    if (config.extraData.topoLegend) 
-        allPositions, colors = getTopoColor(plotData, config)
+    if (config.extraData.topoLegend)
+        allPositions = getTopoPositions(plotData, config)
+        colors = getTopoColor(plotData, config)
+        @show allPositions
+        @show colors
     else
         # Categorical mapping
         # convert color column into string, so no wrong grouping happens

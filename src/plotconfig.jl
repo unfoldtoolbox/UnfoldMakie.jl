@@ -40,8 +40,6 @@ mutable struct PlotConfig
             categoricalColor=true,
             categoricalGroup=true,
             topoLegend=false,
-            topoLabel=nothing,
-            topoPositions=nothing,
             xTicks=nothing,
             legendLabel=nothing,
             meanPlot=false,
@@ -128,7 +126,7 @@ mutable struct PlotConfig
             this.axisData = merge(this.axisData, kwargs)
             return this
         end
-            
+
         # standard values for each plotType
         if (pltType == :lineplot)
             this.setMappingValues(
@@ -165,12 +163,18 @@ mutable struct PlotConfig
                 x=:xPos,
                 y=:yPos,
                 topodata=(:topodata, :data, :y),
-                positions=(:pos, :positions, :position, :x),
-                labels=(:labels, :channel, :sensor),
+                topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
+                topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
+                topoChannels=(:channels, :channel, :topoChannel, :nothing),
             )
         elseif (pltType == :butterfly)
             this.setExtraValues(topoLegend = true)
             this.setLayoutValues(showLegend = false)
+            this.setMappingValues(
+                topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
+                topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
+                topoChannels=(:channels, :channel, :topoChannel, :nothing),
+            )
         elseif (pltType == :erp)
             this.setExtraValues(
                 sortData = true,
@@ -207,13 +211,18 @@ mutable struct PlotConfig
             # filter collumns to only include the ones that are in plotData, or throw an error if none are
             function getAvailable(key, choices)
                 available = choices[keys(choices)[isCollumn.(collect(choices))]]
-                length(available) >= 1 ? available :
-                    @error("default collumns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
+                if length(available) >= 1
+                    return available[1]
+                else
+                    return (:nothing ∈ collect(choices)) ?
+                        nothing :
+                        @error("default collumns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
+                end
             end
             # have to use Dict here because NamedTuples break when trying to map them with keys/indices
             mappingDict = Dict()
             for (k,v) in pairs(this.mappingData)
-                mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v)[1] : v
+                mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v) : v
             end
             this.mappingData = (;mappingDict...)
         end
