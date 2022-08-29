@@ -5,7 +5,7 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 
 ### Include used Modules
 The following modules are necessary for following this tutorial:
-```@example main
+```
 ???
 for effects?:
 using PyMNE
@@ -19,10 +19,8 @@ In case you do not already have data, look at the [Load Data](@ref test_data) se
 
 Use the test data of `erpcore-N170.jld2`.
 
-### Configuration for PCP
-Here we look into possible options for configuring the PCP visualization.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
-```@example main
+Some further definitions.
+```
 f = Figure()
 
 data = effects(Dict(:category=>["face", "car"], :condition=>["intact"]), mres)
@@ -31,6 +29,19 @@ paraConfig = PlotConfig(:paracoord)
 
 plot_paraCoord(data, paraConfig; channels=[1,7,6])
 ```
-Note that you may need to the names when setting mapping values to the data you use.
 
-## TODO: USED MODULES, MORE CONFIG DETAILS ONCE FINISHED
+### Plot PCP Plots
+
+The following code will result in the default configuration. 
+```
+paraConfig = PlotConfig(:paracoord)
+```
+[Here](@ref o_pcp_vis) we look into possible options for configuring the designmatrix visualization.
+For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
+
+This is how you finally plot the PCP.
+```
+plot_paraCoord(data, paraConfig; channels=[1,7,6])
+```
+
+## TODO: USED MODULES, DATA?
