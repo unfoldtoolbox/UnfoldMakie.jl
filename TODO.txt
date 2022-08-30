@@ -16,7 +16,7 @@ ERP images
 
 
 Parralel Coordinate Plots
-	f.scene removing.. hopefully
+
 
 Dokumentation
 	function documentation: for all vis: explain applicable config? (not extra data)
