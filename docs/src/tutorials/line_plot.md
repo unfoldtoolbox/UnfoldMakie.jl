@@ -1,6 +1,6 @@
-## [General Line Plot Visualization](@id lp_vis)
+## [Line Plot Visualization](@id lp_vis)
 
-Here we discuss general line plot visualization. 
+Here we discuss line plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used Modules
@@ -38,15 +38,18 @@ This is how you finally plot the line plot.
 plot_line(results_plot, cLine)
 ```
 
-## [Visualization Options for Line Plot](@id o_lp_vis)
+![Default Line Plot](../images/line_plot_default.png)
 
 
-##   REMOVED FROM line_plot.md
-### Configuration for Line Plots
+
+## Configuration for Line Plots
+
 Here we look into possible options for configuring the line plot visualization.
+The options for configuring the visualization mentioned here are specific for line plots.
+For more general options look into the Plot Configuration section of the documentation.
 
+Using some general configurations we can pretty up this default visualization. Here we use the following configuration:
 ```
-cLine = PlotConfig(:lineplot)
 cLine.setExtraValues(showLegend=true,
     categoricalColor=false,
     categoricalGroup=false)
@@ -54,15 +57,21 @@ cLine.setMappingValues(color=:coefname, group=:coefname)
 cLine.setLegendValues(nbanks=2)
 cLine.setLayoutValues(legendPosition=:bottom)
 ```
-```
-plot_line(results_plot, cLine)
-```
-Note that you may need to the names when setting mapping values to the data you use.
 
-### Configuration for Line Plots with STD Error
+![Pretty Line Plot](../images/line_plot_pretty.png)
+Note that you may need the names when setting mapping values to the data you use.
+In the following we will use this "pretty" line plot as a basis for looking into configuration options.
+
+### stderror (boolean)
+Indicating whether the data estimates should be complemented 
+with lower and higher estimates based on the stderror. 
+Lower estimates is gained by pointwise subtraction of the stderror from the estimates. 
+Higher estimates is gained by pointwise addition of the stderror to the estimates. 
+Both estimates are then included in the mapping. 
+Default is `false`.
+
 In case you add `stderror=true` when setting extra values, you get a visualization that displays them.
 ```
-cLine = PlotConfig(:lineplot)
 cLine.setExtraValues(
     categoricalColor=false,
     categoricalGroup=false,
@@ -70,13 +79,17 @@ cLine.setExtraValues(
 cLine.setMappingValues(color=:coefname, group=:coefname)
 cLine.setLegendValues(nbanks=2)
 cLine.setLayoutValues(legendPosition=:bottom)
-plot_line(results_plot, cLine)
 ```
+
+![Pretty Line Plot](../images/line_plot_std.png)
 Note that you may need to the names when setting mapping values to the data you use.
 
-### Configuration for Line Plots with p-values
+### pvalue (array)
+Is an array of p-values. If array not empty, complement data by adding p-values.
+Default is an empty array, `nothing`.
+
 In case you have `pvalue` defined in the extra values, it will be displayed in the visualization.
-In the following you can soo a simple definition
+In the following you can see a simple definition.
 ```
 cLine = PlotConfig(:lineplot)
 
@@ -95,4 +108,6 @@ cLine.setLayoutValues(legendPosition=:bottom)
 cLine.setLegendValues(nbanks=2)
 plot_line(results_plot, cLine)
 ```
+
+![Pretty Line Plot](../images/line_plot_p-val.png)
 Note that you may need to the names when setting mapping values to the data you use.

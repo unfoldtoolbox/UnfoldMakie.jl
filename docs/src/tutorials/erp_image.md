@@ -1,6 +1,6 @@
-## [General ERP Image Visualization](@id erpi_vis)
+## [ERP Image Visualization](@id erpi_vis)
 
-Here we discuss general butterfly plot visualization. 
+Here we discuss butterfly plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used Modules
