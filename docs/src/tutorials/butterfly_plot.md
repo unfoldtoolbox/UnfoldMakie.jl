@@ -1,6 +1,6 @@
-## [General Butterfly Plot Visualization](@id bfp_vis)
+## [Butterfly Plot Visualization](@id bfp_vis)
 
-Here we discuss general butterfly plot visualization. 
+Here we discuss butterfly plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used Modules

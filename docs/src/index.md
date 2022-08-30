@@ -17,8 +17,8 @@ For easy readability, the documentation is divided into sections users can inspe
 
 The `Tutorials: Setup` section contains all information to get started including [installation](@ref install_instruct) and how to aquire necessary [data](@ref test_data) for testing if the user has none.
 
-The `Tutorials: General Visualizations` section summarizes all possible basic visualizations and how users can generate them. 
-It also details their configuration options.
+The `Tutorials: Visualizations` section summarizes all possible visualizations and how users can generate them. 
+It also details their unique configuration options.
 
 These visualizations are:
 - [Designmatrices](@ref dm_vis)
@@ -32,7 +32,6 @@ The `Plot Configuration` all segments of the config, detailing their contained a
 The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
 These segments are:
 - [Colorbar Data](@ref config_colorbar)
-- [Extra Data](@ref config_extra)
 - [Layout Data](@ref config_layout)
 - [Legend Data](@ref config_legend)
 - [Mapping Data](@ref config_mapping)
@@ -41,8 +40,10 @@ These segments are:
 The `How To` section features information on how to achieve specific goals or deal with specific problems.
 
 These segments are:
+- [Fix Parallel Coordinates Plot](@ref ht_fpcp)
 - [Include multiple Visualizations in one Figure](@ref ht_mvf)
 - [Show out of Bounds Label](@ref ht_soobl)
+- [Generate a Timeexpanded Designmatrix](@ref ht_gen_te_designmatrix)
 
 ## Required Packages TODO: correct?
 Everything was tested with Julia v1.7.
