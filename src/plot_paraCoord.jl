@@ -3,24 +3,68 @@ using Pipe
 using PyMNE
 
 """
-    function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64}=[])
+    function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
 Plot a PCP (parallel coordinates plot).
 ## Arguments:
-- `plotData::DataFrame`: data for the PCP being visualized.
-- `config::PlotConfig`: data of the configuration being applied to the visualization.
-- `channels::Vector{Int64}=[]`: vector for all axes used in the PCP.
+- `plotData::DataFrame`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
-## Behavior: TODO?
-### `config.extraData.-`:
+## Extra Data Behavior:
+
+PCP has problems with size changes of the view window.
+By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a Coordinated Multiple Views System
+
+`pc_aspect_ratio`  Default : `0.55`
+
+`pc_right_padding`  Default : `15`
+
+`pc_left_padding`  Default : `25`
+
+`pc_top_padding`  Default : `26`
+
+`pc_bottom_padding`  Default : `16`
+
+`pc_tick_label_size`  Default : `14`
 
 ## Return Value:
-The figure displaying the PCP.
+A figure displaying the PCP.
 """
 function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
     plot_paraCoord!(Figure(), plotData, config; channels)
 end
 
+"""
+    function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
+
+Plot a PCP (parallel coordinates plot).
+## Arguments:
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData::DataFrame`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
+
+## Extra Data Behavior:
+
+PCP has problems with size changes of the view window.
+By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a Coordinated Multiple Views System
+
+`pc_aspect_ratio`  Default : `0.55`
+
+`pc_right_padding`  Default : `15`
+
+`pc_left_padding`  Default : `25`
+
+`pc_top_padding`  Default : `26`
+
+`pc_bottom_padding`  Default : `16`
+
+`pc_tick_label_size`  Default : `14`
+
+## Return Value:
+The input `f`
+"""
 function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
     
     # We didn't find a good formula to set these automatically

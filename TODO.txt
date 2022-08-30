@@ -1,9 +1,16 @@
+Issues:
+	extraData.topoLegend uses?
+	How to deactivate topoLegend?
+	updated plotConfig names good?
+	can you still put in custom labels and positions in topoplot?
+	Datatype topoplots
+
 
 Line Plots
 	
 
 Design Matrix
-	access axis for user
+
 
 Butterfly Plots
 

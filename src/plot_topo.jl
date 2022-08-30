@@ -6,25 +6,42 @@ using ColorSchemes
 
 
 """
-    plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothing)
+    function plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothing)
 
 Plot a topo plot.
 ## Arguments:
-- `plotData`: data for the topo plot being visualized.
-- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `plotData`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `positions=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
 - `labels=nothing`: labels used if `plotData` is no DataFrame.
 
-## Behavior: TODO?
-### `config.extraData.-`:
+## Extra Data Behavior:
+None
 
 ## Return Value:
-The figure displaying the topo plot.
+A figure displaying the topo plot.
 """
 function plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothing)
     plot_topo!(Figure(), plotData, config; positions, labels)
 end
 
+"""
+    function plot_topo!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig; positions=nothing, labels=nothing)
+
+Plot a topo plot.
+## Arguments:
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `positions=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
+- `labels=nothing`: labels used if `plotData` is no DataFrame.
+
+## Extra Data Behavior:
+None
+
+## Return Value:
+A figure displaying the topo plot.
+"""
 function plot_topo!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig; positions=nothing, labels=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
 

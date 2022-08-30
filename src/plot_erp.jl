@@ -5,29 +5,70 @@ using ImageFiltering
 
 Plot an ERP image.
 ## Arguments:
-- `plotData::Matrix{Float64}`: data for the ERP image being visualized.
-- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `plotData::Matrix{Float64}`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 
-## Behavior:
-### `config.extraData.erpBlur`:
+## Extra Data Behavior:
+`erpBlur`:
+
+Default : `10`
+
 Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
-Default value is `10`. Negative values are snapped to `0`.
-### `config.extraData.sortData`:
+Non-Positive values deactivate the blur.
+
+`sortData`:
+
+Default: `false`
+
 Indicating whether the data is sorted; using sortperm() of Base Julia 
 (sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
-Default is `false`.
-### `config.extraData.meanPlot`:
-Indicating whether the plot should be a line plot using the mean of the data.
-Default is `false`.
+
+`meanPlot`:
+
+Default : `false`
+
+Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 ## Return Value:
-The figure displaying the ERP image, or if `config.extraData.meanPlot = true` a line plot.
+A figure displaying the ERP image.
 """
 function plot_erp(plotData::Matrix{Float64},config::PlotConfig)
     return plot_erp!(Figure(), plotData, config)
 end
 
+"""
+    function plot_erp!(f::Union{GridPosition, Figure}, data::Matrix{Float64},config::PlotConfig)
 
+Plot an ERP image.
+## Arguments:
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData::Matrix{Float64}`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+        
+## Extra Data Behavior:
+`erpBlur`:
+
+Default : `10`
+
+Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
+Non-Positive values deactivate the blur.
+
+`sortData`:
+
+Default: `false`
+
+Indicating whether the data is sorted; using sortperm() of Base Julia 
+(sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
+
+`meanPlot`:
+
+Default : `false`
+
+Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+
+## Return Value:
+The input `f`
+"""
 function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},config::PlotConfig)
     # ix = [[a[1] for a in plotData]...]
 

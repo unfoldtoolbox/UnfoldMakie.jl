@@ -3,49 +3,104 @@ using TopoPlots
 using LinearAlgebra
 
 """
-    plot_line(plotData::DataFrame, config::PlotConfig)
+    function plot_line(plotData::DataFrame, config::PlotConfig)
 
 Plot a line plot.
 ## Arguments:
-- `plotData::DataFrame`: data for the line plot being visualized.
-- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `plotData::DataFrame`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 
-## Behavior:
-### `config.extraData.stderror`: 
-Indicating whether the data estimates should be complemented 
-with lower and higher estimates based on the stderror. 
-Lower estimates is gained by pointwise subtraction of the stderror from the estimates. 
-Higher estimates is gained by pointwise addition of the stderror to the estimates. 
-Both estimates are then included in the mapping.
-Default is `false`.
-### `config.extraData.categoricalColor`:
-Indicates whether it should be categorized based on color. 
-Every line will get its discrete entry in the legend.
-Default is `true`.
-### `config.extraData.categoricalGroup`:
-Indicates whether it should be categorized based on group.
-The legend is a colorbar.
-Default is `true`.
-Should not be set in conjunction with `config.extraData.categoricalColor`.
-### `config.extraData.topoLegend`:
+## Extra Data Behavior:
+
+`categoricalColor`:
+
+Default : `true`
+
+Indicates whether the column referenced in mappingData.color should be used nonnumerically.
+
+`categoricalGroup`:
+
+Default: `true`
+
+Indicates whether the column referenced in mappingData.group should be used nonnumerically.
+
+`topoLegend`:
+
+Default : `false`
+
 Indicating whether a topo plot is used as a legend.
-Default is `false`.
-### `config.extraData.pvalue`: TODO
-An array of p-values. If array not empty, complement data by adding p-values.
-Default is an empty array.
+
+`stderror`:
+
+Default : `false`
+
+Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
+
+`pvalue`:
+
+Default : `[]`
+
+An array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
 
 ## Return Value:
-The figure displaying the line plot.
+A figure displaying the line plot.
+
 """
 function plot_line(plotData::DataFrame, config::PlotConfig)
     plot_line!(Figure(), plotData, config)
 end
 
+
+"""
+    function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
+
+Plot a line plot.
+## Arguments:
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData::DataFrame`: Data for the line plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+
+## Extra Data Behavior:
+
+`categoricalColor`:
+
+Default : `true`
+
+Indicates whether the column referenced in mappingData.color should be used nonnumerically.
+
+`categoricalGroup`:
+
+Default: `true`
+
+Indicates whether the column referenced in mappingData.group should be used nonnumerically.
+
+`topoLegend`:
+
+Default : `false`
+
+Indicating whether a topo plot is used as a legend.
+
+`stderror`:
+
+Default : `false`
+
+Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
+
+`pvalue`:
+
+Default : `[]`
+
+An array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
+
+## Return Value:
+The input `f`
+
+"""
 function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
     plotData = deepcopy(plotData)
     
     config.resolveMappings(plotData)
-
+    config.setExtraValues
     # turn "nothing" from group columns into :fixef
     if "group" ∈  names(plotData)
         plotData.group = plotData.group .|> a -> isnothing(a) ? :fixef : a
