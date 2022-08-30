@@ -59,8 +59,11 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     end
     
     # Get topocolors if topoPlot Legend active
-    if (config.extraData.topoLegend) 
-        allPositions, colors = getTopoColor(plotData, config)
+    if (config.extraData.topoLegend)
+        allPositions = getTopoPositions(plotData, config)
+        colors = getTopoColor(plotData, config)
+        @show allPositions
+        @show colors
     else
         # Categorical mapping
         # convert color column into string, so no wrong grouping happens
@@ -74,7 +77,11 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     end
 
     # pValues will break if x and y are included in this step
-    mapp = mapping(;filterNamesOutTuple(config.mappingData, (:x, :y))...)
+    #mapp = mapping(;filterNamesOutTuple(config.mappingData, (:x, :y))...)
+    mapp = mapping(;config.mappingData.color)
+    if (:group ∈ keys(config.mappingData))
+        mapp = mapp * mapping(;config.mappingData.group)
+    end
     
     xy_mapp = mapping(config.mappingData.x, config.mappingData.y)
 
@@ -99,16 +106,15 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     if (config.extraData.topoLegend)
         legendRight = config.layoutData.legendPosition == :right
         if config.layoutData.showLegend
-            axis = Axis(f[2,2], aspect = DataAspect())
-            topoplotLegend(axis, allPositions)
-            drawing = draw!(legendRight ? f[1:2,1] : f[1,1:2],plotEquation; palettes=(color=colors,))
+            topoAxis = Axis(f[2,2], aspect = DataAspect())
         else
-            axis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
-            topoplotLegend(axis, allPositions)
-            drawing = draw!(legendRight ? f[1:2,1] : f[1,1:2],plotEquation; palettes=(color=colors,))
+            topoAxis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
         end
+        topoplotLegend(topoAxis, allPositions)
+        mainAxis = Axis(legendRight ? f[1:2,1] : f[1,1:2]; config.axisData...)
+        drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
     else
-        drawing = draw!(f[1,1],plotEquation)
+        drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
     end
 
     
@@ -188,22 +194,21 @@ function addPvalues(plotData, config)
 
     # rename to match the res-dataframe
 
-    shouldHave = hcat(config.mappingData.col, config.mappingData.row, config.mappingData.color)
-    shouldHave = shouldHave[shouldHave.!=1] # remove defaults as defined above
+    # shouldHave = hcat(config.mappingData.color)
+    # shouldHave = shouldHave[shouldHave.!=1] # remove defaults as defined above
     
     # was present in the example, but crashes the code if executed
     # if ~isempty(config.mappingData)
     #     shouldHave = hcat(shouldHave, values(config.mappingData))
     # end
     
-    shouldHave = string.(shouldHave)
+    # shouldHave = string.(shouldHave)
     
-    for k in shouldHave
-        if k ∉ names(p)
-            p[!,k] .= plotData[1,k]
-        end
-
-    end
+    # for k in shouldHave
+    #     if k ∉ names(p)
+    #         p[!,k] .= plotData[1,k]
+    #     end
+    # end
     # return shouldHave
     un = unique(p[!,config.mappingData.color])
     # define an index to dodge the lines vertically
