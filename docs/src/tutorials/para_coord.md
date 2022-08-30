@@ -1,6 +1,6 @@
-## [General Parallel Coordinates Plot](@id pcp_vis)
+## [Parallel Coordinates Plot](@id pcp_vis)
 
-Here we discuss general parallel coordinates plot (PCP) visualization. 
+Here we discuss parallel coordinates plot (PCP) visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used Modules

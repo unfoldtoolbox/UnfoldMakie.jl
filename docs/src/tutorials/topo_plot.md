@@ -1,4 +1,7 @@
-## [General Topo Plot Visualization](@id tp_vis)
+## [Topo Plot Visualization](@id tp_vis)
+
+Here we discuss topo plot visualization. 
+Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ### Include used modules
 The following modules are necessary for following this tutorial:
