@@ -31,10 +31,29 @@ The following code will result in the default configuration.
 ```
 cButter = PlotConfig(:butterfly)
 ```
-[Here](@ref o_bfp_vis) we look into possible options for configuring the line plot visualization.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
+At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
 This is how you finally plot the butterfly plot.
 ```
 plot_line(results_plot_butter, cButter)
+```
+
+## [Visualization Options for Butterfly Plot](@id o_bfp_vis)
+
+
+##   REMOVED FROM butterfly_plot_matrix.md
+### Configurations for Butterfly Plots
+Here we look into possible options for configuring the butterfly plot visualization.
+
+```
+cButter = PlotConfig(:butterfly)
+        
+cButter.setExtraValues(categoricalColor=false,
+    categoricalGroup=true,
+    legendPosition=:right,
+    border=false,
+    topoLabel=:position)
+    
+# for testing add a column with labels
+results_plot_butter.position = results_plot_butter[:, :channel] .|> c -> ("C" * string(c))
 ```
