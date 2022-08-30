@@ -138,16 +138,12 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
             labelfont = "Arial", 
             ticklabelfont = "Arial",
             spinevisible = true, 
-            # ticklabelsvisible = switch, 
             ticklabelsize = tick_label_size,
             minorticks = IntervalsBetween(2), 
             endpoints = Point2f[(x_values[i], bottom_padding), (x_values[i], y_values[i])],
             ticklabelalign = (:right, :center),
             labelvisible = false)
     end
-    # @show limits
-    
-    
     
     # Draw colored line through all channels for each time entry 
     for time in unique(plotData[:,config.mappingData.time]) 
@@ -189,7 +185,6 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     text!(x_values, fill(0, chaLeng), align = (:right, :bottom),  text = string.(round.(l_low, digits=1)))
     # upper limit text
     text!(x_values, y_values, align = (:right, :bottom), text = string.(round.(l_up, digits=1)))
-    #println(string.(round.(l_low, digits=2)))
     Makie.xlims!(low = 0, high = width + right_padding)
     Makie.ylims!(low = 0, high = height + top_padding)
 
