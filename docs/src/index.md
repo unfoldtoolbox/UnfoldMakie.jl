@@ -17,7 +17,8 @@ For easy readability, the documentation is divided into sections users can inspe
 
 The `Tutorials: Setup` section contains all information to get started including [installation](@ref install_instruct) and how to aquire necessary [data](@ref test_data) for testing if the user has none.
 
-The `Tutorials: General Visualizations` section summarizes all possible basic visualizations and how users can generate them.
+The `Tutorials: General Visualizations` section summarizes all possible basic visualizations and how users can generate them. 
+It also details their configuration options.
 
 These visualizations are:
 - [Designmatrices](@ref dm_vis)
@@ -27,7 +28,7 @@ These visualizations are:
 - [Topo Plots](@ref tp_vis)
 - [Parallel Coordinate Plots](@ref pcp_vis)
 
-The `Plot Configuration` section contains an [overview](@ref plot_config) as well as all segments of the config, detailing their contained attributes.
+The `Plot Configuration` all segments of the config, detailing their contained attributes.
 The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
 These segments are:
 - [Colorbar Data](@ref config_colorbar)
@@ -37,15 +38,11 @@ These segments are:
 - [Mapping Data](@ref config_mapping)
 - [Visual Data](@ref config_visual)
 
-The `Visualization Options` section details the configuration options for all visualizations.
+The `How To` section features information on how to achieve specific goals or deal with specific problems.
 
 These segments are:
-- [For Designmatrices](@ref o_dm_vis)
-- [For Line Plots](@ref o_lp_vis)
-- [For Butterfly Plots](@ref o_bfp_vis)
-- [For ERP Images](@ref o_erpi_vis)
-- [For Topo Plots](@ref o_tp_vis)
-- [For Parallel Coordinate Plots](@ref o_pcp_vis)
+- [Include multiple Visualizations in one Figure](@ref ht_mvf)
+- [Show out of Bounds Label](@ref ht_soobl)
 
 ## Required Packages TODO: correct?
 Everything was tested with Julia v1.7.

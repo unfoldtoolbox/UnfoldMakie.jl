@@ -36,12 +36,30 @@ If there are no columns named `category` or `yhat` we have to give the correct n
 ```
 paraConfig.setMappingValues(category=:coefname,yhat=:estimate)
 ```
-[Here](@ref o_pcp_vis) we look into possible options for configuring the designmatrix visualization.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
+At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
 This is how you finally plot the PCP.
 ```
 plot_paraCoord(results_plot, paraConfig; channels=[5,3,2])
 ```
+
+## [Visualization Options for Parallel Coordinates Plot](@id o_pcp_vis)
+
+
+##   REMOVED FROM para_coord.md
+### Configuration for PCP
+Here we look into possible options for configuring the PCP visualization.
+
+```
+f = Figure()
+
+data = effects(Dict(:category=>["face", "car"], :condition=>["intact"]), mres)
+
+paraConfig = PlotConfig(:paracoord)
+
+plot_paraCoord(data, paraConfig; channels=[1,7,6])
+```
+Note that you may need the names when setting mapping values to the data you use.
+
 
 ## TODO: USED MODULES, DATA?
