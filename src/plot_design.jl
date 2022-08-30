@@ -125,7 +125,6 @@ function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMat
         labels = newLabels
     end
     
-    # @show labels
     if isa(designmat, SparseMatrixCSC)
         @assert(!config.extraData.sortData,"Sorting does not make sense for timeexpanded designmatrices")
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
