@@ -3,7 +3,40 @@ using GeometryBasics
 using Makie
 
 """
-This struct contains all the configurations of a plot
+    PlotConfig(<plotname>)
+
+This struct is used as the configuration of an UnfoldMakie plot.
+
+`<plotname>`:
+- `:lines`: Line Plot
+- `:butterfly`: Butterfly Plot
+- `:erp`: ERP Image
+- `:design`: Design Matrix Plot
+- `:topo`: Topo Plot
+- `:paraCoord`: Parallel Coordiante Plot
+
+The PlotConfig includes multiple Named Tuples with settings for different areas
+
+Their attributes can be set through setter Methods callable on the PlotConfig instance:
+
+- `setExtraValues(kwargs...)`
+- `setLayoutValues(kwargs...)`
+- `setVisualValues(kwargs...)`
+- `setMappingValues(kwargs...)`
+- `setLegendValues(kwargs...)`
+- `setColorbarValues(kwargs...)`
+- `setAxisValues(kwargs...)`
+
+# Example
+
+`config = PlotConfig(:lines)`
+
+`config.setLegendValues(nbanks=2)`
+
+`config.setLayoutValues(showLegend=true, legendPosition=:bottom)`
+
+`config.setMappingValues(color=:coefname, group=:coefname)`
+
 """
 mutable struct PlotConfig
     plotType::Any
@@ -14,8 +47,8 @@ mutable struct PlotConfig
     legendData::NamedTuple
     colorbarData::NamedTuple
     axisData::NamedTuple
-    
-    setExtraValues::Function
+
+    setExtraValues::Function    
     setLayoutValues::Function
     setVisualValues::Function
     setMappingValues::Function
@@ -41,9 +74,8 @@ mutable struct PlotConfig
             categoricalGroup=true,
             topoLegend=false,
             xTicks=nothing,
-            legendLabel=nothing,
             meanPlot=false,
-            sortData=false,
+            sortData=true,
             standardizeData=true,
             stderror=false,
             pvalue=[],
@@ -92,6 +124,7 @@ mutable struct PlotConfig
         )
         
         # setter for ANY values for Data
+        """Test1"""
         this.setExtraValues = function (;kwargs...)
             this.extraData = merge(this.extraData, kwargs)
             return this

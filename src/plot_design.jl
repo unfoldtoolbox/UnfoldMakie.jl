@@ -3,37 +3,82 @@ using SparseArrays
 
 
 """ 
-    plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
+    function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
 
-Plot a designmatrix. 
+Plot a designmatrix plot. 
 ## Arguments:
-- `plotData::Unfold.DesignMatrix`: data for the designmatrix being visualized.
-- `config::PlotConfig`: data of the configuration being applied to the visualization.
+- `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 
-## Behavior:
-### `config.extraData.standardizeData`:
+## Extra Data Behavior:
+`standardizeData`:
+
+Default : `true`
+
 Indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation.
-Default is `true`.
-### `config.extraData.sortData`:
+
+`sortData`:
+
+Default : `true`
+
 Indicating whether the data is sorted; using sortslices() of Base Julia. 
-Default is `false`.
-### `config.extraData.xTicks`:
+
+`xTicks`:
+
+Default : `nothing`
+
 Indicating the number of labels on the x-axis.
 Behavior if specified in configuration:
 - xTicks = 0: no labels are placed.
 - xTicks = 1: first possible label is placed.
 - xTicks = 2: first and last possible labels are placed.
-- 2 < xTicks < number of labels: xTicks-2 labels are placed 
-between the first and last.
-- xTicks ≥ number of labels: all labels are placed.
+- 2 < xTicks < `number of labels`: Equally distribute the labels.
+- xTicks ≥ `number of labels`: all labels are placed.
 
 ## Return Value:
-The figure displaying the designmatrix by using the first heatmap return of the Makie module. 
+A figure displaying the designmatrix plot. 
 """
 function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
     return plot_design!(Figure(), plotData, config)
 end
 
+""" 
+    function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMatrix,config::PlotConfig)
+
+Plot a designmatrix plot. 
+## Arguments:
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+
+## Extra Data Behavior:
+`standardizeData`:
+
+Default : `true`
+
+Indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation.
+
+`sortData`:
+
+Default : `true`
+
+Indicating whether the data is sorted; using sortslices() of Base Julia. 
+
+`xTicks`:
+
+Default : `nothing`
+
+Indicating the number of labels on the x-axis.
+Behavior if specified in configuration:
+- xTicks = 0: no labels are placed.
+- xTicks = 1: first possible label is placed.
+- xTicks = 2: first and last possible labels are placed.
+- 2 < xTicks < `number of labels`: Equally distribute the labels.
+- xTicks ≥ `number of labels`: all labels are placed.
+
+## Return Value:
+The input `f`
+"""
 function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMatrix,config::PlotConfig)
     designmat = Unfold.get_Xs(plotData);
     if config.extraData.standardizeData
