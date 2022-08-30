@@ -29,7 +29,7 @@ makedocs(;
             "Installation" => "tutorials/installation.md",
             "Test Data" => "tutorials/test_data.md",
         ],
-        "Tutorials: General Visualizations" => [
+        "Tutorials: Visualizations" => [
             "Butterfly Plot" => "tutorials/butterfly_plot.md",
             "Designmatrix" => "tutorials/design_matrix.md",
             "ERP Image" => "tutorials/erp_image.md",
@@ -38,14 +38,15 @@ makedocs(;
             "Topo Plot" => "tutorials/topo_plot.md",
         ],
         "Plot Configuration" => [
-            "Config Colorbar Data" => "config/colorbar_data.md",
-            "Config Extra Data" => "config/extra_data.md",
-            "Config Layout Data" => "config/layout_data.md",
-            "Config Legend Data" => "config/legend_data.md",
-            "Config Mapping Data" => "config/mapping_data.md",
-            "Config Visual Data" => "config/visual_data.md",
+            "Colorbar Data" => "config/colorbar_data.md",
+            "Layout Data" => "config/layout_data.md",
+            "Legend Data" => "config/legend_data.md",
+            "Mapping Data" => "config/mapping_data.md",
+            "Visual Data" => "config/visual_data.md",
         ],
         "How To" => [
+            "Fix Parallel Coordinates Plot" => "how_to/fix_pcp.md",
+            "Generate a Timeexpanded Designmatrix" => "how_to/gen_te_designmatrix.md",
             "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],

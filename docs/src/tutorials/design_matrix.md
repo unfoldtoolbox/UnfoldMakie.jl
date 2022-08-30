@@ -1,6 +1,6 @@
-## [General Designmatrix Visualization](@id dm_vis)
+## [Designmatrix Visualization](@id dm_vis)
 
-Here we discuss general designmatrix visualization. 
+Here we discuss designmatrix visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct) section. 
 
 ### Include used modules
@@ -43,64 +43,62 @@ This is how you finally plot the designmatrix, when using data of the `erpcore-N
 plot_design(designmatrix(mres), cDesign)
 ```
 
-
-## Plot Timeexpanded Designmatrices
-
-In the code below, data of the `Unfold` module was used.
-To display a timeexpanded designmatrix we add the following code:
-```
-bfDict = Dict(Any=>(f,basisfunction))
-ufCont = UnfoldLinearModelContinuousTime(bfDict)
-```
-The following code will result in the default configuration.
-```
-cBugDesign = PlotConfig(:designmatrix)
-```
-At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
-
-This is how you finally plot the timeexpanded designmatrix.
-```
-plot_design(designmatrix!(ufCont, evts), cBugDesign)
-```
-Note that without further adjustments in the configuration, you may experience cluttering of labels.
+![Default Designmatrix](../images/designmatrix_default.png)
 
 
-## Visualization Options for Designmatrix
+## Configurations for Designmatrices
 
-##   REMOVED FROM design_matrix.md
-### Configurations for Designmatrices
 Here we look into possible options for configuring the designmatrix visualization.
-
-The following code will result in the default configuration. 
-```
-cDesign = PlotConfig(:designmatrix)
-```
-...---Some configurations are displayed below. 
-In case you want to display less labels on a specific axis, you can execute the following code:
-```
-cDesign.setExtraValues(xTicks=5, sortData=true)
-```
-In this example, the number of labels on the x-axis is set to 2.---...
-
-TODO more examples
+The options for configuring the visualization mentioned here are specific for designmatrices.
+For more general options look into the Plot Configuration section of the documentation.
+This is the list of unique configuration (extraData):
+- sortData (boolean)
+- standardizeData (boolean)
+- xTicks (number)
 
 
+### sortData (boolean)
 
-### Configurations for Designmatrices
-Here we look into possible options for configuring the designmatrix visualization.
+Indicating whether the data is sorted; using sortslices() of Base Julia. 
+Default is `false`.
 
-The following code will result in the default configuration.
+In order to make the designmatrix easier to read, you may want to sort it.
+The following configuration achieves this:
 ```
-cBugDesign = PlotConfig(:designmatrix)
+cDesign.setExtraValues(sortData=true)
 ```
 
-An especially useful configuration is limiting the number of labels on the x-axis. 
-In the following case to 12.
+![Sorted Designmatrix](../images/designmatrix_sorted.png)
+
+### standardizeData (boolean)
+Indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation. 
+Default is `true`.
+
+If you don't want the data you use to be standardized, set this value to `false`, as seen below.
 ```
-cBugDesign.setExtraValues(xTicks=12)
+cDesign.setExtraValues(standardizeData=false)
 ```
+
+
+### xTicks (number)
+Indicating the number of labels on the x-axis. Behavior if specified in configuration:
+- xTicks = 0: no labels are placed.
+- xTicks = 1: first possible label is placed.
+- xTicks = 2: first and last possible labels are placed.
+- 2 < xTicks < number of labels: xTicks-2 labels are placed between the first and last.
+- xTicks ≥ number of labels: all labels are placed.
+
+This is how you apply the configuration:
+```
+cBugDesign.setExtraValues(xTicks=2)
+```
+In this case it was set to two labels on the x-axis.
+
 
 
 ## TODO: INSTRUCTIONS
+- timeexpanded vs not -> mention some extra data multiple times or restructure?
+- add further extraData?
+- images for all options?
 Potentially missing content: 
 https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/plot_design/#Plot-Designmatrix
