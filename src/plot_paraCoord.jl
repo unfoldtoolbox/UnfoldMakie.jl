@@ -39,7 +39,7 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     ch_label_offset = 15
     
     # axis for plot
-    ax = Axis(f[1, 1])
+    ax = Axis(f[1, 1]; config.axisData...)
     
     # colormap border (prevents from using outer parts of color map)
     bord = 0

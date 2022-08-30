@@ -1,46 +1,54 @@
 # Work in progress
-function getTopoColor(results, config)
-    # for testing
-    # results.position = results[:, :channel] .|> c -> ("C" * string(c))
-    # show(results.position)
-    
-    allPositions = Point2f[]
-    function customLabelPipe(position)
-        push!(allPositions, Point2f(position[1], position[2]))
-        return string(position)
+
+function getTopoPositions(plotData, config)
+
+    if isnothing(config.mappingData.topoPositions)
+        if isnothing(config.mappingData.topoLabels)
+            if isnothing(config.mappingData.topoChannels)
+                @error "At least one of these collumns is required: topoChannels, topoLabels, topoPositions"
+            else
+                plotData.topoLabels = plotData[:, config.mappingData.topoChannels] .|> channelToLabel
+                config.setMappingValues(topoLabels = :topoLabels)
+            end
+        end
+        plotData.topoPositions = plotData[:, config.mappingData.topoLabels] .|> getLabelPos
+        config.setMappingValues(topoPositions = :topoPositions)
     end
 
-    function positionPipe(position)
-        
-        return (position=>posToColor(position))
-    end
+    unique(plotData[:, config.mappingData.topoPositions] .|> (p -> Point2f(p[1], p[2])))
+end
 
-    function labelPipe(label)
-        position = getLabelPos(label)
-        push!(allPositions, Point2f(position[1], position[2]))
-        return (label=>posToColor(position))
-    end
+function getTopoColor(plotData, config)
 
-
-    if !(config.extraData.topoPositions === nothing)
-        config.mappingData = merge(config.mappingData, (;color=:customLabels))
-        # create own label data column
-        results.customLabels = results[:, config.extraData.topoPositions] .|> customLabelPipe
-        mapping = unique(zip(results.customLabels, results[:, config.extraData.topoPositions]) .|> data -> (data[1]=>posToColor(data[2])))
-    elseif !(config.extraData.topoLabel === nothing)
-        config.mappingData = merge(config.mappingData, (;color=config.extraData.topoLabel))
-
-        mapping = unique(results[:, config.extraData.topoLabel] .|> labelPipe)
-
+    if !isnothing(config.mappingData.topoLabels)
+        config.setMappingValues(color=config.mappingData.topoLabels)
+        list = zip(plotData[:, config.mappingData.topoLabels], plotData[:, config.mappingData.topoPositions])
+        mapping = unique(list .|> entry -> entry[1]=>posToColor(entry[2]))
+    elseif !isnothing(config.mappingData.topoPositions)
+        config.setMappingValues(color=:positionLabel)
+        plotData.positionLabel = plotData[:, config.mappingData.topoPositions] .|> string
+        mapping = unique(plotData[:, config.mappingData.topoPositions] .|> entry -> string(entry)=>posToColor(entry))
     else
-        # no custom color column
         mapping = nothing
     end
 
-    return allPositions, mapping
+    # if !isnothing(config.mappingData.topoPositions)
+    #     @show "Test1"
+    #     config.mappingData = merge(config.mappingData, (;color=:customLabels))
+    #     # create own label data column
+    #     results.customLabels = results[:, config.mappingData.topoPositions] .|> customLabelPipe
+    #     mapping = unique(zip(results.customLabels, results[:, config.mappingData.topoPositions]) .|> data -> (data[1]=>posToColor(data[2])))
+    # elseif !isnothing(config.mappingData.topoLabels)
+    #     @show "Test2"
+    #     config.mappingData = merge(config.mappingData, (;color=config.mappingData.topoLabels))
 
-    
+    #     mapping = unique(results[:, config.mappingData.topoLabels] .|> labelPipe)
+    # else
+    #     # no custom color column
+    #     mapping = nothing
+    # end
 
+    return mapping
 end
 
 function posToColor(pos)
