@@ -10,10 +10,10 @@ using ColorSchemes
 
 Plot a topo plot.
 ## Arguments:
-- `plotData`: Data for the plot visualization.
+- `plotData::Union{DataFrame, Vector{Float32}}`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-- `positions=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
-- `labels=nothing`: labels used if `plotData` is no DataFrame.
+- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
+- `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
 
 ## Extra Data Behavior:
 None
@@ -21,7 +21,7 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
-function plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothing)
+function plot_topo(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions::Vector{Point{2, Float32}}=nothing, labels::Vector{String}=nothing)
     plot_topo!(Figure(), plotData, config; positions, labels)
 end
 
@@ -31,10 +31,10 @@ end
 Plot a topo plot.
 ## Arguments:
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData`: Data for the plot visualization.
+- `plotData::Union{DataFrame, Vector{Float32}}`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-- `positions=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
-- `labels=nothing`: labels used if `plotData` is no DataFrame.
+- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
+- `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
 
 ## Extra Data Behavior:
 None
@@ -42,7 +42,7 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
-function plot_topo!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig; positions=nothing, labels=nothing)
+function plot_topo!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions::Vector{Point{2, Float32}}=nothing, labels::Vector{String}=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
 
     if plotData isa DataFrame
@@ -57,7 +57,7 @@ function plot_topo!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig
         end
     end
 
-    if config.plotType == :eegtopoplot
+    if config.plotType == :eegtopo
         eeg_topoplot!(axis, plotData, labels; positions, config.visualData...)
     else
         topoplot!(axis, plotData, positions; labels, config.visualData...)

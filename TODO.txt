@@ -1,28 +1,8 @@
 Issues:
-	extraData.topoLegend uses?
-	How to deactivate topoLegend?
-	updated plotConfig names good?
-	can you still put in custom labels and positions in topoplot?
-	Datatype topoplots
+	Plot method is in plotConfig
+	butterfly plot fixen topoLegend
 
 
-Line Plots
-	
-
-Design Matrix
-
-
-Butterfly Plots
-
-
-Topolots
-
-
-
-ERP images
-
-
-Parralel Coordinate Plots
 
 
 Dokumentation
@@ -38,7 +18,7 @@ Dokumentation
 	Tutorials
 	Example
 
-
+	mapping data in each plot
 
 LinePlot Matrix
 	MAYBE!
