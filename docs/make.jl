@@ -45,13 +45,9 @@ makedocs(;
             "Config Mapping Data" => "config/mapping_data.md",
             "Config Visual Data" => "config/visual_data.md",
         ],
-        "Visualization Options" => [
-            "For Butterfly Plot" => "vis_options/o_butterfly_plot.md",
-            "For Designmatrix" => "vis_options/o_design_matrix.md",
-            "For ERP Image" => "vis_options/o_erp_image.md",
-            "For Line Plot" => "vis_options/o_line_plot.md",
-            "For Parallel Coordinates Plot" => "vis_options/o_para_coord.md",
-            "For Topo Plot" => "vis_options/o_topo_plot.md",
+        "How To" => [
+            "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
+            "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
     ],
 )
