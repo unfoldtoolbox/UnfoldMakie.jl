@@ -30,12 +30,26 @@ The following code will result in the default configuration.
 ```
 erpConfig = PlotConfig(:erp)
 ```
-[Here](@ref o_erpi_vis) we look into possible options for configuring the ERP image.
-For more information on plot configurations in general, look at the [plot config](@ref plot_config) section. 
+At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
 This is how you finally plot the ERP image.
 ```
 plot_erp(dat_e[28,:,:], erpConfig)
+```
+
+## [Visualization Options for ERP Image](@id o_erpi_vis)
+
+##   REMOVED FROM erp_image.md
+### Configurations for ERP Images
+Here we look into possible options for configuring the ERP image visualization.
+
+```
+erpConfig = PlotConfig(:erp)
+erpConfig.setExtraValues(;ylims = (low = 3650, high = 8000),
+	ylabel = "Sorted trials",
+	meanPlot = true)
+erpConfig.setColorbarValues(;label = "Voltage [µV]")
+erpConfig.setVisualValues(;colormap = Reverse("RdBu"), colorrange = (-40, 40))
 ```
 
 ## TODO: MORE CONFIG DETAILS ONCE FINISHED

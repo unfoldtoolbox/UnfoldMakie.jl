@@ -17,7 +17,7 @@ Here we used the FIR basisfunction.
 For more information on basisfunctions see the [Unfold.jl documentation](https://unfoldtoolbox.github.io/Unfold.jl/dev/explanations/basisfunctions/).
 
 ### Test Data erpcore-N170.jld2
-Download the `erpcore-N170.jld2` file from this [website](https://figshare.com/articles/dataset/erpcore-N170_jld2/19762705). 
+Download the `erpcore-N170.jld2` data file from [figshare](https://figshare.com/articles/dataset/erpcore-N170_jld2/19762705). 
 
 As we manually load data we use the following modules:
 ```
