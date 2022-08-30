@@ -86,7 +86,8 @@ function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMat
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
     end
     # plot Designmatrix
-    ax = Axis(f[1, 1], xticklabelrotation=pi/8, xticks=(1:length(labels),labels))
+    config.setAxisValues(xticks=(1:length(labels),labels))
+    ax = Axis(f[1, 1]; config.axisData...)
     hm = heatmap!(ax, designmat'; config.visualData...)
     
     if isa(designmat, SparseMatrixCSC)

@@ -13,6 +13,7 @@ mutable struct PlotConfig
     mappingData::NamedTuple
     legendData::NamedTuple
     colorbarData::NamedTuple
+    axisData::NamedTuple
     
     setExtraValues::Function
     setLayoutValues::Function
@@ -20,6 +21,7 @@ mutable struct PlotConfig
     setMappingValues::Function
     setLegendValues::Function
     setColorbarValues::Function
+    setAxisValues::Function
 
     # removes all varaibles from mappingData which aren't collumns in input plotData
     resolveMappings::Function
@@ -38,8 +40,6 @@ mutable struct PlotConfig
             categoricalColor=true,
             categoricalGroup=true,
             topoLegend=false,
-            topoLabel=nothing,
-            topoPositions=nothing,
             xTicks=nothing,
             legendLabel=nothing,
             meanPlot=false,
@@ -48,6 +48,14 @@ mutable struct PlotConfig
             stderror=false,
             pvalue=[],
             erpBlur=10,
+
+            # paracoord fix-values
+            pc_aspect_ratio = 0.55,
+            pc_right_padding = 15,
+            pc_left_padding = 25,
+            pc_top_padding = 26,
+            pc_bottom_padding = 16,
+            pc_tick_label_size = 14,
         )
         this.layoutData = (;
             showLegend=true,
@@ -76,6 +84,11 @@ mutable struct PlotConfig
             vertical = true,
             tellwidth = true,
             tellheight = false
+        )
+
+        this.axisData = (;
+            xlabel = "x label",
+            ylabel = "y label"
         )
         
         # setter for ANY values for Data
@@ -117,14 +130,16 @@ mutable struct PlotConfig
             this.colorbarData = merge(this.colorbarData, kwargs)
             return this
         end
-            
+        this.setAxisValues = function (;kwargs...)
+            this.axisData = merge(this.axisData, kwargs)
+            return this
+        end
+
         # standard values for each plotType
         if (pltType == :lineplot)
             this.setMappingValues(
                 x=(:x, :time),
                 y=(:y, :estimate, :yhat),
-                col=(:col, :basisname),
-                row=(:row, :group),
                 color=(:color, :coefname),
             )
         elseif (pltType == :designmatrix)
@@ -134,6 +149,9 @@ mutable struct PlotConfig
             this.setLayoutValues(
                 xlabel="",
                 ylabel="",
+            )
+            this.setAxisValues(
+                xticklabelrotation=pi/8
             )
         elseif (pltType == :topoplot || pltType == :eegtopoplot)
             this.setLayoutValues(
@@ -153,12 +171,18 @@ mutable struct PlotConfig
                 x=:xPos,
                 y=:yPos,
                 topodata=(:topodata, :data, :y),
-                positions=(:pos, :positions, :position, :x),
-                labels=(:labels, :channel, :sensor),
+                topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
+                topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
+                topoChannels=(:channels, :channel, :topoChannel, :nothing),
             )
         elseif (pltType == :butterfly)
             this.setExtraValues(topoLegend = true)
             this.setLayoutValues(showLegend = false)
+            this.setMappingValues(
+                topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
+                topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
+                topoChannels=(:channels, :channel, :topoChannel, :nothing),
+            )
         elseif (pltType == :erp)
             this.setExtraValues(
                 sortData = true,
@@ -183,7 +207,6 @@ mutable struct PlotConfig
                 channel=:channel,
                 category=:category,
                 time=:time,
-                yhat=:yhat,
             )
         end
 
@@ -195,13 +218,18 @@ mutable struct PlotConfig
             # filter collumns to only include the ones that are in plotData, or throw an error if none are
             function getAvailable(key, choices)
                 available = choices[keys(choices)[isCollumn.(collect(choices))]]
-                length(available) >= 1 ? available :
-                    @error("default collumns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
+                if length(available) >= 1
+                    return available[1]
+                else
+                    return (:nothing ∈ collect(choices)) ?
+                        nothing :
+                        @error("default collumns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
+                end
             end
             # have to use Dict here because NamedTuples break when trying to map them with keys/indices
             mappingDict = Dict()
             for (k,v) in pairs(this.mappingData)
-                mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v)[1] : v
+                mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v) : v
             end
             this.mappingData = (;mappingDict...)
         end

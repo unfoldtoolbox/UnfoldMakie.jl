@@ -26,17 +26,13 @@ function plot_topo(plotData, config::PlotConfig; positions=nothing, labels=nothi
 end
 
 function plot_topo!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig; positions=nothing, labels=nothing)
-    axis = Axis(f[1, 1])
+    axis = Axis(f[1, 1]; config.axisData...)
 
     if plotData isa DataFrame
         config.resolveMappings(plotData)
 
-        if string(config.mappingData.positions) ∉ names(plotData)
-            plotData[!,config.mappingData.positions] = plotData[!,config.mappingData.labels] .|> (x -> Point2f(getLabelPos(x)[1], getLabelPos(x)[2]))
-        end
-    
-        labels = (string(config.mappingData.labels) ∈ names(plotData)) ? plotData[:,config.mappingData.labels] : nothing    
-        positions = plotData[:,config.mappingData.positions]
+        positions = getTopoPositions(plotData, config)
+        labels = (string(config.mappingData.topoLabels) ∈ names(plotData)) ? plotData[:,config.mappingData.topoLabels] : nothing    
         plotData = plotData[:,config.mappingData.topodata]
     else
         if isnothing(positions)
