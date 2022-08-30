@@ -19,7 +19,6 @@ function getTopoPositions(plotData, config)
 end
 
 function getTopoColor(plotData, config)
-
     if !isnothing(config.mappingData.topoLabels)
         config.setMappingValues(color=config.mappingData.topoLabels)
         list = zip(plotData[:, config.mappingData.topoLabels], plotData[:, config.mappingData.topoPositions])
