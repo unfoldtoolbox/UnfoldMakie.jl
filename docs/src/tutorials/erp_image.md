@@ -26,7 +26,7 @@ cErp = PlotConfig(:erp)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you finally plot the ERP image.
+This is how you plot the ERP image.
 ```
 cErp.plot(dat_e[28,:,:])
 ```
