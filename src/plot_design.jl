@@ -5,7 +5,7 @@ using SparseArrays
 """ 
     function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
 
-Plot a designmatrix plot. 
+Plot a designmatrix. 
 ## Arguments:
 - `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
@@ -36,7 +36,7 @@ Behavior if specified in configuration:
 - xTicks ≥ `number of labels`: all labels are placed.
 
 ## Return Value:
-A figure displaying the designmatrix plot. 
+A figure displaying the designmatrix. 
 """
 function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
     return plot_design!(Figure(), plotData, config)
@@ -45,7 +45,7 @@ end
 """ 
     function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMatrix,config::PlotConfig)
 
-Plot a designmatrix plot. 
+Plot a designmatrix. 
 ## Arguments:
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::Unfold.DesignMatrix`: Data for the plot visualization.

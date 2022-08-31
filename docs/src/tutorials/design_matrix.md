@@ -44,14 +44,14 @@ cDesign.plot(designmatrix(mres))
 
 ![Default Designmatrix](../images/designmatrix_default.png)
 
-## Column Mappings for Designmatrix Plots
+## Column Mappings for Designmatrices
 
 Since designmatrix uses an `Unfold.DesignMatrix` as an input, the library does not need any infos about the mapping.
 
 ## Configurations for Designmatrices
 
 Here we look into possible options for configuring the designmatrix visualization using `config.setExtraValues(<name>=<value>,...)`.
-By calling the `config.plot(...)` function on a designmatrix plot the function `plot_design(...)` is executed.
+By calling the `config.plot(...)` function on a designmatrix the function `plot_design(...)` is executed.
 
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
