@@ -113,8 +113,8 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
         plotData[!,:se_high] = plotData[:,config.mappingData.y] .+ plotData.stderror
     end
     
-    # Get topocolors if topoPlot Legend active
-    if (config.extraData.topoLegend)
+    # Get topocolors for butterfly
+    if (config.plotType == :butterfly)
         allPositions = getTopoPositions(plotData, config)
         colors = getTopoColor(plotData, config)
     else
@@ -129,7 +129,13 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
         end
     end
 
-    mapp = mapping(;config.mappingData.color)
+
+    mapp = mapping()
+
+    if (:color ∈ keys(config.mappingData))
+        mapp = mapp * mapping(;config.mappingData.color)
+    end
+    
     if (:group ∈ keys(config.mappingData))
         mapp = mapp * mapping(;config.mappingData.group)
     end
@@ -153,18 +159,26 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     
     plotEquation = basic * mapp
 
-    # add topoLegend if topoPlot Legend active
-    if (config.extraData.topoLegend)
-        legendRight = config.layoutData.legendPosition == :right
-        if config.layoutData.showLegend
-            topoAxis = Axis(f[2,2], aspect = DataAspect())
+
+    # butterfly plot is drawn slightly different
+    if config.plotType == :butterfly
+        # add topoLegend
+        if (config.extraData.topoLegend)
+            legendRight = config.layoutData.legendPosition == :right
+            if config.layoutData.showLegend
+                topoAxis = Axis(f[2,2], aspect = DataAspect())
+            else
+                topoAxis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
+            end
+            topoplotLegend(topoAxis, allPositions)
+            mainAxis = Axis(legendRight ? f[1:2,1] : f[1,1:2]; config.axisData...)
         else
-            topoAxis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
+            # no extra legend
+            mainAxis = Axis(f[1,1]; config.axisData...)
         end
-        topoplotLegend(topoAxis, allPositions)
-        mainAxis = Axis(legendRight ? f[1:2,1] : f[1,1:2]; config.axisData...)
-        drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
+            drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
     else
+        # normal lineplot draw
         drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
     end
 
@@ -223,8 +237,6 @@ end
 
 function addPvalues(plotData, config)
     p = deepcopy(config.extraData.pvalue)
-
-
 
     # for now, add them to the fixed effect
     if "group" ∉  names(p)

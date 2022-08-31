@@ -45,7 +45,7 @@ A figure displaying the topo plot.
 function plot_topo!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
 
-    # use collumns when we have a DataFrame
+    # use columns when we have a DataFrame
     if plotData isa DataFrame
         config.resolveMappings(plotData)
 
