@@ -7,7 +7,7 @@ To have our Line Plot use the `estimate` column for x and the `time` column for 
 ```
 config.setMappingValues(x = :estimate, y = :time)
 ```
-Which columns are used by which plotting function can be looked up in their respective tutorials in the documentation.
+Which columns are used by which plotting function can be looked up in their respective tutorials in the `Tutorials: Visualizations` section.
 
 ## Multiple Options
 In addition to giving a single column which contains the specified data the user can also give a list of columns which may contain the data.

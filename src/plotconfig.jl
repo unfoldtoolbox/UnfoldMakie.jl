@@ -120,7 +120,6 @@ mutable struct PlotConfig
         this.layoutData = (;
             showLegend=true,
             legendPosition=:right,
-            showAxisLabels=true,
             xlabelFromMapping=:x,
             ylabelFromMapping=:y,
             useColorbar=false,
