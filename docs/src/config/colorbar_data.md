@@ -7,7 +7,8 @@ As a consequence, the possible options are determined by the underlying function
 For line plots, the `colorbar!` function of the `AlgebraOfGraphics` module is used ([documentation](http://juliaplots.org/AlgebraOfGraphics.jl/stable/API/functions/#AlgebraOfGraphics.colorbar!)).
 
 The `Colorbar` will be automatically used, when `AlgebraOfGraphics` is able to draw it. 
-For this the `color` data will be used and has to be numerical and `extraData.categoricalColor` needs to be `false`.
+For this, the `color` data will be used and has to be numerical. 
+Furthermore `extraData.categoricalColor` needs to be `false`.
 
 ## Other Plots
 In all other Plots the `Colorbar` function of the `Makie` module is used ([documentation](https://makie.juliaplots.org/v0.17.13/examples/blocks/colorbar/index.html)).
