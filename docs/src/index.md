@@ -31,6 +31,7 @@ These visualizations are:
 The `Plot Configuration` all segments of the config, detailing their contained attributes.
 The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
 These segments are:
+- [Axis Data](@ref config_axis)
 - [Colorbar Data](@ref config_colorbar)
 - [Layout Data](@ref config_layout)
 - [Legend Data](@ref config_legend)
@@ -70,34 +71,3 @@ The following module in their respective versions are used:
 - Pkg
 - SparseArrays
 - Statistics
-
-## Notes
-
-### Idea Topics:
-- Vis Config
-- How to Popular EEG visualizations
-- [function documentation](https://julia-doc.readthedocs.io/en/latest/manual/documentation/) 
-- [BE doc example](https://unfoldtoolbox.github.io/Unfold.jl/dev/references/types/)
-- [documenter](https://juliadocs.github.io/Documenter.jl/stable/)
-
-
-### from Unfold Documentation
-You might want to start with **tutorials** such as the [installation tutorial](@ref install_instruct). 
-
-in installation.md - "add UnfoldMakie" does not yet add our fork
-
-Documentation for [Unfold](https://unfoldtoolbox.github.io/Unfold.jl/dev/).
-Documentation for [UnfoldMakie](https://github.com/behinger/UnfoldMakie.jl).
-
-This is another one
-
-```@index
-```
-
-```@autodocs
-Modules = [UnfoldMakie]
-```
-
-```@meta
-CurrentModule = UnfoldMakie
-```
