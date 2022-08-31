@@ -65,7 +65,7 @@ To get the positions from the channels we use a set from the [PyMNE Library](htt
 
 ## Plot EEG Topo Plots
 
-There is an alternative version of the topo plots showing a representation of a head, with the same features as the one seen above.
+There is an alternative version of the topo plots showing a representation of a head, with similar features as the one seen above.
 
 We suggest additionally setting the aspect ratio in the Axis values to `DataAspect()`.
 This results in a round plot
@@ -123,7 +123,7 @@ The labels have to be given into the function seperately:
 Default is `true`.
 
 ### label_scatter (boolean)
-Indicates whether the dots should drawn at the given positions.
+Indicates whether the dots should be drawn at the given positions.
 
 Default is `true`.
 
