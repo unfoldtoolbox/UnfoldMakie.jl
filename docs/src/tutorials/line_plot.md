@@ -33,7 +33,7 @@ cLine = PlotConfig(:line)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you finally plot the line plot.
+This is how you plot the line plot.
 ```
 cLine.plot(results_plot)
 ```
