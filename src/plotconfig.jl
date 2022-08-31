@@ -272,6 +272,8 @@ mutable struct PlotConfig
             this.setLayoutValues(
                 xlabelFromMapping=:channel,
                 ylabelFromMapping=:y,
+                hidespines=(),
+                hidedecorations=(;label = false),
             )
             this.setMappingValues(
                 channel=:channel,

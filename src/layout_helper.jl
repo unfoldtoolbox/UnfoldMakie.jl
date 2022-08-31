@@ -31,7 +31,7 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
     end
     
     if :hidedecorations ∈ keys(config.layoutData) && !isnothing(config.layoutData.hidedecorations)
-        hidedecorations!(ax, config.layoutData.hidedecorations...)
+        hidedecorations!(ax; config.layoutData.hidedecorations...)
     end
     
     # automatic labels
