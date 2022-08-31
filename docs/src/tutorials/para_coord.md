@@ -43,7 +43,7 @@ We choose to put the legend at the bottom instead of to the right
 cParacoord.setLayoutValues(legendPosition=:bottom)
 ```
 
-This is how you finally plot the PCP.
+This is how you plot the PCP.
 ```
 cParacoord.plot(results_plot; channels=[5,3,2])
 ```
