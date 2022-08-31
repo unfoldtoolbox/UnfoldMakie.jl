@@ -20,7 +20,6 @@ For more information on basisfunctions see the [Unfold.jl documentation](https:/
 
 ### Properties of resulting used variables:
 
-- `data`:	is of type `Vector{Float64} (alias for Array{Float64, 1})` with a size of `(12000,)`
 - `evts`:	is of type `DataFrame` with size of `(397, 5)` and the columns:
 	- `latency`:	is of type `Int64`
 	- `type`:	is of type `String7`
@@ -99,6 +98,3 @@ end
 	- `time`:	is of type `Float64`
 	- `subject`:	is of type `Int64`
 - `mres`:	is of type `UnfoldLinearModel` (more information at the [Unfold module](https://github.com/unfoldtoolbox/Unfold.jl))
-
-
-## TODO: is data really used?
