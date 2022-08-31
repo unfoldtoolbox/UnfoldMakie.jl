@@ -50,7 +50,7 @@ plot_design(designmatrix(mres), cDesign)
 
 Here we look into possible options for configuring the designmatrix visualization.
 The options for configuring the visualization mentioned here are specific for designmatrices.
-For more general options look into the Plot Configuration section of the documentation.
+For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
 - sortData (boolean)
 - standardizeData (boolean)

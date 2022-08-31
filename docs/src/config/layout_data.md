@@ -1,4 +1,4 @@
-## [Config: Layout Data](@id config_layout)
+## [Layout Data](@id config_layout)
 
 The layout data of the configuration consists of config options for the layout such as for legend and labels. 
 
