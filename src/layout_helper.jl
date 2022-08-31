@@ -8,7 +8,7 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
         hidespines!(ax, :t, :r)
     end
 
-    # set f[] position depending on position
+    # set f[] position depending on legendPosition
     if (config.layoutData.showLegend)
         if isnothing(fig)
             @error "Legend needs figure parameter"
@@ -22,7 +22,6 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
                         Colorbar(legendPosition, hm; config.colorbarData...)
                     end
                 else
-                    # axislegend(ax; config.legendData...)
                     Legend(legendPosition, ax; config.legendData...)
                 end
             else
@@ -32,7 +31,7 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
         end
     end
     
-    # # label
+    # labels
     if config.layoutData.showAxisLabels
         ax.xlabel = config.layoutData.xlabel === nothing ? string(config.mappingData.x) : config.layoutData.xlabel
         ax.ylabel = config.layoutData.ylabel === nothing ? string(config.mappingData.y) : config.layoutData.ylabel
