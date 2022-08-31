@@ -33,7 +33,7 @@ cDesign = PlotConfig(:design)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you finally plot the designmatrix, when using data of the `Unfold` module.
+This is how you plot the designmatrix, when using data of the `Unfold` module.
 ```
 plot_design(designmatrix(ufMass, evts), cDesign)
 ```
