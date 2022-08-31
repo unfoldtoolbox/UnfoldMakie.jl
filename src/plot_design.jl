@@ -85,6 +85,15 @@ function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMat
         designmat = designmat ./ std(designmat,dims=1)
         designmat[isinf.(designmat)] .= 1.
     end
+
+    if isa(designmat, SparseMatrixCSC)
+        if config.extraData.sortData
+            @warn "Sorting does not make sense for timeexpanded designmatrices. sortData has been set to `false`"
+            config.extraData.sortData = false
+        end
+        designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
+    end
+
     if config.extraData.sortData
         designmat = Base.sortslices(designmat,dims=1)
     end
@@ -125,10 +134,7 @@ function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMat
         labels = newLabels
     end
     
-    if isa(designmat, SparseMatrixCSC)
-        @assert(!config.extraData.sortData,"Sorting does not make sense for timeexpanded designmatrices")
-        designmat = Matrix(designmat[end÷2-2000:end÷2+2000,:])
-    end
+
     # plot Designmatrix
     config.setAxisValues(xticks=(1:length(labels),labels))
     ax = Axis(f[1, 1]; config.axisData...)
