@@ -175,8 +175,6 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
         lines!(ax, 1, 1, 1, label = cat, color = colors[cat])
     end
     
-    applyLayoutSettings(config; fig = f)
-
     # labels
     text!(x_values, y_values, text = channelNames, align = (:center, :center), 
         offset = (0, ch_label_offset * 2), 
@@ -188,8 +186,7 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     Makie.xlims!(low = 0, high = width + right_padding)
     Makie.ylims!(low = 0, high = height + top_padding)
 
-    hidespines!(ax) 
-    hidedecorations!(ax, label = false)
+    applyLayoutSettings(config; fig = f, ax=ax)
 
     # ensures the axis numbers aren't squished
     ax.aspect = DataAspect()
