@@ -1,6 +1,6 @@
 # [Mapping Data](@id config_mapping)
 
-The mapping data of the configuration is used to let the plotting functions know which columns of a DataFrame contain which data, therefore it is only used in plots with a `DataFrame` as input.
+The mapping data of the configuration is used to let the plotting functions know which columns of a `DataFrame` contain which data, therefore it is only used in plots with a `DataFrame` as input.
 
 For example a Line Plot makes use of the x and y mappings.
 To have our Line Plot use the `estimate` column for x and the `time` column for y we can use:
@@ -16,4 +16,4 @@ config.setMappingValues(y = (:y, :yhat, :estimate))
 ```
 In this case the first available column will be chosen.
 
-Some configurations for certain plots already have a default column or a list of columns set, this way the user might not need to set any mapping values themselves if the DataFrame conforms to the same standards.
+Some configurations for certain plots already have a default column or a list of columns set, this way the user might not need to set any mapping values themselves if the `DataFrame` conforms to the same standards.
