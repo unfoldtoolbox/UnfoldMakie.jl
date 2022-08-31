@@ -20,9 +20,9 @@ To visualize topo plots we use the `TopoPlots` module.
 Topo plots can be visualized either by data from the `TopoPlots` module, or from a `DataFrame`.
 Both function very similar, though the dataframe needs some extra attention regarding the input.
 
-### Plot Topo Plots
+## Plot Topo Plots
 
-## Giving the Data
+### Giving the Data
 
 Using the `TopoPlots` is very straight forward.
 
@@ -51,7 +51,7 @@ Once set, the `DataFrame` can be put into the function directly
 cTopo.plot(dataframe)
 ```
 
-## Giving the positions
+### Giving the Positions
 
 Since the topo plot needs the positions of the sensors they have to be put into the drawing function. But there are multiple options (In order of prioritization):
 
@@ -63,7 +63,7 @@ To get the positions from the labels we use a [database](https://raw.githubuserc
 
 To get the positions from the channels we use a set from the [PyMNE Library](https://juliapackages.com/p/pymne).
 
-### Plot EEG Topo Plots
+## Plot EEG Topo Plots
 
 There is an alternative version of the topo plots showing a representation of a head, with the same features as the one seen above.
 

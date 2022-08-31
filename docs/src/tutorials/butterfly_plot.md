@@ -54,6 +54,15 @@ Default is `(:x, :time)`.
 ### y
 Default is `(:y, :estimate, :yhat)`.
 
+### topoPositions
+Default is `(:pos, :positions, :position, :topoPositions, :x, :nothing)`
+
+### topoLabels
+Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
+
+### topoChannels
+Default is `(:channels, :channel, :topoChannel, :nothing)`
+
 ## Configurations for Butterfly Plots
 
 Here we look into possible options for configuring the butterfly plot visualization using `config.setExtraValues(<name>=<value>,...)`.

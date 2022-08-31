@@ -85,10 +85,10 @@ When you followed the tutorial, using test data of the file `erpcore-N170.jld2`,
 ```
 data = effects(Dict(:category=>["face", "car"], :condition=>["intact"]), mres)
 
-paraConfig = PlotConfig(:paracoord)
-paraConfig.setVisualValues(colormap = :RdBu)
-paraConfig.setLayoutValues(legendPosition=:right)
-paraConfig.setExtraValues(
+cParacoord = PlotConfig(:paracoord)
+cParacoord.setVisualValues(colormap = :RdBu)
+cParacoord.setLayoutValues(legendPosition=:right)
+cParacoord.setExtraValues(
     pc_aspect_ratio = 0.8,
     pc_right_padding = 15,
     pc_left_padding = 45,
@@ -97,7 +97,7 @@ paraConfig.setExtraValues(
     pc_tick_label_size = 15,
 )
 
-paraConfig.plot(data; channels=[1,7,6])
+cParacoord.plot(data; channels=[1,7,6])
 ```
 
 ![Alternative PCP](../images/PCP_alt.png)

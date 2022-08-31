@@ -116,7 +116,7 @@ cLine.setExtraValues(
 cLine.setMappingValues(color=:coefname, group=:coefname)
 cLine.setLayoutValues(legendPosition=:bottom)
 cLine.setLegendValues(nbanks=2)
-plot_line(results_plot, cLine)
+cLine.plot(results_plot)
 ```
 
 ![Pretty Line Plot](../images/line_plot_p-val.png)
