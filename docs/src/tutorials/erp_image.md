@@ -1,6 +1,6 @@
 # [ERP Image Visualization](@id erpi_vis)
 
-Here we discuss butterfly plot visualization. 
+Here we discuss ERP image visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 ## Include used Modules
@@ -35,7 +35,7 @@ cErp.plot(dat_e[28,:,:])
 
 ## Column Mappings for ERP Images
 
-Since erp images use a `Matrix` as an input, the library does not need any informations about the mapping.
+Since ERP images use a `Matrix` as an input, the library does not need any informations about the mapping.
 
 ## Configurations for ERP Images
 
@@ -59,6 +59,8 @@ Default is `false`.
 
 ### meanPlot (boolean)
 Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+If limits are set in the axis values both plots will be aligned.
+
 Default is `false`.
 
 
