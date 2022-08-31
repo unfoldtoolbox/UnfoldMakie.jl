@@ -21,7 +21,7 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
-function plot_topo(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions::Vector{Point{2, Float32}}=nothing, labels::Vector{String}=nothing)
+function plot_topo(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
     plot_topo!(Figure(), plotData, config; positions, labels)
 end
 
@@ -42,7 +42,7 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
-function plot_topo!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions::Vector{Point{2, Float32}}=nothing, labels::Vector{String}=nothing)
+function plot_topo!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
 
     # use collumns when we have a DataFrame
