@@ -31,7 +31,7 @@ The code files can be found in the `src` folder.
 ## Documentation Notes
 
 The documentation can be found in the `doc` folder.
-In the `src` folder contained within it exists as "raw" `.md` files and in the `build` folder contained within it exists as `.html`.
+In the `src` folder contained within it exists as "raw" `.md` files and in the `build` folder contained within it exists as `.html` after running the `make.jl` file.
 These are specifically the "index" file with more files in sub folders.
 
 
