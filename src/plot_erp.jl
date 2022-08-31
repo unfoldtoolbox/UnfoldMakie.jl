@@ -85,15 +85,28 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},con
 
     if config.extraData.meanPlot
         # UserInput
-        axisOffset = (config.layoutData.showLegend && config.layoutData.legendPosition == :bottom) ? 1 : 0
-        lines(f[5+axisOffset,1],mean(plotData,dims=2)[:,1])
-        config2 = deepcopy(config)
-        config2.setLayoutValues(
+        subConfig = deepcopy(config)
+        subConfig.setLayoutValues(
             showLegend = false,
-            ylabel = config.colorbarData.label === nothing ? "" : config.colorbarData.label,
-            ylims = nothing
         )
-        applyLayoutSettings(config2; fig = f)
+        subConfig.setAxisValues(
+            ylabel = config.colorbarData.label === nothing ? "" : config.colorbarData.label
+        )
+        if :limits ∈ keys(subConfig.axisData)
+            subConfig.setAxisValues(limits = (config.axisData.limits[1], config.axisData.limits[2], nothing, nothing))
+        end
+        if !(:rightspinevisible ∈ keys(subConfig.axisData))
+            subConfig.setAxisValues(rightspinevisible = false)
+        end
+        if !(:topspinevisible ∈ keys(subConfig.axisData))
+            subConfig.setAxisValues(topspinevisible = false)
+        end
+
+        axisOffset = (config.layoutData.showLegend && config.layoutData.legendPosition == :bottom) ? 1 : 0
+        subAxis = Axis(f[5+axisOffset,1]; subConfig.axisData...)
+
+        lines!(subAxis,mean(plotData,dims=2)[:,1])
+        applyLayoutSettings(subConfig; fig = f, ax=subAxis)
     end
 
     return f

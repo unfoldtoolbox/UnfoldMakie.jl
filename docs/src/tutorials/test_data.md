@@ -1,9 +1,9 @@
 ## [Load Data](@id test_data)
 
 In case you do not have data to visualize line plots, you can follow along this step to get data. You can also use this as a reference on how to load your own data. 
-With the exception of example data for topoplots which can be found in [General Topo Plot Visualization](@ref tp_vis), information on how to load example data for other types of visualizations are detailed here.
+With the exception of example data for topo plots which can be found in [General Topo Plot Visualization](@ref tp_vis), information on how to load example data for other types of visualizations are detailed here.
 
-### Test Data from the Unfold Module
+## Test Data from the Unfold Module
 The `Unfold` module offers some test data (useful e. g. for designmatrix visualization). 
 In the following we load the data. 
 ```
@@ -12,11 +12,25 @@ include(joinpath(dirname(pathof(Unfold)), "../test/test_utilities.jl") ) # to lo
 data, evts = loadtestdata("test_case_3b");
 basisfunction = firbasis(τ=(-0.4,.8),sfreq=50,name="stimulus")
 f  = @formula 0~1+conditionA+continuousA
+
+ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8)))
 ```
 Here we used the FIR basisfunction.
 For more information on basisfunctions see the [Unfold.jl documentation](https://unfoldtoolbox.github.io/Unfold.jl/dev/explanations/basisfunctions/).
 
-### Test Data erpcore-N170.jld2
+### Properties of resulting used variables:
+
+- `data`:	is of type `Vector{Float64} (alias for Array{Float64, 1})` with a size of `(12000,)`
+- `evts`:	is of type `DataFrame` with size of `(397, 5)` and the columns:
+	- `latency`:	is of type `Int64`
+	- `type`:	is of type `String7`
+	- `intercept`:	is of type `Int64`
+	- `conditionA`:	is of type `Int64`
+	- `continuousA`:	is of type `Float64`
+- `ufMass`:	is of type `UnfoldLinearModel` (more information at the [Unfold module](https://github.com/unfoldtoolbox/Unfold.jl))
+
+
+## Test Data erpcore-N170.jld2
 Download the `erpcore-N170.jld2` data file from [figshare](https://figshare.com/articles/dataset/erpcore-N170_jld2/19762705). 
 
 As we manually load data we use the following modules:
@@ -72,5 +86,19 @@ for sub ∈ unique(evt_e.subject)
 end
 ```
 
-## TODO MORE TEST DATA?
-[sub-002_ses-N170_task-N170_eeg.set](https://figshare.com/articles/dataset/N170_Single_Subject_ERPCore/19762960)
+
+### Properties of resulting used variables:
+
+- `results_onesubject`:	is of type `DataFrame` with a size of `(25476, 8)` and columns:
+	- `basisname`:	is of type `String`
+	- `channel`:	is of type `Int64`
+	- `coefname`:	is of type `String`
+	- `estimate`:	is of type `Float64`
+	- `group`:	is of type `Nothing`
+	- `stderror`:	is of type `Float64`
+	- `time`:	is of type `Float64`
+	- `subject`:	is of type `Int64`
+- `mres`:	is of type `UnfoldLinearModel` (more information at the [Unfold module](https://github.com/unfoldtoolbox/Unfold.jl))
+
+
+## TODO: is data really used?
