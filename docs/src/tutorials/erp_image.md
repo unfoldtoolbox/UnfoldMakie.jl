@@ -35,7 +35,7 @@ cErp.plot(dat_e[28,:,:])
 
 ## Column Mappings for ERP Images
 
-Since erp images use a `Matrix` as an input, the library does not need any infos about the mapping.
+Since erp images use a `Matrix` as an input, the library does not need any informations about the mapping.
 
 ## Configurations for ERP Images
 
