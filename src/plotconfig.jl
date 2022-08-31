@@ -13,7 +13,7 @@ This struct is used as the configuration and simple plot method for an UnfoldMak
 - `:erp`: ERP Image
 - `:design`: Designmatrix Plot
 - `:topo`: Topo Plot
-- `:eegtopo`: Alternative Topo Plot
+- `:eegtopo`: EEG Topo Plot
 - `:paraCoord`: Parallel Coordinates Plot
 
 ## Attributes
@@ -84,20 +84,20 @@ mutable struct PlotConfig
     setColorbarValues::Function
     setAxisValues::Function
 
-    # removes all varaibles from mappingData which aren't collumns in input plotData
+    # removes all varaibles from mappingData which aren't columns in input plotData
     resolveMappings::Function
 
     plot::Function
     plot!::Function
 
-    "plot types: :lineplot, :designmatrix, :topolot, :butterfly"
+    "plot types: :line, :design, :topo, :eegtopo, :butterfly, :erp, :paracoord"
     function PlotConfig(pltType)
         this = new()
 
         this.plotType = pltType
         # standard values for ALL plots
         this.extraData = (
-            # vars to make scolumns nonnumerical
+            # vars to make columns nonnumerical
             categoricalColor=true,
             categoricalGroup=true,
             topoLegend=false,
@@ -272,6 +272,8 @@ mutable struct PlotConfig
             this.setLayoutValues(
                 xlabelFromMapping=:channel,
                 ylabelFromMapping=:y,
+                hidespines=(),
+                hidedecorations=(;label = false),
             )
             this.setMappingValues(
                 channel=:channel,
@@ -280,20 +282,20 @@ mutable struct PlotConfig
             )
         end
 
-        # removes all varaibles from mappingData which aren't collumns in input plotData
+        # removes all varaibles from mappingData which aren't columns in input plotData
         this.resolveMappings = function (plotData)
-            function isCollumn(col)
+            function isColumn(col)
                 string(col) ∈ names(plotData)
             end
-            # filter collumns to only include the ones that are in plotData, or throw an error if none are
+            # filter columns to only include the ones that are in plotData, or throw an error if none are
             function getAvailable(key, choices)
-                available = choices[keys(choices)[isCollumn.(collect(choices))]]
+                available = choices[keys(choices)[isColumn.(collect(choices))]]
                 if length(available) >= 1
                     return available[1]
                 else
                     return (:nothing ∈ collect(choices)) ?
                         nothing :
-                        @error("default collumns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
+                        @error("default columns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues()")
                 end
             end
             # have to use Dict here because NamedTuples break when trying to map them with keys/indices

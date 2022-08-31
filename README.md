@@ -1,4 +1,37 @@
 # UnfoldMakie
+
+This is the UnfoldMakie module for the Julia programming language.
+
+It was authored by `Benedikt Ehinger` and has been worked upon by students within the context of a university project (`Fachpraktikum:  Methods in Computational EEG`) at the University of Stuttgart.
+
+The student names are:
+- Baumgartner, Daniel
+- Döring, Sören
+- Gärtner, Niklas
+
+## Code Notes
+
+The code files can be found in the `src` folder.
+
+
+## Documentation Notes
+
+The documentation can be found in the `doc` folder.
+In the `src` folder contained within it exists as "raw" `.md` files and in the `build` folder contained within it exists as `.html`.
+These are specifically the "index" file with more files in sub folders.
+
+## General Notes
+
+As we are unfamiliar with some formalities, we did not edit some formal files.
+Specifically, we did not edit the `License` file, and within the `make.jl`, values other than `pages`.
+
+
+## Finally
+
+Following is the content of the original Readme before revision within the context of the `Fachpraktikum`.
+
+
+# Legacy Readme Content
 Currently supports plotting designmatrices `plot(designmatrix(uf))` and results `plot_results(coeftable(uf))`. Check out the `topoplot` branch for topographical plotting.
 
 The toolbox requires a Makie-Backend to be loaded, e.g. `using CairoMakie`
