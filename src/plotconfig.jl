@@ -121,11 +121,8 @@ mutable struct PlotConfig
             showLegend=true,
             legendPosition=:right,
             showAxisLabels=true,
-            border=false,
-            xlabel=nothing,
-            ylabel=nothing,
-            ylims=nothing,
-            xlims=nothing,
+            xlabelFromMapping=:x,
+            ylabelFromMapping=:y,
             useColorbar=false,
         )
         this.visualData = (;
@@ -146,10 +143,7 @@ mutable struct PlotConfig
             tellheight = false
         )
 
-        this.axisData = (;
-            xlabel = "x label",
-            ylabel = "y label"
-        )
+        this.axisData = (;)
         
         # setter for very plot specific Data
         this.setExtraValues = function (;kwargs...)
@@ -191,6 +185,12 @@ mutable struct PlotConfig
             return this
         end
         this.setAxisValues = function (;kwargs...)
+            if :xlabel ∈ keys(kwargs)
+                this.layoutData = merge(this.layoutData, (;xlabelFromMapping = nothing))
+            end
+            if :ylabel ∈ keys(kwargs)
+                this.layoutData = merge(this.layoutData, (;ylabelFromMapping = nothing))
+            end
             this.axisData = merge(this.axisData, kwargs)
             return this
         end
@@ -202,23 +202,28 @@ mutable struct PlotConfig
                 y=(:y, :estimate, :yhat),
                 color=(:color, :coefname),
             )
+            this.setLayoutValues(
+                hidespines = (:r, :t)
+            )
         elseif (pltType == :design)
             this.setLayoutValues(
                 useColorbar = true
             )
             this.setLayoutValues(
-                xlabel="",
-                ylabel="",
+                xlabelFromMapping=nothing,
+                ylabelFromMapping=nothing,
             )
             this.setAxisValues(
                 xticklabelrotation=pi/8
             )
         elseif (pltType == :topo || pltType == :eegtopo)
             this.setLayoutValues(
-                border=true,
-                showLegend=false,
-                showAxisLabels=false,
+                showLegend= pltType == :topo,
+                xlabelFromMapping=nothing,
+                ylabelFromMapping=nothing,
                 useColorbar = true,
+                hidespines = (),
+                hidedecorations = ()
             )
             this.setVisualValues(
                 contours=(color=:white, linewidth=2),
@@ -237,7 +242,10 @@ mutable struct PlotConfig
             )
         elseif (pltType == :butterfly)
             this.setExtraValues(topoLegend = true)
-            this.setLayoutValues(showLegend = false)
+            this.setLayoutValues(
+                showLegend = false,
+                hidespines = (:r, :t)
+            )
             this.setMappingValues(
                 topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
                 topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
@@ -248,17 +256,22 @@ mutable struct PlotConfig
                 sortData = true,
             )
             this.setLayoutValues(
-                border=false,
-                showAxisLabels=true,
                 useColorbar = true,
+            )
+            this.setColorbarValues(
+                label = "Voltage [µV]"
+            )
+            this.setAxisValues(
+                xlabel = "Time",
+                ylabel = "Sorted trials"
             )
         elseif (pltType == :paracoord)
             this.setExtraValues(
                 sortData = true,
             )
             this.setLayoutValues(
-                xlabel = "Channels",
-                ylabel = "Timestamps",
+                xlabelFromMapping=:channel,
+                ylabelFromMapping=:y,
             )
             this.setMappingValues(
                 channel=:channel,
