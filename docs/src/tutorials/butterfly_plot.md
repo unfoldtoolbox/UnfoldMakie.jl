@@ -6,8 +6,8 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 ### Include used Modules
 The following modules are necessary for following this tutorial:
 ```
-using Unfold
 using UnfoldMakie
+using Unfold
 using StatsModels # can be removed in Unfold v0.3.5
 using DataFrames
 using CairoMakie
@@ -35,21 +35,37 @@ At this point you can detail changes you want to make to the visualization throu
 
 This is how you finally plot the butterfly plot.
 ```
-plot_line(results_plot_butter, cButter)
+cButter.plot(results_plot_butter)
 ```
 
 ![Default Butterfly Plot](../images/butterfly_plot_default.png)
 
+## Column Mappings for Butterfly Plots
 
+Since butterfly plots use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
+
+For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+
+While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+
+### x
+Default is `(:x, :time)`.
+
+### y
+Default is `(:y, :estimate, :yhat)`.
 
 ### Configurations for Butterfly Plots
 
-Here we look into possible options for configuring the butterfly plot visualization. 
-To build up a butterfly plot, we internally use functions for visualizing line plots.
-Hence, the options for configuring the visualization mentioned here are specific for line plots.
-For more general options look into the Plot Configuration section of the documentation.
+Here we look into possible options for configuring the butterfly plot visualization using `config.setExtraValues(<name>=<value>,...)`.
+By calling the `config.plot(...)` function on a butterfly plot the function `plot_lines(...)` is executed.
 
-[Here](@ref lp_vis) you can find the configurations for line plots.
+For more general options look into the `Plot Configuration` section of the documentation.
+This is the list of unique configuration (extraData):
+- topoLegend (boolean)
 
+Since the configurations for line plots can be applied to butterfly plots as well.
+[Here](@ref lp_vis) you can find the configurations for line plots, 
 
-## TODO ??
+### topoLegend (boolean)
+Indicating whether the topo legend is displayed.
+Default is `true`.

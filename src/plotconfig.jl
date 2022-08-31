@@ -97,18 +97,21 @@ mutable struct PlotConfig
         this.plotType = pltType
         # standard values for ALL plots
         this.extraData = (
-            # vars to make columns nonnumerical
+            # lineplot vars
             categoricalColor=true,
             categoricalGroup=true,
-            topoLegend=false,
-            xTicks=nothing,
-            meanPlot=false,
-            sortData=true,
-            standardizeData=true,
             stderror=false,
             pvalue=[],
+            # butterfly plot vars
+            topoLegend=false,
+            # designmatrix plot vars
+            xTicks=nothing,
+            standardizeData=true,
+            # Designmatrix and erp image var 
+            sortData=true,
+            # erp image var
+            meanPlot=false,
             erpBlur=10,
-
             # paracoord fix-values
             pc_aspect_ratio = 0.55,
             pc_right_padding = 15,
@@ -129,8 +132,8 @@ mutable struct PlotConfig
             colormap=:haline,
         )
         this.mappingData = (
-            x=:time,
-            y=:estimate,
+            x=(:x, :time),
+            y=(:y, :estimate, :yhat),
         ) 
         this.legendData = (;
             orientation = :vertical,
@@ -198,8 +201,6 @@ mutable struct PlotConfig
         # standard values for each plotType
         if (pltType == :line)
             this.setMappingValues(
-                x=(:x, :time),
-                y=(:y, :estimate, :yhat),
                 color=(:color, :coefname),
             )
             this.setLayoutValues(
@@ -233,8 +234,6 @@ mutable struct PlotConfig
                 colormap=Reverse(:RdBu),
             )
             this.setMappingValues(
-                x=:xPos,
-                y=:yPos,
                 topodata=(:topodata, :data, :y),
                 topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
                 topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),

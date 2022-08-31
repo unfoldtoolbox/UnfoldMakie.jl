@@ -20,11 +20,6 @@ The documentation can be found in the `doc` folder.
 In the `src` folder contained within it exists as "raw" `.md` files and in the `build` folder contained within it exists as `.html`.
 These are specifically the "index" file with more files in sub folders.
 
-## General Notes
-
-As we are unfamiliar with some formalities, we did not edit some formal files.
-Specifically, we did not edit the `License` file, and within the `make.jl`, values other than `pages`.
-
 
 ## Finally
 
