@@ -38,7 +38,7 @@ cParacoord.setMappingValues(category=:coefname, y=:estimate)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are also detailed further below. 
 
-We choose to put the legend at the bottom instead of to the right
+We choose to put the legend at the bottom instead of to the right:
 ```
 cParacoord.setLayoutValues(legendPosition=:bottom)
 ```
@@ -54,9 +54,9 @@ cParacoord.plot(results_plot; channels=[5,3,2])
 
 Since PCPs use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
-For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+For more informations about mapping values, look into the [Mapping Data](@ref config_mapping) section of the documentation.
 
-While there are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+While there are multiple default values that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 
 ### y
 Default is `(:y, :estimate, :yhat)`.
