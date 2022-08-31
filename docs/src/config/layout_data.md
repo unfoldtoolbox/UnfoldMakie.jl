@@ -1,41 +1,41 @@
-## [Layout Data](@id config_layout)
+# [Layout Data](@id config_layout)
 
 The layout data of the configuration consists of config options for the layout such as for legend and labels. 
 
 The following layout data options exist:
 
-### showLegend (boolean)
+## showLegend (boolean)
 Indicating whether the legend is displayed.
 Default is `true`.
 
-### legendPostion ()
+## legendPostion ()
 Indicating the position of the legend.
 Default is `:right`.
 
-### showAxisLabels (boolean)
+## showAxisLabels (boolean)
 Indicating whether axis labels are displayed.
 Default is `true`.
 
-### border (boolean)
+## border (boolean)
 Indicating whether there should be a border.
 Default is `false`.
 
-### xlabel ()
+## xlabel ()
 -
 Default is `nothing`.
 
-### ylabel ()
+## ylabel ()
 -
 Default is `nothing`.
 
-### xlims ()
+## xlims ()
 -
 Default is `nothing`.
 
-### ylims ()
+## ylims ()
 -
 Default is `nothing`.
 
-### useColorbar (boolean)
+## useColorbar (boolean)
 Indicating whether the colorbar should be used.
 Default is `false`.

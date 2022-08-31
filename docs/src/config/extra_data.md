@@ -1,30 +1,30 @@
-## [Extra Data](@id config_extra)
+# [Extra Data](@id config_extra)
 
 The extra data of the configuration consists of all config options that are unique for the visualizations. 
 
 The following extra data options exist:
 
-### categoricalColor (boolean)
+## categoricalColor (boolean)
 Used for `Line Plot`, indicates whether the column referenced in mappingData.color should be used nonnumerically.
 Default is `true`.
 
-### categoricalGroup (boolean)
+## categoricalGroup (boolean)
 Used for `Line Plot`, indicates whether the column referenced in mappingData.group should be used nonnumerically.
 Default is `true`.
 
-### erpBlur (number)
+## erpBlur (number)
 Used for `ERP Image`, is a number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module. 
 Default value is `10`. Negative values deactivate the blur.
 
-### meanPlot (boolean)
+## meanPlot (boolean)
 Used for `ERP Image`, indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 Default is `false`.
 
-### pvalue (array)
+## pvalue (array)
 Used for `Line Plot`, is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
 Default is `[]` (an empty array).
 
-### sortData (boolean)
+## sortData (boolean)
 Used for `Designmatrix`, indicating whether the data is sorted; using sortslices() of Base Julia. 
 Default is `false`.
 
@@ -32,19 +32,19 @@ Used for `ERP Image`, indicating whether the data is sorted; using sortperm() of
 (sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
 Default is `false`.
 
-### standardizeData (boolean)
+## standardizeData (boolean)
 Used for `Designmatrix`, indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation. 
 Default is `true`.
 
-### stderror (boolean)
+## stderror (boolean)
 Used for `Line Plot`, indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 Default is `false`.
 
-### topoLegend (boolean)
+## topoLegend (boolean)
 Used for `Line Plot`, indicating whether a topo plot is used as a legend.
 Default is `false`.
 
-### xTicks (number)
+## xTicks (number)
 Used for `Designmatrix`, indicating the number of labels on the x-axis. Behavior if specified in configuration:
 - xTicks = 0: no labels are placed.
 - xTicks = 1: first possible label is placed.

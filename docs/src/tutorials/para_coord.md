@@ -1,9 +1,9 @@
-## [Parallel Coordinates Plot](@id pcp_vis)
+# [Parallel Coordinates Plot](@id pcp_vis)
 
 Here we discuss parallel coordinates plot (PCP) visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used Modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -16,7 +16,7 @@ using DataFramesMeta
 
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
-### Data
+## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 Use the test data of `erpcore-N170.jld2`.
@@ -26,7 +26,7 @@ We filter the data to make it more clearly represented:
 results_plot = @subset(results_onesubject,:channel .<=6)
 ```
 
-### Plot PCP Plots
+## Plot PCP Plots
 
 The following code will result in the default configuration. 
 ```
@@ -51,7 +51,7 @@ plot_paraCoord(results_plot, paraConfig; channels=[5,3,2])
 ![Default PCP](../images/para_coord_default.png)
 
 
-### Configuration for PCP
+## Configuration for PCP
 
 Here we look into possible options for configuring the PCP visualization.
 The options for configuring the visualization mentioned here are specific for PCPs.

@@ -1,4 +1,4 @@
-## [Hide Axis Spines and Decorations](@id ht_hide_deco)
+# [Hide Axis Spines and Decorations](@id ht_hide_deco)
 
 In this section we discuss how users are able to efficiently hide axis spines and decorations in their plots.
 

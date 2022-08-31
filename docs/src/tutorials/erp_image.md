@@ -1,9 +1,9 @@
-## [ERP Image Visualization](@id erpi_vis)
+# [ERP Image Visualization](@id erpi_vis)
 
 Here we discuss butterfly plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used Modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -18,13 +18,13 @@ Note that `DataFramesMeta` is also used here in order to be able to use `@subset
 
 Note that `Random` is used.
 
-### Data
+## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 Use the test data of `erpcore-N170.jld2`.
 Note that you do not need the pre-processing step detailed in that section.
 
-### Plot ERP Images
+## Plot ERP Images
 
 The following code will result in the default configuration. 
 ```
@@ -40,7 +40,7 @@ plot_erp(dat_e[28,:,:], erpConfig)
 ![Default ERP Image](../images/erp_image_default.png)
 
 
-### Configurations for ERP Images
+## Configurations for ERP Images
 
 Here we look into possible options for configuring the ERP image visualization.
 The options for configuring the visualization mentioned here are specific for ERP images.

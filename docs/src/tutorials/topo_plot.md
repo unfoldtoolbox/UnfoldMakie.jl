@@ -1,9 +1,9 @@
-## [Topo Plot Visualization](@id tp_vis)
+# [Topo Plot Visualization](@id tp_vis)
 
 Here we discuss topo plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used modules
+## Include used modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -15,7 +15,7 @@ using TopoPlots
 ```
 To visualize topo plots we use the `TopoPlots` module.
 
-### Data
+## Data
 In case you do not already have data, you can get example data from the `TopoPlots` module. 
 You can do it like this:
 ```
@@ -36,7 +36,7 @@ f, ax, h = eeg_topoplot(data[:, 340, 1], labels; label_text=false,positions=posi
 axis = Axis(f, bbox = BBox(100, 0, 0, 100); axisSettings...)
 ```
 
-### Plot Topo Plots
+## Plot Topo Plots
 
 This is how you finally plot the topo plot.
 ```
