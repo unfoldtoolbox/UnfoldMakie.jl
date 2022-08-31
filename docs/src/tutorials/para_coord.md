@@ -32,11 +32,16 @@ The following code will result in the default configuration.
 ```
 paraConfig = PlotConfig(:paracoord)
 ```
-If there are no columns named `category` or `yhat` we have to give the correct names. With this test data it has to be given:
+If there are no columns named `category`,`y`,`channel` and `time` we have to give the correct names. Though y has some alternative default values, it might be safer to set it directly. With this test data we give:
 ```
-paraConfig.setMappingValues(category=:coefname,yhat=:estimate)
+paraConfig.setMappingValues(category=:coefname, y=:estimate)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
+
+We choose to put the legend at the bottom instead of to the right
+```
+paraConfig.setLayoutValues(legendPosition=:bottom)
+```
 
 This is how you finally plot the PCP.
 ```
