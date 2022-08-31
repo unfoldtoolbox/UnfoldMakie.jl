@@ -2,13 +2,13 @@
 
 In this section we discuss how users are able to include multiple visualizations in a single figure.
 
-By using the !-version of the plotting function and putting in a grid position instead of a full figure, we can create Coordinated Multiple Views.
+By using the !-version of the plotting function and putting in a grid position instead of a full figure, we can create Multiple Coordinated Views.
 
 You start by creating a figure with Makie.Figure. 
 
 `f = Figure()`
 
-now each plot can be added to `f` via the `config.plot!(...)` function by putting in a grid position, like `f[1,1]`
+Now each plot can be added to `f` via the `config.plot!(...)` function by putting in a grid position, such as `f[1,1]`.
 
 ```
 f = Figure()
@@ -26,7 +26,7 @@ f
 
 ![Simple Coordinated Multiple Views](../images/two_plots.png)
 
-By using the data from the tutorials we can create a big image with every plot.
+By using the data from the tutorials we can create a big image with every type of plot.
 
 With so many plots at once it's incentivised to set a fixed resolution in your figure to order the plots evenly (Code below).
 

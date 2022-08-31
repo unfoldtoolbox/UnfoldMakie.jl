@@ -2,11 +2,11 @@
 
 In this section we discuss how users are able to efficiently hide axis spines and decorations in their plots.
 
-While it's possible to hide these axis decorations through setting the axis settings with `config.setAxisValues(...)`, Makie.Axis features multiple variables for different aspects of the plot. This means that removing all decoration is only possible by setting a lot of variables each time.
+While it's possible to hide these axis decorations through setting the axis settings with `config.setAxisValues(...)`, `Makie.Axis` features multiple variables for different aspects of the plot. This means that removing all decoration is only possible by setting a lot of variables each time.
 
-Makie does feature methods like `hidespines!` and `hidedecorations!`, but the user might not have easy acces to axis their plot is drawn in.
+Makie does feature methods like `hidespines!` and `hidedecorations!`, but the user might not have easy acces to the axis their plot is drawn in.
 
-So instead these functions can be called by setting variables with `config.setLayoutValues`
+So instead these functions can be called by setting variables with `config.setLayoutValues`:
 
 ```
 config.setLayoutValues(
