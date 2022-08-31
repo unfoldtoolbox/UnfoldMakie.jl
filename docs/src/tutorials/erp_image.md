@@ -46,7 +46,26 @@ Here we look into possible options for configuring the ERP image visualization.
 The options for configuring the visualization mentioned here are specific for ERP images.
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
-- ...
+- erpBlur (number)
+- meanPlot (boolean)
+- sortData (boolean)
+
+
+### erpBlur (number)
+Is a number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module. 
+Default value is `10`. Negative values deactivate the blur.
+
+
+### meanPlot (boolean)
+Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+Default is `false`.
+
+
+### sortData (boolean)
+Indicating whether the data is sorted; using sortperm() of Base Julia 
+(sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
+Default is `false`.
+
 
 ...
 
