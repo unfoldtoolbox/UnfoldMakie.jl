@@ -2,33 +2,18 @@
 
 The legend data of the configuration consists of config options for the legend. 
 
-## Case: `drawing=nothing` and `config.layoutData.useColorbar=true` and `hm=nothing`
-The input of this config is directly fed into the `Colorbar` function of the `Makie` module. 
-As a consequence, the possible options are also determined by the function. 
-Details for these options can be found in the [corresponding article of the Makie documentation](https://makie.juliaplots.org/v0.17.13/examples/blocks/colorbar/index.html).
+## Line Plots and Butterfly Plots
+For line plots the `legend!` function of the `AlgebraOfGraphics` module is used ([documentation](http://juliaplots.org/AlgebraOfGraphics.jl/stable/API/functions/#AlgebraOfGraphics.legend!)).
 
+The Legend will be automatically used when AlgebraOfGraphics is able to draw it, for this the `color` data will be used and either has to be non-numerical or `config.extraData.categoricalColor` needs to be `true`.
 
-## Case: `drawing=nothing` and `config.layoutData.useColorbar=false`
-The input of this config is directly fed into the `Legend` function of the `Makie` module. 
-As a consequence, the possible options are also determined by the function. 
-Details for these options can be found in the [corresponding article of the Makie documentation](https://makie.juliaplots.org/v0.17.13/examples/blocks/legend/index.html).
+## Parallel Coordinates Plots
+In a parallel coordinate plot the `Legend` function of the `Makie` module is used ([documentation](https://makie.juliaplots.org/v0.17.13/examples/blocks/legend/index.html)).
 
+The Legend will only be used when `config.layoutData.showLegend` is `true` and `config.layoutData.useColorbar` is `false`
 
-## Case: Not `drawing=nothing`
-The input of this config is directly fed into the `legend` function of the `AlgebraOfGraphics` module. 
-As a consequence, the possible options are also determined by the function. 
-Details for these options can be found in the [corresponding article of the AlgebraOfGraphics documentation](http://juliaplots.org/AlgebraOfGraphics.jl/stable/API/functions/#AlgebraOfGraphics.legend!).
+## Legend data default options
 
-
-
-## orientation ()
-Indicates where the legend is placed.
-Default is `:vertical`.
-
-## tellwidth (boolean)
--
-Default is `true`.
-
-## tellheight (boolean)
--
-Default is `false`.
+- orientation = `:vertical`
+- tellwidth = `true`
+- tellheight = `true`
