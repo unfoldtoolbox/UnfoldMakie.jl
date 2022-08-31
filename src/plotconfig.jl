@@ -36,7 +36,7 @@ The used plot-function is choosen based on the given plot type in the constructo
 
 `plot(plotData::Any; kwargs...)`
 
-See the plot function of each plot type for more infos about data types and possibly additional kwargs.
+See the plot function of each plot type for more informations about data types and possibly additional kwargs.
 
 Called functions per `<plotname>`:
 - `:line` -> `plot_line(...)`

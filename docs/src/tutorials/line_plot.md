@@ -44,7 +44,7 @@ cLine.plot(results_plot)
 
 Since line plots use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
-For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+For more informations about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
 
 While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 

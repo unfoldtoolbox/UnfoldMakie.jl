@@ -68,7 +68,7 @@ To get the positions from the channels we use a set from the [PyMNE Library](htt
 There is an alternative version of the topo plots showing a representation of a head, with the same features as the one seen above.
 
 We suggest additionally setting the aspect ratio in the Axis values to `DataAspect()`.
-This results in a round plot
+This results in a round plot:
 
 ```
 data, positions = TopoPlots.example_data()
@@ -88,7 +88,7 @@ cTopo.plot(data[:, 340, 1]; positions=positions)
 
 When using topo plots with a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
-For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+For more informations about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
 
 While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 
@@ -118,7 +118,7 @@ For more general options look into the `Plot Configuration` section of the docum
 Indicates whether label should drawn next to their position.
 The labels have to be given into the function seperately:
 - For `TopoPlots` data use: `cTopo.plot(...; labels=[...])`
-- For a `DataFrame` give a valid column name of a column with the labels (see above for more info on column mapping)
+- For a `DataFrame` give a valid column name of a column with the labels (see above for more information on column mapping)
 
 Default is `true`.
 
