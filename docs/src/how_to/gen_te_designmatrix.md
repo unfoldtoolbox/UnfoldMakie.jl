@@ -30,9 +30,10 @@ As you can see, this is the case here.
 
 In order to avoid the cluttering problem, we can limit the number of labels with the following configuration.
 ```
-cBugDesign.setExtraValues(xTicks=12)
+cBugDesign.setExtraValues(xTicks=12, sortData=false)
 ```
 In this case it was set to 12 labels on the x-axis.
+We set `sortData=false`, as it makes no sense to sort data for timeexpanded designmatrices (and it is `true` by default).
 
 When plotting the result is as follows:
 

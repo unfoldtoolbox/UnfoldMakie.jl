@@ -1,6 +1,8 @@
 Issues:
 	butterfly plot fixen topoLegend
 	remove plot and plot_results in docs and readme
+	remove TODO
+	remove ylims/xlims from doc
 
 
 

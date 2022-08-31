@@ -48,7 +48,11 @@ Here we look into possible options for configuring the line plot visualization.
 The options for configuring the visualization mentioned here are specific for line plots.
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
-- ...
+- categoricalColor (boolean)
+- categoricalGroup (boolean)
+- pvalue (array)
+- stderror (boolean)
+- topoLegend (boolean)
 
 Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 ```
@@ -64,34 +68,22 @@ cLine.setLayoutValues(legendPosition=:bottom)
 Note that you may need the names when setting mapping values to the data you use.
 In the following we will use this "pretty" line plot as a basis for looking into configuration options.
 
-### stderror (boolean)
-Indicating whether the data estimates should be complemented 
-with lower and higher estimates based on the stderror. 
-Lower estimates is gained by pointwise subtraction of the stderror from the estimates. 
-Higher estimates is gained by pointwise addition of the stderror to the estimates. 
-Both estimates are then included in the mapping. 
-Default is `false`.
 
-In case you add `stderror=true` when setting extra values, you get a visualization that displays them.
-```
-cLine.setExtraValues(
-    categoricalColor=false,
-    categoricalGroup=false,
-    stderror=true)
-cLine.setMappingValues(color=:coefname, group=:coefname)
-cLine.setLegendValues(nbanks=2)
-cLine.setLayoutValues(legendPosition=:bottom)
-```
+### categoricalColor (boolean)
+Indicates whether the column referenced in mappingData.color should be used nonnumerically.
+Default is `true`.
 
-![Pretty Line Plot](../images/line_plot_std.png)
-Note that you may need to the names when setting mapping values to the data you use.
+
+### categoricalGroup (boolean)
+Indicates whether the column referenced in mappingData.group should be used nonnumerically.
+Default is `true`.
+
 
 ### pvalue (array)
-Is an array of p-values. If array not empty, complement data by adding p-values.
-Default is an empty array, `nothing`.
+Is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values. 
+Default is `[]` (an empty array).
 
-In case you have `pvalue` defined in the extra values, it will be displayed in the visualization.
-In the following you can see a simple definition.
+Shown below is an example in which `pvalue` are given:
 ```
 cLine = PlotConfig(:lineplot)
 
@@ -113,3 +105,27 @@ plot_line(results_plot, cLine)
 
 ![Pretty Line Plot](../images/line_plot_p-val.png)
 Note that you may need to the names when setting mapping values to the data you use.
+
+
+### stderror (boolean)
+Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
+Default is `false`.
+
+Shown below is an example where `stderror=true`:
+```
+cLine.setExtraValues(
+    categoricalColor=false,
+    categoricalGroup=false,
+    stderror=true)
+cLine.setMappingValues(color=:coefname, group=:coefname)
+cLine.setLegendValues(nbanks=2)
+cLine.setLayoutValues(legendPosition=:bottom)
+```
+
+![Pretty Line Plot](../images/line_plot_std.png)
+Note that you may need to the names when setting mapping values to the data you use.
+
+
+### topoLegend (boolean)
+Indicating whether a topo plot is used as a legend.
+Default is `false`.

@@ -1,11 +1,6 @@
 function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, drawing = nothing, ax = nothing, plotArea = (1, 1))
-    # remove border
     if isnothing(ax)
         ax = current_axis()
-    end
-
-    if !config.layoutData.border
-        hidespines!(ax, :t, :r)
     end
 
     # set f[] position depending on legendPosition
@@ -30,18 +25,20 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
             end
         end
     end
+
+    if :hidespines ∈ keys(config.layoutData) && !isnothing(config.layoutData.hidespines)
+        hidespines!(ax, config.layoutData.hidespines...)
+    end
     
-    # labels
-    if config.layoutData.showAxisLabels
-        ax.xlabel = config.layoutData.xlabel === nothing ? string(config.mappingData.x) : config.layoutData.xlabel
-        ax.ylabel = config.layoutData.ylabel === nothing ? string(config.mappingData.y) : config.layoutData.ylabel
+    if :hidedecorations ∈ keys(config.layoutData) && !isnothing(config.layoutData.hidedecorations)
+        hidedecorations!(ax, config.layoutData.hidedecorations...)
     end
-
-    if !isnothing(config.layoutData.ylims)
-        ylims!(config.layoutData.ylims...)
+    
+    # automatic labels
+    if !isnothing(config.layoutData.xlabelFromMapping)
+        ax.xlabel = string(config.mappingData[config.layoutData.xlabelFromMapping])
     end
-
-    if !isnothing(config.layoutData.xlims)
-        xlims!(config.layoutData.xlims...)
+    if !isnothing(config.layoutData.ylabelFromMapping)
+        ax.ylabel = string(config.mappingData[config.layoutData.ylabelFromMapping])
     end
 end
