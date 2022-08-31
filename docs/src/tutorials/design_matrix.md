@@ -35,7 +35,7 @@ At this point you can detail changes you want to make to the visualization throu
 
 This is how you plot the designmatrix, when using data of the `Unfold` module.
 ```
-plot_design(designmatrix(ufMass, evts), cDesign)
+cDesign.plot(designmatrix(ufMass, evts))
 ```
 This is how you finally plot the designmatrix, when using data of the `erpcore-N170.jld2` file.
 ```
