@@ -1,4 +1,4 @@
-## [Fix Parallel Coordinates Plot](@id ht_fpcp)
+# [Fix Parallel Coordinates Plot](@id ht_fpcp)
 
 Since Makie didn't have a native function to draw PCPs our version is somewhat experimental for broad applications.
 

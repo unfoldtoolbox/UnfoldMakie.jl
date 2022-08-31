@@ -1,4 +1,4 @@
-## [Generate a Timeexpanded Designmatrix](@id ht_gen_te_designmatrix)
+# [Generate a Timeexpanded Designmatrix](@id ht_gen_te_designmatrix)
 
 In the following we discuss how to generate a Timeexpanded Designmatrix.
 
