@@ -117,8 +117,6 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     if (config.extraData.topoLegend)
         allPositions = getTopoPositions(plotData, config)
         colors = getTopoColor(plotData, config)
-        @show allPositions
-        @show colors
     else
         # Categorical mapping
         # convert color column into string, so no wrong grouping happens
@@ -131,8 +129,6 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
         end
     end
 
-    # pValues will break if x and y are included in this step
-    #mapp = mapping(;filterNamesOutTuple(config.mappingData, (:x, :y))...)
     mapp = mapping(;config.mappingData.color)
     if (:group ∈ keys(config.mappingData))
         mapp = mapp * mapping(;config.mappingData.group)
@@ -191,9 +187,6 @@ function eegHeadMatrix(positions, center, radius)
 end
 
 function topoplotLegend(axis, allPositions)    
-    # for testing
-    # data, positions = TopoPlots.example_data()
-    
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
@@ -246,25 +239,6 @@ function addPvalues(plotData, config)
         end
     end
     
-
-    # rename to match the res-dataframe
-
-    # shouldHave = hcat(config.mappingData.color)
-    # shouldHave = shouldHave[shouldHave.!=1] # remove defaults as defined above
-    
-    # was present in the example, but crashes the code if executed
-    # if ~isempty(config.mappingData)
-    #     shouldHave = hcat(shouldHave, values(config.mappingData))
-    # end
-    
-    # shouldHave = string.(shouldHave)
-    
-    # for k in shouldHave
-    #     if k ∉ names(p)
-    #         p[!,k] .= plotData[1,k]
-    #     end
-    # end
-    # return shouldHave
     un = unique(p[!,config.mappingData.color])
     # define an index to dodge the lines vertically
     p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
