@@ -1,9 +1,9 @@
-## [ERP Image Visualization](@id erpi_vis)
+# [ERP Image Visualization](@id erpi_vis)
 
 Here we discuss butterfly plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used Modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -12,13 +12,13 @@ using StatsModels # can be removed in Unfold v0.3.5
 using CairoMakie
 ```
 
-### Data
+## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 Use the test data of `erpcore-N170.jld2`.
 Note that you do not need the pre-processing step detailed in that section.
 
-### Plot ERP Images
+## Plot ERP Images
 
 The following code will result in the default configuration. 
 ```
@@ -37,7 +37,7 @@ cErp.plot(dat_e[28,:,:])
 
 Since erp images use a `Matrix` as an input, the library does not need any infos about the mapping.
 
-### Configurations for ERP Images
+## Configurations for ERP Images
 
 Here we look into possible options for configuring the ERP image visualization using `config.setExtraValues(<name>=<value>,...)`.
 By calling the `config.plot(...)` function on an ERP image the function `plot_erp(...)` is executed.

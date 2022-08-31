@@ -8,7 +8,6 @@ Issues:
 
 Dokumentation
 	function documentation: for all vis: explain applicable config? (not extra data)
-	"title level" #, or ## ?
 	extra_data.md (complete + missing + correct + butterfly plot?!)
 	colorbar_data.md add restrictions? + complete
 	layout_data.md add restrictions? + complete

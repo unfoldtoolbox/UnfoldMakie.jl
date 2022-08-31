@@ -31,7 +31,9 @@ These visualizations are:
 The `Plot Configuration` all segments of the config, detailing their contained attributes.
 The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
 These segments are:
+- [Axis Data](@ref config_axis)
 - [Colorbar Data](@ref config_colorbar)
+- [Extra Data](@ref config_extra)
 - [Layout Data](@ref config_layout)
 - [Legend Data](@ref config_legend)
 - [Mapping Data](@ref config_mapping)
@@ -46,58 +48,22 @@ These segments are:
 - [Include multiple Visualizations in one Figure](@ref ht_mvf)
 - [Show out of Bounds Label](@ref ht_soobl)
 
-## Required Packages TODO: correct?
+## Used Packages
 Everything was tested with Julia v1.7.
 
-The following module in their respective versions are used:
+The following module in their respective versions are used internally by UnfoldMakie:
 - AlgebraOfGraphics v0.6.9
 - CairoMakie v0.8.9
-- CategoricalArrays v0.10.6
-- ColorSchemes v3.19.0
 - Colors v0.12.8
+- ColorSchemes v3.19.0
 - DataFrames v1.3.4
-- Documenter v0.27.22
 - GeometryBasics v0.4.2
-- Glob v1.3.0
 - ImageFiltering v0.7.1
-- Literate v2.13.4
 - Makie v0.17.9
 - Pipe v1.3.0
 - PyMNE v0.1.2
 - TopoPlots v0.1.0
 - Unfold v0.3.11
 - LinearAlgebra 
-- Pkg
 - SparseArrays
 - Statistics
-
-## Notes
-
-### Idea Topics:
-- Vis Config
-- How to Popular EEG visualizations
-- [function documentation](https://julia-doc.readthedocs.io/en/latest/manual/documentation/) 
-- [BE doc example](https://unfoldtoolbox.github.io/Unfold.jl/dev/references/types/)
-- [documenter](https://juliadocs.github.io/Documenter.jl/stable/)
-
-
-### from Unfold Documentation
-You might want to start with **tutorials** such as the [installation tutorial](@ref install_instruct). 
-
-in installation.md - "add UnfoldMakie" does not yet add our fork
-
-Documentation for [Unfold](https://unfoldtoolbox.github.io/Unfold.jl/dev/).
-Documentation for [UnfoldMakie](https://github.com/behinger/UnfoldMakie.jl).
-
-This is another one
-
-```@index
-```
-
-```@autodocs
-Modules = [UnfoldMakie]
-```
-
-```@meta
-CurrentModule = UnfoldMakie
-```

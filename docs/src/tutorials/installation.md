@@ -1,14 +1,14 @@
-## [Installation](@id install_instruct)
+# [Installation](@id install_instruct)
 
-### Getting Julia
+## Getting Julia
 
 You can install Julia by following the instructions from the [official website](https://julialang.org/). 
 
-### Setup UnfoldMakie.jl
+## Setup UnfoldMakie.jl
 
 After installing Julia, you can execute the `julia.exe`. 
 
-### Generate a Project
+## Generate a Project
 
 If you do not yet have a project you can generate one. 
 First you type `]` into the Julia console to switch from `julia` to `(@VERSION) pkg`. 
@@ -21,7 +21,7 @@ generate "FOLDER_PATH"
 Use backslash `\` for the folder path. 
 Note that the specific folder in which you want to generate the project does not already exist.
 
-### Activate your Project
+## Activate your Project
 
 Before you can add the necessary modules to use UnfoldMakie you have to activate your project in the `(@VERSION) pkg` environment. 
 The command is: 
@@ -32,7 +32,7 @@ activate "FOLDER_PATH"
 
 Use backslash `\` for the folder path. 
 
-### Install the UnfoldMakie Module
+## Install the UnfoldMakie Module
 
 When your project is activated you can add the module. 
 The command is: 
@@ -41,7 +41,7 @@ The command is:
 add UnfoldMakie
 ```
 
-### Using the Project in a Notebook
+## Using the Project in a Notebook
 
 In case you want to use this generated project in a notebook (e.g. [Pluto](https://www.juliapackages.com/p/pluto) or [Jupyter](https://ipython.org/notebook.html)), you can activate this in the notebook in the following manner:
 ```
