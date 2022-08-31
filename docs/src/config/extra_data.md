@@ -1,32 +1,28 @@
-## [Config: Extra Data](@id config_extra)
+## [Extra Data](@id config_extra)
 
 The extra data of the configuration consists of all config options that are unique for the visualizations. 
 
 The following extra data options exist:
 
 ### categoricalColor (boolean)
-Used for `Line Plot`, indicates whether it should be categorized based on color. 
-Every line will get its discrete entry in the legend.
+Used for `Line Plot`, indicates whether the column referenced in mappingData.color should be used nonnumerically.
 Default is `true`.
 
-### categoricalGroup (boolean) TODO? (plot_line.jl)
-Used for `Line Plot`, indicates whether it should be categorized based on group.
-The legend is a colorbar.
+### categoricalGroup (boolean)
+Used for `Line Plot`, indicates whether the column referenced in mappingData.group should be used nonnumerically.
 Default is `true`.
 
 ### erpBlur (number)
-Used for `ERP Image`, is a number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module. Default value is `10`. Negative values are snapped to `0`.
-
-### legendLabel
-Used for
+Used for `ERP Image`, is a number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module. 
+Default value is `10`. Negative values deactivate the blur.
 
 ### meanPlot (boolean)
-Used for `ERP Image`, indicating whether the plot should be a line plot using the mean of the data. 
+Used for `ERP Image`, indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 Default is `false`.
 
-### pvalue (array) TODO? (plot_line.jl)
-Used for `Line Plot`, is an array of p-values. If array not empty, complement data by adding p-values.
-Default is an empty array.
+### pvalue (array)
+Used for `Line Plot`, is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
+Default is `[]` (an empty array).
 
 ### sortData (boolean)
 Used for `Designmatrix`, indicating whether the data is sorted; using sortslices() of Base Julia. 
@@ -41,22 +37,12 @@ Used for `Designmatrix`, indicating whether the data is standardized by pointwis
 Default is `true`.
 
 ### stderror (boolean)
-Used for `Line Plot`, indicating whether the data estimates should be complemented 
-with lower and higher estimates based on the stderror. 
-Lower estimates is gained by pointwise subtraction of the stderror from the estimates. 
-Higher estimates is gained by pointwise addition of the stderror to the estimates. 
-Both estimates are then included in the mapping. 
+Used for `Line Plot`, indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 Default is `false`.
-
-### topoLabel
-Used for
 
 ### topoLegend (boolean)
 Used for `Line Plot`, indicating whether a topo plot is used as a legend.
 Default is `false`.
-
-### topoPositions
-Used for
 
 ### xTicks (number)
 Used for `Designmatrix`, indicating the number of labels on the x-axis. Behavior if specified in configuration:
