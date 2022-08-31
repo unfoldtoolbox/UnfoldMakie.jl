@@ -72,7 +72,7 @@ FIX Legend/Colorbar
 	SOME PROBLEM with nonnumeric, color=... is directly in mapping for now
 
 
-Mapping.color is only the collumn
+Mapping.color is only the column
 	We need to give the actual colors. Maybe we have to create our own mapping
 	eig überall colorArray and pallets
 	New idea with custom mapping
