@@ -1,4 +1,4 @@
-## [Config: Legend Data](@id config_legend)
+## [Legend Data](@id config_legend)
 
 The legend data of the configuration consists of config options for the legend. 
 

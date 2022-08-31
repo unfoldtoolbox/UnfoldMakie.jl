@@ -1,4 +1,4 @@
-## [Config: Extra Data](@id config_extra)
+## [Extra Data](@id config_extra)
 
 The extra data of the configuration consists of all config options that are unique for the visualizations. 
 

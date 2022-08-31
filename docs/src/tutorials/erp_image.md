@@ -37,11 +37,18 @@ This is how you finally plot the ERP image.
 plot_erp(dat_e[28,:,:], erpConfig)
 ```
 
-## [Visualization Options for ERP Image](@id o_erpi_vis)
+![Default ERP Image](../images/erp_image_default.png)
 
-##   REMOVED FROM erp_image.md
+
 ### Configurations for ERP Images
+
 Here we look into possible options for configuring the ERP image visualization.
+The options for configuring the visualization mentioned here are specific for ERP images.
+For more general options look into the `Plot Configuration` section of the documentation.
+This is the list of unique configuration (extraData):
+- ...
+
+...
 
 ```
 erpConfig = PlotConfig(:erp)
@@ -52,6 +59,10 @@ erpConfig.setColorbarValues(;label = "Voltage [µV]")
 erpConfig.setVisualValues(;colormap = Reverse("RdBu"), colorrange = (-40, 40))
 ```
 
+![ERP Image with Line](../images/erp_image_line.png)
+
+
 ## TODO: MORE CONFIG DETAILS ONCE FINISHED
+- description
 - is DataFramesMeta needed here?
 - Link to config + more detail?
