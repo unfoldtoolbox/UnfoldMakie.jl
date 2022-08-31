@@ -3,7 +3,7 @@
 Since Makie didn't have a native function to draw PCPs our version is somewhat experimental for broad applications.
 
 Under certain circumstances the PCP is not properly visualized.
-This leads to cut of edges of the PCP, and unused space.
+This leads to cut off edges of the PCP, and unused space.
 
 Especially when changing the container size by customizing the figure resolution, or adding multiple plots into one figure, the PCP can have problems fitting inside.
 
