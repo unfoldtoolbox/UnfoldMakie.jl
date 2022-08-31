@@ -29,7 +29,7 @@ designmatrix(mres)
 
 The following code will result in the default configuration. 
 ```
-cDesign = PlotConfig(:designmatrix)
+cDesign = PlotConfig(:design)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
@@ -39,16 +39,20 @@ plot_design(designmatrix(ufMass, evts), cDesign)
 ```
 This is how you finally plot the designmatrix, when using data of the `erpcore-N170.jld2` file.
 ```
-plot_design(designmatrix(mres), cDesign)
+cDesign.plot(designmatrix(mres))
 ```
 
 ![Default Designmatrix](../images/designmatrix_default.png)
 
+## Column Mappings for Designmatrix Plots
+
+Since designmatrix uses an `Unfold.DesignMatrix` as an input, the library does not need any infos about the mapping.
 
 ## Configurations for Designmatrices
 
-Here we look into possible options for configuring the designmatrix visualization.
-The options for configuring the visualization mentioned here are specific for designmatrices.
+Here we look into possible options for configuring the designmatrix visualization using `config.setExtraValues(<name>=<value>,...)`.
+By calling the `config.plot(...)` function on a designmatrix plot the function `plot_design(...)` is executed.
+
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
 - sortData (boolean)
@@ -70,13 +74,8 @@ cDesign.setExtraValues(sortData=true)
 ![Sorted Designmatrix](../images/designmatrix_sorted.png)
 
 ### standardizeData (boolean)
-Indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation. 
+Indicating whether the data is standardized, mapping the values between 0 and 1. 
 Default is `true`.
-
-If you don't want the data you use to be standardized, set this value to `false`, as seen below.
-```
-cDesign.setExtraValues(standardizeData=false)
-```
 
 
 ### xTicks (number)
@@ -86,18 +85,3 @@ Indicating the number of labels on the x-axis. Behavior if specified in configur
 - xTicks = 2: first and last possible labels are placed.
 - 2 < xTicks < number of labels: xTicks-2 labels are placed between the first and last.
 - xTicks ≥ number of labels: all labels are placed.
-
-This is how you apply the configuration:
-```
-cBugDesign.setExtraValues(xTicks=2)
-```
-In this case it was set to two labels on the x-axis.
-
-
-
-## TODO: INSTRUCTIONS
-- timeexpanded vs not -> mention some extra data multiple times or restructure?
-- add further extraData?
-- images for all options?
-Potentially missing content: 
-https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/plot_design/#Plot-Designmatrix

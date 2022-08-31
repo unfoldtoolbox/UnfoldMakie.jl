@@ -26,52 +26,78 @@ We filter the data to make it more clearly represented:
 results_plot = @subset(results_onesubject,:channel .<=6)
 ```
 
-### Plot PCP Plots
+### Plot PCPs
 
 The following code will result in the default configuration. 
 ```
-paraConfig = PlotConfig(:paracoord)
+cParacoord = PlotConfig(:paracoord)
 ```
-If there are no columns named `category`,`y`,`channel` and `time` we have to give the correct names. Though y has some alternative default values, it might be safer to set it directly. With this test data we give:
+If the column names of the `DataFrame` do not fit the default values we have to set the correct names. These are detailed further below.
 ```
-paraConfig.setMappingValues(category=:coefname, y=:estimate)
+cParacoord.setMappingValues(category=:coefname, y=:estimate)
 ```
-At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
+At this point you can detail changes you want to make to the visualization through the plot config. These are also detailed further below. 
 
 We choose to put the legend at the bottom instead of to the right
 ```
-paraConfig.setLayoutValues(legendPosition=:bottom)
+cParacoord.setLayoutValues(legendPosition=:bottom)
 ```
 
 This is how you finally plot the PCP.
 ```
-plot_paraCoord(results_plot, paraConfig; channels=[5,3,2])
+cParacoord.plot(results_plot; channels=[5,3,2])
 ```
 
 ![Default PCP](../images/para_coord_default.png)
 
+## Column Mappings for PCPs
 
-### Configuration for PCP
+Since PCPs use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
-Here we look into possible options for configuring the PCP visualization.
-The options for configuring the visualization mentioned here are specific for PCPs.
+For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+
+While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+
+### y
+Default is `(:y, :estimate, :yhat)`.
+
+### channel
+Default is `:channel`.
+
+### category
+Default is `:category`.
+
+### time
+Default is `:time`.
+
+### Configuration for PCPs
+
+Instead of extra settings, PCPs only feature a few variables that can be used to fix some problems with the visualization using `config.setExtraValues(<name>=<value>,...)`.
+More on these variables and their use can be read in [Fix Parallel Coordinates Plot](@ref ht_fpcp).
+
+By calling the `config.plot(...)` function on a PCP the function `plot_paraCoord(...)` is executed.
 For more general options look into the `Plot Configuration` section of the documentation.
-This is the list of unique configuration (extraData):
-- ...
 
+## Another PCP
 
-...
+When you followed the tutorial, using test data of the file `erpcore-N170.jld2`, the following code can create a parallel coordinate plot comparing face and car samples:
 
 ```
-f = Figure()
-
 data = effects(Dict(:category=>["face", "car"], :condition=>["intact"]), mres)
 
 paraConfig = PlotConfig(:paracoord)
+paraConfig.setVisualValues(colormap = :RdBu)
+paraConfig.setLayoutValues(legendPosition=:right)
+paraConfig.setExtraValues(
+    pc_aspect_ratio = 0.8,
+    pc_right_padding = 15,
+    pc_left_padding = 45,
+    pc_top_padding = 50,
+    pc_bottom_padding = 24,
+    pc_tick_label_size = 15,
+)
 
-plot_paraCoord(data, paraConfig; channels=[1,7,6])
+paraConfig.plot(data; channels=[1,7,6])
 ```
-Note that you may need the names when setting mapping values to the data you use.
 
-
-## TODO: USED MODULES, DATA?
+![Alternative PCP](../images/PCP_alt.png)
