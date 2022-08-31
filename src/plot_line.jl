@@ -28,7 +28,7 @@ Indicates whether the column referenced in mappingData.group should be used nonn
 
 Default : `false`
 
-Indicating whether a topo plot is used as a legend.
+Indicating whether the topoplot legend is shown or not.
 
 `stderror`:
 

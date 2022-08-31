@@ -37,11 +37,37 @@ This is how you finally plot the ERP image.
 plot_erp(dat_e[28,:,:], erpConfig)
 ```
 
-## [Visualization Options for ERP Image](@id o_erpi_vis)
+![Default ERP Image](../images/erp_image_default.png)
 
-##   REMOVED FROM erp_image.md
+
 ### Configurations for ERP Images
+
 Here we look into possible options for configuring the ERP image visualization.
+The options for configuring the visualization mentioned here are specific for ERP images.
+For more general options look into the `Plot Configuration` section of the documentation.
+This is the list of unique configuration (extraData):
+- erpBlur (number)
+- meanPlot (boolean)
+- sortData (boolean)
+
+
+### erpBlur (number)
+Is a number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module. 
+Default value is `10`. Negative values deactivate the blur.
+
+
+### meanPlot (boolean)
+Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+Default is `false`.
+
+
+### sortData (boolean)
+Indicating whether the data is sorted; using sortperm() of Base Julia 
+(sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
+Default is `false`.
+
+
+...
 
 ```
 erpConfig = PlotConfig(:erp)
@@ -52,6 +78,10 @@ erpConfig.setColorbarValues(;label = "Voltage [µV]")
 erpConfig.setVisualValues(;colormap = Reverse("RdBu"), colorrange = (-40, 40))
 ```
 
+![ERP Image with Line](../images/erp_image_line.png)
+
+
 ## TODO: MORE CONFIG DETAILS ONCE FINISHED
+- description
 - is DataFramesMeta needed here?
 - Link to config + more detail?

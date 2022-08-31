@@ -36,18 +36,18 @@ The used plot-function is choosen based on the given plot type in the constructo
 
 `plot(plotData::Any; kwargs...)`
 
-See the plot function of each plot type for more infos about data types and additional kwargs.
+See the plot function of each plot type for more infos about data types and possibly additional kwargs.
 
-Called functions:
+Called functions per `<plotname>`:
 - `:line` -> `plot_line(...)`
 - `:butterfly` -> `plot_line(...)`
 - `:erp` -> `plot_erp(...)`
 - `:design` -> `plot_design(...)`
 - `:topo` -> `plot_topo(...)`
-- `eegtopo` -> `plot_topo(...)`
+- `:eegtopo` -> `plot_topo(...)`
 - `:paraCoord` -> `plot_paraCoord(...)`
 
-Use this to use the !-version of each function respectively:
+Following the bang convention, use this to exectute the !-version of each function respectively:
 
 `plot!(f::Union{GridPosition, Figure}, plotData::Any; kwargs...)`
 

@@ -43,12 +43,19 @@ This is how you finally plot the PCP.
 plot_paraCoord(results_plot, paraConfig; channels=[5,3,2])
 ```
 
-## [Visualization Options for Parallel Coordinates Plot](@id o_pcp_vis)
+![Default PCP](../images/para_coord_default.png)
 
 
-##   REMOVED FROM para_coord.md
 ### Configuration for PCP
+
 Here we look into possible options for configuring the PCP visualization.
+The options for configuring the visualization mentioned here are specific for PCPs.
+For more general options look into the `Plot Configuration` section of the documentation.
+This is the list of unique configuration (extraData):
+- ...
+
+
+...
 
 ```
 f = Figure()

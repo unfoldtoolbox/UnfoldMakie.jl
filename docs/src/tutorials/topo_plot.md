@@ -38,8 +38,6 @@ axis = Axis(f, bbox = BBox(100, 0, 0, 100); axisSettings...)
 
 ### Plot Topo Plots
 
-At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
-
 This is how you finally plot the topo plot.
 ```
 draw = eeg_topoplot!(axis, zeros(64), labels; label_text=falsepositions=positions)
@@ -48,9 +46,4 @@ draw = eeg_topoplot!(axis, zeros(64), labels; label_text=falsepositions=position
 f
 ```
 
-## [Visualization Options for Topo Plot](@id o_tp_vis)
-
-## Plot Config?
-
-## TODO: !
-- any config options?
+![Default Topo Plot](../images/topo_plot_default.png)
