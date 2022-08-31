@@ -4,7 +4,7 @@ function getTopoPositions(plotData, config)
     if isnothing(config.mappingData.topoPositions)
         if isnothing(config.mappingData.topoLabels)
             if isnothing(config.mappingData.topoChannels)
-                @error "At least one of these collumns is required: topoChannels, topoLabels, topoPositions"
+                @error "At least one of these columns is required: topoChannels, topoLabels, topoPositions"
             else
                 plotData.topoLabels = plotData[:, config.mappingData.topoChannels] .|> channelToLabel
                 config.setMappingValues(topoLabels = :topoLabels)

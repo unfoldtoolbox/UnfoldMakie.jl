@@ -238,8 +238,6 @@ end
 function addPvalues(plotData, config)
     p = deepcopy(config.extraData.pvalue)
 
-
-
     # for now, add them to the fixed effect
     if "group" ∉  names(p)
         # group not specified using first
