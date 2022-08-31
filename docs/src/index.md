@@ -41,9 +41,10 @@ The `How To` section features information on how to achieve specific goals or de
 
 These segments are:
 - [Fix Parallel Coordinates Plot](@ref ht_fpcp)
+- [Generate a Timeexpanded Designmatrix](@ref ht_gen_te_designmatrix)
+- [Hide Axis Spines and Decorations](@ref ht_hide_deco)
 - [Include multiple Visualizations in one Figure](@ref ht_mvf)
 - [Show out of Bounds Label](@ref ht_soobl)
-- [Generate a Timeexpanded Designmatrix](@ref ht_gen_te_designmatrix)
 
 ## Required Packages TODO: correct?
 Everything was tested with Julia v1.7.

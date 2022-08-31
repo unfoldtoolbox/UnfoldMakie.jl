@@ -47,6 +47,7 @@ makedocs(;
         "How To" => [
             "Fix Parallel Coordinates Plot" => "how_to/fix_pcp.md",
             "Generate a Timeexpanded Designmatrix" => "how_to/gen_te_designmatrix.md",
+            "Hide Axis Spines and Decorations" => "how_to/hide_deco.md",
             "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
