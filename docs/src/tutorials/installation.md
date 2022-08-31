@@ -54,11 +54,11 @@ end
 Use slash `/` for the folder path. 
 
 ## Install a dev-version of UnfoldMakie
-In order to see and change the tutorials, you have to install a local dev-version of Unfold via:
+In order to see and change the tutorials, you have to install a local dev-version of UnfoldMakie via:
 `]dev --local UnfoldMakie` - which installs it in `./dev/UnfoldMakie`
 
 ## Instantiating the documentation environment
 - Now we have to add the packages required for the documentation.
-- Next we have to make sure to be in the `UnfoldMakie/docs` folder, else the tutorial will not be able to find the data. Thus `cd("./docs")` in case you cd'ed already to the Unfold project. 
+- Next we have to make sure to be in the `UnfoldMakie/docs` folder, else the tutorial will not be able to find the data. Thus `cd("./docs")` in case you cd'ed already to the UnfoldMakie project. 
 - And the `]activate .` to activate the docs-environment.
 - Finally run `]instantiate` to install the required packages. Now you are ready to run the tutorials locally
