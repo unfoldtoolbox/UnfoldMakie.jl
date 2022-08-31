@@ -33,7 +33,7 @@ cButter = PlotConfig(:butterfly)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you finally plot the butterfly plot.
+This is how you plot the butterfly plot.
 ```
 cButter.plot(results_plot_butter)
 ```
