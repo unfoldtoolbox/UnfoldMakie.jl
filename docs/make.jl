@@ -15,7 +15,7 @@ DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive=
 
 makedocs(;
     modules=[UnfoldMakie],
-    authors="Benedikt Ehinger",
+    authors="Benedikt Ehinger, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
     repo="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
     sitename="UnfoldMakie.jl",
     format=Documenter.HTML(;
@@ -40,6 +40,7 @@ makedocs(;
         "Plot Configuration" => [
             "Axis Data" => "config/axis_data.md",
             "Colorbar Data" => "config/colorbar_data.md",
+            "Extra Data" => "config/extra_data.md",
             "Layout Data" => "config/layout_data.md",
             "Legend Data" => "config/legend_data.md",
             "Mapping Data" => "config/mapping_data.md",

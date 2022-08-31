@@ -29,30 +29,46 @@ results_plot = @subset(results_onesubject,:channel .==3)
 
 The following code will result in the default configuration. 
 ```
-cLine = PlotConfig(:lineplot)
+cLine = PlotConfig(:line)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
 This is how you finally plot the line plot.
 ```
-plot_line(results_plot, cLine)
+cLine.plot(results_plot)
 ```
 
 ![Default Line Plot](../images/line_plot_default.png)
 
+## Column Mappings for Line Plots
+
+Since line plots use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
+
+For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+
+While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+
+### x
+Default is `(:x, :time)`.
+
+### y
+Default is `(:y, :estimate, :yhat)`.
+
+### color (Optional)
+Default is `(:color, :coefname)`.
 
 
 ## Configuration for Line Plots
 
-Here we look into possible options for configuring the line plot visualization.
-The options for configuring the visualization mentioned here are specific for line plots.
+Here we look into possible options for configuring the line plot visualization using `config.setExtraValues(<name>=<value>,...)`.
+By calling the `config.plot(...)` function on a line plot the function `plot_lines(...)` is executed.
+
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
 - categoricalColor (boolean)
 - categoricalGroup (boolean)
 - pvalue (array)
 - stderror (boolean)
-- topoLegend (boolean)
 
 Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 ```
@@ -65,7 +81,7 @@ cLine.setLayoutValues(legendPosition=:bottom)
 ```
 
 ![Pretty Line Plot](../images/line_plot_pretty.png)
-Note that you may need the names when setting mapping values to the data you use.
+
 In the following we will use this "pretty" line plot as a basis for looking into configuration options.
 
 
@@ -104,7 +120,6 @@ plot_line(results_plot, cLine)
 ```
 
 ![Pretty Line Plot](../images/line_plot_p-val.png)
-Note that you may need to the names when setting mapping values to the data you use.
 
 
 ### stderror (boolean)
@@ -123,9 +138,3 @@ cLine.setLayoutValues(legendPosition=:bottom)
 ```
 
 ![Pretty Line Plot](../images/line_plot_std.png)
-Note that you may need to the names when setting mapping values to the data you use.
-
-
-### topoLegend (boolean)
-Indicating whether a topo plot is used as a legend.
-Default is `false`.
