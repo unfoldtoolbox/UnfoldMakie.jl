@@ -13,7 +13,7 @@ This struct is used as the configuration and simple plot method for an UnfoldMak
 - `:erp`: ERP Image
 - `:design`: Designmatrix Plot
 - `:topo`: Topo Plot
-- `:eegtopo`: Alternative Topo Plot
+- `:eegtopo`: EEG Topo Plot
 - `:paraCoord`: Parallel Coordinates Plot
 
 ## Attributes
@@ -90,7 +90,7 @@ mutable struct PlotConfig
     plot::Function
     plot!::Function
 
-    "plot types: :lineplot, :designmatrix, :topolot, :butterfly"
+    "plot types: :line, :design, :topo, :eegtopo, :butterfly, :erp, :paracoord"
     function PlotConfig(pltType)
         this = new()
 
