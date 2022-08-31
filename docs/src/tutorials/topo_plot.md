@@ -3,7 +3,7 @@
 Here we discuss topo plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-## Include used modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -44,7 +44,7 @@ cTopo.plot(data[:, 340, 1]; positions=positions)
 ```
 ![Default Topo Plot](../images/topo_plot_default.png)
 
-Using a `DataFrame` means the correct column names have to be put into the mapping values, more on that is detailed further below.
+Using a `DataFrame` means the correct column names have to be put into the mapping values. More on that is detailed further below.
 
 Once set, the `DataFrame` can be put into the function directly
 ```
@@ -90,7 +90,7 @@ When using topo plots with a `DataFrame` as an input, the library needs to know 
 
 For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
 
-While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+While there are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 
 Note that only one of `topoPositions`, `topoLabels` , or `topoChannels` have to be set to draw a topo plot. If multiple are set, they will be prioritized in that order.
 
