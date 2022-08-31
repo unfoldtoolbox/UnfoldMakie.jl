@@ -1,9 +1,9 @@
-## [Line Plot Visualization](@id lp_vis)
+# [Line Plot Visualization](@id lp_vis)
 
 Here we discuss line plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used Modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -15,7 +15,7 @@ using DataFramesMeta
 ```
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
-### Data
+## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 Use the test data of `erpcore-N170.jld2`.
@@ -25,7 +25,7 @@ We filter the data to make it more clearly represented:
 results_plot = @subset(results_onesubject,:channel .==3)
 ```
 
-### Plot Line Plots
+## Plot Line Plots
 
 The following code will result in the default configuration. 
 ```

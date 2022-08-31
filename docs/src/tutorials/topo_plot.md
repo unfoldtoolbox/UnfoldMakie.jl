@@ -1,9 +1,9 @@
-## [Topo Plot Visualization](@id tp_vis)
+# [Topo Plot Visualization](@id tp_vis)
 
 Here we discuss topo plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used modules
+## Include used modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -15,7 +15,7 @@ using TopoPlots
 ```
 To visualize topo plots we use the `TopoPlots` module.
 
-### Data
+## Data
 
 Topo plots can be visualized either by data from the `TopoPlots` module, or from a `DataFrame`.
 Both function very similar, though the dataframe needs some extra attention regarding the input.

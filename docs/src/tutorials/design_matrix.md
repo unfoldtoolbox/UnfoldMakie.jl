@@ -1,9 +1,9 @@
-## [Designmatrix Visualization](@id dm_vis)
+# [Designmatrix Visualization](@id dm_vis)
 
 Here we discuss designmatrix visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct) section. 
 
-### Include used modules
+## Include used modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold
@@ -13,7 +13,7 @@ using DataFrames
 using CairoMakie
 ```
 
-### Data
+## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 When you followed the tutorial, using test data of the `Unfold` module, use the following code for further pre-processing:

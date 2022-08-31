@@ -12,7 +12,7 @@ Plot a topo plot.
 ## Arguments:
 - `plotData::Union{DataFrame, Vector{Float32}}`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
+- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `labels`.
 - `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
 
 ## Extra Data Behavior:
@@ -33,7 +33,7 @@ Plot a topo plot.
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::Union{DataFrame, Vector{Float32}}`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `lables`.
+- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `labels`.
 - `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
 
 ## Extra Data Behavior:

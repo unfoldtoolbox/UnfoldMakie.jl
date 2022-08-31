@@ -1,9 +1,9 @@
-## [Butterfly Plot Visualization](@id bfp_vis)
+# [Butterfly Plot Visualization](@id bfp_vis)
 
 Here we discuss butterfly plot visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-### Include used Modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using UnfoldMakie
@@ -15,7 +15,7 @@ using DataFramesMeta
 ```
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
-### Data
+## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 Use the test data of `erpcore-N170.jld2`.
@@ -25,7 +25,7 @@ We filter the data to make it more clearly represented:
 results_plot_butter = @subset(results_onesubject,:coefname .== "(Intercept)",:channel .<7)
 ```
 
-### Plot Butterfly Plots
+## Plot Butterfly Plots
 
 The following code will result in the default configuration. 
 ```
@@ -54,7 +54,7 @@ Default is `(:x, :time)`.
 ### y
 Default is `(:y, :estimate, :yhat)`.
 
-### Configurations for Butterfly Plots
+## Configurations for Butterfly Plots
 
 Here we look into possible options for configuring the butterfly plot visualization using `config.setExtraValues(<name>=<value>,...)`.
 By calling the `config.plot(...)` function on a butterfly plot the function `plot_lines(...)` is executed.

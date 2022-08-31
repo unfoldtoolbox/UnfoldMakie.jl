@@ -1,4 +1,4 @@
-## [Load Data](@id test_data)
+# [Load Data](@id test_data)
 
 In case you do not have data to visualize line plots, you can follow along this step to get data. You can also use this as a reference on how to load your own data. 
 With the exception of example data for topo plots which can be found in [General Topo Plot Visualization](@ref tp_vis), information on how to load example data for other types of visualizations are detailed here.
