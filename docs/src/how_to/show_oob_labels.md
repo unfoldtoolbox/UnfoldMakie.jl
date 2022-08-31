@@ -20,9 +20,9 @@ A quick fix would be to place an empty plot to the left of the designmatrix.
 
 By creating your own figure with Makie.Figure, and then only giving a certain grid position to the designmatrix we get white space next to the plot.
 
-The plot! function inside the plotconfic instance can take any grid position, and the figure `f` will include plot and sufficient white space next to it.
+The `plot!` function inside the plot config instance can take any grid position, and the figure `f` will include plot and sufficient white space next to it.
 
-The exact numbers in the grid position can be guessed from the ratio of the overlap, or just tried out.6
+The exact numbers in the grid position can be guessed from the ratio of the overlap, or just tried out.
 
 ```
 cDesign = PlotConfig(:design)

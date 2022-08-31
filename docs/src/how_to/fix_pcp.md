@@ -25,7 +25,7 @@ pc_aspect_ratio = 1,
 ...
 ```
 
-The cut off or overlap at each side can be fixed with
+The cut off or overlap at each side can be fixed with:
 ```
 ...
 pc_right_padding = 15,
@@ -35,7 +35,7 @@ pc_bottom_padding = 27,
 ...
 ```
 
-and finally if the tick-number size becomes too big or small it can be changed with
+Furthermore, if the tick-number size becomes too big or small it can be changed with:
 ```
 ...
 pc_tick_label_size = 25,
