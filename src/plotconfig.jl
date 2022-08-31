@@ -151,8 +151,7 @@ mutable struct PlotConfig
             ylabel = "y label"
         )
         
-        # setter for ANY values for Data
-        """Test1"""
+        # setter for very plot specific Data
         this.setExtraValues = function (;kwargs...)
             this.extraData = merge(this.extraData, kwargs)
             return this
@@ -257,9 +256,6 @@ mutable struct PlotConfig
             this.setExtraValues(
                 sortData = true,
             )
-            # this.setLegendValues(
-            #     position = :rc
-            # )
             this.setLayoutValues(
                 xlabel = "Channels",
                 ylabel = "Timestamps",
@@ -317,12 +313,4 @@ mutable struct PlotConfig
 
         return this
     end
-end
-
-# filters out the entries with the given names from the tuple
-function filterNamesOutTuple(inputTuple, filterNames)
-    function isInName(col)
-        !(col ∈ filterNames)
-    end
-    return inputTuple[keys(inputTuple)[isInName.(collect(keys(inputTuple)))]]
 end

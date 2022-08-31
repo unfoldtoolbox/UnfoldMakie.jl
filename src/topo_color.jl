@@ -1,4 +1,3 @@
-# Work in progress
 
 function getTopoPositions(plotData, config)
 
@@ -22,32 +21,14 @@ function getTopoColor(plotData, config)
     if !isnothing(config.mappingData.topoLabels)
         config.setMappingValues(color=config.mappingData.topoLabels)
         list = zip(plotData[:, config.mappingData.topoLabels], plotData[:, config.mappingData.topoPositions])
-        mapping = unique(list .|> entry -> entry[1]=>posToColor(entry[2]))
+        return unique(list .|> entry -> entry[1]=>posToColor(entry[2]))
     elseif !isnothing(config.mappingData.topoPositions)
         config.setMappingValues(color=:positionLabel)
         plotData.positionLabel = plotData[:, config.mappingData.topoPositions] .|> string
-        mapping = unique(plotData[:, config.mappingData.topoPositions] .|> entry -> string(entry)=>posToColor(entry))
+        return unique(plotData[:, config.mappingData.topoPositions] .|> entry -> string(entry)=>posToColor(entry))
     else
-        mapping = nothing
+        return nothing
     end
-
-    # if !isnothing(config.mappingData.topoPositions)
-    #     @show "Test1"
-    #     config.mappingData = merge(config.mappingData, (;color=:customLabels))
-    #     # create own label data column
-    #     results.customLabels = results[:, config.mappingData.topoPositions] .|> customLabelPipe
-    #     mapping = unique(zip(results.customLabels, results[:, config.mappingData.topoPositions]) .|> data -> (data[1]=>posToColor(data[2])))
-    # elseif !isnothing(config.mappingData.topoLabels)
-    #     @show "Test2"
-    #     config.mappingData = merge(config.mappingData, (;color=config.mappingData.topoLabels))
-
-    #     mapping = unique(results[:, config.mappingData.topoLabels] .|> labelPipe)
-    # else
-    #     # no custom color column
-    #     mapping = nothing
-    # end
-
-    return mapping
 end
 
 function posToColor(pos)
@@ -58,4 +39,3 @@ function posToColor(pos)
     b = 1.0 - (2*sqrt(cx^2+cy^2))^2
     return RGB(0.5 - rx*1.414, 0.5 - ry*1.414, b)
 end
-
