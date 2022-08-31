@@ -3,7 +3,7 @@
 Here we discuss designmatrix visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct) section. 
 
-## Include used modules
+## Include used Modules
 The following modules are necessary for following this tutorial:
 ```
 using Unfold

@@ -56,7 +56,7 @@ Since PCPs use a `DataFrame` as an input, the library needs to know the names of
 
 For more infos about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
 
-While there are multiple default values, that are checked in order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+While there are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 
 ### y
 Default is `(:y, :estimate, :yhat)`.
