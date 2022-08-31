@@ -15,7 +15,7 @@ One such example is the possibility of using a topo plot as a legend for a line 
 
 The supportet visualizations are:
 
-- Designmatrix Plots
+- Designmatrices
 - Line Plots
 - Butterfly Plots
 - ERP Images

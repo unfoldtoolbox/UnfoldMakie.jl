@@ -11,7 +11,7 @@ This struct is used as the configuration and simple plot method for an UnfoldMak
 - `:line`: Line Plot
 - `:butterfly`: Butterfly Plot
 - `:erp`: ERP Image
-- `:design`: Designmatrix Plot
+- `:design`: Designmatrix
 - `:topo`: Topo Plot
 - `:eegtopo`: EEG Topo Plot
 - `:paraCoord`: Parallel Coordinates Plot
@@ -104,7 +104,7 @@ mutable struct PlotConfig
             pvalue=[],
             # butterfly plot vars
             topoLegend=false,
-            # designmatrix plot vars
+            # designmatrix vars
             xTicks=nothing,
             standardizeData=true,
             # Designmatrix and erp image var 
