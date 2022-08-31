@@ -46,7 +46,7 @@ cDesign.plot(designmatrix(mres))
 
 ## Column Mappings for Designmatrices
 
-Since designmatrix uses an `Unfold.DesignMatrix` as an input, the library does not need any infos about the mapping.
+Since designmatrix uses an `Unfold.DesignMatrix` as an input, the library does not need any informations about the mapping.
 
 ## Configurations for Designmatrices
 

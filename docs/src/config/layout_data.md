@@ -37,4 +37,4 @@ config.setLayoutValues(
 )
 ```
 Setting them to `nothing` will disable them.
-More info on how to use them can be found in this [HowTo](@ref ht_hide_deco)
+More information on how to use them can be found in this [HowTo](@ref ht_hide_deco)

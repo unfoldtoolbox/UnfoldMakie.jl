@@ -22,7 +22,7 @@ Since these values mirror the input of the function, we can use an empty tuple t
 And using `hidespines = (:r, :t)` results in the removal of the top and right border.
 
 
-For more info on the input of these functions refer to the [Makie dokumentation on Axis.](https://makie.juliaplots.org/v0.15.2/examples/layoutables/axis/#hiding_axis_spines_and_decorations)
+For more information on the input of these functions refer to the [Makie dokumentation on Axis.](https://makie.juliaplots.org/v0.15.2/examples/layoutables/axis/#hiding_axis_spines_and_decorations)
 
 Since some plots hide features by default, the hiding can be reverted by setting the variables to `nothing`
 
