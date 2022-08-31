@@ -70,13 +70,8 @@ Indicating whether the plot should add a line plot below the ERP image, showing 
 The input `f`
 """
 function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},config::PlotConfig)
-    # ix = [[a[1] for a in plotData]...]
-
     ax = Axis(f[1:4,1]; config.axisData...)
 
-    # make sure blur is never negative
-    @show config.extraData.erpBlur
-    # config.extraData.erpBlur = config.extraData.erpBlur < 0 ? 0 : config.extraData.erpBlur 
     filtered_data = imfilter(plotData, Kernel.gaussian((0,config.extraData.erpBlur)))
     
     if config.extraData.sortData
@@ -85,14 +80,6 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},con
     else
         hm = heatmap!(ax,(filtered_data[:,:]); config.visualData...)
     end
-    # @show ix
-    # @show sort_x
-
-    # sortperm() computes a permutation of the array's indices that puts the array into sorted order:
-    
-    # show(hm)
-    # image(f[1:4,1],plotData[:,ix]; config.visualData...)
-    # ax = current_axis()
 
     applyLayoutSettings(config; fig = f, hm = hm, ax = ax, plotArea = (4,1))
 

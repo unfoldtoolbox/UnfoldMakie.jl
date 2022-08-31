@@ -5,18 +5,20 @@ using Makie
 """
     PlotConfig(<plotname>)
 
-This struct is used as the configuration of an UnfoldMakie plot.
+This struct is used as the configuration and simple plot method for an UnfoldMakie plot.
 
-`<plotname>`:
-- `:lines`: Line Plot
+## Values for `<plotname>`
+- `:line`: Line Plot
 - `:butterfly`: Butterfly Plot
 - `:erp`: ERP Image
-- `:design`: Design Matrix Plot
+- `:design`: Designmatrix Plot
 - `:topo`: Topo Plot
-- `:paraCoord`: Parallel Coordiante Plot
+- `:eegtopo`: Alternative Topo Plot
+- `:paraCoord`: Parallel Coordinates Plot
 
-The PlotConfig includes multiple Named Tuples with settings for different areas
+## Attributes
 
+The PlotConfig includes multiple Named Tuples with settings for different areas.
 Their attributes can be set through setter Methods callable on the PlotConfig instance:
 
 - `setExtraValues(kwargs...)`
@@ -27,15 +29,41 @@ Their attributes can be set through setter Methods callable on the PlotConfig in
 - `setColorbarValues(kwargs...)`
 - `setAxisValues(kwargs...)`
 
+## Plotting
+
+The config includes a simple way to create a plot with the choosen settings.
+The used plot-function is choosen based on the given plot type in the constructor.
+
+`plot(plotData::Any; kwargs...)`
+
+See the plot function of each plot type for more infos about data types and possibly additional kwargs.
+
+Called functions per `<plotname>`:
+- `:line` -> `plot_line(...)`
+- `:butterfly` -> `plot_line(...)`
+- `:erp` -> `plot_erp(...)`
+- `:design` -> `plot_design(...)`
+- `:topo` -> `plot_topo(...)`
+- `:eegtopo` -> `plot_topo(...)`
+- `:paraCoord` -> `plot_paraCoord(...)`
+
+Following the bang convention, use this to exectute the !-version of each function respectively:
+
+`plot!(f::Union{GridPosition, Figure}, plotData::Any; kwargs...)`
+
+
 # Example
 
-`config = PlotConfig(:lines)`
+`config = PlotConfig(:line)`
 
 `config.setLegendValues(nbanks=2)`
 
 `config.setLayoutValues(showLegend=true, legendPosition=:bottom)`
 
 `config.setMappingValues(color=:coefname, group=:coefname)`
+
+`config.plot(data)`
+
 
 """
 mutable struct PlotConfig
@@ -123,8 +151,7 @@ mutable struct PlotConfig
             ylabel = "y label"
         )
         
-        # setter for ANY values for Data
-        """Test1"""
+        # setter for very plot specific Data
         this.setExtraValues = function (;kwargs...)
             this.extraData = merge(this.extraData, kwargs)
             return this
@@ -169,13 +196,13 @@ mutable struct PlotConfig
         end
 
         # standard values for each plotType
-        if (pltType == :lineplot)
+        if (pltType == :line)
             this.setMappingValues(
                 x=(:x, :time),
                 y=(:y, :estimate, :yhat),
                 color=(:color, :coefname),
             )
-        elseif (pltType == :designmatrix)
+        elseif (pltType == :design)
             this.setLayoutValues(
                 useColorbar = true
             )
@@ -186,7 +213,7 @@ mutable struct PlotConfig
             this.setAxisValues(
                 xticklabelrotation=pi/8
             )
-        elseif (pltType == :topoplot || pltType == :eegtopoplot)
+        elseif (pltType == :topo || pltType == :eegtopo)
             this.setLayoutValues(
                 border=true,
                 showLegend=false,
@@ -197,7 +224,7 @@ mutable struct PlotConfig
                 contours=(color=:white, linewidth=2),
                 label_scatter=true,
                 label_text=true,
-                bounding_geometry=(pltType == :topoplot) ? Rect : Circle,
+                bounding_geometry=(pltType == :topo) ? Rect : Circle,
                 colormap=Reverse(:RdBu),
             )
             this.setMappingValues(
@@ -229,9 +256,6 @@ mutable struct PlotConfig
             this.setExtraValues(
                 sortData = true,
             )
-            # this.setLegendValues(
-            #     position = :rc
-            # )
             this.setLayoutValues(
                 xlabel = "Channels",
                 ylabel = "Timestamps",
@@ -272,15 +296,15 @@ mutable struct PlotConfig
         end
 
         this.plot! = function (f::Union{GridPosition, Figure}, plotData::Any; kwargs...)
-            if (this.plotType == :designmatrix)
+            if (this.plotType == :design)
                 plot_design!(f, plotData, this)
             elseif (this.plotType == :erp)
                 plot_erp!(f, plotData, this)
-            elseif (this.plotType == :lineplot || this.plotType == :butterfly)
+            elseif (this.plotType == :line || this.plotType == :butterfly)
                 plot_line!(f, plotData, this)
             elseif (this.plotType == :paracoord)
                 plot_paraCoord!(f, plotData, this; kwargs...)
-            elseif (this.plotType == :topoplot || this.plotType == :eegtopoplot)
+            elseif (this.plotType == :topo || this.plotType == :eegtopo)
                 plot_topo!(f, plotData, this; kwargs...)
             else
                 @error "Unknown plot type, cannot use plot function."
@@ -289,12 +313,4 @@ mutable struct PlotConfig
 
         return this
     end
-end
-
-# filters out the entries with the given names from the tuple
-function filterNamesOutTuple(inputTuple, filterNames)
-    function isInName(col)
-        !(col ∈ filterNames)
-    end
-    return inputTuple[keys(inputTuple)[isInName.(collect(keys(inputTuple)))]]
 end
