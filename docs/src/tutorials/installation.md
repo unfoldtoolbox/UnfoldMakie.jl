@@ -18,7 +18,6 @@ Here you can generate a project by using the command:
 generate "FOLDER_PATH"
 ```
 
-Use backslash `\` for the folder path. 
 Note that the specific folder in which you want to generate the project does not already exist.
 
 ## Activate your Project
@@ -30,7 +29,6 @@ The command is:
 activate "FOLDER_PATH"
 ```
 
-Use backslash `\` for the folder path. 
 
 ## Install the UnfoldMakie Module
 

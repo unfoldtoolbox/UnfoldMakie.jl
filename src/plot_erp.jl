@@ -72,7 +72,7 @@ The input `f`
 function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},config::PlotConfig)
     ax = Axis(f[1:4,1]; config.axisData...)
 
-    filtered_data = imfilter(plotData, Kernel.gaussian((0,config.extraData.erpBlur)))
+    filtered_data = imfilter(plotData, Kernel.gaussian((0,max(config.extraData.erpBlur,0))))
     
     if config.extraData.sortData
         ix = sortperm([a[1] for a in argmax(plotData, dims=1)][1,:])   # ix - trials sorted by time of maximum spike
