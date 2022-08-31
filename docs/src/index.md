@@ -33,6 +33,7 @@ The plot config is the prime interface allowing the user to access the different
 These segments are:
 - [Axis Data](@ref config_axis)
 - [Colorbar Data](@ref config_colorbar)
+- [Extra Data](@ref config_extra)
 - [Layout Data](@ref config_layout)
 - [Legend Data](@ref config_legend)
 - [Mapping Data](@ref config_mapping)
