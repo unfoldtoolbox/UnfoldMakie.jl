@@ -1,4 +1,4 @@
-## [Config: Mapping Data](@id config_mapping)
+## [Mapping Data](@id config_mapping)
 
 The mapping data of the configuration consists of config options for which "column in the data table" is mapped to the x-axis and which is mapped to the y-axis of the visualization. 
 
