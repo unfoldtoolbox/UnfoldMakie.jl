@@ -1,4 +1,4 @@
-## [Config: Colorbar Data](@id config_colorbar)
+## [Colorbar Data](@id config_colorbar)
 
 The colorbar data of the configuration consists of config options for the colorbar that can be used as a legend. 
 

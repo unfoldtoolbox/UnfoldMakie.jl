@@ -46,9 +46,11 @@ plot_line(results_plot, cLine)
 
 Here we look into possible options for configuring the line plot visualization.
 The options for configuring the visualization mentioned here are specific for line plots.
-For more general options look into the Plot Configuration section of the documentation.
+For more general options look into the `Plot Configuration` section of the documentation.
+This is the list of unique configuration (extraData):
+- ...
 
-Using some general configurations we can pretty up this default visualization. Here we use the following configuration:
+Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 ```
 cLine.setExtraValues(showLegend=true,
     categoricalColor=false,
