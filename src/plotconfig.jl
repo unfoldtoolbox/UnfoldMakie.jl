@@ -44,7 +44,7 @@ Called functions:
 - `:erp` -> `plot_erp(...)`
 - `:design` -> `plot_design(...)`
 - `:topo` -> `plot_topo(...)`
-- `eegtopo` -> `plot_topo(...)`
+- `:eegtopo` -> `plot_topo(...)`
 - `:paraCoord` -> `plot_paraCoord(...)`
 
 Use this to use the !-version of each function respectively:

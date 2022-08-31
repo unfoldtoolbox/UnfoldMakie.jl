@@ -1,5 +1,4 @@
 Issues:
-	Plot method is in plotConfig
 	butterfly plot fixen topoLegend
 
 
