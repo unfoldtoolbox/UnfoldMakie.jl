@@ -31,8 +31,8 @@ By adapting the padding, aspect ratio and tick label size in px for a new use ca
 ## Return Value:
 A figure displaying the PCP.
 """
-function plot_paraCoord(plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
-    plot_paraCoord!(Figure(), plotData, config; channels)
+function plot_paraCoord(plotData::DataFrame, config::PlotConfig,channels::Vector{Int64})
+    plot_paraCoord!(Figure(), plotData, config, channels)
 end
 
 """
@@ -65,8 +65,13 @@ By adapting the padding, aspect ratio and tick label size in px for a new use ca
 ## Return Value:
 The input `f`
 """
-function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
-    
+plot_paraCoord(plotData::DataFrame, config::PlotConfig,channels;kwargs...) = plot_paraCoord!(Figure(), plotData, config,channels;kwargs...)
+plot_paraCoord(plotData::DataFrame,channels;kwargs...) = plot_paraCoord(plotData, PlotConfig(:paracoord),channels;kwargs...)
+plot_paraCoord!(f::Union{GridPosition, Figure},plotData::DataFrame,channels;kwargs...) = plot_paraCoord!(f,plotData, PlotConfig(:para),channels;kwargs...)
+
+function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig, channels::Vector{Int64};kwargs...)
+    @show kwargs
+    config_kwargs!(config;kwargs...)
     # We didn't find a good formula to set these automatically
     # have to be set manually for now
     # if size of the plot-area changes the padding gets weird
@@ -88,7 +93,7 @@ function plot_paraCoord!(f::Union{GridPosition, Figure}, plotData::DataFrame, co
     # colormap border (prevents from using outer parts of color map)
     bord = 0
     
-    config.resolveMappings(plotData)
+    config.mappingData = resolveMappings(plotData,config.mappingData)
     
     categories = unique(plotData[:,config.mappingData.category])
     catLeng = length(categories)

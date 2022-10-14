@@ -7,11 +7,11 @@ function getTopoPositions(plotData, config)
                 @error "At least one of these columns is required: topoChannels, topoLabels, topoPositions"
             else
                 plotData.topoLabels = plotData[:, config.mappingData.topoChannels] .|> channelToLabel
-                config.setMappingValues(topoLabels = :topoLabels)
+                config.setMappingValues!(topoLabels = :topoLabels)
             end
         end
         plotData.topoPositions = plotData[:, config.mappingData.topoLabels] .|> getLabelPos
-        config.setMappingValues(topoPositions = :topoPositions)
+        config.setMappingValues!(topoPositions = :topoPositions)
     end
 
     unique(plotData[:, config.mappingData.topoPositions] .|> (p -> Point2f(p[1], p[2])))
@@ -19,11 +19,11 @@ end
 
 function getTopoColor(plotData, config)
     if !isnothing(config.mappingData.topoLabels)
-        config.setMappingValues(color=config.mappingData.topoLabels)
+        config.setMappingValues!(color=config.mappingData.topoLabels)
         list = zip(plotData[:, config.mappingData.topoLabels], plotData[:, config.mappingData.topoPositions])
         return unique(list .|> entry -> entry[1]=>posToColor(entry[2]))
     elseif !isnothing(config.mappingData.topoPositions)
-        config.setMappingValues(color=:positionLabel)
+        config.setMappingValues!(color=:positionLabel)
         plotData.positionLabel = plotData[:, config.mappingData.topoPositions] .|> string
         return unique(plotData[:, config.mappingData.topoPositions] .|> entry -> string(entry)=>posToColor(entry))
     else

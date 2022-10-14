@@ -42,12 +42,16 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
+plot_topo(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_topo!(Figure(), plotData, config;kwargs...)
+plot_topo(plotData::DataFrame;kwargs...) = plot_topo(plotData, PlotConfig(:topo);kwargs...)
+plot_topo!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_topo!(f,plotData, PlotConfig(:para);kwargs...)
+
 function plot_topo!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
 
     # use columns when we have a DataFrame
     if plotData isa DataFrame
-        config.resolveMappings(plotData)
+        config.mappingData = resolveMappings(plotData,config.mappingData)
 
         positions = getTopoPositions(plotData, config)
         labels = (string(config.mappingData.topoLabels) ∈ names(plotData)) ? plotData[:,config.mappingData.topoLabels] : nothing    
@@ -64,7 +68,7 @@ function plot_topo!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, V
         topoplot!(axis, plotData, positions; labels, config.visualData...)
     end
 
-    config.setColorbarValues(limits = (min(plotData...), max(plotData...)))
+    config.setColorbarValues!(limits = (min(plotData...), max(plotData...)))
 
     applyLayoutSettings(config; fig=f)
 
