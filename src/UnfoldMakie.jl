@@ -31,5 +31,7 @@ export plot_topo
 export plot_topo!
 export plot_paraCoord
 export plot_paraCoord!
+export plot_butterfly
+export plot_butterfly!
 
 end

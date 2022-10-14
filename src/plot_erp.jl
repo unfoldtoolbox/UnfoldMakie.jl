@@ -1,40 +1,12 @@
 using ImageFiltering
 
-"""
-    function plot_erp(data::Matrix{Float64},config::PlotConfig)
 
-Plot an ERP image.
-## Arguments:
-- `plotData::Matrix{Float64}`: Data for the plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+plot_erp(plotData::DataFrame;kwargs...) = plot_line(plotData, PlotConfig(:erp);kwargs...)
+plot_erp!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_line!(f,plotData, PlotConfig(:erp);kwargs...)
 
-## Extra Data Behavior:
-`erpBlur`:
 
-Default : `10`
-
-Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
-Non-Positive values deactivate the blur.
-
-`sortData`:
-
-Default: `false`
-
-Indicating whether the data is sorted; using sortperm() of Base Julia 
-(sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
-
-`meanPlot`:
-
-Default : `false`
-
-Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
-
-## Return Value:
-A figure displaying the ERP image.
-"""
-function plot_erp(plotData::Matrix{Float64},config::PlotConfig)
-    return plot_erp!(Figure(), plotData, config)
-end
+plot_erp(plotData::Matrix{Real},config::PlotConfig) =  plot_erp!(Figure(), plotData, config)
+plot_erp(plotData::Matrix{Real};kwargs...) = plot_erp(plotData,PlotConfig(:erp);kwargs...)
 
 """
     function plot_erp!(f::Union{GridPosition, Figure}, data::Matrix{Float64},config::PlotConfig)
@@ -86,20 +58,20 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},con
     if config.extraData.meanPlot
         # UserInput
         subConfig = deepcopy(config)
-        subConfig.setLayoutValues(
+        subConfig.setLayoutValues!(
             showLegend = false,
         )
-        subConfig.setAxisValues(
+        subConfig.setAxisValues!(
             ylabel = config.colorbarData.label === nothing ? "" : config.colorbarData.label
         )
         if :limits ∈ keys(subConfig.axisData)
-            subConfig.setAxisValues(limits = (config.axisData.limits[1], config.axisData.limits[2], nothing, nothing))
+            subConfig.setAxisValues!(limits = (config.axisData.limits[1], config.axisData.limits[2], nothing, nothing))
         end
         if !(:rightspinevisible ∈ keys(subConfig.axisData))
-            subConfig.setAxisValues(rightspinevisible = false)
+            subConfig.setAxisValues!(rightspinevisible = false)
         end
         if !(:topspinevisible ∈ keys(subConfig.axisData))
-            subConfig.setAxisValues(topspinevisible = false)
+            subConfig.setAxisValues!(topspinevisible = false)
         end
 
         axisOffset = (config.layoutData.showLegend && config.layoutData.legendPosition == :bottom) ? 1 : 0

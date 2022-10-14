@@ -8,7 +8,6 @@ The following modules are necessary for following this tutorial:
 ```
 using Unfold
 using UnfoldMakie
-using StatsModels # can be removed in Unfold v0.3.5
 using DataFrames
 using CairoMakie
 using TopoPlots
@@ -95,7 +94,7 @@ While there are multiple default values, that are checked in that order if they 
 Note that only one of `topoPositions`, `topoLabels` , or `topoChannels` have to be set to draw a topo plot. If multiple are set, they will be prioritized in that order.
 
 ### topodata
-Default is `(:topodata, :data, :y)`.
+Default is `(:topodata, :data, :y, :estimate)`.
 
 ### topoPositions (See note above)
 Default is `(:pos, :positions, :position, :topoPositions, :x, :nothing)`.

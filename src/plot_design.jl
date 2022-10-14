@@ -38,47 +38,8 @@ Behavior if specified in configuration:
 ## Return Value:
 A figure displaying the designmatrix. 
 """
-function plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig)
-    return plot_design!(Figure(), plotData, config)
-end
-
-""" 
-    function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMatrix,config::PlotConfig)
-
-Plot a designmatrix. 
-## Arguments:
-- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-
-## Extra Data Behavior:
-`standardizeData`:
-
-Default : `true`
-
-Indicating whether the data is standardized by pointwise division of the data with its sampled standard deviation.
-
-`sortData`:
-
-Default : `true`
-
-Indicating whether the data is sorted; using sortslices() of Base Julia. 
-
-`xTicks`:
-
-Default : `nothing`
-
-Indicating the number of labels on the x-axis.
-Behavior if specified in configuration:
-- xTicks = 0: no labels are placed.
-- xTicks = 1: first possible label is placed.
-- xTicks = 2: first and last possible labels are placed.
-- 2 < xTicks < `number of labels`: Equally distribute the labels.
-- xTicks ≥ `number of labels`: all labels are placed.
-
-## Return Value:
-The input `f`
-"""
+plot_design(plotData::Unfold.DesignMatrix,config::PlotConfig) = plot_design!(Figure(), plotData, config)
+plot_design(plotData::Unfold.DesignMatrix;kwargs...) = plot_design(plotData,PlotConfig(:design);kwargs...)
 function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMatrix,config::PlotConfig)
     designmat = Unfold.get_Xs(plotData);
     if config.extraData.standardizeData
@@ -136,7 +97,7 @@ function plot_design!(f::Union{GridPosition, Figure}, plotData::Unfold.DesignMat
     
 
     # plot Designmatrix
-    config.setAxisValues(xticks=(1:length(labels),labels))
+    config.setAxisValues!(xticks=(1:length(labels),labels))
     ax = Axis(f[1, 1]; config.axisData...)
     hm = heatmap!(ax, designmat'; config.visualData...)
     

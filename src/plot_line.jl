@@ -1,56 +1,6 @@
 using DataFrames
 using TopoPlots
 using LinearAlgebra
-
-"""
-    function plot_line(plotData::DataFrame, config::PlotConfig)
-
-Plot a line plot.
-## Arguments:
-- `plotData::DataFrame`: Data for the plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-
-## Extra Data Behavior:
-
-`categoricalColor`:
-
-Default : `true`
-
-Indicates whether the column referenced in mappingData.color should be used nonnumerically.
-
-`categoricalGroup`:
-
-Default: `true`
-
-Indicates whether the column referenced in mappingData.group should be used nonnumerically.
-
-`topoLegend`:
-
-Default : `false`
-
-Indicating whether the topoplot legend is shown or not.
-
-`stderror`:
-
-Default : `false`
-
-Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-
-`pvalue`:
-
-Default : `[]`
-
-An array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
-
-## Return Value:
-A figure displaying the line plot.
-
-"""
-function plot_line(plotData::DataFrame, config::PlotConfig)
-    plot_line!(Figure(), plotData, config)
-end
-
-
 """
     function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
 
@@ -96,11 +46,30 @@ An array of p-values. If array not empty, plot shows colored lines under the plo
 The input `f`
 
 """
-function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
+plot_line(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_line!(Figure(), plotData, config;kwargs...)
+
+"""
+see `plot_line`
+"""
+plot_butterfly(plotData::DataFrame;kwargs...) = plot_line(plotData, PlotConfig(:butterfly);kwargs...)
+plot_butterfly!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_line!(f,plotData, PlotConfig(:butterfly);kwargs...)
+
+function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig;kwargs...)
     plotData = deepcopy(plotData)
     
-    config.resolveMappings(plotData)
-    config.setExtraValues
+    # set PlotDefaults      
+    config.setMappingValues!(color=(:color, :coefname),)
+    config.setLayoutValues!(hidespines = (:r, :t))
+
+    config_kwargs!(config;kwargs...)
+    @show config.extraData.topoLegend
+    # apply config kwargs
+    
+
+    # resolve columns with data
+    config.mappingData = resolveMappings(plotData,config.mappingData)
+
+    
     # turn "nothing" from group columns into :fixef
     if "group" ∈  names(plotData)
         plotData.group = plotData.group .|> a -> isnothing(a) ? :fixef : a
@@ -115,6 +84,7 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     
     # Get topocolors for butterfly
     if (config.plotType == :butterfly)
+    
         allPositions = getTopoPositions(plotData, config)
         colors = getTopoColor(plotData, config)
     else
@@ -163,6 +133,7 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
     # butterfly plot is drawn slightly different
     if config.plotType == :butterfly
         # add topoLegend
+    
         if (config.extraData.topoLegend)
             legendRight = config.layoutData.legendPosition == :right
             if config.layoutData.showLegend
@@ -176,7 +147,7 @@ function plot_line!(f::Union{GridPosition, Figure}, plotData::DataFrame, config:
             # no extra legend
             mainAxis = Axis(f[1,1]; config.axisData...)
         end
-            drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
+        drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
     else
         # normal lineplot draw
         drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
