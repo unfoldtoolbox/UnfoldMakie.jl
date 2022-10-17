@@ -13,7 +13,6 @@ This struct is used as the configuration and simple plot method for an UnfoldMak
 - `:erp`: ERP Image
 - `:design`: Designmatrix
 - `:topo`: Topo Plot
-- `:eegtopo`: EEG Topo Plot
 - `:paraCoord`: Parallel Coordinates Plot
 
 ## Attributes
@@ -42,10 +41,9 @@ Called functions per `<plotname>`:
 - `:line` -> `plot_line(...)`
 - `:butterfly` -> `plot_line(...)`
 - `:erp` -> `plot_erp(...)`
-- `:design` -> `plot_design(...)`
-- `:topo` -> `plot_topo(...)`
-- `:eegtopo` -> `plot_topo(...)`
-- `:paraCoord` -> `plot_paraCoord(...)`
+- `:design` -> `plot_designmatrix(...)`
+- `:topo` -> `plot_topoplot(...)`
+- `:paraCoord` -> `plot_parallelcoordinates(...)`
 
 Following the bang convention, use this to exectute the !-version of each function respectively:
 
@@ -88,7 +86,7 @@ mutable struct PlotConfig
     # removes all variables from mappingData which aren't columns in input plotData
     resolveMappings::Function
 
-    #"plot types: :line, :design, :topo, :eegtopo, :butterfly, :erp, :paracoord"
+    #"plot types: :line, :design, :topo, :butterfly, :erp, :paracoord"
      
 
         # removes all varaibles from mappingData which aren't columns in input plotData
@@ -241,7 +239,7 @@ function PlotConfig(T::Val{:topo})
                 contours=(color=:white, linewidth=2),
                 label_scatter=true,
                 label_text=true,
-                bounding_geometry=(this.plotType == :topo) ? Rect : Circle,
+                bounding_geometry=Circle,
                 colormap=Reverse(:RdBu),
             )
             this.setMappingValues!(
@@ -268,7 +266,7 @@ function PlotConfig(T::Val{:topo})
             )
             return this
         end
-        function PlotConfig(T::Val{:butterfly})
+        function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this = PlotConfig()
             this.plotType =  valType_to_symbol(T)
 
@@ -284,7 +282,7 @@ function PlotConfig(T::Val{:topo})
             )
             return this
         end
-        function PlotConfig(T::Val{:erp})
+        function PlotConfig(T::Val{:erpimage})
             this = PlotConfig()
             this.plotType = valType_to_symbol(T)
             this.setExtraValues!(
@@ -299,6 +297,10 @@ function PlotConfig(T::Val{:topo})
             this.setAxisValues!(
                 xlabel = "Time",
                 ylabel = "Sorted trials"
+                
+            )
+            this.setVisualValues!(
+                colormap = Reverse("RdBu"),
             )
             return this
         end      

@@ -7,13 +7,15 @@ using Unfold
 using Colors
 using ColorSchemes
 
+include("example_data.jl")
+
 include("plotconfig.jl")
 
-include("plot_line.jl")
-include("plot_design.jl")
-include("plot_topo.jl")
 include("plot_erp.jl")
-include("plot_paracoord.jl")
+include("plot_designmatrix.jl")
+include("plot_topoplot.jl")
+include("plot_erpimage.jl")
+include("plot_parallelcoordinates.jl")
 
 include("layout_helper.jl")
 include("eeg_positions.jl")
@@ -21,16 +23,17 @@ include("topo_color.jl")
 
 export PlotConfig
 
-export plot_line
-export plot_line!
-export plot_design
-export plot_design!
+
+export plot_designmatrix
+export plot_designmatrix!
 export plot_erp
 export plot_erp!
-export plot_topo
-export plot_topo!
-export plot_paraCoord
-export plot_paraCoord!
+export plot_erpimage
+export plot_erpimage!
+export plot_topoplot
+export plot_topoplot!
+export plot_parallelcoordinates
+export plot_parallelcoordinates!
 export plot_butterfly
 export plot_butterfly!
 
