@@ -5,10 +5,9 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 
 ## Include used Modules
 The following modules are necessary for following this tutorial:
-```
+```@example main
 using Unfold
 using UnfoldMakie
-using StatsModels # can be removed in Unfold v0.3.5
 using DataFrames
 using CairoMakie
 using DataFramesMeta
@@ -16,29 +15,21 @@ using DataFramesMeta
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
 ## Data
-In case you do not already have data, look at the [Load Data](@ref test_data) section. 
+In case you want different data, look at the [Load Data](@ref test_data) section. 
 
-Use the test data of `erpcore-N170.jld2`.
-
-We filter the data to make it more clearly represented:
-```
-results_plot = @subset(results_onesubject,:channel .==3)
+```@example main
+results_plot = @subset(UnfoldMakie.example_data(),:channel .== 32);
+first(results_plot ,3)
 ```
 
 ## Plot Line Plots
 
 The following code will result in the default configuration. 
-```
-cLine = PlotConfig(:line)
+```@example main
+plot_erp(results_plot)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you plot the line plot.
-```
-cLine.plot(results_plot)
-```
-
-![Default Line Plot](../images/line_plot_default.png)
 
 ## Column Mappings for Line Plots
 
@@ -60,8 +51,7 @@ Default is `(:color, :coefname)`.
 
 ## Configuration for Line Plots
 
-Here we look into possible options for configuring the line plot visualization using `config.setExtraValues(<name>=<value>,...)`.
-By calling the `config.plot(...)` function on a line plot the function `plot_lines(...)` is executed.
+Here we look into possible options for configuring the line plot visualization using `plot_erp(...;setExtraValues=(<name>=<value>,...)`.
 
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
@@ -71,16 +61,17 @@ This is the list of unique configuration (extraData):
 - stderror (boolean)
 
 Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
-```
-cLine.setExtraValues(showLegend=true,
-    categoricalColor=false,
-    categoricalGroup=false)
-cLine.setMappingValues(color=:coefname, group=:coefname)
-cLine.setLegendValues(nbanks=2)
-cLine.setLayoutValues(legendPosition=:bottom)
+```@example main
+plot_erp(results_plot;
+    setExtraValues=(showLegend=true,
+                    categoricalColor=false,
+                    categoricalGroup=false),
+    setMappingValues = (color=:coefname, group=:coefname,),
+    setLegendValues  = (nbanks=2,),
+    setLayoutValues  = (legendPosition=:bottom,))
 ```
 
-![Pretty Line Plot](../images/line_plot_pretty.png)
+
 
 In the following we will use this "pretty" line plot as a basis for looking into configuration options.
 
@@ -100,26 +91,23 @@ Is an array of p-values. If array not empty, plot shows colored lines under the 
 Default is `[]` (an empty array).
 
 Shown below is an example in which `pvalue` are given:
-```
-cLine = PlotConfig(:lineplot)
-
+```@example main
 pvals = DataFrame(
 		from=[0.1,0.3],
 		to=[0.5,0.7],
-		coefname=["(Intercept)","category: face"] # if coefname not specified, line should be black
+		coefname=["A","B"] # if coefname not specified, line should be black
 	)
 
-cLine.setExtraValues(
-    categoricalColor=false,
-    categoricalGroup=false,
-    pvalue=pvals)
-cLine.setMappingValues(color=:coefname, group=:coefname)
-cLine.setLayoutValues(legendPosition=:bottom)
-cLine.setLegendValues(nbanks=2)
-cLine.plot(results_plot)
-```
+plot_erp(results_plot;
+    setExtraValues= (
+        categoricalColor=false,
+        categoricalGroup=false,
+        pvalue=pvals),
+    setMappingValues = (color=:coefname, group=:coefname,),
+    setLayoutValues = (legendPosition=:bottom,),
+    setLegendValues = (nbanks=2,),)
 
-![Pretty Line Plot](../images/line_plot_p-val.png)
+```
 
 
 ### stderror (boolean)
@@ -127,14 +115,17 @@ Indicating whether the plot should show a colored band showing lower and higher 
 Default is `false`.
 
 Shown below is an example where `stderror=true`:
-```
-cLine.setExtraValues(
-    categoricalColor=false,
-    categoricalGroup=false,
-    stderror=true)
-cLine.setMappingValues(color=:coefname, group=:coefname)
-cLine.setLegendValues(nbanks=2)
-cLine.setLayoutValues(legendPosition=:bottom)
+```@example main
+
+results_plot.se_low = results_plot.estimate .- 0.05
+results_plot.se_high = results_plot.estimate .+ 0.05
+plot_erp(results_plot;
+    setExtraValues= (
+        categoricalColor=false,
+        categoricalGroup=false,
+        stderror=true),
+    setMappingValues = (color=:coefname, group=:coefname,),
+    setLayoutValues = (legendPosition=:bottom,),
+    setLegendValues = (nbanks=2,),)
 ```
 
-![Pretty Line Plot](../images/line_plot_std.png)

@@ -13,7 +13,8 @@ data, evts = loadtestdata("test_case_3b");
 basisfunction = firbasis(τ=(-0.4,.8),sfreq=50,name="stimulus")
 f  = @formula 0~1+conditionA+continuousA
 
-ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8)))
+ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8))) 
+designmatrix!(ufMass, evts)
 ```
 Here we used the FIR basisfunction.
 For more information on basisfunctions see the [Unfold.jl documentation](https://unfoldtoolbox.github.io/Unfold.jl/dev/explanations/basisfunctions/).

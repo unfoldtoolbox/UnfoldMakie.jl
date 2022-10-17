@@ -5,42 +5,39 @@ Make sure you have looked into the [installation instructions](@ref install_inst
 
 ## Include used Modules
 The following modules are necessary for following this tutorial:
-```
+```@example main
 using Unfold
 using UnfoldMakie
-using StatsModels # can be removed in Unfold v0.3.5
 using DataFrames
 using CairoMakie
 ```
 
 ## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
+```@example main
+# load and generate a simulated Unfold Design
 
-When you followed the tutorial, using test data of the `Unfold` module, use the following code for further pre-processing:
+include(joinpath(dirname(pathof(Unfold)), "../test/test_utilities.jl") ) # to load data
+
+data, evts = loadtestdata("test_case_3b");
+f  = @formula 0~1+conditionA+continuousA
+
+# generate ModelStruct
+ufMass = UnfoldLinearModel(Dict(Any=>(f,-0.4:1/50:.8))) 
+# generate designmatrix
+designmatrix!(ufMass, evts)
 ```
-designmatrix(ufMass, evts)
-```
-When you followed the tutorial, using test data of the file `erpcore-N170.jld2`, use the following code:
-```
-designmatrix(mres)
-```
+
 
 ## Plot Designmatrices
 
 The following code will result in the default configuration. 
-```
-cDesign = PlotConfig(:design)
+```@example main
+plot_designmatrix(designmatrix(ufMass))
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you plot the designmatrix, when using data of the `Unfold` module.
-```
-cDesign.plot(designmatrix(ufMass, evts))
-```
-This is how you finally plot the designmatrix, when using data of the `erpcore-N170.jld2` file.
-```
-cDesign.plot(designmatrix(mres))
-```
+
 
 ![Default Designmatrix](../images/designmatrix_default.png)
 
@@ -50,8 +47,7 @@ Since designmatrix uses an `Unfold.DesignMatrix` as an input, the library does n
 
 ## Configurations for Designmatrices
 
-Here we look into possible options for configuring the designmatrix visualization using `config.setExtraValues(<name>=<value>,...)`.
-By calling the `config.plot(...)` function on a designmatrix the function `plot_design(...)` is executed.
+Here we look into possible options for configuring the designmatrix visualization using `plot_designmatrix(...;setExtraValues=(<name>=<value>,...)`.
 
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
@@ -68,7 +64,7 @@ Default is `false`.
 In order to make the designmatrix easier to read, you may want to sort it.
 The following configuration achieves this:
 ```
-cDesign.setExtraValues(sortData=true)
+plot_designmatrix(designmatrix(ufMass);setExtraValues=(sortData=true,))
 ```
 
 ![Sorted Designmatrix](../images/designmatrix_sorted.png)

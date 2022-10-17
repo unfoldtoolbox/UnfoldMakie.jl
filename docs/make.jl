@@ -2,13 +2,19 @@ using UnfoldMakie
 using Documenter
 using DocStringExtensions
 
+# preload once
+using CairoMakie
+using Unfold
+using DataFrames
+using DataFramesMeta
+
 using Literate
 using Glob
 
 # literate
-GENERATED = joinpath(@__DIR__, "src")
-SOURCE_FILES = Glob.glob("*/*.jl", GENERATED)
-foreach(fn -> Literate.markdown(fn, GENERATED), SOURCE_FILES)
+#GENERATED = joinpath(@__DIR__, "src")
+#SOURCE_FILES = Glob.glob("*/*.jl", GENERATED)
+#foreach(fn -> Literate.markdown(fn, GENERATED), SOURCE_FILES)
 
 
 
@@ -27,16 +33,16 @@ makedocs(;
     pages=[
         "UnfoldMakie Documentation" => "index.md",
         "Tutorials: Setup" => [
-            "Installation" => "tutorials/installation.md",
-            "Test Data" => "tutorials/test_data.md",
+         #   "Installation" => "tutorials/installation.md",
+         #   "Test Data" => "tutorials/test_data.md",
         ],
         "Tutorials: Visualizations" => [
-            "Butterfly Plot" => "tutorials/butterfly_plot.md",
-            "Designmatrix" => "tutorials/design_matrix.md",
-            "ERP Image" => "tutorials/erp_image.md",
-            "Line Plot" => "tutorials/line_plot.md",
-            "Parallel Coordinates Plot" => "tutorials/para_coord.md",
-            "Topo Plot" => "tutorials/topo_plot.md",
+            "Butterfly Plot" => "tutorials/butterfly.md",
+            "Designmatrix" => "tutorials/designmatrix.md",
+            "ERP Image" => "tutorials/erpimage.md",
+            "Line Plot" => "tutorials/erp.md",
+            "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
+            "Topo Plot" => "tutorials/topoplot.md",
         ],
         "Plot Configuration" => [
             "Axis Data" => "config/axis_data.md",
