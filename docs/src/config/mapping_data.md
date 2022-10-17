@@ -6,14 +6,17 @@ Therefore it is only used in plots with a `DataFrame` as input.
 For example a Line Plot makes use of the `x` and `y` mappings.
 To have our Line Plot use the "estimate" column for `x` and the "time" column for `y` we can use:
 ```
-config.setMappingValues(x = :estimate, y = :time)
+plot_erp(...;setMappingValues=(x=:estimate,))
+
+# or specify in a `PlotConfig` structure
+config.setMappingValues(x = :estimate, y = :time) 
 ```
 Which columns are used by which plotting function can be looked up in their respective tutorials in the `Tutorials: Visualizations` section.
 
 ## Multiple Options
 In addition to providing a single column which contains the specified data, the user can also provide a list of columns which may contain the data.
 ```
-config.setMappingValues(y = (:y, :yhat, :estimate))
+plot_erp(...;setMappingValues=(y = (:y, :yhat, :estimate),))
 ```
 In this case the first available column will be chosen.
 

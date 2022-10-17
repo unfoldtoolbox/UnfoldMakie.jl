@@ -12,14 +12,8 @@ Now each plot can be added to `f` via the `config.plot!(...)` function by puttin
 
 ```
 f = Figure()
-
-cLine = PlotConfig(:line)
-cLine.setMappingValues(color=:channel)
-cLine.plot!(f[1,1], results_plot_butter)
-
-cButterfly = PlotConfig(:butterfly)
-cButterfly.setMappingValues(topoChannels=:channel)
-cButterfly.plot!(f[2, 1], results_plot_butter)
+plot_erp(f[1,1],results_plot_butter;setMappingValues(color=:channel,))
+plot_butterfly(f[2,1],results_plot_butter;setMappingValues(color=:channel,))
 
 f
 ```

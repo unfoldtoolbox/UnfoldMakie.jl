@@ -9,39 +9,42 @@ Afterwards you continue as follows.
 
 In the code below, data of the `Unfold` module was used.
 To display a timeexpanded designmatrix we add the following code:
-```
+```@example main
+using Unfold
+using UnfoldMakie
+
+include(joinpath(dirname(pathof(Unfold)), "../test/test_utilities.jl") ) # to load data
+
+data, evts = loadtestdata("test_case_3b");
+basisfunction = firbasis(τ=(-0.4,.8),sfreq=50,name="stimulus")
+f  = @formula 0~1+conditionA+continuousA
+
 bfDict = Dict(Any=>(f,basisfunction))
 ufCont = UnfoldLinearModelContinuousTime(bfDict)
-```
-The following code will result in the default configuration.
-```
-cDesign = PlotConfig(:design)
-```
-At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-We set `sortData=false`, as it makes no sense to sort data for timeexpanded designmatrices (and it is `true` by default).
-```
-cDesign.setExtraValues(sortData=false)
+designmatrix!(ufCont, evts)
 ```
 
 This is how you plot the timeexpanded designmatrix.
-```
-cDesign.plot(designmatrix!(ufCont, evts))
+```@example main
+plot_designmatrix(designmatrix(ufCont))
 ```
 
-![Default Timeexpanded Designmatrix](../images/designmatrix_te_default.png)
+
+We set `sortData=false`, as it makes no sense to sort data for timeexpanded designmatrices (and it is `true` by default).
+```@example main
+plot_designmatrix(designmatrix(ufCont);setExtraValues=(sortData=false,))
+```
+
 Note that without further adjustments in the configuration, you may experience cluttering of labels. 
 As you can see, this is the case here. 
 
 In order to avoid the cluttering problem, we can limit the number of labels by changing the `xTicks`.
 ```
-cDesign.setExtraValues(xTicks=12)
+plot_designmatrix(designmatrix!(ufCont,evts);setExtraValues=(sortData=false,xTicks=12,))
 ```
 In this case it was set to 12 labels on the x-axis.
 
 
-When plotting the result is as follows:
-
-![Label Limited Timeexpanded Designmatrix](../images/designmatrix_te_12_labels.png)
 As you can see labels are cut off to the left.
 In the [corresponding How To section](@ref ht_soobl) you can see a workaroundfor it.

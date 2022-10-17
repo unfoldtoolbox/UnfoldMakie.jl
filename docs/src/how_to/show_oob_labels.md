@@ -5,14 +5,11 @@ In the following we discuss a possible quick fix for this problem.
 
 Here we start off with the "label-limited" timeexpanded designmatrix from the [corresponding How To section](@ref ht_gen_te_designmatrix) that details how it can be generated.
 
-```
-cDesign = PlotConfig(:design)
-cDesign.setExtraValues(xTicks=10, sortData=false)
-
-cDesign.plot(designmatrix!(ufCont, evts))
+```@julia main
+plot_design(designmatrix!(ufCont,evts),cDesign;setExtraValues=(xTicks=10, sortData=false))
 ```
 
-![Label Limited Timeexpanded Designmatrix](../images/designmatrix_te_12_labels.png)
+#![Label Limited Timeexpanded Designmatrix](../images/designmatrix_te_12_labels.png)
 
 While the plot automatically sets it's height accoring to the labels, they are cut off on the left side.
 
@@ -24,15 +21,11 @@ The `plot!` function inside the plot config instance can take any grid position,
 
 The exact numbers in the grid position can be guessed from the ratio of the overlap, or just tried out.
 
-```
-cDesign = PlotConfig(:design)
-cDesign.setExtraValues(xTicks=10, sortData=false)
-
+```@julia main
 f = Figure()
-
-cDesign.plot!(f[1,2:6],designmatrix!(ufCont, evts))
+plot_design(f[1,2:6],designmatrix!(ufCont,evts),cDesign;setExtraValues=(xTicks=10, sortData=false))
 
 f
 ```
 
-![Label Limited Timeexpanded Designmatrix](../images/label_fix.png)
+#![Label Limited Timeexpanded Designmatrix](../images/label_fix.png)

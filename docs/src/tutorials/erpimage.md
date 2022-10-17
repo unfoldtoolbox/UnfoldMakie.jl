@@ -14,22 +14,19 @@ using CairoMakie
 
 ## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
+!!! note
+    We are working on UnfoldSim to generate sensible examples. Right now best is to use the test data of `erpcore-N170.jld2` from the [Load Data](@ref test_data) section.
 
-Use the test data of `erpcore-N170.jld2`.
 Note that you do not need the pre-processing step detailed in that section.
 
 ## Plot ERP Images
 
 The following code will result in the default configuration. 
 ```
-cErp = PlotConfig(:erp)
+plot_erpimage(dat_e[28,:,:])
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
-This is how you plot the ERP image.
-```
-cErp.plot(dat_e[28,:,:])
-```
 
 ![Default ERP Image](../images/erp_image_default.png)
 
@@ -39,8 +36,8 @@ Since ERP images use a `Matrix` as an input, the library does not need any infor
 
 ## Configurations for ERP Images
 
-Here we look into possible options for configuring the ERP image visualization using `config.setExtraValues(<name>=<value>,...)`.
-By calling the `config.plot(...)` function on an ERP image the function `plot_erp(...)` is executed.
+Here we look into possible options for configuring the ERP image visualization using `setExtraValues = (<name>=<value>,...)`.
+
 For more general options look into the `Plot Configuration` section of the documentation.
 This is the list of unique configuration (extraData):
 - erpBlur (number)
@@ -65,13 +62,11 @@ Default is `false`.
 
 
 ```
-cErp = PlotConfig(:erp)
+plot_erpimage(dat_e[28,:,:],
+    setExtraValues = (meanPlot = true,),
+    setColorbarValues = (label = "Voltage [µV]",),
+    setVisualValues = (colormap = "Viridis", colorrange = (-40, 40)),
 
-cErp.setExtraValues(meanPlot = true)
-cErp.setColorbarValues(label = "Voltage [µV]")
-cErp.setVisualValues(colormap = Reverse("RdBu"), colorrange = (-40, 40))
-
-cErp.plot(dat_e[28,:,:])
 ```
 
 ![ERP Image with Line](../images/erp_image_line.png)
