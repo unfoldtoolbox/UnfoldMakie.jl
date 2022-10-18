@@ -1,6 +1,6 @@
 using LinearAlgebra
 #using Pipe
-using PyMNE
+#using PyMNE
 
 
 
