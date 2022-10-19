@@ -2,15 +2,17 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig)
+    function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, [config::PlotConfig];kwargs...)
+    function plot_erp(plotData::DataFrame, [config::PlotConfig];kwargs...)
+        
 
-Plot a line plot.
+Plot an ERP plot.
 ## Arguments:
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Data for the line plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-
-## Extra Data Behavior:
+- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df;setMappingValues=(;color=:coefname,col=:conditionA))`
+## Extra Data Behavior (...;setExtraData=(;[key]=value)):
 
 `categoricalColor`:
 

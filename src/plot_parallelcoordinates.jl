@@ -15,7 +15,7 @@ Plot a PCP (parallel coordinates plot).
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
-## Extra Data Behavior:
+## Extra Data Behavior (...;setExtraData=(;[key]=value)):
 
 PCP has problems with size changes of the view window.
 By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a Coordinated Multiple Views System

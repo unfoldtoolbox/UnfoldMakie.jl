@@ -2,11 +2,9 @@ using ImageFiltering
 
 
 
-plot_erpimage(plotData::Matrix{Real},config::PlotConfig,kwargs...) =  plot_erpimage!(Figure(), plotData, config;kwargs...)
-plot_erpimage(plotData::Matrix{Real};kwargs...) = plot_erpimage(plotData,PlotConfig(:erpimage);kwargs...)
-
 """
-    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64},config::PlotConfig)
+    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64},[config::PlotConfig])
+    function plot_erpimage(data::Matrix{Float64},[config::PlotConfig])
 
 Plot an ERP image.
 ## Arguments:
@@ -14,7 +12,7 @@ Plot an ERP image.
 - `plotData::Matrix{Float64}`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
         
-## Extra Data Behavior:
+## Extra Data Behavior (...;setExtraData=(;[key]=value)):
 `erpBlur`:
 
 Default : `10`
@@ -38,6 +36,8 @@ Indicating whether the plot should add a line plot below the ERP image, showing 
 ## Return Value:
 The input `f`
 """
+plot_erpimage(plotData::Matrix{Real},config::PlotConfig,kwargs...) =  plot_erpimage!(Figure(), plotData, config;kwargs...)
+plot_erpimage(plotData::Matrix{Real};kwargs...) = plot_erpimage(plotData,PlotConfig(:erpimage);kwargs...)
 function plot_erpimage!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},config::PlotConfig;kwargs...)
     config_kwargs!(config;kwargs...)
 
