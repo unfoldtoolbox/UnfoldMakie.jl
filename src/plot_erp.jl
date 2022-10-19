@@ -68,7 +68,7 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     config.setLayoutValues!(hidespines = (:r, :t))
 
     config_kwargs!(config;kwargs...)
-    @show config.extraData.topoLegend
+
     # apply config kwargs
     
 
@@ -116,10 +116,9 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
         mapp = mapp * mapping(;config.mappingData.group)
     end
     
-    xy_mapp = mapping(config.mappingData.x, config.mappingData.y)
+    xy_mapp = mapping(config.mappingData.x, config.mappingData.y;config.mappingData...)
 
     basic = visual(Lines; config.visualData...) * xy_mapp
-
     # add band of sdterrors
     if config.extraData.stderror
         m_se = mapping(config.mappingData.x,:se_low,:se_high)
@@ -135,7 +134,7 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     
     plotEquation = basic * mapp
 
-
+    f_grid = f[1,1]
     # butterfly plot is drawn slightly different
     if config.plotType == :butterfly
         # add topoLegend
@@ -151,16 +150,24 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
             mainAxis = Axis(legendRight ? f[1:2,1] : f[1,1:2]; config.axisData...)
         else
             # no extra legend
-            mainAxis = Axis(f[1,1]; config.axisData...)
+            mainAxis = Axis(f_grid; config.axisData...)
         end
         drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
     else
         # normal lineplot draw
-        drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
+        #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
+    
+        drawing = draw!(f_grid,plotEquation;axis=config.axisData)
     end
 
     
-    applyLayoutSettings(config; fig = f, drawing = drawing)
+    # apply to axis (or axes in case of col/row)
+    
+    for ax in f.content
+         if ax isa Axis
+            applyLayoutSettings(config; fig = f, ax=ax, drawing = drawing)
+         end
+    end
 
     return f
     
