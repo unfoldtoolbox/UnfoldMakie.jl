@@ -6,27 +6,8 @@ using ColorSchemes
 
 
 """
-    function plot_topoplot(plotData, config::PlotConfig; positions=nothing, labels=nothing)
-
-Plot a topo plot.
-## Arguments:
-- `plotData::Union{DataFrame, Vector{Float32}}`: Data for the plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-- `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `labels`.
-- `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
-
-## Extra Data Behavior:
-None
-
-## Return Value:
-A figure displaying the topo plot.
-"""
-function plot_topoplot(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
-    plot_topoplot!(Figure(), plotData, config; positions, labels)
-end
-
-"""
-    function plot_topoplot!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig; positions=nothing, labels=nothing)
+    function plot_topoplot!(f::Union{GridPosition, Figure}, plotData, config::PlotConfig; positions=nothing, labels=nothing,kwargs...)
+    function plot_topoplot(plotData, [config::PlotConfig]; positions=nothing, labels=nothing,kwargs...)
 
 Plot a topo plot.
 ## Arguments:
@@ -36,16 +17,18 @@ Plot a topo plot.
 - `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `labels`.
 - `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
 
-## Extra Data Behavior:
+## Extra Data Behavior (...;setExtraData=(;[key]=value)):
 None
 
 ## Return Value:
 A figure displaying the topo plot.
 """
+function plot_topoplot(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing,kwargs...)
+    plot_topoplot!(Figure(), plotData, config; positions, labels,kwargs...)
+end
 plot_topoplot(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig;kwargs...) = plot_topoplot!(Figure(), plotData, config;kwargs...)
 plot_topoplot(plotData::Union{DataFrame, Vector{Float32}};kwargs...) = plot_topoplot(plotData, PlotConfig(:topo);kwargs...)
 plot_topoplot!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_topoplot!(f,plotData, PlotConfig(:para);kwargs...)
-
 function plot_topoplot!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
 

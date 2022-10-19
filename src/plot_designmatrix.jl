@@ -3,14 +3,15 @@ using SparseArrays
 
 
 """ 
-    function plot_designmatrix(plotData::Unfold.DesignMatrix,config::PlotConfig)
+    function plot_designmatrix(plotData::Unfold.DesignMatrix,[config::PlotConfig];kwargs...)
+        
 
 Plot a designmatrix. 
 ## Arguments:
 - `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `config::PlotConfig`: (optional) Instance of PlotConfig being applied to the visualization.
 
-## Extra Data Behavior:
+## Extra Data Behavior (...;setExtraData=(;[key]=value))
 `standardizeData`:
 
 Default : `true`
