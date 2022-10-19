@@ -1,6 +1,6 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
-authors = ["Benedikt Ehinger"]
+authors = ["Benedikt Ehinger", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner"]
 version = "0.2.0"
 
 [deps]
