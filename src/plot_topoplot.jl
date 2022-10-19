@@ -23,9 +23,6 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
-function plot_topoplot(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing,kwargs...)
-    plot_topoplot!(Figure(), plotData, config; positions, labels,kwargs...)
-end
 plot_topoplot(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig;kwargs...) = plot_topoplot!(Figure(), plotData, config;kwargs...)
 plot_topoplot(plotData::Union{DataFrame, Vector{Float32}};kwargs...) = plot_topoplot(plotData, PlotConfig(:topo);kwargs...)
 plot_topoplot!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_topoplot!(f,plotData, PlotConfig(:para);kwargs...)
