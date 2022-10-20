@@ -275,7 +275,10 @@ function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this = PlotConfig()
             this.plotType =  valType_to_symbol(T)
 
-            this.setExtraValues!(topoLegend = true)
+            this.setExtraValues!(
+                topoLegend = true,
+                topoPositionToColorFunction = x->posToColorRomaO(x)
+                )
             this.setLayoutValues!(
                 showLegend = false,
                 hidespines = (:r, :t)
@@ -336,11 +339,13 @@ function resolveMappings(plotData,mappingData)
     end
     # filter columns to only include the ones that are in plotData, or throw an error if none are
     function getAvailable(key, choices)
+        # isColumn is an internally defined function mapping col ∈ names(plotData)
         available = choices[keys(choices)[isColumn.(collect(choices))]]
+        
         if length(available) >= 1
             return available[1]
         else
-            return (:nothing ∈ collect(choices)) ?
+            return (:nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                 nothing :
                 @error("default columns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues!()")
         end
@@ -348,6 +353,10 @@ function resolveMappings(plotData,mappingData)
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
     mappingDict = Dict()
     for (k,v) in pairs(mappingData)
+
+        #if 
+        #    continue
+        #end
         mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v) : v
     end
     return (;mappingDict...)
