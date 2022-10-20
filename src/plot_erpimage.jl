@@ -3,8 +3,8 @@ using ImageFiltering
 
 
 """
-    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64},[config::PlotConfig])
-    function plot_erpimage(data::Matrix{Float64},[config::PlotConfig])
+    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64},[config::PlotConfig];kwargs...)
+    function plot_erpimage(data::Matrix{Float64},[config::PlotConfig];kwargs...)
 
 Plot an ERP image.
 ## Arguments:
