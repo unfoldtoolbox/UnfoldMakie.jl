@@ -118,6 +118,11 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
         mapp = mapp * mapping(;config.mappingData.group)
     end
     
+    #remove mapping values with `nothing`
+    
+    deleteNothing(nt::NamedTuple{names}, keys) where names = NamedTuple{filter(x -> x ∉ keys, names)}(nt)
+    config.mappingData = deleteNothing(config.mappingData,keys(config.mappingData)[findall(isnothing.(values(config.mappingData)))])
+
     xy_mapp = mapping(config.mappingData.x, config.mappingData.y;config.mappingData...)
 
     basic = visual(Lines; config.visualData...) * xy_mapp
@@ -148,7 +153,7 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
             else
                 topoAxis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
             end
-            topoplotLegend(topoAxis, allPositions)
+            topoplotLegend(config,topoAxis, allPositions)
             mainAxis = Axis(legendRight ? f[1:2,1] : f[1,1:2]; config.axisData...)
         else
             # no extra legend
@@ -186,23 +191,24 @@ function eegHeadMatrix(positions, center, radius)
                        center[1]-oldCenter[1]*radF, center[2]-oldCenter[2]*radF, 0, 1)
 end
 
-function topoplotLegend(axis, allPositions)    
+function topoplotLegend(config,axis, allPositions)    
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
-    specialColors = ColorScheme(vcat(RGB(1,1,1.),[posToColor(pos) for pos in allPositions]...))
+    specialColors = ColorScheme(vcat(RGB(1,1,1.),[config.extraData.topoPositionToColorFunction(pos) for pos in allPositions]...))
     
 	xlims!(low = -0.2, high = 1.2)
 	ylims!(low = -0.2, high = 1.2)
     topoplot = eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
         string.(1:length(allPositions)); 
         positions=allPositions,
-        interpolation=NullInterpolator(), # inteprolator that returns only 0
+        interpolation=NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
         colorrange = (0,length(allPositions)), # add the 0 for the white-first color
         colormap= specialColors,
-        head = (color=:black, linewidth=1, model = topoMatrix))
+        head = (color=:black, linewidth=1, model = topoMatrix),
+        label_scatter=(markersize=8, strokewidth=0.5,))
 
     hidedecorations!(current_axis())
     hidespines!(current_axis())

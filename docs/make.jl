@@ -54,6 +54,7 @@ makedocs(;
             "Visual Data" => "config/visual_data.md",
         ],
         "How To" => [
+            "Butterfly Colormap" => "how_to/position2color.md",
             "Fix Parallel Coordinates Plot" => "how_to/fix_pcp.md",
             "Generate a Timeexpanded Designmatrix" => "how_to/gen_te_designmatrix.md",
             "Hide Axis Spines and Decorations" => "how_to/hide_deco.md",
