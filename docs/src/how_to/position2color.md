@@ -1,10 +1,11 @@
-# [Change Butterfly Channel Position Color](@id ht_mvf)
+# [Change Butterfly Channel Position Color](@id ht_p2c)
 
 In this section we discuss how users are able change the position to colorscale of the legendtopo in the butterfly plot.
 
 ```@example main
 using UnfoldMakie
 using CairoMakie
+using DataFramesMeta
 ```
 
 By default the plot looks like this:
