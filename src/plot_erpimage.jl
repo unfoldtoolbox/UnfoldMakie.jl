@@ -36,9 +36,9 @@ Indicating whether the plot should add a line plot below the ERP image, showing 
 ## Return Value:
 The input `f`
 """
-plot_erpimage(plotData::Matrix{Real},config::PlotConfig,kwargs...) =  plot_erpimage!(Figure(), plotData, config;kwargs...)
-plot_erpimage(plotData::Matrix{Real};kwargs...) = plot_erpimage(plotData,PlotConfig(:erpimage);kwargs...)
-function plot_erpimage!(f::Union{GridPosition, Figure}, plotData::Matrix{Float64},config::PlotConfig;kwargs...)
+plot_erpimage(plotData::Matrix{<:Real},config::PlotConfig,kwargs...) =  plot_erpimage!(Figure(), plotData, config;kwargs...)
+plot_erpimage(plotData::Matrix{<:Real};kwargs...) = plot_erpimage(plotData,PlotConfig(:erpimage);kwargs...)
+function plot_erpimage!(f::Union{GridPosition, Figure}, plotData::Matrix{<:Real},config::PlotConfig;kwargs...)
     config_kwargs!(config;kwargs...)
 
     ax = Axis(f[1:4,1]; config.axisData...)
