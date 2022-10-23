@@ -11,7 +11,7 @@ Plot a designmatrix.
 - `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
 - `config::PlotConfig`: (optional) Instance of PlotConfig being applied to the visualization.
 
-## Extra Data Behavior (...;setExtraData=(;[key]=value))
+## Extra Data Behavior (...;setExtraValues=(;[key]=value))
 `standardizeData`:
 
 Default : `true`

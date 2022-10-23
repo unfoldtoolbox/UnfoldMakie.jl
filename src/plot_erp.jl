@@ -12,7 +12,7 @@ Plot an ERP plot.
 - `plotData::DataFrame`: Data for the line plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `kwargs...`: Additional styling behavior. Often used: `plot_erp(df;setMappingValues=(;color=:coefname,col=:conditionA))`
-## Extra Data Behavior (...;setExtraData=(;[key]=value)):
+## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
 
 `categoricalColor`:
 
