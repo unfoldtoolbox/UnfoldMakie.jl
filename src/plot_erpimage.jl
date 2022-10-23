@@ -12,7 +12,7 @@ Plot an ERP image.
 - `plotData::Matrix{Float64}`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
         
-## Extra Data Behavior (...;setExtraData=(;[key]=value)):
+## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
 `erpBlur`:
 
 Default : `10`

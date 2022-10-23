@@ -17,7 +17,7 @@ Plot a topo plot.
 - `positions::Vector{Point{2, Float32}}=nothing`: positions used if `plotData` is no DataFrame. If this is the case and `positions=nothing` then positions is generated from `labels`.
 - `labels::Vector{String}=nothing`: labels used if `plotData` is no DataFrame.
 
-## Extra Data Behavior (...;setExtraData=(;[key]=value)):
+## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
 None
 
 ## Return Value:
