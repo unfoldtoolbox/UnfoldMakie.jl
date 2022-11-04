@@ -6,6 +6,8 @@ using AlgebraOfGraphics
 using Unfold
 using Colors
 using ColorSchemes
+using TopoPlots
+using ColorTypes
 
 include("example_data.jl")
 
@@ -16,6 +18,7 @@ include("plot_designmatrix.jl")
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")
+include("plot_circulareegtopoplot.jl")
 
 include("layout_helper.jl")
 include("eeg_positions.jl")
@@ -36,5 +39,7 @@ export plot_parallelcoordinates
 export plot_parallelcoordinates!
 export plot_butterfly
 export plot_butterfly!
+export plot_circulareegtopoplot
+export plot_circulareegtopoplot!
 
 end
