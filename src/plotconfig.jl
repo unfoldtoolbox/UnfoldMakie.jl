@@ -14,6 +14,7 @@ This struct is used as the configuration and simple plot method for an UnfoldMak
 - `:design`: Designmatrix
 - `:topo`: Topo Plot
 - `:paraCoord`: Parallel Coordinates Plot
+- `:circeegtopo`: EEG Topo Plot for data with a circular predictor
 
 ## Attributes
 
@@ -44,6 +45,7 @@ Called functions per `<plotname>`:
 - `:design` -> `plot_designmatrix(...)`
 - `:topo` -> `plot_topoplot(...)`
 - `:paraCoord` -> `plot_parallelcoordinates(...)`
+- `:circeegtopo` -> `plot_circulareegtopoplot(...)`
 
 Following the bang convention, use this to exectute the !-version of each function respectively:
 
@@ -86,7 +88,7 @@ mutable struct PlotConfig
     # removes all variables from mappingData which aren't columns in input plotData
     resolveMappings::Function
 
-    #"plot types: :line, :design, :topo, :butterfly, :erp, :paracoord"
+    #"plot types: :line, :design, :topo, :butterfly, :erp, :paracoord, :circeegtopo"
      
 
         # removes all varaibles from mappingData which aren't columns in input plotData
@@ -118,6 +120,9 @@ function PlotConfig()# defaults
                 pc_top_padding = 26,
                 pc_bottom_padding = 16,
                 pc_tick_label_size = 14,
+                # circular eeg topoplot vars
+                topoplotLabels = [],
+                predictorBounds = [0,360],
             )
             this.layoutData = (;
                 showLegend=true,
@@ -332,7 +337,28 @@ end
             )
             return this
         end
+        function PlotConfig(T::Val{:circeegtopo})
+            this = PlotConfig()
+            this.plotType =  valType_to_symbol(T)
 
+            this.setExtraValues!(
+                topoplotLabels = [["s1","s2"],["s1","s2"],["s1","s2"],["s1","s2"],["s1","s2"],["s1","s2"]],
+                predictorBounds = [0,360]
+            )
+            this.setLayoutValues!(
+                hidespines = (),
+                hidedecorations = (),
+                showLegend=false
+            )
+            this.setColorbarValues!(
+                label = "Voltage [µV]",
+                colormap = Reverse(:RdBu)
+            )
+            this.setAxisValues!(
+                label = "incoming\nangle",
+                backgroundcolor = RGB(0.98, 0.98, 0.98)
+            )
+        end
 function resolveMappings(plotData,mappingData)
     function isColumn(col)
         string(col) ∈ names(plotData)
