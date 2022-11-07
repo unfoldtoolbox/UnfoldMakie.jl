@@ -4,13 +4,26 @@ tempConfig = PlotConfig(:circeegtopo)
 #plotData consists of the plot's data in index 1 and 2 and index 3 being the predictor values
 plot_circulareegtopoplot(plotData, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = config.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, config;kwargs...)
 plot_circulareegtopoplot(plotData;kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = tempConfig.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, tempConfig;kwargs...)
-function plot_circulareegtopoplot!(fig, plotData, config::PlotConfig;kwargs...)
-    # fig could also be of type GridLayout or GridPosition which is a child of Figure
-    f = fig
-    while typeof(f) != Figure
-        f = f.parent
+function plot_circulareegtopoplot!(f_in, plotData, config::PlotConfig;kwargs...)
+
+    # notice that this method handles cases in which f_in is of type Figure, GridLayout, GridPosition, and GridSubposition
+    f_in_pos = f_in
+    nestedPositions = DataStructures.Stack{Array{Int}}()
+    while(typeof(f_in_pos) == GridSubposition)
+        nestedPositions = DataStructures.push!(nestedPositions,[f_in_pos.rows,f_in_pos.cols])
+        f_in_pos = f_in_pos.parent
     end
-    resolution = f.scene.px_area.val.widths.data
+
+    f = (typeof(f_in_pos) == GridPosition) ? f_in_pos.layout.parent[f_in_pos.span.rows,f_in_pos.span.cols] = GridLayout() : f_in_pos
+    while(!isempty(nestedPositions))
+        index = DataStructures.pop!(nestedPositions)
+        f = f[index[1],index[2]] = GridLayout()
+    end
+
+    # f could also be of type GridLayout or GridPosition
+    sugbboxval = (typeof(f) == Figure) ? f.layout.layoutobservables.suggestedbbox.val : f.layoutobservables.suggestedbbox.val
+    origin = sugbboxval.origin
+    widths = sugbboxval.widths
     
     # moving the values of the predictor to a different array to perform boolean queries on them
     predictorValues = plotData[2]
@@ -31,12 +44,20 @@ function plot_circulareegtopoplot!(fig, plotData, config::PlotConfig;kwargs...)
         error("plotData[1] and config.extraData.topoplotLabels have to be of the same size")
     end
 
-    plotCircularAxis(f, config.extraData.predictorBounds,config.axisData.label, config.axisData.backgroundcolor)
+    plotCircularAxis(f, origin, widths, config.extraData.predictorBounds,config.axisData.label, config.axisData.backgroundcolor)
 
     min, max = calculateGlobalMaxValues(plotData[1])
 
-    plotTopoPlots(f, resolution, config.axisData.backgroundcolor,plotData[1], config.extraData.topoplotLabels, predictorValues, config.extraData.predictorBounds, min, max)
-    Colorbar(f, bbox = BBox(resolution[1]*0.8,resolution[1]*0.9,resolution[2]*0.05,resolution[2]*0.2), colormap = config.colorbarData.colormap, colorrange=(min, max), label = config.colorbarData.label)
+    # bboxes cannot be applied to GridLayout or GridPosition objects, only to their parent Figure object
+    fig = f
+    # GridLayout and GridPosition can be subchildren of figures
+    while typeof(fig) != Figure
+        fig = fig.parent
+    end
+
+    plotTopoPlots(f, fig, origin, widths, config.axisData.backgroundcolor,plotData[1], config.extraData.topoplotLabels, predictorValues, config.extraData.predictorBounds, min, max)
+    origin[1]*0.8,(origin[1] + widths[1])*0.9,origin[2]*0.05,(origin[2]+widths[2])*0.2
+    Colorbar(fig, bbox = BBox((origin[1]+widths[1])*0.85,(origin[1]+widths[1])*0.95,(origin[2]+widths[2])*0.06,(origin[2]+widths[2])*0.25), colormap = config.colorbarData.colormap, colorrange=(min, max), label = config.colorbarData.label)
     
     applyLayoutSettings(config; fig=f)
     # set the scene's background color according to config
@@ -58,14 +79,16 @@ function calculateGlobalMaxValues(plotData)
     return (-globalMaxVal,globalMaxVal)
 end
 
-function plotCircularAxis(f, predictorBounds, label, bgcolor)
+function plotCircularAxis(f, origin, widths, predictorBounds, label, bgcolor)
     # the axis position is always the middle of the screen (means it uses the GridLayout's full size)
-    circleAxis = Axis(f[1:f.layout.size[1],1:f.layout.size[2]], aspect = 1, backgroundcolor = bgcolor)
+    circleAxis = typeof(f) == Figure ? Axis(f[1:f.layout.size[1],1:f.layout.size[2]], aspect = 1, backgroundcolor = bgcolor) : Axis(f[1,1], aspect = 1, backgroundcolor = bgcolor)
     xlims!(-9,9)
     ylims!(-9,9)
     hidedecorations!(circleAxis)
     hidespines!(circleAxis)
     lines!(circleAxis, 3 * cos.(LinRange(0,2*pi,500)), 3 * sin.(LinRange(0,2*pi,500)), color = (:black, 0.5),linewidth = 3)
+
+    minsize = minimum([origin[1]+widths[1],origin[2]+widths[2]])
 
     # labels and label lines for the circle
     circlepoints_lines = [(3.2 * cos(a), 3.2 * sin(a)) for a in LinRange(0, 2pi, 5)[1:end-1]]
@@ -76,15 +99,15 @@ function plotCircularAxis(f, predictorBounds, label, bgcolor)
         text = ["_","_","_","_"],
         rotation = LinRange(0, 2pi, 5)[1:end-1],
         align = (:right, :baseline),
-        textsize = 30
+        textsize = round(minsize*0.03)
     )
     text!(
         circlepoints_labels,
         text = calculateAxisLabels(predictorBounds),
         align = (:center, :center),
-        textsize = 30
+        textsize = round(minsize*0.03)
     )
-    text!(circleAxis, 0, 0, text = label, align = (:center, :center),textsize = 40)
+    text!(circleAxis, 0, 0, text = label, align = (:center, :center),textsize = round(minsize*0.04))
 end
 
 # four labels around the circle, middle values are the 0.25, 0.5, and 0.75 quantiles
@@ -94,41 +117,44 @@ function calculateAxisLabels(predictorBounds)
     return [string(trunc(Int,predictorBounds[1])), string(trunc(Int,nonboundlabels[1])), string(trunc(Int,nonboundlabels[2]), "   "), string(trunc(Int,nonboundlabels[3]))]
 end
 
-function plotTopoPlots(f, configResolution, configBackgroundColor, data, topoplotLabels, predictorValues, predictorBounds, globalmin, globalmax)
+function plotTopoPlots(f, fig, origin, widths, configBackgroundColor, data, topoplotLabels, predictorValues, predictorBounds, globalmin, globalmax)
     for (index, value) in enumerate(data)
         datapoints, positions = value
-        eegaxis = Axis(f, bbox = calculateBBoxCoordiantes(configResolution,predictorValues[index],predictorBounds), backgroundcolor = configBackgroundColor)
+        bbox = calculateBBox(origin, widths, predictorValues[index],predictorBounds)
+        eegaxis = Axis(fig, bbox = bbox, backgroundcolor = configBackgroundColor)
         hidedecorations!(eegaxis)
         hidespines!(eegaxis)
         TopoPlots.eeg_topoplot!(datapoints[:, 340, 1], eegaxis, topoplotLabels[index]; positions=positions, colorrange = (globalmin, globalmax))
     end
 end
 
-function calculateBBoxCoordiantes(configResolution, predictorValue, bounds)
-    canvasResolution = minimum(configResolution)
-    percentage = (predictorValue-bounds[1])/(bounds[2]-bounds[1])
-    radius = (canvasResolution * 0.7) / 2
-    sizeOfBBox = canvasResolution / 5
+function calculateBBox(origin, widths, predictorValue, bounds)
+    minwidth = minimum(widths)
+    predictorRatio = (predictorValue-bounds[1])/(bounds[2]-bounds[1])
+    radius = (minwidth * 0.7) / 2
+    sizeOfBBox = minwidth / 5
 
     # the middle point of the circle for the topoplot positions
     # has to be moved a bit into the direction of the longer axis
     # to be centered on a scene that's not shaped like a square
-    resShift = [(configResolution[1] - configResolution[2]) / 2, (configResolution[2] - configResolution[1]) / 2]
+    resShift = [((origin[1] + widths[1]) - widths[1]) / 2, ((origin[2] + widths[2]) - widths[2]) / 2]
     resShift[resShift .< 0] .= 0
-    x = radius*cos(percentage*2*pi) + resShift[1]
-    y = radius*sin(percentage*2*pi) + resShift[2]
+
+    x = radius * cos(predictorRatio * 2 * pi) + resShift[1]
+    y = radius * sin(predictorRatio * 2 * pi) + resShift[2]
     
-    return BBox(canvasResolution/2-sizeOfBBox/2 + x, canvasResolution/2+sizeOfBBox-sizeOfBBox/2 + x, canvasResolution/2-sizeOfBBox/2 + y, canvasResolution/2+sizeOfBBox-sizeOfBBox/2 + y)
+    return BBox((origin[1]+widths[1]) / 2 - sizeOfBBox / 2 + x, (origin[1]+widths[1]) / 2 + sizeOfBBox - sizeOfBBox / 2 + x, (origin[2]+widths[2]) / 2 - sizeOfBBox / 2 + y, (origin[2]+widths[2]) / 2 + sizeOfBBox - sizeOfBBox / 2 + y)
 end
 
 
-# uncomment this to try out the functions
+# uncomment everything below this to try out the code
 #data = TopoPlots.example_data()
 #labels = ["s$i" for i in 1:size(data, 1)]
 
-#f = Figure(resolution = (700,1500))
+#f = Figure(resolution = (1200,600))
 #Axis(f[1,1])
-#Axis(f[1,3])
-#g = f[1,2] = GridLayout()
-#plot_circulareegtopoplot!(g,([data,data,data,data,data,data],[0,50,80,120,180,210]),tempConfig)
+#Axis(f[1,2])
+
+#plot_circulareegtopoplot!(f[1,2:3][2,2],([data,data,data,data,data,data],[0,50,80,120,180,210]),tempConfig)
+
 #f

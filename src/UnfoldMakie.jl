@@ -8,6 +8,7 @@ using Colors
 using ColorSchemes
 using TopoPlots
 using ColorTypes
+using DataStructures
 
 include("example_data.jl")
 
