@@ -1,10 +1,41 @@
 # needing a config object in method defintion for the case where config is not given
 tempConfig = PlotConfig(:circeegtopo)
 
-#plotData consists of the plot's data in index 1 and 2 and index 3 being the predictor values
-plot_circulareegtopoplot(plotData, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = config.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, config;kwargs...)
-plot_circulareegtopoplot(plotData;kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = tempConfig.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, tempConfig;kwargs...)
-function plot_circulareegtopoplot!(f_in, plotData, config::PlotConfig;kwargs...)
+"""
+    function plot_circulareegtopoplot(plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}}, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = config.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, config;kwargs...)
+    function plot_circulareegtopoplot(plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}};kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = tempConfig.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, tempConfig;kwargs...)
+    function plot_circulareegtopoplot!(f_in, plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}}, config::PlotConfig;kwargs...)
+
+        
+
+Plot a circular EEG topoplot.
+## Arguments:
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}}`: Vector of data for each topoplot used in this plot, and the predictor values. Each topoplot data element in that vecotr is a vector of an nChannels x 1 vector containing yhat values, and an nchannels x 1 vector containing points that represent the electrode's location on the topoplot
+- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `kwargs...`: Additional styling behavior.
+## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
+topoplotLabel = ["s1","s2"],
+                predictorBounds = [0,360],
+`topoplotLabel`:
+
+Default : `["s1","s2"]
+
+Channel labels of the topoplot
+
+`predictorBounds`:
+
+Default: `[0,360]`
+
+The bounds of the predictor. This is relevant for the axis labels.
+
+## Return Value:
+The input `f`
+
+"""
+plot_circulareegtopoplot(plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}}, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = config.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, config;kwargs...)
+plot_circulareegtopoplot(plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}};kwargs...) = plot_circulareegtopoplot!(Figure(backgroundcolor = tempConfig.axisData.backgroundcolor, resolution = (1000, 1000)), plotData, tempConfig;kwargs...)
+function plot_circulareegtopoplot!(f_in, plotData::Tuple{Vector{Tuple{Vector{Number}, Vector{Point{2, Number}}}}, Vector{Number}}, config::PlotConfig;kwargs...)
 
     # notice that this method handles cases in which f_in is of type Figure, GridLayout, GridPosition, and GridSubposition
     f_in_pos = f_in
@@ -38,10 +69,7 @@ function plot_circulareegtopoplot!(f_in, plotData, config::PlotConfig;kwargs...)
         error("all values in plotData[2] have to be within the config.extraData.predictorBounds range")
     end
     if(length(plotData[1]) != length(plotData[2]))
-        error("plotData and plotData[2] have to be of the same size")
-    end
-    if(length(plotData[1]) != length(config.extraData.topoplotLabels))
-        error("plotData[1] and config.extraData.topoplotLabels have to be of the same size")
+        error("plotData[1] and plotData[2] have to be of the same length")
     end
 
     plotCircularAxis(f, origin, widths, config.extraData.predictorBounds,config.axisData.label, config.axisData.backgroundcolor)
@@ -55,8 +83,10 @@ function plot_circulareegtopoplot!(f_in, plotData, config::PlotConfig;kwargs...)
         fig = fig.parent
     end
 
-    plotTopoPlots(f, fig, origin, widths, config.axisData.backgroundcolor,plotData[1], config.extraData.topoplotLabels, predictorValues, config.extraData.predictorBounds, min, max)
-    origin[1]*0.8,(origin[1] + widths[1])*0.9,origin[2]*0.05,(origin[2]+widths[2])*0.2
+    plotTopoPlots(f, fig, origin, widths, config.axisData.backgroundcolor,plotData[1], config.extraData.topoplotLabel, predictorValues, config.extraData.predictorBounds, min, max)
+    # setting the colorbar to the bottom right of the box.
+    # Relative values got determined by checking what subjectively
+    # looks best
     Colorbar(fig, bbox = BBox((origin[1]+widths[1])*0.85,(origin[1]+widths[1])*0.95,(origin[2]+widths[2])*0.06,(origin[2]+widths[2])*0.25), colormap = config.colorbarData.colormap, colorrange=(min, max), label = config.colorbarData.label)
     
     applyLayoutSettings(config; fig=f)
@@ -69,9 +99,8 @@ function calculateGlobalMaxValues(plotData)
     globalMaxVal = 0
 
     for (index, value) in enumerate(plotData)
-        datapoints = value[1]
-        datapoints1d = vec(copy(datapoints))
-        localMaxVal = maximum(abs.(quantile!(datapoints1d, [0.01,0.99])))
+        datapoints = copy(value[1])
+        localMaxVal = maximum(abs.(quantile!(datapoints, [0.01,0.99])))
         if(localMaxVal > globalMaxVal)
             globalMaxVal = localMaxVal
         end
@@ -80,7 +109,8 @@ function calculateGlobalMaxValues(plotData)
 end
 
 function plotCircularAxis(f, origin, widths, predictorBounds, label, bgcolor)
-    # the axis position is always the middle of the screen (means it uses the GridLayout's full size)
+    # the axis position is always the middle of the
+    # screen (means it uses the GridLayout's full size)
     circleAxis = typeof(f) == Figure ? Axis(f[1:f.layout.size[1],1:f.layout.size[2]], aspect = 1, backgroundcolor = bgcolor) : Axis(f[1,1], aspect = 1, backgroundcolor = bgcolor)
     xlims!(-9,9)
     ylims!(-9,9)
@@ -113,18 +143,19 @@ end
 # four labels around the circle, middle values are the 0.25, 0.5, and 0.75 quantiles
 function calculateAxisLabels(predictorBounds)
     nonboundlabels = quantile(predictorBounds,[0.25,0.5,0.75])
-    # third label is on the left and it tends to cover the circle so added some blank spaces to tackle that
+    # third label is on the left and it tends to cover the circle
+    # so added some blank spaces to tackle that
     return [string(trunc(Int,predictorBounds[1])), string(trunc(Int,nonboundlabels[1])), string(trunc(Int,nonboundlabels[2]), "   "), string(trunc(Int,nonboundlabels[3]))]
 end
 
-function plotTopoPlots(f, fig, origin, widths, configBackgroundColor, data, topoplotLabels, predictorValues, predictorBounds, globalmin, globalmax)
+function plotTopoPlots(f, fig, origin, widths, configBackgroundColor, data, topoplotLabel, predictorValues, predictorBounds, globalmin, globalmax)
     for (index, value) in enumerate(data)
         datapoints, positions = value
         bbox = calculateBBox(origin, widths, predictorValues[index],predictorBounds)
         eegaxis = Axis(fig, bbox = bbox, backgroundcolor = configBackgroundColor)
         hidedecorations!(eegaxis)
         hidespines!(eegaxis)
-        TopoPlots.eeg_topoplot!(datapoints[:, 340, 1], eegaxis, topoplotLabels[index]; positions=positions, colorrange = (globalmin, globalmax))
+        TopoPlots.eeg_topoplot!(datapoints, eegaxis, topoplotLabel; positions=positions, colorrange = (globalmin, globalmax))
     end
 end
 
@@ -143,18 +174,16 @@ function calculateBBox(origin, widths, predictorValue, bounds)
     x = radius * cos(predictorRatio * 2 * pi) + resShift[1]
     y = radius * sin(predictorRatio * 2 * pi) + resShift[2]
     
+    # notice that the bbox defines the bottom left and the top
+    # right point of the axis. This means that you have to 
+    # move the bbox to the bottom left by sizeofbbox/2 to move
+    # the center of the axis to a point 
     return BBox((origin[1]+widths[1]) / 2 - sizeOfBBox / 2 + x, (origin[1]+widths[1]) / 2 + sizeOfBBox - sizeOfBBox / 2 + x, (origin[2]+widths[2]) / 2 - sizeOfBBox / 2 + y, (origin[2]+widths[2]) / 2 + sizeOfBBox - sizeOfBBox / 2 + y)
 end
 
 
 # uncomment everything below this to try out the code
-#data = TopoPlots.example_data()
-#labels = ["s$i" for i in 1:size(data, 1)]
-
-#f = Figure(resolution = (1200,600))
-#Axis(f[1,1])
-#Axis(f[1,2])
-
-#plot_circulareegtopoplot!(f[1,2:3][2,2],([data,data,data,data,data,data],[0,50,80,120,180,210]),tempConfig)
-
+#data = (TopoPlots.example_data()[1][:, 340, 1],data[2])
+#f = Figure(resolution = (1000,1000))
+#plot_circulareegtopoplot!(f,([data,data,data,data,data,data],[0,50,80,120,180,210]),tempConfig)
 #f
