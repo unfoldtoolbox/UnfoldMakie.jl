@@ -342,21 +342,21 @@ end
             this.plotType =  valType_to_symbol(T)
 
             this.setExtraValues!(
-                topoplotLabels = [["s1","s2"],["s1","s2"],["s1","s2"],["s1","s2"],["s1","s2"],["s1","s2"]],
-                predictorBounds = [0,360]
+                topoplotLabel = ["s1","s2"],
+                predictorBounds = [0,360],
             )
             this.setLayoutValues!(
                 hidespines = (),
                 hidedecorations = (),
-                showLegend=false
+                showLegend=false,
             )
             this.setColorbarValues!(
                 label = "Voltage [µV]",
-                colormap = Reverse(:RdBu)
+                colormap = Reverse(:RdBu),
             )
             this.setAxisValues!(
                 label = "incoming\nangle",
-                backgroundcolor = RGB(0.98, 0.98, 0.98)
+                backgroundcolor = RGB(0.98, 0.98, 0.98),
             )
         end
 function resolveMappings(plotData,mappingData)
