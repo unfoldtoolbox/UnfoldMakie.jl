@@ -1,6 +1,6 @@
-using UnfoldMakie
 using Test
+include("../src/UnfoldMakie.jl")
 
 @testset "UnfoldMakie.jl" begin
-    # Write your tests here.
+    include("test_plot_circulareegtopoplot.jl")
 end
