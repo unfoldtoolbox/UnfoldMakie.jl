@@ -1,6 +1,9 @@
 
 using GeometryBasics
 using Makie
+using Colors
+using ColorSchemes
+using ColorTypes
 
 """
     PlotConfig(<plotname>)
