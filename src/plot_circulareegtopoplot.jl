@@ -155,7 +155,7 @@ function plotTopoPlots(f, fig, origin, widths, configBackgroundColor, data, posi
         eegaxis = Axis(fig, bbox = bbox, backgroundcolor = configBackgroundColor)
         hidedecorations!(eegaxis)
         hidespines!(eegaxis)
-        TopoPlots.eeg_topoplot!(datapoints, eegaxis, topoplotLabel; positions=positions, colorrange = (globalmin, globalmax))
+        TopoPlots.eeg_topoplot!(datapoints, eegaxis, topoplotLabel; positions=positions, colorrange = (globalmin, globalmax), enlarge = 1)
     end
 end
 
