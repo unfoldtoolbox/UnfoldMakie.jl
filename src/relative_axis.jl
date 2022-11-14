@@ -1,0 +1,82 @@
+
+"""
+ax = RelativeAxis(figlike,p::NTuple{4,Float64}; kwargs...)
+
+Returns an axis which's position is relative to a GridLayout Element (via BBox) and not relative to the Scene (default Axis(...,bbox=BBox()) behavior)
+
+p::NTuple{4,Float64}: Give the relative position to the GridPosition, left:right; bottom:up, typical numbers betwen 0 and 1. E.g. (0.25,0.75,0.25,0.75) would center an Axis inside that GridPosition
+
+kwargs... are pasted into Axis
+
+f = Figure()
+ax = RelativeAxis(f[1,2],(0.25,0.75,0.25,0.75))	 # returns Axis centered within f[1,2]
+
+"""
+struct RelativeAxis
+    layoutobservables::GridLayoutBase.LayoutObservables{GridLayout}
+    relative_bbox::NTuple
+end
+
+function RelativeAxis(
+    figlike::Union{GridPosition, GridSubposition}, 
+    rel::NTuple{4,Float64};
+    kwargs...)
+
+    
+    # it's all fake!
+    layoutobservables = GridLayoutBase.LayoutObservables(
+        Observable(nothing),
+        Observable(nothing),
+        Observable(true), 
+        Observable(true), 	
+        Observable(true),
+        Observable(true),
+        Observable(Inside()), 
+        suggestedbbox =nothing)
+
+    # generate placeholder container
+    r = RelativeAxis(layoutobservables,rel)
+
+    # asign it to GridLayout to get suggestedbbox
+    figlike[] =r
+
+    # lift bbox to make it relative
+    bbox = lift(r.layoutobservables.suggestedbbox,r.relative_bbox) do old,rel
+        return rel_to_abs_bbox(old,rel)
+    end
+    
+    # generate axis
+    
+    ax = Axis(get_figure(figlike); bbox = bbox, kwargs...)
+    return ax
+    
+end
+
+get_figure(f::GridPosition) = f.layout.parent
+get_figure(f::GridSubposition) = get_figure(f.parent)
+
+"""
+rel_to_abs_bbox(org,rel)
+
+Takes a rectangle `org` and applies the relative transformation tuple `rel`
+Returns a Makie.BBox
+
+"""
+function rel_to_abs_bbox(org,rel)
+# org => suggestedbbox of parent Grid
+# rel => BBox input between 0 / 1
+	
+	(org_left,org_right,org_bottom,org_top) = rel
+	org_width = org_right - org_left
+	org_heigth = org_top - org_bottom
+	
+	new_width = org.widths[1] .* org_width
+	new_heigth = org.widths[2] .* org_heigth
+
+	new_left = org.origin[1] + org.widths[1] * org_left
+	new_bottom = org.origin[2] + org.widths[2] * org_bottom
+	tup = new_left,new_left+new_width,new_bottom,new_bottom+new_heigth
+	
+	
+	return BBox(tup...)
+end;

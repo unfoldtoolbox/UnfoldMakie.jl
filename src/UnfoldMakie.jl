@@ -24,6 +24,7 @@ include("plot_circulareegtopoplot.jl")
 include("layout_helper.jl")
 include("eeg_positions.jl")
 include("topo_color.jl")
+include("relative_axis.jl")
 
 export PlotConfig
 
