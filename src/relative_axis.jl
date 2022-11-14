@@ -1,4 +1,5 @@
 
+
 """
 ax = RelativeAxis(figlike,p::NTuple{4,Float64}; kwargs...)
 
@@ -17,8 +18,9 @@ struct RelativeAxis
     relative_bbox::NTuple
 end
 
+
 function RelativeAxis(
-    figlike::Union{GridPosition, GridSubposition}, 
+    figlike::Union{GridPosition, GridSubposition,Axis}, 
     rel::NTuple{4,Float64};
     kwargs...)
 
@@ -36,12 +38,10 @@ function RelativeAxis(
 
     # generate placeholder container
     r = RelativeAxis(layoutobservables,rel)
-
-    # asign it to GridLayout to get suggestedbbox
-    figlike[] =r
-
     # lift bbox to make it relative
-    bbox = lift(r.layoutobservables.suggestedbbox,r.relative_bbox) do old,rel
+    
+    
+    bbox = lift(suggestedbbox(figlike,r),r.relative_bbox) do old,rel
         return rel_to_abs_bbox(old,rel)
     end
     
@@ -51,9 +51,24 @@ function RelativeAxis(
     return ax
     
 end
+function suggestedbbox(figlike::Union{GridPosition, GridSubposition},r::RelativeAxis)
+    # asign it to GridLayout to get suggestedbbox
+    figlike[] =r
+    return suggestedbboxobservable(r)
+
+end
+function suggestedbbox(figlike::Axis, r::RelativeAxis)
+    # need to use px_area to follow the aspect ratio of an axis
+    return figlike.scene.px_area
+end
+		
+
+
 
 get_figure(f::GridPosition) = f.layout.parent
 get_figure(f::GridSubposition) = get_figure(f.parent)
+get_figure(f::Axis) = f.parent
+
 
 """
 rel_to_abs_bbox(org,rel)

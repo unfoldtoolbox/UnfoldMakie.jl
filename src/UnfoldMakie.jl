@@ -9,7 +9,7 @@ using ColorSchemes
 using TopoPlots
 using ColorTypes
 using DataStructures
-
+using GridLayoutBase # for relative_axis
 include("example_data.jl")
 
 include("plotconfig.jl")
