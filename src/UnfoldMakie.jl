@@ -37,4 +37,5 @@ export plot_parallelcoordinates!
 export plot_butterfly
 export plot_butterfly!
 
+export nonnumeric
 end
