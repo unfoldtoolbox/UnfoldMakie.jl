@@ -28,9 +28,11 @@ plot_topoplot(plotData::Union{DataFrame, Vector{Float32}};kwargs...) = plot_topo
 plot_topoplot!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_topoplot!(f,plotData, PlotConfig(:para);kwargs...)
 function plot_topoplot!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
     axis = Axis(f[1, 1]; config.axisData...)
-
+    
+    config_kwargs!(config;kwargs...)
     # use columns when we have a DataFrame
     if plotData isa DataFrame
+
         config.mappingData = resolveMappings(plotData,config.mappingData)
 
         positions = getTopoPositions(plotData, config)
