@@ -44,4 +44,5 @@ export plot_butterfly!
 export plot_circulareegtopoplot
 export plot_circulareegtopoplot!
 
+export nonnumeric
 end
