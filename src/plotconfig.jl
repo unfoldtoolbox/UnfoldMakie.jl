@@ -232,9 +232,36 @@ end
 
  PlotConfig(T::Symbol) = PlotConfig(Val{T}())
         
+
+ function PlotConfig(T::Val{:circeegtopo})
+    this = PlotConfig(:topo)
+    this.plotType =  valType_to_symbol(T)
+
+    this.setExtraValues!(
+        predictorBounds = [0,360],
+    )
+    this.setLayoutValues!(
+        showLegend=false,
+    )
+    this.setColorbarValues!(
+        label = "Voltage [µV]",
+        colormap = Reverse(:RdBu),
+    )
+    this.setMappingValues!(
+        x = (:nothing)
+    )
+
+    this.setAxisValues!(
+        label = "",
+        #backgroundcolor = RGB(0.98, 0.98, 0.98),
+    )
+    return this
+end
 function PlotConfig(T::Val{:topo})
             this = PlotConfig()
             this.plotType = valType_to_symbol(T)
+
+            
             this.setLayoutValues!(
                 showLegend= this.plotType == :topo,
                 xlabelFromMapping=nothing,
@@ -274,11 +301,7 @@ function PlotConfig(T::Val{:design})
             )
             return this
         end
-function PlotConfig(T::Val{:erp})
-        this = PlotConfig()
-        this.plotType =  valType_to_symbol(T)
-    return this
-end
+
 function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this = PlotConfig()
             this.plotType =  valType_to_symbol(T)
@@ -340,28 +363,7 @@ end
             )
             return this
         end
-        function PlotConfig(T::Val{:circeegtopo})
-            this = PlotConfig()
-            this.plotType =  valType_to_symbol(T)
 
-            this.setExtraValues!(
-                topoplotLabel = ["s1","s2"],
-                predictorBounds = [0,360],
-            )
-            this.setLayoutValues!(
-                hidespines = (),
-                hidedecorations = (),
-                showLegend=false,
-            )
-            this.setColorbarValues!(
-                label = "Voltage [µV]",
-                colormap = Reverse(:RdBu),
-            )
-            this.setAxisValues!(
-                label = "incoming\nangle",
-                backgroundcolor = RGB(0.98, 0.98, 0.98),
-            )
-        end
 function resolveMappings(plotData,mappingData)
     function isColumn(col)
         string(col) ∈ names(plotData)
