@@ -10,8 +10,9 @@ Plot a circular EEG topoplot.
 ## Arguments:
 
 - `figlike::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::DataFrame`: Dataframe with keys for data, :predictor and :position (see mappingData), predictor containing the current predictor value, effect containing a Vector of yhat values (one yhat value per channel), 
+- `plotData::DataFrame`: Dataframe with keys for data (looks for `:topodata, :data, :y,:estimate`, and :position (looks for `:pos, :positions, :position, :topoPositions, :x`), 
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
 - `kwargs...`: Additional styling behavior.
 
 ## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
@@ -23,6 +24,11 @@ Default: `[0,360]`
 The bounds of the predictor. This is relevant for the axis labels.
 
 
+## Axis Data Behavior (...;setAxisValues=(;[key]=value)):
+`label`: default "", the text in the center of the cricle
+## Mapping Data Behavior (...;setMappingValues=(;[key]=value)):
+    See 
+
 
 ## Return Value:
 A figure containing the circular topoplot at given layout position
@@ -31,11 +37,11 @@ A figure containing the circular topoplot at given layout position
 plot_circulareegtopoplot(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData, config;kwargs...)
 plot_circulareegtopoplot(plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData, PlotConfig(:circeegtopo);kwargs...)
 plot_circulareegtopoplot!(f,plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(f, plotData, PlotConfig(:circeegtopo);kwargs...)
-function plot_circulareegtopoplot!(f, plotData::DataFrame, config::PlotConfig;kwargs...)
+function plot_circulareegtopoplot!(f, plotData::DataFrame, config::PlotConfig;predictor=:predictor,kwargs...)
     config_kwargs!(config;kwargs...)
     config.mappingData = resolveMappings(plotData,config.mappingData)
     # moving the values of the predictor to a different array to perform boolean queries on them
-    predictorValues = plotData[:,:predictor]
+    predictorValues = plotData[:,predictor]
 
     if(length(config.extraData.predictorBounds) != 2) 
         error("config.extraData.predictorBounds needs exactly two values")
@@ -57,7 +63,7 @@ function plot_circulareegtopoplot!(f, plotData::DataFrame, config::PlotConfig;kw
 
     plotCircularAxis!(ax,config.extraData.predictorBounds,config.axisData.label)
     limits!(ax,-3.5,3.5,-3.5,3.5)
-    min, max = calculateGlobalMaxValues(plotData[:,config.mappingData.topodata],plotData[:,:predictor])
+    min, max = calculateGlobalMaxValues(plotData[:,config.mappingData.topodata],predictorValues)
     
     positions = getTopoPositions(plotData, config)
     plotTopoPlots!(ax, plotData[:,config.mappingData.topodata], positions, predictorValues, config.extraData.predictorBounds, min, max)
