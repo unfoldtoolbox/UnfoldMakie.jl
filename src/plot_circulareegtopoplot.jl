@@ -1,23 +1,20 @@
 """
-    function plot_circulareegtopoplot(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure) plotData, config;kwargs...)
-    function plot_circulareegtopoplot(plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData, PlotConfig(:circeegtopo);kwargs...)
-    function plot_circulareegtopoplot!(f_in, plotData::DataFrame, config::PlotConfig;kwargs...)
+
+    plot_circulareegtopoplot(plotData::DataFrame, config::PlotConfig;kwargs...) 
+    plot_circulareegtopoplot(plotData::DataFrame;kwargs...)
+    plot_circulareegtopoplot!(figlike, plotData::DataFrame, config::PlotConfig;kwargs...)
 
         
 
 Plot a circular EEG topoplot.
 ## Arguments:
-- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::DataFrame`: Dataframe with keys :predictor, :estimate, and :positions, predictor containing the current predictor value, effect containing a Vector of yhat values (one yhat value per channel), and :channelpositions containing the positions of the channels. Usually each row here has the same value as the values are recorded with the same EEG constellation.
+
+- `figlike::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `plotData::DataFrame`: Dataframe with keys for data, :predictor and :position (see mappingData), predictor containing the current predictor value, effect containing a Vector of yhat values (one yhat value per channel), 
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `kwargs...`: Additional styling behavior.
+
 ## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
-
-`topoplotLabel`:
-
-Default : `["s1","s2"]
-
-Channel labels of the topoplot
 
 `predictorBounds`:
 
