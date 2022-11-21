@@ -6,8 +6,8 @@ using InteractiveUtils
 
 # ╔═╡ a979aa82-4b9d-11ed-1469-978ebad92bc3
 begin
-using Pkg
-Pkg.activate("..")
+    using Pkg
+    Pkg.activate("..")
 end
 
 # ╔═╡ c2e68f1d-23a6-4d8a-bcf2-9ba1620869cf
@@ -29,39 +29,39 @@ using Unfold
 using DataFrames
 
 # ╔═╡ d6afa7aa-eb8a-4a85-b378-37c01408756d
-data,chanlocs = TopoPlots.example_data();
+data, chanlocs = TopoPlots.example_data();
 
 # ╔═╡ b1a9cd37-f22e-471c-bd7f-c0e508d26adc
 begin
-	df = DataFrame(estimate=Float64[],time=[],channel=[],coefname=[],topoPositions=[],se=[])
-	pos = TopoPlots.points2mat(chanlocs)
-for ch = 1:size(data,1)
-	for t = 1:size(data,2)
-		append!(df,DataFrame(estimate=data[ch,t,1],se=data[ch,t,1],time=t,channel=ch,coefname="A",topoPositions=(pos[1,ch],pos[2,ch])))
-		
-		
-	end
-end
-	dftmp = deepcopy(df)
-	dftmp.estimate .= 0.5 .* dftmp.estimate .+ 0.1.*rand(nrow(df)) .- 0.05
-	dftmp.coefname .= "B"
-	df = vcat(df,dftmp)
+    df = DataFrame(estimate=Float64[], time=[], channel=[], coefname=[], topoPositions=[], se=[])
+    pos = TopoPlots.points2mat(chanlocs)
+    for ch = 1:size(data, 1)
+        for t = 1:size(data, 2)
+            append!(df, DataFrame(estimate=data[ch, t, 1], se=data[ch, t, 1], time=t, channel=ch, coefname="A", topoPositions=(pos[1, ch], pos[2, ch])))
+
+
+        end
+    end
+    dftmp = deepcopy(df)
+    dftmp.estimate .= 0.5 .* dftmp.estimate .+ 0.1 .* rand(nrow(df)) .- 0.05
+    dftmp.coefname .= "B"
+    df = vcat(df, dftmp)
 end
 
 # ╔═╡ 5fb731af-d004-4e01-a459-b8ccc5362613
-UnfoldMakie.plot_butterfly(df[df.coefname .=="A",:];setExtraValues=(:topoLegend=>true,),setMappingValues=(:category=>:coefname,))#,topoPositions=chanlocs))
+UnfoldMakie.plot_butterfly(df[df.coefname.=="A", :]; setExtraValues=(:topoLegend => true,), setMappingValues=(:category => :coefname,))#,topoPositions=chanlocs))
 
 # ╔═╡ 3f25224f-e2a2-4df3-9ee5-94c7e5b3760b
-UnfoldMakie.plot_erp(df[df.channel .==32,:])
+UnfoldMakie.plot_erp(df[df.channel.==32, :])
 
 # ╔═╡ 01457325-fde5-4c61-95c7-9467175ef4a7
 
 
 # ╔═╡ 4182b4dc-f6bb-4de2-883e-9db5c5e592b8
-UnfoldMakie.plot_topo(df[(df.time .==230) .&&(df.coefname.=="A"),:])
+UnfoldMakie.plot_topo(df[(df.time.==230).&&(df.coefname.=="A"), :])
 
 # ╔═╡ 3f7decce-5f15-4298-a304-f42967cb0f9b
-UnfoldMakie.plot_paraCoord(df,collect(20:30),setMappingValues=(:category=>:coefname,))
+UnfoldMakie.plot_paraCoord(df, collect(20:30), setMappingValues=(:category => :coefname,))
 
 # ╔═╡ Cell order:
 # ╠═a979aa82-4b9d-11ed-1469-978ebad92bc3

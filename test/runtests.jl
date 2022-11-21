@@ -1,5 +1,5 @@
 using Test
-include("../src/UnfoldMakie.jl")
+include("setup.jl")
 
 @testset "UnfoldMakie.jl" begin
     include("test_plot_circulareegtopoplot.jl")

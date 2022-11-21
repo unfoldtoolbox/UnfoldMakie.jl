@@ -9,6 +9,7 @@ using ColorSchemes
 using TopoPlots
 using ColorTypes
 using DataStructures
+import DataFrames.DataFrame
 
 include("example_data.jl")
 
