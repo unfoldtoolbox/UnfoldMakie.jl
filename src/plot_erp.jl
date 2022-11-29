@@ -167,7 +167,7 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     else
         # normal lineplot draw
         #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
-    @show plotEquation
+    
         drawing = draw!(f_grid,plotEquation;axis=config.axisData)
     end
 
