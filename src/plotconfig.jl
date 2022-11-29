@@ -302,6 +302,14 @@ function PlotConfig(T::Val{:design})
             return this
         end
 
+function PlotConfig(T::Val{:butterfly})
+            this = PlotConfig(:erp)
+            this.plotType =  valType_to_symbol(T)
+            this.setMappingValues!(
+                topoChannels=(:channels, :channel, :topoChannel, :nothing),
+            )
+            return this
+        end        
 function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this = PlotConfig()
             this.plotType =  valType_to_symbol(T)
@@ -317,7 +325,7 @@ function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this.setMappingValues!(
                 topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
                 topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
-                topoChannels=(:channels, :channel, :topoChannel, :nothing),
+
             )
             return this
 end
