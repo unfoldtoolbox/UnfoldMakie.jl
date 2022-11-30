@@ -1,6 +1,6 @@
 @testset "error cases and warns" begin
     
-    let outOfBoundsErr = nothing 
+    @testset "out of error bounds" begin
         testdf = DataFrame(
             effect = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
             predictor = [70,80,400],
@@ -16,7 +16,8 @@
         @test sprint(showerror, outOfBoundsErr) == "all values in the plotData's effect column have to be within the config.extraData.predictorBounds range"
     end
 
-    let tooManyBoundsErr
+    @testset "tooManyBoundsErr" begin
+
         testdf = DataFrame(
             effect = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
             predictor = [70,80,90],
