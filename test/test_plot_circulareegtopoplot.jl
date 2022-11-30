@@ -34,3 +34,25 @@
         @test sprint(showerror, tooManyBoundsErr) == "config.extraData.predictorBounds needs exactly two values"
     end
 end
+
+
+
+@testset "testing calculateGlobalMaxValues" begin
+    # notice: this function uses the 0.01 and the 0.99 quantile
+    @test calculateGlobalMaxValues([[1, 2], [3, 4], [5, 6, 7], [8], [9, 10]]) == (-9.99, 9.99)
+    @test calculateGlobalMaxValues([[-1, -2], [-3, -4], [5, 6, 7], [-8], [9, 10]]) == (-9.99, 9.99)
+end
+
+@testset "testing calculateAxisLabels" begin
+    # notice: this function uses the 0.01 and the 0.99 quantile
+    @test calculateAxisLabels([0, 360]) == ["0", "90", "180   ", "270"]
+    @test calculateAxisLabels([-180, 180]) == ["-180", "-90", "0   ", "90"]
+    @test calculateAxisLabels([0, 100]) == ["0", "25", "50   ", "75"]
+end
+
+@testset "testing calculateBBox" begin
+    @test calculateBBox([0, 0], [1000, 1000], 180, [0, 360]) == BBox(50.0, 250.0, 400.0, 600.0)
+    @test calculateBBox([0, 0], [1000, 1000], -45, [0, 360]) == BBox(647.48737, 847.48737, 152.51262, 352.51262)
+    @test calculateBBox([0, 0], [1000, 1000], -180, [-180, 180]) == BBox(750.0, 950.0, 400.0, 600.0)
+end
+
