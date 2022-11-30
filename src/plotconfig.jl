@@ -1,6 +1,9 @@
 
 using GeometryBasics
 using Makie
+using Colors
+using ColorSchemes
+using ColorTypes
 
 """
     PlotConfig(<plotname>)
@@ -14,6 +17,7 @@ This struct is used as the configuration and simple plot method for an UnfoldMak
 - `:design`: Designmatrix
 - `:topo`: Topo Plot
 - `:paraCoord`: Parallel Coordinates Plot
+- `:circeegtopo`: EEG Topo Plot for data with a circular predictor
 
 ## Attributes
 
@@ -44,6 +48,7 @@ Called functions per `<plotname>`:
 - `:design` -> `plot_designmatrix(...)`
 - `:topo` -> `plot_topoplot(...)`
 - `:paraCoord` -> `plot_parallelcoordinates(...)`
+- `:circeegtopo` -> `plot_circulareegtopoplot(...)`
 
 Following the bang convention, use this to exectute the !-version of each function respectively:
 
@@ -86,7 +91,7 @@ mutable struct PlotConfig
     # removes all variables from mappingData which aren't columns in input plotData
     resolveMappings::Function
 
-    #"plot types: :line, :design, :topo, :butterfly, :erp, :paracoord"
+    #"plot types: :line, :design, :topo, :butterfly, :erp, :paracoord, :circeegtopo"
      
 
         # removes all varaibles from mappingData which aren't columns in input plotData
@@ -118,6 +123,9 @@ function PlotConfig()# defaults
                 pc_top_padding = 26,
                 pc_bottom_padding = 16,
                 pc_tick_label_size = 14,
+                # circular eeg topoplot vars
+                topoplotLabels = [],
+                predictorBounds = [0,360],
             )
             this.layoutData = (;
                 showLegend=true,
@@ -224,9 +232,36 @@ end
 
  PlotConfig(T::Symbol) = PlotConfig(Val{T}())
         
+
+ function PlotConfig(T::Val{:circeegtopo})
+    this = PlotConfig(:topo)
+    this.plotType =  valType_to_symbol(T)
+
+    this.setExtraValues!(
+        predictorBounds = [0,360],
+    )
+    this.setLayoutValues!(
+        showLegend=false,
+    )
+    this.setColorbarValues!(
+        label = "Voltage [µV]",
+        colormap = Reverse(:RdBu),
+    )
+    this.setMappingValues!(
+        x = (:nothing)
+    )
+
+    this.setAxisValues!(
+        label = "",
+        #backgroundcolor = RGB(0.98, 0.98, 0.98),
+    )
+    return this
+end
 function PlotConfig(T::Val{:topo})
             this = PlotConfig()
             this.plotType = valType_to_symbol(T)
+
+            
             this.setLayoutValues!(
                 showLegend= this.plotType == :topo,
                 xlabelFromMapping=nothing,
@@ -266,11 +301,15 @@ function PlotConfig(T::Val{:design})
             )
             return this
         end
-function PlotConfig(T::Val{:erp})
-        this = PlotConfig()
-        this.plotType =  valType_to_symbol(T)
-    return this
-end
+
+function PlotConfig(T::Val{:butterfly})
+            this = PlotConfig(:erp)
+            this.plotType =  valType_to_symbol(T)
+            this.setMappingValues!(
+                topoChannels=(:channels, :channel, :topoChannel, :nothing),
+            )
+            return this
+        end        
 function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this = PlotConfig()
             this.plotType =  valType_to_symbol(T)
@@ -286,7 +325,7 @@ function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
             this.setMappingValues!(
                 topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
                 topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
-                topoChannels=(:channels, :channel, :topoChannel, :nothing),
+
             )
             return this
 end

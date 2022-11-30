@@ -13,7 +13,7 @@ function getTopoPositions(plotData, config)
         plotData.topoPositions = plotData[:, config.mappingData.topoLabels] .|> getLabelPos
         config.setMappingValues!(topoPositions = :topoPositions)
     end
-
+    
     unique(plotData[:, config.mappingData.topoPositions] .|> (p -> Point2f(p[1], p[2])))
 end
 
