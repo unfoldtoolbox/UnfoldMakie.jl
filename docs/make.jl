@@ -11,10 +11,13 @@ using DataFramesMeta
 using Literate
 using Glob
 
-# literate
-#GENERATED = joinpath(@__DIR__, "src")
-#SOURCE_FILES = Glob.glob("*/*.jl", GENERATED)
-#foreach(fn -> Literate.markdown(fn, GENERATED), SOURCE_FILES)
+GENERATED = joinpath(@__DIR__, "src", "literate")
+for subfolder ∈ ["explanations","HowTo","tutorials"]
+    local SOURCE_FILES = Glob.glob(subfolder*"/*.jl", GENERATED)
+    foreach(fn -> Literate.markdown(fn, GENERATED*"/"*subfolder), SOURCE_FILES)
+
+end
+
 
 
 
@@ -43,6 +46,7 @@ makedocs(;
             "Line Plot" => "tutorials/erp.md",
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
             "Topo Plot" => "tutorials/topoplot.md",
+	    "Circular TopoPlot" => "literate/tutorials/circTopo.md",
         ],
         "Plot Configuration" => [
             "Axis Data" => "config/axis_data.md",

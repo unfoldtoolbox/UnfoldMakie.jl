@@ -118,12 +118,16 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
         mapp = mapp * mapping(;config.mappingData.group)
     end
     
-    #remove mapping values with `nothing`
     
-    deleteNothing(nt::NamedTuple{names}, keys) where names = NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    config.mappingData = deleteNothing(config.mappingData,keys(config.mappingData)[findall(isnothing.(values(config.mappingData)))])
+    deleteKeys(nt::NamedTuple{names}, keys) where names = NamedTuple{filter(x -> x ∉ keys, names)}(nt)
+    
+    #remove mapping values with `nothing`
+    config.mappingData = deleteKeys(config.mappingData,keys(config.mappingData)[findall(isnothing.(values(config.mappingData)))])
 
-    xy_mapp = mapping(config.mappingData.x, config.mappingData.y;config.mappingData...)
+    # remove x / y
+    mappingOthers = deleteKeys(config.mappingData,[:x,:y])
+    
+    xy_mapp = mapping(config.mappingData.x, config.mappingData.y;mappingOthers...)
 
     basic = visual(Lines; config.visualData...) * xy_mapp
     # add band of sdterrors
