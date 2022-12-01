@@ -308,25 +308,27 @@ function PlotConfig(T::Val{:butterfly})
             this.setMappingValues!(
                 topoChannels=(:channels, :channel, :topoChannel, :nothing),
             )
-            return this
-        end        
-function PlotConfig(T::Union{Val{:erp},Val{:butterfly}})
-            this = PlotConfig()
-            this.plotType =  valType_to_symbol(T)
 
             this.setExtraValues!(
                 topoLegend = true,
                 topoPositionToColorFunction = x->posToColorRomaO(x)
                 )
-            this.setLayoutValues!(
-                showLegend = false,
-                hidespines = (:r, :t)
-            )
             this.setMappingValues!(
                 topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
                 topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
 
             )
+            return this
+        end        
+function PlotConfig(T::Val{:erp})
+            this = PlotConfig()
+            this.plotType =  valType_to_symbol(T)
+
+            this.setLayoutValues!(
+                showLegend = true,
+                hidespines = (:r, :t)
+            )
+            
             return this
 end
         function PlotConfig(T::Val{:erpimage})
