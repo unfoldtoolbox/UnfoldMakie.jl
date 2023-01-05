@@ -285,6 +285,26 @@ function PlotConfig(T::Val{:topo})
             )
             return this
         end
+function PlotConfig(T::Val{:topoplotseries})
+            this = PlotConfig(:topo)
+            this.plotType = valType_to_symbol(T)
+
+            this.setExtraValues!(
+                combinefun = mean,
+            )
+            this.setLayoutValues!(
+                showLegend= this.plotType == :topo,
+            )
+            this.setVisualValues!(
+                
+            )
+            this.setMappingValues!(
+               col=(:time,),
+               row=(:nothing,)
+               
+            )
+            return this
+end
 function PlotConfig(T::Val{:design})
             this = PlotConfig()
             this.plotType = valType_to_symbol(T)
