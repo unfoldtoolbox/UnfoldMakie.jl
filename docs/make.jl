@@ -46,7 +46,8 @@ makedocs(;
             "Line Plot" => "tutorials/erp.md",
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
             "Topo Plot" => "tutorials/topoplot.md",
-	    "Circular TopoPlot" => "literate/tutorials/circTopo.md",
+            "Topo Plot Series" => "tutorials/topoplotseries.md",
+	        "Circular TopoPlot" => "literate/tutorials/circTopo.md",
         ],
         "Plot Configuration" => [
             "Axis Data" => "config/axis_data.md",
