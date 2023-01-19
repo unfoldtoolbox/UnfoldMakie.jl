@@ -9,10 +9,15 @@ using ColorSchemes
 using TopoPlots
 using ColorTypes
 using DataStructures
+using DataFrames
+using CategoricalArrays # for cut for TopoPlotSeries
 using GridLayoutBase # for relative_axis
 include("example_data.jl")
 
 include("plotconfig.jl")
+
+include("eeg-series.jl")
+include("plot_topoplotseries.jl")
 
 include("plot_erp.jl")
 include("plot_designmatrix.jl")
@@ -43,6 +48,9 @@ export plot_butterfly
 export plot_butterfly!
 export plot_circulareegtopoplot
 export plot_circulareegtopoplot!
+
+export plot_topoplotseries
+export plot_topoplotseries!
 
 export nonnumeric
 end
