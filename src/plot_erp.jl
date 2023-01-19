@@ -66,7 +66,7 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     plotData = deepcopy(plotData)
     
     # set PlotDefaults      
-    config.setMappingValues!(color=(:color, :coefname),)
+    config.setMappingValues!(color=(:color, :coefname, nothing),)
     config.setLayoutValues!(hidespines = (:r, :t))
 
     config_kwargs!(config;kwargs...)
