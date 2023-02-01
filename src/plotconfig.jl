@@ -328,7 +328,9 @@ function PlotConfig(T::Val{:butterfly})
             this.setMappingValues!(
                 topoChannels=(:channels, :channel, :topoChannel, :nothing),
             )
-
+            this.setLayoutValues!(
+                showLegend=false
+            )
             this.setExtraValues!(
                 topoLegend = true,
                 topoPositionToColorFunction = x->posToColorRomaO(x)
