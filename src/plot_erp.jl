@@ -50,6 +50,7 @@ The input `f`
 """
 plot_erp(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_erp!(Figure(), plotData, config;kwargs...)
 plot_erp(plotData::DataFrame;kwargs...) = plot_erp!(Figure(), plotData, PlotConfig(:erp);kwargs...)
+plot_erp!(fig::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_erp!(fig, plotData, PlotConfig(:erp);kwargs...)
 
 
 """
@@ -57,6 +58,7 @@ Plot Butterfly
 
 see `plot_erp`
 """
+plot_butterfly(plotData::DataFrame,config::PlotConfig;kwargs...) = plot_erp(plotData, config;kwargs...)
 plot_butterfly(plotData::DataFrame;kwargs...) = plot_erp(plotData, PlotConfig(:butterfly);kwargs...)
 plot_butterfly!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_erp!(f,plotData, PlotConfig(:butterfly);kwargs...)
 
