@@ -146,7 +146,7 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     end
     
     plotEquation = basic * mapp
-
+    
     f_grid = f[1,1]
     # butterfly plot is drawn slightly different
     if config.plotType == :butterfly
@@ -175,13 +175,18 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
 
     
     # apply to axis (or axes in case of col/row)
-    
-    for ax in f.content
-         if ax isa Axis
+    if f isa Figure
+    for ax in (isa(f,GridPosition) ? f.layout.content : f.content)
+        if ax isa GridLayoutBase.GridContent
+            ax = ax.content
+        end
+         if ax isa Axis 
             applyLayoutSettings(config; fig = f, ax=ax, drawing = drawing)
          end
     end
-
+    else
+        @warn "applyLayoutsettings currently not supported for sub-figures / Gridlayouts"
+    end
     return f
     
 end
