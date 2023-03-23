@@ -1,5 +1,12 @@
 # [Include multiple Visualizations in one Figure](@id ht_mvf)
 
+```@example main
+using UnfoldMakie
+using CairoMakie
+using DataFramesMeta
+```
+
+
 In this section we discuss how users are able to include multiple visualizations in a single figure.
 
 By using the !-version of the plotting function and putting in a grid position instead of a full figure, we can create Multiple Coordinated Views.
@@ -10,15 +17,14 @@ You start by creating a figure with Makie.Figure.
 
 Now each plot can be added to `f` via the `config.plot!(...)` function by putting in a grid position, such as `f[1,1]`.
 
-```
+```@example main
 f = Figure()
-plot_erp(f[1,1],results_plot_butter;setMappingValues(color=:channel,))
-plot_butterfly(f[2,1],results_plot_butter;setMappingValues(color=:channel,))
+plot_erp(f[1,1],results_plot_butter;setMappingValues = (color=:channel,))
+plot_butterfly(f[2,1],results_plot_butter;setMappingValues = (color=:channel,))
 
 f
 ```
 
-![Simple Coordinated Multiple Views](../images/two_plots.png)
 
 By using the data from the tutorials we can create a big image with every type of plot.
 
