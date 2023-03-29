@@ -14,35 +14,15 @@ Plot an ERP plot.
 - `kwargs...`: Additional styling behavior. Often used: `plot_erp(df;setMappingValues=(;color=:coefname,col=:conditionA))`
 ## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
 
-`categoricalColor`:
+`categoricalColor`: (Default: `true`) Indicates whether the column referenced in mappingData.color should be used nonnumerically.
 
-Default : `true`
+`categoricalGroup`: (Default: `true`) Indicates whether the column referenced in mappingData.group should be used nonnumerically.
 
-Indicates whether the column referenced in mappingData.color should be used nonnumerically.
+`topoLegend`: (Default : `false`) Indicating whether a topo plot is used as a legend.
 
-`categoricalGroup`:
+`stderror`: (Default : `false`) Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 
-Default: `true`
-
-Indicates whether the column referenced in mappingData.group should be used nonnumerically.
-
-`topoLegend`:
-
-Default : `false`
-
-Indicating whether a topo plot is used as a legend.
-
-`stderror`:
-
-Default : `false`
-
-Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-
-`pvalue`:
-
-Default : `[]`
-
-An array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
+`pvalue`: Default : `[]` Check the code for specifications. DataFrame of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
 
 ## Return Value:
 The input `f`
