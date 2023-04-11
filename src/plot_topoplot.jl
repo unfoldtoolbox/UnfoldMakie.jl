@@ -26,7 +26,7 @@ A figure displaying the topo plot.
 plot_topoplot(plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig;kwargs...) = plot_topoplot!(Figure(), plotData, config;kwargs...)
 plot_topoplot(plotData::Union{DataFrame, Vector{Float32}};kwargs...) = plot_topoplot(plotData, PlotConfig(:topo);kwargs...)
 plot_topoplot!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_topoplot!(f,plotData, PlotConfig(:para);kwargs...)
-function plot_topoplot!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing)
+function plot_topoplot!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, Vector{Float32}}, config::PlotConfig; positions=nothing, labels=nothing,kwargs...)
     axis = Axis(f[1, 1]; config.axisData...)
     
     config_kwargs!(config;kwargs...)
