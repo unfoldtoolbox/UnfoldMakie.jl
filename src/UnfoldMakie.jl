@@ -6,6 +6,7 @@ using AlgebraOfGraphics
 using Unfold
 using Colors
 using ColorSchemes
+using LinearAlgebra # for PCP
 using TopoPlots
 using ColorTypes
 using DataStructures
