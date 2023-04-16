@@ -10,7 +10,7 @@ using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
-#using DataFramesMeta
+
 ```
 
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).

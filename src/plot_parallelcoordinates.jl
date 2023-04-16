@@ -1,10 +1,3 @@
-using LinearAlgebra
-#using Pipe
-#using PyMNE
-
-
-
-
 """
     function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
@@ -107,7 +100,7 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
         else
             switch = false
         end
-        Makie.LineAxis(ax.scene, 
+        Makie.LineAxis(ax.scene; 
             limits = limits[i],
             spinecolor = :black,
             labelfont = "Arial", 
