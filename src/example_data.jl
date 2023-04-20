@@ -1,5 +1,3 @@
-
-using TopoPlots
 """
 Makes use of TopoPlots example data (originating from eegvis matlab toolbox).
 Returns tidy DataFrame with two conditions, 64 channels and 800ms of data. This is an average over many subjects.

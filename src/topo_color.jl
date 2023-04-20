@@ -1,35 +1,21 @@
 
-function getTopoPositions(plotData, config)
-
-    if isnothing(config.mappingData.topoPositions)
-        if isnothing(config.mappingData.topoLabels)
-            if isnothing(config.mappingData.topoChannels)
-                @error "At least one of these columns is required: topoChannels, topoLabels, topoPositions"
-            else
-                plotData.topoLabels = plotData[:, config.mappingData.topoChannels] .|> channelToLabel
-                config.setMappingValues!(topoLabels = :topoLabels)
-            end
-        end
-        plotData.topoPositions = plotData[:, config.mappingData.topoLabels] .|> getLabelPos
-        config.setMappingValues!(topoPositions = :topoPositions)
+function getTopoPositions(;labels=nothing,positions=nothing)
+    # positions have priority over labels
+    if isnothing(positions) && !isnothing(labels)
+        positions = getLabelPos.(labels)
     end
-    
-    unique(plotData[:, config.mappingData.topoPositions] .|> (p -> Point2f(p[1], p[2])))
+    @assert !isnothing(positions) "No Positions found, did you forget to provide them via positions=XX, or labels=YY?"
+    return positions .|> (p -> Point2f(p[1], p[2]))
 end
 
-function getTopoColor(plotData, config)
-    posToColor = config.extraData.topoPositionToColorFunction
-    if !isnothing(config.mappingData.topoLabels)
-        config.setMappingValues!(color=config.mappingData.topoLabels)
-        list = zip(plotData[:, config.mappingData.topoLabels], plotData[:, config.mappingData.topoPositions])
-        return unique(list .|> entry -> entry[1]=>posToColor(entry[2]))
-    elseif !isnothing(config.mappingData.topoPositions)
-        config.setMappingValues!(color=:positionLabel)
-        plotData.positionLabel = plotData[:, config.mappingData.topoPositions] .|> string
-        return unique(plotData[:, config.mappingData.topoPositions] .|> entry -> string(entry)=>posToColor(entry))
-    else
+function getTopoColor(positions, config)
+    posToColor = config.extra.topoPositionToColorFunction
+#    positions = getTopoPositions(plotData,config)
+    if isnothing(positions)
         return nothing
     end
+    return posToColor.(positions)
+    
 end
 
 function posToColorRGB(pos)

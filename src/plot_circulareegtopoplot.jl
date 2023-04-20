@@ -1,8 +1,7 @@
 """
 
-    plot_circulareegtopoplot(plotData::DataFrame, config::PlotConfig;kwargs...) 
     plot_circulareegtopoplot(plotData::DataFrame;kwargs...)
-    plot_circulareegtopoplot!(figlike, plotData::DataFrame, config::PlotConfig;kwargs...)
+    plot_circulareegtopoplot!(figlike, plotData::DataFrame;kwargs...)
 
         
 
@@ -10,68 +9,65 @@ Plot a circular EEG topoplot.
 ## Arguments:
 
 - `figlike::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::DataFrame`: Dataframe with keys for data (looks for `:topodata, :data, :y,:estimate`, and :position (looks for `:pos, :positions, :position, :topoPositions, :x`), 
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `plotData::DataFrame`: Dataframe with keys for data (looks for `:y,:yhat, :estimate`, and :position (looks for `:pos, :positions, :position`), 
 - `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
 - `kwargs...`: Additional styling behavior.
 
-## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
+## Extra Data Behavior (...;extra=(;[key]=value)):
 
-`predictorBounds`:
-
-Default: `[0,360]`
-
-The bounds of the predictor. This is relevant for the axis labels.
+`predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
 
 
-## Axis Data Behavior (...;setAxisValues=(;[key]=value)):
+## Axis Data Behavior (...;axis=(;[key]=value)):
 `label`: default "", the text in the center of the cricle
-## Mapping Data Behavior (...;setMappingValues=(;[key]=value)):
-    See 
 
-
+## Mapping Data Behavior (...;mapping=(;[key]=value)):
+    
 ## Return Value:
 A figure containing the circular topoplot at given layout position
 
 """
-plot_circulareegtopoplot(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData, config;kwargs...)
-plot_circulareegtopoplot(plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData, PlotConfig(:circeegtopo);kwargs...)
-plot_circulareegtopoplot!(f,plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(f, plotData, PlotConfig(:circeegtopo);kwargs...)
-function plot_circulareegtopoplot!(f, plotData::DataFrame, config::PlotConfig;predictor=:predictor,kwargs...)
+plot_circulareegtopoplot(plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData;kwargs...)
+plot_circulareegtopoplot!(f,plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(f, plotData;kwargs...)
+function plot_circulareegtopoplot!(f, plotData::DataFrame,;predictor=:predictor,positions=nothing,labels=nothing,kwargs...)
+    config = PlotConfig(:circeegtopo)
     config_kwargs!(config;kwargs...)
-    config.mappingData = resolveMappings(plotData,config.mappingData)
+    config.mapping = resolveMappings(plotData,config.mapping)
+
+ 
+    positions = getTopoPositions(;positions=positions,labels=labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
     predictorValues = plotData[:,predictor]
 
-    if(length(config.extraData.predictorBounds) != 2) 
-        error("config.extraData.predictorBounds needs exactly two values")
+    if(length(config.extra.predictorBounds) != 2) 
+        error("config.extra.predictorBounds needs exactly two values")
     end
-    if(config.extraData.predictorBounds[1] >= config.extraData.predictorBounds[2])
-        error("config.extraData.predictorBounds[1] needs to be smaller than config.extraData.predictorBounds[2]")
+    if(config.extra.predictorBounds[1] >= config.extra.predictorBounds[2])
+        error("config.extra.predictorBounds[1] needs to be smaller than config.extra.predictorBounds[2]")
     end
-    if((length(predictorValues[predictorValues .< config.extraData.predictorBounds[1]]) != 0) || (length(predictorValues[predictorValues .> config.extraData.predictorBounds[2]]) != 0))
-        error("all values in the plotData's effect column have to be within the config.extraData.predictorBounds range")
+    if((length(predictorValues[predictorValues .< config.extra.predictorBounds[1]]) != 0) || (length(predictorValues[predictorValues .> config.extra.predictorBounds[2]]) != 0))
+        error("all values in the plotData's effect column have to be within the config.extra.predictorBounds range")
     end
     if(all(predictorValues .<= 2*pi))
-        @warn "insert the predictor values in degrees instead of radian, or change config.extraData.predictorBounds"
+        @warn "insert the predictor values in degrees instead of radian, or change config.extra.predictorBounds"
     end
     
-    ax = Axis(f;aspect=1)
+    ax = Axis(f[1,1];aspect=1)
     
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax,config.extraData.predictorBounds,config.axisData.label)
+    plotCircularAxis!(ax,config.extra.predictorBounds,config.axis.label)
     limits!(ax,-3.5,3.5,-3.5,3.5)
-    min, max = calculateGlobalMaxValues(plotData[:,config.mappingData.topodata],predictorValues)
+    min, max = calculateGlobalMaxValues(plotData[:,config.mapping.y],predictorValues)
     
-    positions = getTopoPositions(plotData, config)
-    plotTopoPlots!(ax, plotData[:,config.mappingData.topodata], positions, predictorValues, config.extraData.predictorBounds, min, max)
+    positions = getTopoPositions(;positions=positions,labels=labels)
+    plotTopoPlots!(ax, plotData[:,config.mapping.y], positions, predictorValues, config.extra.predictorBounds, min, max)
     # setting the colorbar to the bottom right of the box.
     # Relative values got determined by checking what subjectively
     # looks best
     #RelativeAxis(ax,(0.85,0.95,0.06,0.25))
-    Colorbar(f[1,2], colormap = config.colorbarData.colormap, colorrange=(min, max), label = config.colorbarData.label,height = @lift Fixed($(pixelarea(ax.scene)).widths[2]))
+    Colorbar(f[1,2], colormap = config.colorbar.colormap, colorrange=(min, max), label = config.colorbar.label,height = @lift Fixed($(pixelarea(ax.scene)).widths[2]))
     applyLayoutSettings(config; fig=ax)
     
     # set the scene's background color according to config
@@ -139,6 +135,7 @@ function plotTopoPlots!(f, data, positions, predictorValues, predictorBounds, gl
         # convet BBox to rect
         rect = (Float64.([bbox.origin[1],bbox.origin[1]+bbox.widths[1],bbox.origin[2],bbox.origin[2]+bbox.widths[2]])...,)
         
+
         eegaxis = RelativeAxis(f, rect;aspect=1)
         
         TopoPlots.eeg_topoplot!(eegaxis,g.e; positions=positions, colorrange = (globalmin, globalmax), enlarge = 1)
