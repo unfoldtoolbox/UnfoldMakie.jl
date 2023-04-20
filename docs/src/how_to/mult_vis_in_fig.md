@@ -35,9 +35,9 @@ With so many plots at once it's incentivised to set a fixed resolution in your f
 ```@example main
 f = Figure(resolution = (2000, 2000))
 
-    plot_butterfly!(f[1, 1], results_plot_butter)
+    plot_butterfly!(f[1, 1:2], results_plot_butter)
     
-plot_erp!(f[1,2],results,extra=(;
+plot_erp!(f[1,3],results,extra=(;
         categoricalColor=false,
         categoricalGroup=false,
         stderror=true))
@@ -51,7 +51,7 @@ plot_erp!(f[1,2],results,extra=(;
             # if coefname not specified, line should be black
             coefname=["(Intercept)","category: face"]
         )
-plot_erp!(f[1,3],results,extra=(;pvalue=pvals))
+plot_erp!(f[2,3],results,extra=(;pvalue=pvals))
     
 
 
@@ -70,14 +70,17 @@ designmatrix!(ufMass, evts)
     plot_designmatrix!(f[2,2], designmatrix(ufMass);visual=(;colormap=:inferno))
 
     topodata, positions = TopoPlots.example_data()
+
     plot_topoplot!(f[3,1], topodata[1:4, 340, 1];
         labels=["O1", "F2", "F3", "P4"])
+
     df = DataFrame()
     df.estimate = topodata[1:4, 340, 1]
     df.labels = ["O1", "F2", "F3", "P4"]
     
     
     plot_topoplot!(f[3,2], df;positions=positions[1:4],visual=(;colormap=:viridis))
+
 
    
 plot_parallelcoordinates!(f[3,3], results_plot_butter,[5,3,2];mapping=(;color=:coefname))    
