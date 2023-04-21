@@ -20,15 +20,15 @@ In case you want to try with different data, look at the [Load Data](@ref test_d
 
 We filter the data to make it more clearly represented:
 ```@example main
-results_plot_butter = @subset(UnfoldMakie.example_data(),:coefname .== "A");
-first(results_plot_butter,3)
+df = UnfoldMakie.example_data(;type="TopoPlots.jl")
+first(df,3)
 ```
 
 ## Plot Butterfly Plots
 
 The following code will plot the default butterfly plot
 ```@example main
-plot_butterfly(results_plot_butter)
+plot_butterfly(df)
 ```
 At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
