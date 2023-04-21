@@ -146,22 +146,11 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame;positions
         #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
     
         drawing = draw!(f_grid,plotEquation;axis=config.axis)
+        
     end
-
+    applyLayoutSettings!(config; fig = f, ax=drawing,drawing=drawing)#, drawing = drawing)
     
-    # apply to axis (or axes in case of col/row)
-    if f isa Figure
-    for ax in (isa(f,GridPosition) ? f.layout.content : f.content)
-        if ax isa GridLayoutBase.GridContent
-            ax = ax.content
-        end
-         if ax isa Axis 
-            applyLayoutSettings(config; fig = f, ax=ax, drawing = drawing)
-         end
-    end
-    else
-        @warn "applyLayoutsettings currently not supported for sub-plots / Gridlayouts (e.g. provide f instead of f[1,1])"
-    end
+    
     return f
     
 end

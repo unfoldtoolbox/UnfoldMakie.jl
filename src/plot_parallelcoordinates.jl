@@ -48,7 +48,7 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     ch_label_offset = 15
     
     # axis for plot
-    ax = Axis(f[1, 1]; config.axis...)
+    ax = Axis(f; config.axis...)
     
     # colormap border (prevents from using outer parts of color map)
     bord = 0
@@ -151,9 +151,9 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     Makie.xlims!(low = 0, high = width + right_padding)
     Makie.ylims!(low = 0, high = height + top_padding)
 
-    applyLayoutSettings(config; fig = f, ax=ax)
+    applyLayoutSettings!(config; fig = f, ax=ax)
 
     # ensures the axis numbers aren't squished
-    ax.aspect = DataAspect()
+    #ax.aspect = DataAspect()
     return f 
 end

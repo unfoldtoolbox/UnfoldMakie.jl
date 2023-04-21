@@ -39,7 +39,7 @@ function plot_erpimage!(f::Union{GridPosition, Figure}, plotData::Matrix{<:Real}
         hm = heatmap!(ax,(filtered_data[:,:]); config.visual...)
     end
 
-    applyLayoutSettings(config; fig = f, hm = hm, ax = ax, plotArea = (4,1))
+    applyLayoutSettings!(config; fig = f, hm = hm, ax = ax, plotArea = (4,1))
 
     if config.extra.meanPlot
         # UserInput
@@ -57,7 +57,7 @@ function plot_erpimage!(f::Union{GridPosition, Figure}, plotData::Matrix{<:Real}
         subAxis = Axis(f[5+axisOffset,1]; subConfig.axis...)
 
         lines!(subAxis,mean(plotData,dims=2)[:,1])
-        applyLayoutSettings(subConfig; fig = f, ax=subAxis)
+        applyLayoutSettings!(subConfig; fig = f, ax=subAxis)
     end
 
     return f

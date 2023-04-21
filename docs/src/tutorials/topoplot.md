@@ -28,7 +28,7 @@ plot_topoplot(data[:,340,1];positions=positions)
 
 ```@example main
 using DataFrames
-df = DataFrame(:estimate=>data[:,340,1],:positions=>positions)
+df = DataFrame(:estimate=>data[:,340,1])
 plot_topoplot(df;positions=positions)
 ```
 

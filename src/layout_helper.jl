@@ -1,4 +1,5 @@
-function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, drawing = nothing, ax = nothing, plotArea = (1, 1))
+function applyLayoutSettings!(config::PlotConfig; fig = nothing, hm = nothing, 
+                            drawing = nothing, ax = nothing, plotArea = (1, 1))
     if isnothing(ax)
         ax = current_axis()
     end
@@ -35,10 +36,14 @@ function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, dr
     end
     
     # automatic labels
-    if !isnothing(config.layout.xlabelFromMapping)
-        ax.xlabel = string(config.mapping[config.layout.xlabelFromMapping])
-    end
-    if !isnothing(config.layout.ylabelFromMapping)
-        ax.ylabel = string(config.mapping[config.layout.ylabelFromMapping])
-    end
+    #if !isnothing(config.layout.xlabelFromMapping)
+    #    ax.xlabel = string(config.mapping[config.layout.xlabelFromMapping])
+    #end
+    #if !isnothing(config.layout.ylabelFromMapping)
+    #    ax.ylabel = string(config.mapping[config.layout.ylabelFromMapping])
+    #end
 end
+hidedecorations!(ax::Matrix{AxisEntries};kwargs...) = hidedecorations!.(ax;kwargs...)
+hidedecorations!(ax::AxisEntries;kwargs...) = hidedecorations!.(ax.axis;kwargs...)
+hidespines!(ax::Matrix{AxisEntries},args...) = hidespines!.(ax,args...)
+hidespines!(ax::AxisEntries,args...) = hidespines!.(ax.axis,args...)

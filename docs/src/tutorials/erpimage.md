@@ -9,7 +9,7 @@ The following modules are necessary for following this tutorial:
 using Unfold
 using UnfoldMakie
 using CairoMakie
-using UnfoldSim
+
 ```
 
 
@@ -17,9 +17,7 @@ using UnfoldSim
 
 The following code will result in the default configuration. 
 ```@example main
-using UnfoldSim
 data,evts = UnfoldSim.predef_eeg(;noiselevel=10,return_epoched=true)
-stack(data,)
 plot_erpimage(data)
 ```
 

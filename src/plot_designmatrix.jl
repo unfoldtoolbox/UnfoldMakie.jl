@@ -93,7 +93,7 @@ function plot_designmatrix!(f::Union{GridPosition, Figure}, plotData::Unfold.Des
         ax.yreversed = true
     end
     
-    applyLayoutSettings(config; fig = f, hm = hm)
+    applyLayoutSettings!(config; fig = f, hm = hm)
 
     return f
 end

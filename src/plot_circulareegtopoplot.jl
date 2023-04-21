@@ -29,7 +29,7 @@ A figure containing the circular topoplot at given layout position
 """
 plot_circulareegtopoplot(plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(Figure(), plotData;kwargs...)
 plot_circulareegtopoplot!(f,plotData::DataFrame;kwargs...) = plot_circulareegtopoplot!(f, plotData;kwargs...)
-function plot_circulareegtopoplot!(f, plotData::DataFrame,;predictor=:predictor,positions=nothing,labels=nothing,kwargs...)
+function plot_circulareegtopoplot!(f::Union{GridPosition, Figure}, plotData::DataFrame,;predictor=:predictor,positions=nothing,labels=nothing,kwargs...)
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config;kwargs...)
     config.mapping = resolveMappings(plotData,config.mapping)
@@ -68,7 +68,7 @@ function plot_circulareegtopoplot!(f, plotData::DataFrame,;predictor=:predictor,
     # looks best
     #RelativeAxis(ax,(0.85,0.95,0.06,0.25))
     Colorbar(f[1,2], colormap = config.colorbar.colormap, colorrange=(min, max), label = config.colorbar.label,height = @lift Fixed($(pixelarea(ax.scene)).widths[2]))
-    applyLayoutSettings(config; fig=ax)
+    applyLayoutSettings!(config; ax=ax)
     
     # set the scene's background color according to config
     #set_theme!(Theme(backgroundcolor = config.axisData.backgroundcolor))

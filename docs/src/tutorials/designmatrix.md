@@ -15,17 +15,8 @@ using CairoMakie
 ## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 ```@example main
-# load and generate a simulated Unfold Design
+uf = UnfoldMakie.example_data(;type="UnfoldLinearModel")
 
-using UnfoldSim
-
-data,evts = UnfoldSim.predef_eeg(;return_epoched=true)
-f  = @formula 0~1+condition+continuous
-
-# generate ModelStruct
-ufMass = UnfoldLinearModel(Dict(Any=>(f,1:size(data,1)))) 
-# generate designmatrix
-designmatrix!(ufMass, evts)
 ```
 
 
