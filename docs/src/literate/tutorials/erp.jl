@@ -57,7 +57,7 @@ plot_erp(res_effects;
                     categoricalColor=false,
                     categoricalGroup=true),
     legend  = (;nbanks=2),
-    layout  = (;legendPosition=:bottom))
+    layout  = (;legendPosition=:right))
 
 
 

@@ -1,9 +1,9 @@
 module UnfoldMakie
 
 using Makie
+using MakieCore
 #using CairoMakie
 using AlgebraOfGraphics
-using Makie
 using TopoPlots
 using GridLayoutBase # for relative_axis
 
@@ -24,7 +24,7 @@ using CategoricalArrays # for cut for TopoPlotSeries
 
 
 
-include("example_data.jl")
+#include("example_data.jl")
 
 include("plotconfig.jl")
 

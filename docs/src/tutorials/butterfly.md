@@ -20,7 +20,8 @@ In case you want to try with different data, look at the [Load Data](@ref test_d
 
 We filter the data to make it more clearly represented:
 ```@example main
-df = UnfoldMakie.example_data(;type="TopoPlots.jl")
+include("../../example_data.jl")
+df = example_data("TopoPlots.jl")
 first(df,3)
 ```
 

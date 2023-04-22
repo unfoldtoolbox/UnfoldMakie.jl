@@ -15,7 +15,8 @@ using CairoMakie
 ## Data
 In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 ```@example main
-uf = UnfoldMakie.example_data(;type="UnfoldLinearModel")
+include("../../example_data.jl")
+uf = example_data("UnfoldLinearModel")
 
 ```
 
@@ -24,7 +25,7 @@ uf = UnfoldMakie.example_data(;type="UnfoldLinearModel")
 
 The following code will result in the default configuration. 
 ```@example main
-plot_designmatrix(designmatrix(ufMass))
+plot_designmatrix(designmatrix(uf))
 ```
 
 # `plot_designmatrix(...;extra=(<name>=<value>,...)`.
@@ -34,7 +35,7 @@ plot_designmatrix(designmatrix(ufMass))
 
 In order to make the designmatrix easier to read, you may want to sort it.
 ```
-plot_designmatrix(designmatrix(ufMass);extra=(;sortData=true))
+plot_designmatrix(designmatrix(uf);extra=(;sortData=true))
 ```
 
 - standardizeData (boolean,false) - Indicating whether the data is standardized, mapping the values between 0 and 1. 
