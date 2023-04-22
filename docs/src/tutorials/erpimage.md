@@ -9,7 +9,8 @@ The following modules are necessary for following this tutorial:
 using Unfold
 using UnfoldMakie
 using CairoMakie
-
+using UnfoldSim
+include("../../example_data.jl")
 ```
 
 
@@ -35,7 +36,7 @@ Since ERP images use a `Matrix` as an input, the library does not need any infor
 - meanPlot (bool, false) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data. If limits are set in the axis values both plots will be aligned.
 
 ```@example main
-plot_erpimage(data,
+plot_erpimage(data;
     extra = (meanPlot = true,),
     colorbar = (label = "Voltage [µV]",),
     visual = (colormap = :viridis, colorrange = (-40, 40)))

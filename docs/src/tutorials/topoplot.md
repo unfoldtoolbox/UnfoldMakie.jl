@@ -83,5 +83,5 @@ Indicates whether the dots should be drawn at the given positions.
 
 ```@example main
 data, positions = TopoPlots.example_data()
-plot_topoplot(data[1:4,340,1];setVisualValues=(;label_scatter = false),  labels=["O1", "F2", "F3", "P4"])
+plot_topoplot(data[1:4,340,1];visual=(;label_scatter = false),  labels=["O1", "F2", "F3", "P4"])
 ```

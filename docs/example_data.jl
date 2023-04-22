@@ -1,4 +1,6 @@
 using UnfoldSim
+using TopoPlots
+using Unfold
 """
 Makes use of TopoPlots example data (originating from eegvis matlab toolbox).
 type ==

@@ -19,7 +19,7 @@ for subfolder ∈ ["explanations","HowTo","tutorials"]
 end
 
 
-include("example_data")
+
 
 DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive=true)
 
