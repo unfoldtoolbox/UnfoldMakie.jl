@@ -20,7 +20,6 @@ Plot a Topoplot Series.
 The input `f`
 
 """
-plot_topoplotseries(plotData::DataFrame, Δbin::Real;kwargs...) = plot_topoplotseries!(Figure(), plotData, Δbin,kwargs...)
 plot_topoplotseries(plotData::DataFrame,Δbin::Real;kwargs...) = plot_topoplotseries!(Figure(), plotData, Δbin;kwargs...)
 
 

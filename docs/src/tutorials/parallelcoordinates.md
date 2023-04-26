@@ -17,7 +17,7 @@ We use the test data of `erpcore-N170.jld2`.
 
 ```@example main
 include("../../example_data.jl")
-results_plot = example_data();
+results_plot,positions = example_data();
 ```
 
 ## Plot PCPs

@@ -21,11 +21,6 @@ using DataFrames
 using SparseArrays
 using CategoricalArrays # for cut for TopoPlotSeries
 
-
-
-
-#include("example_data.jl")
-
 include("plotconfig.jl")
 
 include("eeg-series.jl")
