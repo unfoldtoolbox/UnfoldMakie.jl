@@ -8,9 +8,8 @@ The following modules are necessary for following this tutorial:
 ```@example main
 using UnfoldMakie
 using Unfold
-using DataFrames
 using CairoMakie
-using DataFramesMeta
+using DataFrames
 ```
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
@@ -21,7 +20,7 @@ In case you want to try with different data, look at the [Load Data](@ref test_d
 We filter the data to make it more clearly represented:
 ```@example main
 include("../../example_data.jl")
-df = example_data("TopoPlots.jl")
+df,pos = example_data("TopoPlots.jl")
 first(df,3)
 ```
 
@@ -31,12 +30,16 @@ The following code will plot the default butterfly plot
 ```@example main
 plot_butterfly(df)
 ```
-At this point you can detail changes you want to make to the visualization through the plot config. These are detailed further below. 
 
+or if you provide the channel positions:
+
+```@example main
+plot_butterfly(df;positions=pos)
+```
 
 ## Column Mappings for Butterfly Plots
 
-Since butterfly plots use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting. You can set these mapping values by `plot_butterfly(...; setMappingValues=(:x=:time,))`, that is, providing a `NamedTuple` (note the trailling `,` in case you specify only a single property!)
+Since butterfly plots use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting. You can set these mapping values by `plot_butterfly(...; mapping=(;:x=:time,))`, that is, providing a `NamedTuple` (note the  `;` just after the opening-brackets
 
 For more information about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
 
@@ -48,18 +51,13 @@ Default is `(:x, :time)`.
 ### y
 Default is `(:y, :estimate, :yhat)`.
 
-### topoPositions
-Default is `(:pos, :positions, :position, :topoPositions, :x, :nothing)`
-
-### topoLabels
+### labels
 Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
 
-### topoChannels
-Default is `(:channels, :channel, :topoChannel, :nothing)`
 
 ## Configurations for Butterfly Plots
 
-Here we look into possible options for configuring the butterfly plot visualization using `(...;setExtraValues=(<name>=<value>,...)`.
+Here we look into possible options for configuring the butterfly plot visualization using `(...;extra=(<name>=<value>,...)`.
 This is the list of unique configuration (extraData):
 - topoLegend (boolean)
 
