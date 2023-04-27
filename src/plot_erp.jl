@@ -2,83 +2,55 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, [config::PlotConfig];kwargs...)
-    function plot_erp(plotData::DataFrame, [config::PlotConfig];kwargs...)
+    function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame;kwargs...)
+    function plot_erp(plotData::DataFrame, ;kwargs...)
         
 
 Plot an ERP plot.
 ## Arguments:
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Data for the line plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
-- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df;setMappingValues=(;color=:coefname,col=:conditionA))`
-## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
-
-`categoricalColor`:
-
-Default : `true`
-
-Indicates whether the column referenced in mappingData.color should be used nonnumerically.
-
-`categoricalGroup`:
-
-Default: `true`
-
-Indicates whether the column referenced in mappingData.group should be used nonnumerically.
-
-`topoLegend`:
-
-Default : `false`
-
-Indicating whether a topo plot is used as a legend.
-
-`stderror`:
-
-Default : `false`
-
-Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-
-`pvalue`:
-
-Default : `[]`
-
-An array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
+- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df;mapping=(;color=:coefname,col=:conditionA))`
+## Extra Data Behavior (...;extra=(;[key]=value)):
+`categoricalColor` (bool,`true`) - Indicates whether the column referenced in mapping.color should be used nonnumerically.
+`categoricalGroup` (bool,`true`) - Indicates whether the column referenced in mapping.group should be used nonnumerically.
+`topoLegend` (bool, `false`) - Indicating whether a topo plot is used as a legend.
+`stderror` (bool,`false`) - Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
+`pvalue` (Array,[]) - An array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
 
 ## Return Value:
-The input `f`
+f - Figure() or the inputed `f`
 
 """
-plot_erp(plotData::DataFrame, config::PlotConfig;kwargs...) = plot_erp!(Figure(), plotData, config;kwargs...)
-plot_erp(plotData::DataFrame;kwargs...) = plot_erp!(Figure(), plotData, PlotConfig(:erp);kwargs...)
-plot_erp!(fig::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_erp!(fig, plotData, PlotConfig(:erp);kwargs...)
-
+plot_erp(plotData::DataFrame;kwargs...) = plot_erp!(Figure(), plotData, ;kwargs...)
 
 """
 Plot Butterfly
 
 see `plot_erp`
 """
-plot_butterfly(plotData::DataFrame,config::PlotConfig;kwargs...) = plot_erp(plotData, config;kwargs...)
-plot_butterfly(plotData::DataFrame;kwargs...) = plot_erp(plotData, PlotConfig(:butterfly);kwargs...)
-plot_butterfly!(f::Union{GridPosition, Figure},plotData::DataFrame;kwargs...) = plot_erp!(f,plotData, PlotConfig(:butterfly);kwargs...)
+plot_butterfly(plotData::DataFrame;kwargs...) = plot_butterfly!(Figure(),plotData; kwargs...)
+plot_butterfly!(f::Union{GridPosition, <:Figure},plotData::DataFrame;extra=(;),kwargs...) = plot_erp!(f,plotData,;extra= merge((;butterfly=true),extra),kwargs...)
 
 
 
-function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig;kwargs...)
-    plotData = deepcopy(plotData)
-    
-    # set PlotDefaults      
-    config.setMappingValues!(color=(:color, :coefname, nothing),)
-    config.setLayoutValues!(hidespines = (:r, :t))
-
+function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame;positions=nothing,labels=nothing,kwargs...)
+    config = PlotConfig(:erp)
     config_kwargs!(config;kwargs...)
+    if config.extra.butterfly
+        config = PlotConfig(:butterfly)
+        config_kwargs!(config;kwargs...)
+    end
 
-    # apply config kwargs
+
+    plotData = deepcopy(plotData) # XXX why?
     
-
     # resolve columns with data
-    config.mappingData = resolveMappings(plotData,config.mappingData)
-
+    config.mapping = resolveMappings(plotData,config.mapping)
+    #remove mapping values with `nothing`
+    deleteKeys(nt::NamedTuple{names}, keys) where names = NamedTuple{filter(x -> x ∉ keys, names)}(nt)
+    config.mapping = deleteKeys(config.mapping,keys(config.mapping)[findall(isnothing.(values(config.mapping)))])
+    
     
     # turn "nothing" from group columns into :fixef
     if "group" ∈  names(plotData)
@@ -86,62 +58,67 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     end
 
     # check if stderror values exist and create new collumsn with high and low band
-    if "stderror" ∈  names(plotData) && config.extraData.stderror
+    if "stderror" ∈  names(plotData) && config.extra.stderror
         plotData.stderror = plotData.stderror .|> a -> isnothing(a) ? 0. : a
-        plotData[!,:se_low]  = plotData[:,config.mappingData.y] .- plotData.stderror
-        plotData[!,:se_high] = plotData[:,config.mappingData.y] .+ plotData.stderror
+        plotData[!,:se_low]  = plotData[:,config.mapping.y] .- plotData.stderror
+        plotData[!,:se_high] = plotData[:,config.mapping.y] .+ plotData.stderror
     end
     
     # Get topocolors for butterfly
-    if (config.plotType == :butterfly)
+    if (config.extra.butterfly)
+        if isnothing(positions) && isnothing(labels)
+            config.extra=merge(config.extra,(;topoLegend=false))
+            #colors =config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plotData)))
+            colors = nothing
+            #config.mapping = merge(config.mapping,(;color=config.))
+        else
+            allPositions = getTopoPositions(;positions=positions,labels=labels)
+            colors = getTopoColor(allPositions, config)
+        end
     
-        allPositions = getTopoPositions(plotData, config)
-        colors = getTopoColor(plotData, config)
-    else
-        # Categorical mapping
-        # convert color column into string, so no wrong grouping happens
-        if config.extraData.categoricalColor && (:color ∈ keys(config.mappingData))
-            config.mappingData = merge(config.mappingData,(;color=config.mappingData.color=>nonnumeric))
-        end
-        # converts group column into string
-        if config.extraData.categoricalGroup && (:group ∈ keys(config.mappingData))
-            config.mappingData = merge(config.mappingData,(;group=config.mappingData.group=>nonnumeric))
-        end
+        
     end
-
-
+     # Categorical mapping
+        # convert color column into string, so no wrong grouping happens
+        if config.extra.categoricalColor && (:color ∈ keys(config.mapping))
+            config.mapping = merge(config.mapping,(;color=config.mapping.color=>nonnumeric))
+        end
+       
+    # converts group column into string
+    if config.extra.categoricalGroup && (:group ∈ keys(config.mapping))
+        config.mapping = merge(config.mapping,(;group=config.mapping.group=>nonnumeric))
+    end
+    #@show colors
     mapp = mapping()
 
-    if (:color ∈ keys(config.mappingData))
-        mapp = mapp * mapping(;config.mappingData.color)
+    if (:color ∈ keys(config.mapping))
+        mapp = mapp * mapping(;config.mapping.color)
     end
     
-    if (:group ∈ keys(config.mappingData))
-        mapp = mapp * mapping(;config.mappingData.group)
+    if (:group ∈ keys(config.mapping))
+        mapp = mapp * mapping(;config.mapping.group)
     end
     
     
-    deleteKeys(nt::NamedTuple{names}, keys) where names = NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    
-    #remove mapping values with `nothing`
-    config.mappingData = deleteKeys(config.mappingData,keys(config.mappingData)[findall(isnothing.(values(config.mappingData)))])
 
+    
+    
     # remove x / y
-    mappingOthers = deleteKeys(config.mappingData,[:x,:y])
+    mappingOthers = deleteKeys(config.mapping,[:x,:y])
     
-    xy_mapp = mapping(config.mappingData.x, config.mappingData.y;mappingOthers...)
+    xy_mapp = mapping(config.mapping.x, config.mapping.y;mappingOthers...)
 
-    basic = visual(Lines; config.visualData...) * xy_mapp
+    basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
-    if config.extraData.stderror
-        m_se = mapping(config.mappingData.x,:se_low,:se_high)
+    if config.extra.stderror
+        m_se = mapping(config.mapping.x,:se_low,:se_high)
         basic = basic + visual(Band,alpha=0.5)*m_se
     end
     
     basic = basic * data(plotData)
 
     # add the pvalues
-    if !isempty(config.extraData.pvalue)
+    if !isempty(config.extra.pvalue)
         basic =  basic + addPvalues(plotData, config)
     end
     
@@ -149,44 +126,31 @@ function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::
     
     f_grid = f[1,1]
     # butterfly plot is drawn slightly different
-    if config.plotType == :butterfly
+    if config.extra.butterfly
         # add topoLegend
     
-        if (config.extraData.topoLegend)
-            legendRight = config.layoutData.legendPosition == :right
-            if config.layoutData.showLegend
-                topoAxis = Axis(f[2,2], aspect = DataAspect())
-            else
-                topoAxis = Axis(legendRight ? f[1:2,2] : f[2,1:2], width = 78, height = 78, aspect = DataAspect())
-            end
+        if (config.extra.topoLegend)
+            topoAxis = Axis(f_grid,width=Relative(0.25),height=Relative(0.25),halign=0.05,valign=0.95,aspect=1)
             topoplotLegend(config,topoAxis, allPositions)
-            mainAxis = Axis(legendRight ? f[1:2,1] : f[1,1:2]; config.axisData...)
-        else
-            # no extra legend
-            mainAxis = Axis(f_grid; config.axisData...)
         end
-        drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
+            # no extra legend
+            mainAxis = Axis(f_grid; config.axis...)
+        
+        if isnothing(colors)
+            drawing = draw!(mainAxis,plotEquation)
+        else
+            drawing = draw!(mainAxis,plotEquation; palettes=(color=colors,))
+        end
     else
         # normal lineplot draw
         #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
     
-        drawing = draw!(f_grid,plotEquation;axis=config.axisData)
+        drawing = draw!(f_grid,plotEquation;axis=config.axis)
+        
     end
-
+    applyLayoutSettings!(config; fig = f, ax=drawing,drawing=drawing)#, drawing = drawing)
     
-    # apply to axis (or axes in case of col/row)
-    if f isa Figure
-    for ax in (isa(f,GridPosition) ? f.layout.content : f.content)
-        if ax isa GridLayoutBase.GridContent
-            ax = ax.content
-        end
-         if ax isa Axis 
-            applyLayoutSettings(config; fig = f, ax=ax, drawing = drawing)
-         end
-    end
-    else
-        @warn "applyLayoutsettings currently not supported for sub-figures / Gridlayouts"
-    end
+    
     return f
     
 end
@@ -208,7 +172,7 @@ function topoplotLegend(config,axis, allPositions)
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
-    specialColors = ColorScheme(vcat(RGB(1,1,1.),[config.extraData.topoPositionToColorFunction(pos) for pos in allPositions]...))
+    specialColors = ColorScheme(vcat(RGB(1,1,1.),[config.extra.topoPositionToColorFunction(pos) for pos in allPositions]...))
     
 	xlims!(low = -0.2, high = 1.2)
 	ylims!(low = -0.2, high = 1.2)
@@ -219,7 +183,7 @@ function topoplotLegend(config,axis, allPositions)
         colorrange = (0,length(allPositions)), # add the 0 for the white-first color
         colormap= specialColors,
         head = (color=:black, linewidth=1, model = topoMatrix),
-        label_scatter=(markersize=8, strokewidth=0.5,))
+        label_scatter=(markersize=10, strokewidth=0.5,))
 
     hidedecorations!(current_axis())
     hidespines!(current_axis())
@@ -239,7 +203,7 @@ function (ni::NullInterpolator)(
 end
 
 function addPvalues(plotData, config)
-    p = deepcopy(config.extraData.pvalue)
+    p = deepcopy(config.extra.pvalue)
 
     # for now, add them to the fixed effect
     if "group" ∉  names(p)
@@ -253,10 +217,15 @@ function addPvalues(plotData, config)
             p[!,:group] .= 1
         end
     end
-    
-    un = unique(p[!,config.mappingData.color])
+    @show config.mapping
+    if :color ∈ keys(config.mapping) 
+        c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
+        un = unique(p[!,c])
+        p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
+    else
+        p[!,:signindex] .= 1
+    end
     # define an index to dodge the lines vertically
-    p[!,:sigindex] .=  [findfirst(un .== x) for x in p.coefname]
 
     scaleY = [minimum(plotData.estimate),maximum(plotData.estimate)]
     stepY = scaleY[2]-scaleY[1]

@@ -1,5 +1,6 @@
 
 using GeometryBasics
+using ColorSchemes: roma
 using Makie
 using Colors
 using ColorSchemes
@@ -7,159 +8,61 @@ using ColorTypes
 
 """
     PlotConfig(<plotname>)
-
-This struct is used as the configuration and simple plot method for an UnfoldMakie plot.
-
-## Values for `<plotname>`
-- `:line`: Line Plot
-- `:butterfly`: Butterfly Plot
-- `:erp`: ERP Image
-- `:design`: Designmatrix
-- `:topo`: Topo Plot
-- `:paraCoord`: Parallel Coordinates Plot
-- `:circeegtopo`: EEG Topo Plot for data with a circular predictor
-
-## Attributes
-
-The PlotConfig includes multiple Named Tuples with settings for different areas.
-Their attributes can be set through setter Methods callable on the PlotConfig instance:
-
-- `setExtraValues!(`
-- `setLayoutValues!(``
-- `setVisualValues!(`
-- `setMappingValues!(`
-- `setLegendValues!(`
-- `setColorbarValues!(`
-- `setAxisValues!(`
-
-## Plotting
-
-The config includes a simple way to create a plot with the choosen settings.
-The used plot-function is choosen based on the given plot type in the constructor.
-
-`plot(plotData::Any; kwargs...)`
-
-See the plot function of each plot type for more informations about data types and possibly additional kwargs.
-
-Called functions per `<plotname>`:
-- `:line` -> `plot_line(...)`
-- `:butterfly` -> `plot_line(...)`
-- `:erp` -> `plot_erp(...)`
-- `:design` -> `plot_designmatrix(...)`
-- `:topo` -> `plot_topoplot(...)`
-- `:paraCoord` -> `plot_parallelcoordinates(...)`
-- `:circeegtopo` -> `plot_circulareegtopoplot(...)`
-
-Following the bang convention, use this to exectute the !-version of each function respectively:
-
-`plot!(f::Union{GridPosition, Figure}, plotData::Any; kwargs...)`
-
-
-# Example
-
-`config = PlotConfig(:line)`
-
-`config.setLegendValues!(nbanks=2)`
-
-`config.setLayoutValues!(showLegend=true, legendPosition=:bottom)`
-
-`config.setMappingValues!(color=:coefname, group=:coefname)`
-
-`config.plot(data)`
-
+    holds various different fields, that can modify various different plotting aspects.
 
 """
 
 mutable struct PlotConfig
-    plotType::Any
-    extraData::NamedTuple
-    layoutData::NamedTuple
-    visualData::NamedTuple
-    mappingData::NamedTuple
-    legendData::NamedTuple
-    colorbarData::NamedTuple
-    axisData::NamedTuple
-
-    setExtraValues!::Function    
-    setLayoutValues!::Function
-    setVisualValues!::Function
-    setMappingValues!::Function
-    setLegendValues!::Function
-    setColorbarValues!::Function
-    setAxisValues!::Function
-
-    # removes all variables from mappingData which aren't columns in input plotData
-    resolveMappings::Function
-
-    #"plot types: :line, :design, :topo, :butterfly, :erp, :paracoord, :circeegtopo"
-     
-
-        # removes all varaibles from mappingData which aren't columns in input plotData
+    figure::NamedTuple
+    layout::NamedTuple
+    axis::NamedTuple
+    mapping::NamedTuple
+    visual::NamedTuple
+    legend::NamedTuple
+    colorbar::NamedTuple   
+    extra::NamedTuple
+end
 
 
 function PlotConfig()# defaults
-            this = new()
-            # standard values for ALL plots
-            this.extraData = (
-                # lineplot vars
-                categoricalColor=true,
-                categoricalGroup=true,
-                stderror=false,
-                pvalue=[],
-                # butterfly plot vars
-                topoLegend=false,
-                # designmatrix vars
-                xTicks=nothing,
-                standardizeData=true,
-                # Designmatrix and erp image var 
-                sortData=true,
-                # erp image var
-                meanPlot=false,
-                erpBlur=10,
-                # paracoord fix-values
-                pc_aspect_ratio = 0.55,
-                pc_right_padding = 15,
-                pc_left_padding = 25,
-                pc_top_padding = 26,
-                pc_bottom_padding = 16,
-                pc_tick_label_size = 14,
-                # circular eeg topoplot vars
-                topoplotLabels = [],
-                predictorBounds = [0,360],
-            )
-            this.layoutData = (;
+           PlotConfig(
+           (;), #figure
+
+            (; # layout
                 showLegend=true,
                 legendPosition=:right,
                 xlabelFromMapping=:x,
                 ylabelFromMapping=:y,
                 useColorbar=false,
-            )
-            this.visualData = (;
-                colormap=:haline,
-            )
-            this.mappingData = (
-                x=(:x, :time),
-                y=(:y, :estimate, :yhat),
-            ) 
-            this.legendData = (;
+            ),
+            (;), # axis
+            (#maping
+                x=(:time,),
+                y=(:estimate, :yhat,:y,),
+            ),
+            (; # visual
+                colormap=:roma,
+            ),
+           
+            (;#legend
                 orientation = :vertical,
                 tellwidth = true,
                 tellheight = false
-            )
-            this.colorbarData = (;
+            ),
+            (;#colorbar
                 vertical = true,
                 tellwidth = true,
                 tellheight = false
-            )
-    
-            this.axisData = (;)
-            
-            # setter for very plot specific Data
-            this.setExtraValues! = function (;kwargs...)
-                this.extraData = merge(this.extraData, kwargs)
-                return this
-            end
-            this.setLayoutValues! = function (;kwargs...)
+            ),
+            (;)
+            )  
+
+end
+
+#=
+function updateConfig(cfg::PlotConfig;kwargs)
+
+            this.layout! = function (;kwargs...)
                 # position affects multiple values in legendData
                 kwargsVals = values(kwargs)
                 if haskey(kwargsVals, :legendPosition)
@@ -177,23 +80,8 @@ function PlotConfig()# defaults
                 this.layoutData = merge(this.layoutData, kwargs)
                 return this
             end
-            this.setVisualValues! = function (;kwargs...)
-                this.visualData = merge(this.visualData, kwargs)
-                return this
-            end
-            this.setMappingValues! = function (;kwargs...)
-                this.mappingData = merge(this.mappingData, kwargs)
-                return this
-            end
-            this.setLegendValues! = function (;kwargs...)
-                this.legendData = merge(this.legendData, kwargs)
-                return this
-            end
-            this.setColorbarValues! = function (;kwargs...)
-                this.colorbarData = merge(this.colorbarData, kwargs)
-                return this
-            end
-            this.setAxisValues! = function (;kwargs...)
+          
+            this.axis! = function (;kwargs...)
                 if :xlabel ∈ keys(kwargs)
                     this.layoutData = merge(this.layoutData, (;xlabelFromMapping = nothing))
                 end
@@ -205,25 +93,19 @@ function PlotConfig()# defaults
                 return this
             end
         return this
+
 end
-end    
+=# 
 
 """
-Takes a kwargs named tuple of Key => NamedTuple and applies the Symbol as a function to cfg.
-E.g.
-config_kwargs(PlotConfig,setExtraValues=(color="red",))
-applies
-PlotConfig.setExtraValues!(;color="red")
+Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
 """
 function config_kwargs!(cfg::PlotConfig;kwargs...)
-    list = [:setExtraValues,:setLayoutValues,:setVisualValues,:setMappingValues,:setLegendValues,:setColorbarValues,:setAxisValues]
+    list = fieldnames(PlotConfig)#[:extra,:layout,:visual,:mapping,:legend,:colorbar,:axis]
     keyList = collect(keys(kwargs))
-    applyTo = keyList[in.(keyList,Ref(list))]
-    #@show keyList[.!in.(keyList,Ref(list))] # as warning?
-
+    applyTo = keyList[in.(keyList,Ref(list))]    
     for k ∈ applyTo
-        @eval($cfg.$(Symbol(k,"!")))(;kwargs[k]...)
-        
+        setfield!(cfg,k,merge(getfield(cfg,k),kwargs[k]))
     end
 end
 
@@ -234,166 +116,150 @@ end
         
 
  function PlotConfig(T::Val{:circeegtopo})
-    this = PlotConfig(:topo)
-    this.plotType =  valType_to_symbol(T)
-
-    this.setExtraValues!(
-        predictorBounds = [0,360],
-    )
-    this.setLayoutValues!(
-        showLegend=false,
-    )
-    this.setColorbarValues!(
-        label = "Voltage [µV]",
-        colormap = Reverse(:RdBu),
-    )
-    this.setMappingValues!(
-        x = (:nothing)
-    )
-
-    this.setAxisValues!(
-        label = "",
-        #backgroundcolor = RGB(0.98, 0.98, 0.98),
-    )
-    return this
-end
-function PlotConfig(T::Val{:topo})
-            this = PlotConfig()
-            this.plotType = valType_to_symbol(T)
-
+    cfg = PlotConfig(:topoplot)
+    
+    config_kwargs!(cfg;extra=(;
+            predictorBounds = [0,360],
+        ),layout=(;
+            showLegend=false,
+        ),colorbar=(;
+            label = "Voltage [µV]",
+            colormap = Reverse(:RdBu),
+        ),mapping=(;
             
-            this.setLayoutValues!(
-                showLegend= this.plotType == :topo,
+        ),axis=(;
+            label = "",
+            #backgroundcolor = RGB(0.98, 0.98, 0.98),
+        ))
+    return cfg
+end
+
+function PlotConfig(T::Val{:topoplot})
+            cfg = PlotConfig()
+            
+            config_kwargs!(cfg;layout=(
+                showLegend= true,
                 xlabelFromMapping=nothing,
                 ylabelFromMapping=nothing,
                 useColorbar = true,
                 hidespines = (),
                 hidedecorations = ()
-            )
-            this.setVisualValues!(
+            ),visual=(;
                 contours=(color=:white, linewidth=2),
                 label_scatter=true,
                 label_text=true,
                 bounding_geometry=Circle,
                 colormap=Reverse(:RdBu),
-            )
-            this.setMappingValues!(
-                topodata=(:topodata, :data, :y,:estimate),
-                topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
-                topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
-                topoChannels=(:channels, :channel, :topoChannel, :nothing),
-            )
-            return this
+            ),mapping=(;
+                x = (nothing,),
+                positions=(:pos, :positions, :position, nothing), # Point / Array / Tuple
+                labels=(:labels, :label, :sensor, nothing), # String
+            ))
+            return cfg
         end
 function PlotConfig(T::Val{:topoplotseries})
-            this = PlotConfig(:topo)
-            this.plotType = valType_to_symbol(T)
-
-            this.setExtraValues!(
+            cfg = PlotConfig(:topoplot)
+            config_kwargs!(cfg,extra=(
                 combinefun = mean,
-            )
-            this.setLayoutValues!(
-                showLegend= this.plotType == :topo,
-            )
-            this.setVisualValues!(
-                
-            )
-            this.setMappingValues!(
+            ),layout=(
+                showLegend= false, # what does it mean to have a topoplotseries legend?
+            ),visual=(;label_text=false, # true doesnt work again
+            ),mapping=(
                col=(:time,),
-               row=(:nothing,)
-               
-            )
-            return this
+               row=(nothing,)
+            ))
+            return cfg
 end
-function PlotConfig(T::Val{:design})
-            this = PlotConfig()
-            this.plotType = valType_to_symbol(T)
-
-            this.setLayoutValues!(
-                useColorbar = true
-            )
-            this.setLayoutValues!(
+function PlotConfig(T::Val{:designmat})
+            cfg = PlotConfig()
+            config_kwargs!(cfg;layout=(;
+                useColorbar = true,
                 xlabelFromMapping=nothing,
                 ylabelFromMapping=nothing,
-            )
-            this.setAxisValues!(
+            ),axis=(;
                 xticklabelrotation=pi/8
+            ),extra=(;
+                xTicks=nothing,
+                sortData=false,
+                standardizeData=false,
+            ),
             )
-            return this
+            return cfg
         end
 
 function PlotConfig(T::Val{:butterfly})
-            this = PlotConfig(:erp)
-            this.plotType =  valType_to_symbol(T)
-            this.setMappingValues!(
-                topoChannels=(:channels, :channel, :topoChannel, :nothing),
-            )
-            this.setLayoutValues!(
+    cfg = PlotConfig(:erp)
+    config_kwargs!(cfg;
+            layout=(;
                 showLegend=false
-            )
-            this.setExtraValues!(
+            ),extra=(;
                 topoLegend = true,
                 topoPositionToColorFunction = x->posToColorRomaO(x)
-                )
-            this.setMappingValues!(
-                topoPositions=(:pos, :positions, :position, :topoPositions, :x, :nothing),
-                topoLabels=(:labels, :label, :topoLabels, :sensor, :nothing),
+            ),mapping=(;
+                color=(:channel,:channels,:trial,:trials,),
+                positions=(:pos, :positions, :position, :topoPositions, :x, nothing),
+                labels=(:labels, :label, :topoLabels, :sensor, nothing),
 
-            )
-            return this
-        end        
+            ))
+    return cfg
+end        
 function PlotConfig(T::Val{:erp})
-            this = PlotConfig()
-            this.plotType =  valType_to_symbol(T)
-
-            this.setLayoutValues!(
+            cfg = PlotConfig()
+            config_kwargs!(cfg;mapping=(;
+                color=(:color, :coefname, nothing)
+                ),layout=(;
                 showLegend = true,
                 hidespines = (:r, :t)
-            )
+            ),extra =  (;
+                butterfly=false,
+                categoricalColor=true,
+                categoricalGroup=true,
+                stderror=false, # XXX if it exists, should be plotted
+                pvalue=[],
+            ))
             
-            return this
+            return cfg
 end
         function PlotConfig(T::Val{:erpimage})
-            this = PlotConfig()
-            this.plotType = valType_to_symbol(T)
-            this.setExtraValues!(
+            cfg = PlotConfig()
+            config_kwargs!(cfg;extra=(;
                 sortData = true,
-            )
-            this.setLayoutValues!(
+                meanPlot=false,
+                erpBlur=10,
+            ),layout=(;
                 useColorbar = true,
-            )
-            this.setColorbarValues!(
+            ),colorbar=(;
                 label = "Voltage [µV]"
-            )
-            this.setAxisValues!(
+            ),axis=(
                 xlabel = "Time",
                 ylabel = "Sorted trials"
                 
-            )
-            this.setVisualValues!(
+            ),visual=(;
                 colormap = Reverse("RdBu"),
-            )
-            return this
+            ))
+            return cfg
         end      
         function PlotConfig(T::Val{:paracoord})
-            this = PlotConfig()
-            this.plotType = valType_to_symbol(T)
-
-            this.setExtraValues!(
-                sortData = true,
-            )
-            this.setLayoutValues!(
+            cfg = PlotConfig()
+            config_kwargs!(cfg;layout=(;
                 xlabelFromMapping=:channel,
                 ylabelFromMapping=:y,
                 hidespines=(),
                 hidedecorations=(;label = false),
-            )
-            this.setMappingValues!(
+            ),mapping=(;
                 channel=:channel,
                 category=:category,
                 time=:time,
-            )
-            return this
+            ),extra=(;
+                   # paracoord fix-values
+                   pc_aspect_ratio = 0.55,
+                   pc_right_padding = 15,
+                   pc_left_padding = 25,
+                   pc_top_padding = 26,
+                   pc_bottom_padding = 16,
+                   pc_tick_label_size = 14,
+            ))
+            return cfg
         end
 
 function resolveMappings(plotData,mappingData)
@@ -408,9 +274,9 @@ function resolveMappings(plotData,mappingData)
         if length(available) >= 1
             return available[1]
         else
-            return (:nothing ∈ collect(choices)) ? # is it allowed to return nothing?
+            return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                 nothing :
-                @error("default columns for $key = $choices not found, user must provide one by using plotconfig.setMappingValues!()")
+                @error("default columns for $key = $choices not found, user must provide one by using plotconfig.mapping=()")
         end
     end
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
