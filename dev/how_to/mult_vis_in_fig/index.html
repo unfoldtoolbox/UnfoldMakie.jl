@@ -1,140 +1,77 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Include multiple Visualizations in one Figure · UnfoldMakie.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">UnfoldMakie.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">UnfoldMakie Documentation</a></li><li><span class="tocitem">Tutorials: Setup</span></li><li><span class="tocitem">Tutorials: Visualizations</span><ul><li><a class="tocitem" href="../../tutorials/butterfly/">Butterfly Plot</a></li><li><a class="tocitem" href="../../tutorials/designmatrix/">Designmatrix</a></li><li><a class="tocitem" href="../../tutorials/erpimage/">ERP Image</a></li><li><a class="tocitem" href="../../tutorials/erp/">Line Plot</a></li><li><a class="tocitem" href="../../tutorials/parallelcoordinates/">Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplot/">Topo Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplotseries/">Topo Plot Series</a></li><li><a class="tocitem" href="../../literate/tutorials/circTopo/">Circular TopoPlot</a></li></ul></li><li><span class="tocitem">Plot Configuration</span><ul><li><a class="tocitem" href="../../config/axis_data/">Axis Data</a></li><li><a class="tocitem" href="../../config/colorbar_data/">Colorbar Data</a></li><li><a class="tocitem" href="../../config/extra_data/">Extra Data</a></li><li><a class="tocitem" href="../../config/layout_data/">Layout Data</a></li><li><a class="tocitem" href="../../config/legend_data/">Legend Data</a></li><li><a class="tocitem" href="../../config/mapping_data/">Mapping Data</a></li><li><a class="tocitem" href="../../config/visual_data/">Visual Data</a></li></ul></li><li><span class="tocitem">How To</span><ul><li><a class="tocitem" href="../position2color/">Butterfly Colormap</a></li><li><a class="tocitem" href="../fix_pcp/">Fix Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../gen_te_designmatrix/">Generate a Timeexpanded Designmatrix</a></li><li><a class="tocitem" href="../hide_deco/">Hide Axis Spines and Decorations</a></li><li class="is-active"><a class="tocitem" href>Include multiple Visualizations in one Figure</a></li><li><a class="tocitem" href="../show_oob_labels/">Show out of Bounds Label</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">How To</a></li><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/main/docs/src/how_to/mult_vis_in_fig.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="ht_mvf"><a class="docs-heading-anchor" href="#ht_mvf">Include multiple Visualizations in one Figure</a><a id="ht_mvf-1"></a><a class="docs-heading-anchor-permalink" href="#ht_mvf" title="Permalink"></a></h1><pre><code class="language-julia hljs">using UnfoldMakie
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Include multiple Visualizations in one Figure · UnfoldMakie.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">UnfoldMakie.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">UnfoldMakie Documentation</a></li><li><span class="tocitem">Visualizations-Types</span><ul><li><a class="tocitem" href="../../tutorials/butterfly/">Butterfly Plot</a></li><li><a class="tocitem" href="../../tutorials/designmatrix/">Designmatrix</a></li><li><a class="tocitem" href="../../tutorials/erpimage/">ERP Image</a></li><li><a class="tocitem" href="../../literate/tutorials/erp/">Line Plot</a></li><li><a class="tocitem" href="../../tutorials/parallelcoordinates/">Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplot/">Topo Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplotseries/">Topo Plot Series</a></li><li><a class="tocitem" href="../../literate/tutorials/circTopo/">Circular TopoPlot</a></li></ul></li><li><span class="tocitem">Plot Configuration</span><ul><li><a class="tocitem" href="../../config/axis_data/">Axis Data</a></li><li><a class="tocitem" href="../../config/colorbar_data/">Colorbar Data</a></li><li><a class="tocitem" href="../../config/extra_data/">Extra Data</a></li><li><a class="tocitem" href="../../config/layout_data/">Layout Data</a></li><li><a class="tocitem" href="../../config/legend_data/">Legend Data</a></li><li><a class="tocitem" href="../../config/mapping_data/">Mapping Data</a></li><li><a class="tocitem" href="../../config/visual_data/">Visual Data</a></li></ul></li><li><span class="tocitem">How To</span><ul><li><a class="tocitem" href="../position2color/">Butterfly Colormap</a></li><li><a class="tocitem" href="../fix_pcp/">Fix Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../hide_deco/">Hide Axis Spines and Decorations</a></li><li class="is-active"><a class="tocitem" href>Include multiple Visualizations in one Figure</a></li><li><a class="tocitem" href="../show_oob_labels/">Show out of Bounds Label</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">How To</a></li><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/main/docs/src/how_to/mult_vis_in_fig.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="ht_mvf"><a class="docs-heading-anchor" href="#ht_mvf">Include multiple Visualizations in one Figure</a><a id="ht_mvf-1"></a><a class="docs-heading-anchor-permalink" href="#ht_mvf" title="Permalink"></a></h1><pre><code class="language-julia hljs">using UnfoldMakie
 using CairoMakie
-using DataFramesMeta</code></pre><p>In this section we discuss how users are able to include multiple visualizations in a single figure.</p><p>By using the !-version of the plotting function and putting in a grid position instead of a full figure, we can create Multiple Coordinated Views.</p><p>You start by creating a figure with Makie.Figure. </p><p><code>f = Figure()</code></p><p>Now each plot can be added to <code>f</code> via the <code>config.plot!(...)</code> function by putting in a grid position, such as <code>f[1,1]</code>.</p><pre><code class="language- hljs">f = Figure()
-plot_erp(f[1,1],results_plot_butter;setMappingValues = (color=:channel,))
-plot_butterfly(f[2,1],results_plot_butter;setMappingValues = (color=:channel,))
+using DataFramesMeta
+using UnfoldSim
+using Unfold</code></pre><pre><code class="language-julia hljs">include(&quot;../../example_data.jl&quot;)
+d_topo,positions = example_data(&quot;TopoPlots.jl&quot;)
+uf_deconv= example_data(&quot;UnfoldLinearModelContinuousTime&quot;)
+uf= example_data(&quot;UnfoldLinearModel&quot;)
+uf_5chan = example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
+d_singletrial,_= UnfoldSim.predef_eeg(;return_epoched=true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([-0.04775006828121141 -0.2071934502314474 … -0.2961290597347705 -0.29789003791394847; 0.1557510979111391 -0.2651232078770881 … -0.4430665463276074 -0.48788326360793594; … ; -0.23384887186637143 0.03280811533729396 … -0.40086608150228564 -0.1631512956937874; -0.46968503443599563 0.005211575390744757 … -0.49582249586473054 -0.24922548003477749], 2000×2 DataFrame
+  Row │ continuous  condition
+      │ Float64     String
+──────┼───────────────────────
+    1 │   5.0       car
+    2 │  -2.77778   car
+    3 │   1.66667   car
+    4 │  -1.66667   face
+    5 │   3.88889   car
+    6 │  -3.88889   car
+    7 │   3.88889   face
+    8 │   0.555556  car
+  ⋮   │     ⋮           ⋮
+ 1994 │   2.77778   car
+ 1995 │   2.77778   face
+ 1996 │  -3.88889   face
+ 1997 │   0.555556  face
+ 1998 │  -5.0       car
+ 1999 │  -0.555556  car
+ 2000 │  -5.0       face
+             1985 rows omitted)</code></pre><p>In this section we discuss how users are able to include multiple visualizations in a single figure.</p><p>By using the !-version of the plotting function and putting in a grid position instead of a full figure, we can create Multiple Coordinated Views.</p><p>You start by creating a figure with Makie.Figure. </p><p><code>f = Figure()</code></p><p>Now each plot can be added to <code>f</code>  by putting in a grid position, such as <code>f[1,1]</code>.</p><pre><code class="language- hljs">f = Figure()
+plot_erp!(f[1,1],coeftable(uf_deconv))
+plot_erp!(f[1,2],effects(Dict(:condition=&gt;[&quot;car&quot;,&quot;face&quot;]),uf_deconv),mapping=(;color=:condition))
+plot_butterfly!(f[2,1:2],d_topo;positions=positions)
 
-f</code></pre><p>By using the data from the tutorials we can create a big image with every type of plot.</p><p>With so many plots at once it&#39;s incentivised to set a fixed resolution in your figure to order the plots evenly (Code below).</p><p><img src="../../images/every_plot.png" alt="Coordinated Multiple Views"/></p><pre><code class="nohighlight hljs">f = Figure(resolution = (2000, 2000))
+f</code></pre><p>By using the data from the tutorials we can create a big image with every type of plot.</p><p>With so many plots at once it&#39;s incentivised to set a fixed resolution in your figure to order the plots evenly (Code below).</p><pre><code class="language- hljs">f = Figure(resolution = (2000, 2000))
 
-let
-    results_plot_butter = @subset(results_onesubject,
-        :coefname .== &quot;(Intercept)&quot;,:channel .&lt;7)
+plot_butterfly!(f[1, 1:3], d_topo;positions=positions)
 
-    cButterfly = PlotConfig(:butterfly)
-    cButterfly.setExtraValues(
-        categoricalColor=false,
-        categoricalGroup=true,
-    )
-    cButterfly.setLayoutValues(
-        legendPosition=:bottom,
-    )
-    cButterfly.plot!(f[1, 1], results_plot_butter)
-end
-
-let    
-    results_plot = @subset(results_onesubject,:channel .==3)
-    cLine = PlotConfig(:line)
-
-    cLine.setExtraValues(
-        categoricalColor=false,
-        categoricalGroup=false,
-        stderror=true)
-    cLine.setLayoutValues(
-        showLegend=true,
-        legendPosition=:bottom,
-    )
-    cLine.setMappingValues(color=:coefname, group=:coefname)
-    cLine.setLegendValues(nbanks=2)
-    cLine.plot!(f[1,2], results_plot)
-end
-
-let    
-    results_plot = @subset(results_onesubject,:channel .==3)
-    cLine = PlotConfig(:line)
-    pvals = DataFrame(
-            from=[0.1,0.3],
-            to=[0.5,0.7],
+pvals = DataFrame(
+            from=[0.1,0.15],
+            to=[0.2,0.5],
             # if coefname not specified, line should be black
             coefname=[&quot;(Intercept)&quot;,&quot;category: face&quot;]
         )
-    cLine.setExtraValues(
+plot_erp!(f[2,1:2],results,extra=(;
         categoricalColor=false,
         categoricalGroup=false,
-        pvalue=pvals)
-    cLine.setLayoutValues(
-        showLegend=true,
-        legendPosition=:bottom,
-    )
-    cLine.setVisualValues(linewidth=2)
-    cLine.setMappingValues(color=:coefname, group=:coefname)
-    cLine.setLegendValues(nbanks=2)
-    cLine.plot!(f[1,3], results_plot)
-end
+        pvalue=pvals,
+        stderror=true))
 
-let
-    using Random
-    cErp = PlotConfig(:erp)
-    cErp.setExtraValues(meanPlot = true)
-    cErp.setVisualValues(;
-        colormap=Reverse(:RdBu),
-        colorrange = (-30, 30)
-    )
-    cErp.setLayoutValues(
-        showLegend=true,
-        legendPosition=:right,
-    )
-
-    cErp.plot!(f[2,1], dat_e[28,:,:])
-end
-
-let
-    cDesignTime = PlotConfig(:design)
-    cDesignTime.setExtraValues(xTicks=10, sortData=false)
-    cDesignTime.plot!(f[2,2], designmatrix!(ufCont, evts))
-end
-
-let
-    designmatrix(mres)
-    cDesign = PlotConfig(:design)
-    cDesign.setExtraValues(xTicks=4, sortData=true)
-    cDesign.setLayoutValues(
-        showLegend=true,
-        legendPosition=:right
-    )
-    cDesign.setVisualValues(colormap=:inferno)
-    cDesign.plot!(f[2,3], designmatrix(mres))
-end
-
-let
-    topodata, positions = TopoPlots.example_data()
-    cTopo = PlotConfig(:topo)
-    cTopo.plot!(f[3,1], topodata[1:4, 340, 1];
-        labels=[&quot;O1&quot;, &quot;F2&quot;, &quot;F3&quot;, &quot;P4&quot;])
-end
-
-let
-    topodata, positions = TopoPlots.example_data()
-    df = DataFrame()
-    df.topodata = topodata[1:4, 340, 1]
-    df.pos = positions[1:4]
-    df.labels = [&quot;O1&quot;, &quot;F2&quot;, &quot;F3&quot;, &quot;P4&quot;]
     
-    cTopo = PlotConfig(:eegtopo)
-    cTopo.setVisualValues(
-        colormap=:viridis
-    )
-    cTopo.setAxisValues(
-        aspect = DataAspect()
-    )
-    cTopo.plot!(f[3,2], df)
-end
+    plot_designmatrix!(f[2,3], designmatrix(uf))
 
-let
-    results_plot = @subset(results_onesubject,:channel .&lt;=6)
-    cParacoord = PlotConfig(:paracoord)
-    cParacoord.setLayoutValues(legendPosition=:bottom)
-    cParacoord.setLegendValues(nbanks=2)
-    cParacoord.setMappingValues(category=:coefname,y=:estimate)
-    cParacoord.setExtraValues(
-        pc_aspect_ratio = 0.9,
-        pc_right_padding = 15,
-        pc_left_padding = 34,
-        pc_top_padding = 37,
-        pc_bottom_padding = 23,
-        pc_tick_label_size = 20,
-    )
-    cParacoord.plot!(f[3,3], results_plot; channels=[5,3,2])    
-end
+    #plot_designmatrix!(f[2,4], designmatrix(uf_deconv);visual=(;colormap=:inferno))
 
-f</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Axis Spines and Decorations</a><a class="docs-footer-nextpage" href="../show_oob_labels/">Show out of Bounds Label »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Sunday 16 April 2023 20:44">Sunday 16 April 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    plot_topoplot!(f[3,1], collect(1:64);positions=positions,visual=(;colormap=:viridis))
+    plot_topoplotseries!(f[4,1:3], d_topo,0.1;positions=positions,mapping=(; label=:channel))
+
+
+res_effects = effects(Dict(:continuous=&gt;-5:0.5:5),uf_deconv)
+
+plot_erp!(f[2,4:5],res_effects;
+    mapping = (;y=:yhat,color=:continuous, group=:continuous),
+    extra=(;showLegend=true,
+                    categoricalColor=false,
+                    categoricalGroup=true),
+    legend  = (;nbanks=2),
+    layout  = (;legendPosition=:right))
+
+
+   
+    plot_parallelcoordinates!(f[3,2:3], uf_5chan,[1,2,3,4,5];mapping=(;color=:coefname),layout=(;legendPosition=:bottom))    
+
+    plot_erpimage!(f[1,4:5],d_singletrial)
+    plot_circulareegtopoplot!(f[3:4,4:5],d_topo[in.(d_topo.time,Ref(-0.3:0.1:0.5)),:];positions=positions,predictor=:time,extra=(;predictorBounds=[-0.3,0.5]))
+f</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Axis Spines and Decorations</a><a class="docs-footer-nextpage" href="../show_oob_labels/">Show out of Bounds Label »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Thursday 27 April 2023 18:45">Thursday 27 April 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
