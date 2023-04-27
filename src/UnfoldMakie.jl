@@ -1,7 +1,6 @@
 module UnfoldMakie
 
 using Makie
-using MakieCore
 #using CairoMakie
 using AlgebraOfGraphics
 using TopoPlots
