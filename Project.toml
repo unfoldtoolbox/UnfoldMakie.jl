@@ -1,7 +1,7 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
 authors = ["Benedikt Ehinger", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner", "Vladimir Mikheev"]
-version = "0.2.7"
+version = "0.3.0"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
