@@ -71,7 +71,6 @@ plot_erp(res_effects;
 #
 # Is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values. 
 # Default is `[]` (an empty array).
-
 # Shown below is an example in which `pvalue` are given:
 # pvals = DataFrame(
 #		from=[0.1,0.3],
@@ -80,12 +79,11 @@ plot_erp(res_effects;
 #	)
 #
 # plot_erp(results;extra= (;:pvalue=>pvals))
-
 # ### stderror (boolean)
 # Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 # Default is `false`.
-
-# #previously we showed `:stderror`- but low/high is possible as well`
+#
+# previously we showed `:stderror`- but low/high is possible as well`
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
 plot_erp(select(results,Not(:stderror));extra= (;stderror=true))

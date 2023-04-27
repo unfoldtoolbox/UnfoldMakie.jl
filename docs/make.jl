@@ -35,7 +35,6 @@ makedocs(;
     ),
     pages=[
         "UnfoldMakie Documentation" => "index.md",
-        ],
         "Visualizations-Types" => [
             "Butterfly Plot" => "tutorials/butterfly.md",
             "Designmatrix" => "tutorials/designmatrix.md",
