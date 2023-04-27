@@ -8,7 +8,7 @@ For ERP plots, the `colorbar!` function of the `AlgebraOfGraphics` module is use
 
 The `Colorbar` will be automatically used, when `AlgebraOfGraphics` is able to draw it. 
 For this, the `color` data will be used and has to be numerical. 
-Furthermore `extraData.categoricalColor` needs to be `false`.
+Furthermore `extra=(;categoricalColor=false)` needs to be `false`.
 
 ## Other Plots
 In all other Plots the `Colorbar` function of the `Makie` module is used ([documentation](https://makie.juliaplots.org/v0.17.13/examples/blocks/colorbar/index.html)).
