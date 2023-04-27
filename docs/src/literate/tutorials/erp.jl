@@ -1,4 +1,4 @@
-## [Line Plot Visualization](@id lp_vis)
+# ## [Line Plot Visualization](@id lp_vis)
 
 # Here we discuss line plot visualization. 
 # Make sure you have looked into the [installation instructions](@ref install_instruct).
@@ -40,7 +40,7 @@ plot_erp(results; extra=(:stderror=>true,))
 # :y Default is `(:y, :estimate, :yhat)`.
 # :color Default is `(:color, :coefname)`.
 
-## Configuration for Line Plots
+# # Configuration for Line Plots
 
 # ## extra
 # `plot_erp(...;extra=(;<name>=<value>,...)`.
@@ -64,7 +64,7 @@ plot_erp(res_effects;
 
 # In the following we will use this "pretty" line plot as a basis for looking into configuration options.
 
-### pvalue (array)
+# ## pvalue (array)
 #
 # !!! important
 #       this is currently broken!
