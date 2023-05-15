@@ -18,6 +18,7 @@ uf= example_data("UnfoldLinearModel")
 results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 d_singletrial,_= UnfoldSim.predef_eeg(;return_epoched=true)
+nothing #hide
 ```
 In this section we discuss how users are able to include multiple visualizations in a single figure.
 
