@@ -43,8 +43,8 @@ function applyLayoutSettings!(config::PlotConfig; fig = nothing, hm = nothing,
     #    ax.ylabel = string(config.mapping[config.layout.ylabelFromMapping])
     #end
 end
-hidedecorations!(ax::Matrix{AxisEntries};kwargs...) = hidedecorations!.(ax;kwargs...)
-hidedecorations!(ax::AxisEntries;kwargs...) = Makie.hidedecorations!.(ax.axis;kwargs...)
-hidespines!(ax::Matrix{AxisEntries},args...) = hidespines!.(ax,args...)
-hidespines!(ax::AxisEntries,args...) = Makie.hidespines!.(ax.axis,args...)
+Makie.hidedecorations!(ax::Matrix{AxisEntries};kwargs...) = Makie.hidedecorations!.(ax;kwargs...)
+Makie.hidedecorations!(ax::AxisEntries;kwargs...) = Makie.hidedecorations!.(ax.axis;kwargs...)
+Makie.hidespines!(ax::Matrix{AxisEntries},args...) = Makie.hidespines!.(ax,args...)
+Makie.hidespines!(ax::AxisEntries,args...) = Makie.hidespines!.(ax.axis,args...)
 #hidespinses!(ax:Axis,args...) = hiespines!.(Ref(ax),args...)
