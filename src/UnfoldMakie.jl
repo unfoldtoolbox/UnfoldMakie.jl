@@ -23,7 +23,8 @@ using CategoricalArrays # for cut for TopoPlotSeries
 import Makie.hidedecorations!
 import Makie.hidespines!
 import AlgebraOfGraphics.hidedecorations!
-import AlgebraOfGraphics.hidespines!
+#import AlgebraOfGraphics.hidespines!
+
 include("plotconfig.jl")
 
 include("eeg-series.jl")
