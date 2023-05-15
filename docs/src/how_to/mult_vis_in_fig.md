@@ -7,7 +7,7 @@ using DataFramesMeta
 using UnfoldSim
 using Unfold
 using MakieThemes
-set_theme!(theme_ggthemr(:flat)) # nicer defaults - should maybe be default?
+set_theme!(theme_ggthemr(:fresh)) # nicer defaults - should maybe be default?
 
 ```
 ```@example main
