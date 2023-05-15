@@ -20,6 +20,8 @@ using DataFrames
 using SparseArrays
 using CategoricalArrays # for cut for TopoPlotSeries
 
+import Makie.hidedecorations!
+import Makie.hidespines!
 include("plotconfig.jl")
 
 include("eeg-series.jl")
