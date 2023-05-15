@@ -17,7 +17,7 @@ df= DataFrame(
     :estimate=>eachcol(Float64.(data[:,100:40:300,1])),
     :circularVariable=>[0,50,80,120,180,210],
     :time=>100:40:300)
-  df = flatten(df,:estimate)  
+df = flatten(df,:estimate);
 
 # # Our first plot!
 # note how the plots are at the angles of circularVariable`

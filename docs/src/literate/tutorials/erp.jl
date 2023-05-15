@@ -14,18 +14,18 @@ using DataFramesMeta
 using UnfoldSim
 using UnfoldMakie
 
-# # Setup things
+# ## Setup
 # Let's generate some data and fit a model of a 2-level categorical and a continuous predictor with interaction.
 data,evts = UnfoldSim.predef_eeg(;noiselevel=12,return_epoched=true)
 data = reshape(data,(1,size(data)...))
 f = @formula 0 ~ 1+condition+continuous 
-se_solver =(x,y)->Unfold.solver_default(x,y,stderror=true)
+se_solver =(x,y)->Unfold.solver_default(x,y,stderror=true);
 
 m = fit(UnfoldModel, Dict(Any=>(f,range(0,step=1/100,length=size(data,2)))), evts, data,solver=se_solver)
 results = coeftable(m)
-res_effects = effects(Dict(:continuous=>-5:0.5:5),m)
+res_effects = effects(Dict(:continuous=>-5:0.5:5),m);
 
-# Plot the results
+# ## Plot the results
 plot_erp(results; extra=(:stderror=>true,))
 
 

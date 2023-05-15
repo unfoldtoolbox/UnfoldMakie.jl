@@ -18,7 +18,7 @@ In case you do not already have data, you can get example data from the `TopoPlo
 You can do it like this:
 ```@example main
 data, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1],string.(1:length(positions)))
+df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1],string.(1:length(positions)));
 ```
 
 ```@example main
