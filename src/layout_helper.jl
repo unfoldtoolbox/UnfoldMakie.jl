@@ -28,7 +28,7 @@ function applyLayoutSettings!(config::PlotConfig; fig = nothing, hm = nothing,
     end
 
     if :hidespines ∈ keys(config.layout) && !isnothing(config.layout.hidespines)
-        hidespines!(ax, config.layout.hidespines...)
+        Makie.hidespines!(ax, config.layout.hidespines...)
     end
     
     if :hidedecorations ∈ keys(config.layout) && !isnothing(config.layout.hidedecorations)
@@ -44,7 +44,5 @@ function applyLayoutSettings!(config::PlotConfig; fig = nothing, hm = nothing,
     #end
 end
 Makie.hidedecorations!(ax::Matrix{AxisEntries};kwargs...) = Makie.hidedecorations!.(ax;kwargs...)
-Makie.hidedecorations!(ax::AxisEntries;kwargs...) = Makie.hidedecorations!.(ax.axis;kwargs...)
 Makie.hidespines!(ax::Matrix{AxisEntries},args...) = Makie.hidespines!.(ax,args...)
-Makie.hidespines!(ax::AxisEntries,args...) = Makie.hidespines!.(ax.axis,args...)
 #hidespinses!(ax:Axis,args...) = hiespines!.(Ref(ax),args...)

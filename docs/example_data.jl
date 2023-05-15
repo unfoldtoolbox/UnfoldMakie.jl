@@ -11,11 +11,12 @@ function example_data(example="TopoPlots.jl")
 
 	if example == "UnfoldLinearModel"
 		# load and generate a simulated Unfold Design
-		data,evts = UnfoldSim.predef_eeg(;return_epoched=true)
+		data,evts = UnfoldSim.predef_eeg(;noiselevel=10,return_epoched=true)
+		data = reshape(data,1,size(data)...)
 		f  = @formula 0~1+condition+continuous
 		# generate ModelStruct
 		se_solver =(x,y)->Unfold.solver_default(x,y,stderror=true)
-		return fit(UnfoldModel,(Dict(Any=>(f,range(0,length=size(data,1),step=1/100)))) ,evts,data;solver=se_solver)
+		return fit(UnfoldModel,(Dict(Any=>(f,range(0,length=size(data,2),step=1/100)))) ,evts,data;solver=se_solver)
 	elseif example == "UnfoldLinearModelMultiChannel"
 			# load and generate a simulated Unfold Design
 			cAll = DataFrame()
@@ -40,6 +41,7 @@ function example_data(example="TopoPlots.jl")
 	elseif example == "UnfoldLinearModelContinuousTime"
 		# load and generate a simulated Unfold Design
 		data,evts = UnfoldSim.predef_eeg(;)
+		data = reshape(data,1,size(data)...)
 		f  = @formula 0~1+condition+continuous
 		basis = firbasis([0,0.5],100)
 		# generate ModelStruct

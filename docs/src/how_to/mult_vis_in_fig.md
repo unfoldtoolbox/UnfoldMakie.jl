@@ -6,6 +6,8 @@ using CairoMakie
 using DataFramesMeta
 using UnfoldSim
 using Unfold
+using MakieThemes
+set_theme!(theme_ggthemr(:flat)) # nicer defaults - should maybe be default?
 
 ```
 ```@example main
@@ -13,6 +15,7 @@ include("../../example_data.jl")
 d_topo,positions = example_data("TopoPlots.jl")
 uf_deconv= example_data("UnfoldLinearModelContinuousTime")
 uf= example_data("UnfoldLinearModel")
+results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 d_singletrial,_= UnfoldSim.predef_eeg(;return_epoched=true)
 ```
