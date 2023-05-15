@@ -19,6 +19,7 @@ You can do it like this:
 ```@example main
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1],string.(1:length(positions)));
+nothing #hide
 ```
 
 ```@example main
