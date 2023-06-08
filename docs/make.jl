@@ -36,14 +36,14 @@ makedocs(;
     pages=[
         "UnfoldMakie Documentation" => "index.md",
         "Visualizations-Types" => [
+	    "ERP plot" => "literate/tutorials/erp.md",
             "Butterfly Plot" => "tutorials/butterfly.md",
             "Designmatrix" => "tutorials/designmatrix.md",
             "ERP Image" => "tutorials/erpimage.md",
-            "Line Plot" => "literate/tutorials/erp.md",
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
             "Topo Plot" => "tutorials/topoplot.md",
             "Topo Plot Series" => "tutorials/topoplotseries.md",
-	        "Circular TopoPlot" => "literate/tutorials/circTopo.md",
+	     "Circular TopoPlot" => "literate/tutorials/circTopo.md",
         ],
         "Plot Configuration" => [
             "Axis Data" => "config/axis_data.md",
