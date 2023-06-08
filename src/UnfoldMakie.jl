@@ -1,18 +1,29 @@
 module UnfoldMakie
 
 using Makie
-using CairoMakie
+#using CairoMakie
 using AlgebraOfGraphics
+using TopoPlots
+using GridLayoutBase # for relative_axis
+
 using Unfold
+using ImageFiltering
+using LinearAlgebra # for PCP
+using Statistics
+
 using Colors
 using ColorSchemes
-using TopoPlots
 using ColorTypes
+
 using DataStructures
 using DataFrames
+using SparseArrays
 using CategoricalArrays # for cut for TopoPlotSeries
-using GridLayoutBase # for relative_axis
-include("example_data.jl")
+
+import Makie.hidedecorations!
+import Makie.hidespines!
+import AlgebraOfGraphics.hidedecorations!
+#import AlgebraOfGraphics.hidespines!
 
 include("plotconfig.jl")
 

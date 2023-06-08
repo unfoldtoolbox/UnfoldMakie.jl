@@ -6,7 +6,7 @@ In the following we discuss a possible quick fix for this problem.
 Here we start off with the "label-limited" timeexpanded designmatrix from the [corresponding How To section](@ref ht_gen_te_designmatrix) that details how it can be generated.
 
 ```@julia main
-plot_design(designmatrix!(ufCont,evts),cDesign;setExtraValues=(xTicks=10, sortData=false))
+plot_designmatrix(designmatrix!(ufCont,evts),cDesign;setExtraValues=(xTicks=10, sortData=false))
 ```
 
 #![Label Limited Timeexpanded Designmatrix](../images/designmatrix_te_12_labels.png)

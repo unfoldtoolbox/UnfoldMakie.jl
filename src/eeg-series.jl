@@ -2,19 +2,19 @@
 
 """
 Helper function converting a matrix (channel x times) to a tidy dataframe
-    with columns :erp, :time and :label
+    with columns :estimate, :time and :label
 """
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
     df[!, :time] .= 1:nrow(df)
-    df = stack(df, Not([:time]); variable_name=:label, value_name="erp")
+    df = stack(df, Not([:time]); variable_name=:label, value_name="estimate")
     return df
 end
 
 """
 function eeg_topoplot_series(data::DataFrame,
     Δbin;
-    col_y=:erp,
+    col_y=:estimate,
     col_label=:label,
     col=:time,
     row=nothing,

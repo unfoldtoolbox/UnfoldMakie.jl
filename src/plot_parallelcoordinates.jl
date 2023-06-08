@@ -1,10 +1,3 @@
-using LinearAlgebra
-#using Pipe
-#using PyMNE
-
-
-
-
 """
     function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
@@ -35,22 +28,19 @@ By adapting the padding, aspect ratio and tick label size in px for a new use ca
 ## Return Value:
 The input `f`
 """
-plot_parallelcoordinates(plotData::DataFrame, config::PlotConfig,channels;kwargs...) = plot_parallelcoordinates!(Figure(), plotData, config,channels;kwargs...)
-plot_parallelcoordinates(plotData::DataFrame,channels::Vector{Int64};kwargs...) = plot_parallelcoordinates(plotData, PlotConfig(:paracoord),channels;kwargs...)
-plot_parallelcoordinates!(f::Union{GridPosition, Figure},plotData::DataFrame,channels;kwargs...) = plot_parallelcoordinates!(f,plotData, PlotConfig(:paracoord),channels;kwargs...)
-
-function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig, channels::Vector{Int64};kwargs...)
-    @show kwargs
+plot_parallelcoordinates(plotData::DataFrame,channels::Vector{Int64};kwargs...) = plot_parallelcoordinates!(Figure(),plotData,channels;kwargs...)
+function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, channels::Vector{Int64};kwargs...)
+    config = PlotConfig(:paracoord)
     config_kwargs!(config;kwargs...)
     # We didn't find a good formula to set these automatically
     # have to be set manually for now
     # if size of the plot-area changes the padding gets weird
-    aspect_ratio = config.extraData.pc_aspect_ratio
-    right_padding = config.extraData.pc_right_padding
-    left_padding = config.extraData.pc_left_padding
-    top_padding = config.extraData.pc_top_padding
-    bottom_padding = config.extraData.pc_bottom_padding
-    tick_label_size = config.extraData.pc_tick_label_size
+    aspect_ratio = config.extra.pc_aspect_ratio
+    right_padding = config.extra.pc_right_padding
+    left_padding = config.extra.pc_left_padding
+    top_padding = config.extra.pc_top_padding
+    bottom_padding = config.extra.pc_bottom_padding
+    tick_label_size = config.extra.pc_tick_label_size
     
     # have to be set now to reduce weird behaviour
     width = 500
@@ -58,15 +48,16 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     ch_label_offset = 15
     
     # axis for plot
-    ax = Axis(f[1, 1]; config.axisData...)
+    ax = Axis(f; config.axis...)
     
     # colormap border (prevents from using outer parts of color map)
     bord = 0
     
-    config.mappingData = resolveMappings(plotData,config.mappingData)
+    config.mapping = resolveMappings(plotData,config.mapping)
     
-    categories = unique(plotData[:,config.mappingData.category])
-    catLeng = length(categories)
+    color = unique(plotData[:,config.mapping.color])
+    
+    catLeng = length(color)
     chaLeng = length(channels)
     
     # x position of the axes
@@ -74,12 +65,13 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     # height of the upper labels
     y_values = fill(height, chaLeng)
 
-    colormap = cgrad(config.visualData.colormap, (catLeng < 2) ? 2 + (bord*2) : catLeng + (bord*2), categorical = true)
+    colormap = cgrad(config.visual.colormap, (catLeng < 2) ? 2 + (bord*2) : catLeng + (bord*2), categorical = true)
+    
     colors = Dict{String,RGBA{Float64}}()
 
     # get a colormap for each category
-    for i in eachindex(categories)
-        setindex!(colors, colormap[i+bord], categories[i])
+    for i in eachindex(color)
+        setindex!(colors, colormap[i+bord], color[i])
     end
 
     n = length(channels) # number of axis
@@ -91,8 +83,8 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     
     # get extrema for each channel
     for cha in channels
-        tmp = filter(x -> (x[config.mappingData.channel] == cha),  plotData) 
-        w = extrema.([tmp[:,config.mappingData.y]])
+        tmp = filter(x -> (x[config.mapping.channel] == cha),  plotData) 
+        w = extrema.([tmp[:,config.mapping.y]])
         append!(limits, w)
         append!(l_up, w[1][2])
         append!(l_low, w[1][1])
@@ -107,7 +99,7 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
         else
             switch = false
         end
-        Makie.LineAxis(ax.scene, 
+        Makie.LineAxis(ax.scene; 
             limits = limits[i],
             spinecolor = :black,
             labelfont = "Arial", 
@@ -121,30 +113,30 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     end
     
     # Draw colored line through all channels for each time entry 
-    for time in unique(plotData[:,config.mappingData.time]) 
-        tmp1 = filter(x -> (x[config.mappingData.time] == time),  plotData) #1 timepoint, 10 rows (2 conditions, 5 channels)
-        for cat in categories
+    for time in unique(plotData[:,config.mapping.time]) 
+        tmp1 = filter(x -> (x[config.mapping.time] == time),  plotData) #1 timepoint, 10 rows (2 conditions, 5 channels)
+        for cat in color
             # df with the order of the channels
             dfInOrder = plotData[[],:]
-            tmp2 = filter(x -> (x[config.mappingData.category] == cat),  tmp1)
+            tmp2 = filter(x -> (x[config.mapping.color] == cat),  tmp1)
             
             # create new dataframe with the right order
             for cha in channels
-                append!(dfInOrder,filter(x -> (x[config.mappingData.channel] == cha),  tmp2))
+                append!(dfInOrder,filter(x -> (x[config.mapping.channel] == cha),  tmp2))
             end
             
-            values = map(1:n, dfInOrder[:,config.mappingData.y], limits) do q, d, l # axes, data, limis
+            values = map(1:n, dfInOrder[:,config.mapping.y], limits) do q, d, l # axes, data, limis
                 x = (q - 1) / (n - 1) * width
                 Point2f(x_values[q], (d - l[1]) ./ (l[2] - l[1]) * (y_values[q]-bottom_padding) + bottom_padding)
                 end
-            lines!(ax.scene, values; color = colors[cat], config.visualData...)
+            lines!(ax.scene, values; color = colors[cat], config.visual...)
         end
     end 
     
     channelNames = channelToLabel(channels) 
 
     # helper, because without them they wouldn#t have an entry in legend
-    for cat in categories
+    for cat in color
         lines!(ax, 1, 1, 1, label = cat, color = colors[cat])
     end
     
@@ -159,9 +151,9 @@ function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::Dat
     Makie.xlims!(low = 0, high = width + right_padding)
     Makie.ylims!(low = 0, high = height + top_padding)
 
-    applyLayoutSettings(config; fig = f, ax=ax)
+    applyLayoutSettings!(config; fig = f, ax=ax)
 
     # ensures the axis numbers aren't squished
-    ax.aspect = DataAspect()
+    #ax.aspect = DataAspect()
     return f 
 end
