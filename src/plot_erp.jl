@@ -22,7 +22,9 @@ Plot an ERP plot.
 
 `stderror`: (Default : `false`) Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 
-`pvalue`: Default : `[]` Check the code for specifications. DataFrame of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
+`pvalue`: Default : `[]` example: `DataFrame(from=[0.1,0.3],to=[0.5,0.7],coefname=["(Intercept)","condition: face"])` -  if coefname not specified, the lines will be black
+
+plot_erp(results;extra= (;:pvalue=>pvals))
 
 ## Return Value:
 The input `f`
