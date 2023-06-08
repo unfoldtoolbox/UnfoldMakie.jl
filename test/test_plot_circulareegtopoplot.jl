@@ -2,36 +2,23 @@
     
     @testset "out of error bounds" begin
         testdf = DataFrame(
-            effect = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
+            estimate = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
             predictor = [70,80,400],
-            positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],
+            
         )
-        outOfBoundsErr = nothing
-        try
-            plot_circulareegtopoplot(testdf)
-        catch outOfBoundsErr
-        end
-
-        @test outOfBoundsErr isa Exception
-        @test sprint(showerror, outOfBoundsErr) == "all values in the plotData's effect column have to be within the config.extraData.predictorBounds range"
+        
+    @test_throws ErrorException plot_circulareegtopoplot(testdf;positions=[Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
     end
 
     @testset "tooManyBoundsErr" begin
         testdf = DataFrame(
             effect = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
             predictor = [70,80,90],
-            positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],
             )
             
-        tooManyBoundsErr = nothing
-        try
-            config = PlotConfig(:circeegtopo).setExtraValues!(predictorBounds = [0, 100, 360])
-            plot_circulareegtopoplot(testdf, config)
-        catch tooManyBoundsErr
-        end
+            @test_throws ErrorException plot_circulareegtopoplot(testdf;   extra=(;predictorBounds=[0,100,360]),          positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],
+            )
 
-        @test tooManyBoundsErr isa Exception
-        @test sprint(showerror, tooManyBoundsErr) == "config.extraData.predictorBounds needs exactly two values"
     end
 end
 

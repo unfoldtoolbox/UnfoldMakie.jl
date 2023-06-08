@@ -35,15 +35,11 @@ makedocs(;
     ),
     pages=[
         "UnfoldMakie Documentation" => "index.md",
-        "Tutorials: Setup" => [
-         #   "Installation" => "tutorials/installation.md",
-         #   "Test Data" => "tutorials/test_data.md",
-        ],
-        "Tutorials: Visualizations" => [
+        "Visualizations-Types" => [
             "Butterfly Plot" => "tutorials/butterfly.md",
             "Designmatrix" => "tutorials/designmatrix.md",
             "ERP Image" => "tutorials/erpimage.md",
-            "Line Plot" => "tutorials/erp.md",
+            "Line Plot" => "literate/tutorials/erp.md",
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
             "Topo Plot" => "tutorials/topoplot.md",
             "Topo Plot Series" => "tutorials/topoplotseries.md",
@@ -61,7 +57,6 @@ makedocs(;
         "How To" => [
             "Butterfly Colormap" => "how_to/position2color.md",
             "Fix Parallel Coordinates Plot" => "how_to/fix_pcp.md",
-            "Generate a Timeexpanded Designmatrix" => "how_to/gen_te_designmatrix.md",
             "Hide Axis Spines and Decorations" => "how_to/hide_deco.md",
             "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",

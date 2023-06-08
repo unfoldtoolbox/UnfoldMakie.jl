@@ -1,44 +1,51 @@
-function applyLayoutSettings(config::PlotConfig; fig = nothing, hm = nothing, drawing = nothing, ax = nothing, plotArea = (1, 1))
+function applyLayoutSettings!(config::PlotConfig; fig = nothing, hm = nothing, 
+                            drawing = nothing, ax = nothing, plotArea = (1, 1))
     if isnothing(ax)
         ax = current_axis()
     end
 
-    if (config.layoutData.showLegend)
+    if (config.layout.showLegend)
         if isnothing(fig)
             @error "Legend needs figure parameter"
         else
             # set f[] position depending on legendPosition
-            legendPosition = config.layoutData.legendPosition == :right ? fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]];
+            legendPosition = config.layout.legendPosition == :right ? fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]];
             if isnothing(drawing)
-                if(config.layoutData.useColorbar)
+                if(config.layout.useColorbar)
                     if isnothing(hm)
-                        Colorbar(legendPosition; colormap=config.visualData.colormap, config.colorbarData...)
+                        Colorbar(legendPosition; colormap=config.visual.colormap, config.colorbar...)
                     else
-                        Colorbar(legendPosition, hm; config.colorbarData...)
+                        Colorbar(legendPosition, hm; config.colorbar...)
                     end
                 else
-                    Legend(legendPosition, ax; config.legendData...)
+                    Legend(legendPosition, ax; config.legend...)
                 end
             else
-                legend!(legendPosition, drawing; config.legendData...)
-                colorbar!(legendPosition, drawing; config.colorbarData...)
+                legend!(legendPosition, drawing; config.legend...)
+                colorbar!(legendPosition, drawing; config.colorbar...)
             end
         end
     end
 
-    if :hidespines ∈ keys(config.layoutData) && !isnothing(config.layoutData.hidespines)
-        hidespines!(ax, config.layoutData.hidespines...)
+    if :hidespines ∈ keys(config.layout) && !isnothing(config.layout.hidespines)
+        Makie.hidespines!(ax, config.layout.hidespines...)
     end
     
-    if :hidedecorations ∈ keys(config.layoutData) && !isnothing(config.layoutData.hidedecorations)
-        hidedecorations!(ax; config.layoutData.hidedecorations...)
+    if :hidedecorations ∈ keys(config.layout) && !isnothing(config.layout.hidedecorations)
+        hidedecorations!(ax; config.layout.hidedecorations...)
     end
     
     # automatic labels
-    if !isnothing(config.layoutData.xlabelFromMapping)
-        ax.xlabel = string(config.mappingData[config.layoutData.xlabelFromMapping])
-    end
-    if !isnothing(config.layoutData.ylabelFromMapping)
-        ax.ylabel = string(config.mappingData[config.layoutData.ylabelFromMapping])
-    end
+    #if !isnothing(config.layout.xlabelFromMapping)
+    #    ax.xlabel = string(config.mapping[config.layout.xlabelFromMapping])
+    #end
+    #if !isnothing(config.layout.ylabelFromMapping)
+    #    ax.ylabel = string(config.mapping[config.layout.ylabelFromMapping])
+    #end
 end
+Makie.hidedecorations!(ax::Matrix{AxisEntries};kwargs...) = Makie.hidedecorations!.(ax;kwargs...)
+Makie.hidespines!(ax::Matrix{AxisEntries},args...) = Makie.hidespines!.(ax,args...)
+
+#hidedecorations!(ax::AxisEntries;kwargs...) = Makie.hidedecorations!.(ax.axis;kwargs...)
+Makie.hidespines!(ax::AxisEntries,args...) = Makie.hidespines!.(ax.axis,args...)
+#hidespinses!(ax:Axis,args...) = hiespines!.(Ref(ax),args...)
