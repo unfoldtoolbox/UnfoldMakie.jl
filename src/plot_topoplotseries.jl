@@ -23,19 +23,19 @@ The input `f`
 plot_topoplotseries(plotData::DataFrame,Δbin::Real;kwargs...) = plot_topoplotseries!(Figure(), plotData, Δbin;kwargs...)
 
 
-function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin;positions=nothing,labels=nothing,kwargs...)
+function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin; positions=nothing, labels=nothing,kwargs...)
     config = PlotConfig(:topoplotseries)
     config_kwargs!(config;kwargs...)
     
     plotData = deepcopy(plotData)
 
     # resolve columns with data
-    config.mapping = resolveMappings(plotData,config.mapping)
+    config.mapping = resolveMappings(plotData, config.mapping)
 
-    positions = getTopoPositions(;positions=positions,labels=labels)
+    positions = getTopoPositions(;positions=positions, labels=labels)
     
 
-    eeg_topoplot_series!(f,plotData,Δbin;
+    eeg_topoplot_series!(f, plotData, Δbin;
         col_y = config.mapping.y,
         col_label=:channel,
         col = config.mapping.col,

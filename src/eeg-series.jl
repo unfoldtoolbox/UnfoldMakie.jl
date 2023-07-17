@@ -68,27 +68,27 @@ In place plotting of topoplot series
 see eeg_topoplot_series(data,Δbin) for help
 """
 function eeg_topoplot_series!(fig, data::DataFrame,
-                              Δbin;
-                              col_y=:erp,
-                              col_label=:label,
-                              col=:time,
-                              row=nothing,
-                              combinefun=mean,
-                              topoplot_attributes...)
+    Δbin;
+    col_y=:erp,
+    col_label=:label,
+    col=:time,
+    row=nothing,
+    combinefun=mean,
+    topoplot_attributes...)
 
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
     axisOptions = (aspect=1, xgridvisible=false, xminorgridvisible=false, xminorticksvisible=false,
-                   xticksvisible=false, xticklabelsvisible=false, xlabelvisible=false, ygridvisible=false,
-                   yminorgridvisible=false, yminorticksvisible=false, yticksvisible=false,
-                   yticklabelsvisible=false, ylabelvisible=false,
-                   leftspinevisible=false, rightspinevisible=false, topspinevisible=false,
-                   bottomspinevisible=false, limits=((-0.25, 1.25), (-0.25, 1.25)))
+        xticksvisible=false, xticklabelsvisible=false, xlabelvisible=false, ygridvisible=false,
+        yminorgridvisible=false, yminorticksvisible=false, yticksvisible=false,
+        yticklabelsvisible=false, ylabelvisible=false,
+        leftspinevisible=false, rightspinevisible=false, topspinevisible=false,
+        bottomspinevisible=false, limits=((-0.25, 1.25), (-0.25, 1.25)))
 
     # aggregate the data over time-bins
     data_mean = df_timebin(data, Δbin;
-                           col_y=col_y,
-                           fun=combinefun,
-                           grouping=[col_label, col, row])
+        col_y=col_y,
+        fun=combinefun,
+        grouping=[col_label, col, row])
 
     # using same colormap + contour levels for all plots
     (q_min, q_max) = Statistics.quantile(data_mean[:, col_y], [0.001, 0.999])
@@ -97,7 +97,7 @@ function eeg_topoplot_series!(fig, data::DataFrame,
     q_min = -q_min
 
     topoplot_attributes = merge((colorrange=(q_min, q_max), contours=(levels=range(q_min, q_max; length=7),)),
-                        topoplot_attributes)
+        topoplot_attributes)
 
     # do the col/row plot
 
