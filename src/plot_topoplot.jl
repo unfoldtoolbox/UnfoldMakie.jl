@@ -15,25 +15,25 @@ None
 ## Return Value:
 A figure displaying the topo plot.
 """
-plot_topoplot(plotData::Union{DataFrame, Vector{Float32}};kwargs...) = plot_topoplot!(Figure(), plotData;kwargs...)
-function plot_topoplot!(f::Union{GridPosition, Figure}, plotData::Union{DataFrame, <:AbstractVector}; positions=nothing, labels=nothing,kwargs...)
+plot_topoplot(plotData::Union{DataFrame,Vector{Float32}}; kwargs...) = plot_topoplot!(Figure(), plotData; kwargs...)
+function plot_topoplot!(f::Union{GridPosition,Figure}, plotData::Union{DataFrame,<:AbstractVector}; positions=nothing, labels=nothing, kwargs...)
     config = PlotConfig(:topoplot)
-    config_kwargs!(config;kwargs...) # potentially should be combined
+    config_kwargs!(config; kwargs...) # potentially should be combined
 
     axis = Axis(f[1, 1]; config.axis...)
-    
-    
+
+
     if !(plotData isa Vector)
-        config.mapping = resolveMappings(plotData ,config.mapping)
-         plotData = plotData[:,config.mapping.y]
+        config.mapping = resolveMappings(plotData, config.mapping)
+        plotData = plotData[:, config.mapping.y]
     end
 
 
-    positions = getTopoPositions(;positions=positions,labels=labels)
-    
+    positions = getTopoPositions(; positions=positions, labels=labels)
+
     eeg_topoplot!(axis, plotData, labels; positions, config.visual...)
-        
-    config_kwargs!(config,colorbar=(;limits = (min(plotData...), max(plotData...))))
+
+    config_kwargs!(config, colorbar=(; limits=(min(plotData...), max(plotData...))))
     applyLayoutSettings!(config; fig=f)
 
     return f

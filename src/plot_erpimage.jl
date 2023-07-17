@@ -23,41 +23,41 @@ Non-Positive values deactivate the blur.
 The input `f`
 """
 
-plot_erpimage(plotData::Matrix{<:Real};kwargs...) = plot_erpimage!(Figure(),plotData;kwargs...)
-function plot_erpimage!(f::Union{GridPosition, Figure}, plotData::Matrix{<:Real};kwargs...)
+plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plotData; kwargs...)
+function plot_erpimage!(f::Union{GridPosition,Figure}, plotData::Matrix{<:Real}; kwargs...)
     config = PlotConfig(:erpimage)
-    config_kwargs!(config;kwargs...)
+    config_kwargs!(config; kwargs...)
 
-    ax = Axis(f[1:4,1]; config.axis...)
+    ax = Axis(f[1:4, 1]; config.axis...)
 
-    filtered_data = imfilter(plotData, Kernel.gaussian((0,max(config.extra.erpBlur,0))))
-    
+    filtered_data = imfilter(plotData, Kernel.gaussian((0, max(config.extra.erpBlur, 0))))
+
     if config.extra.sortData
-        ix = sortperm([a[1] for a in argmax(plotData, dims=1)][1,:])   # ix - trials sorted by time of maximum spike
-        hm = heatmap!(ax,(filtered_data[:,ix]); config.visual...)
+        ix = sortperm([a[1] for a in argmax(plotData, dims=1)][1, :])   # ix - trials sorted by time of maximum spike
+        hm = heatmap!(ax, (filtered_data[:, ix]); config.visual...)
     else
-        hm = heatmap!(ax,(filtered_data[:,:]); config.visual...)
+        hm = heatmap!(ax, (filtered_data[:, :]); config.visual...)
     end
 
-    applyLayoutSettings!(config; fig = f, hm = hm, ax = ax, plotArea = (4,1))
+    applyLayoutSettings!(config; fig=f, hm=hm, ax=ax, plotArea=(4, 1))
 
     if config.extra.meanPlot
         # UserInput
         subConfig = deepcopy(config)
-        config_kwargs!(subConfig;layout=(;
-            showLegend = false,
-        ),
-        axis=(;
-            ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label))
+        config_kwargs!(subConfig; layout=(;
+                showLegend=false
+            ),
+            axis=(;
+                ylabel=config.colorbar.label === nothing ? "" : config.colorbar.label))
 
-        
-            #limits = (config.axis.limits[1], config.axis.limits[2], nothing, nothing)))
-        
+
+        #limits = (config.axis.limits[1], config.axis.limits[2], nothing, nothing)))
+
         axisOffset = (config.layout.showLegend && config.layout.legendPosition == :bottom) ? 1 : 0
-        subAxis = Axis(f[5+axisOffset,1]; subConfig.axis...)
+        subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
 
-        lines!(subAxis,mean(plotData,dims=2)[:,1])
-        applyLayoutSettings!(subConfig; fig = f, ax=subAxis)
+        lines!(subAxis, mean(plotData, dims=2)[:, 1])
+        applyLayoutSettings!(subConfig; fig=f, ax=subAxis)
     end
 
     return f
