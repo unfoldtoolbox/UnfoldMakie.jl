@@ -18,13 +18,14 @@ In case you do not already have data, you can get example data from the `TopoPlo
 You can do it like this:
 ```@example main
 data, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1],string.(1:length(positions)));
+df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1], string.(1:length(positions)));
+insertcols!(df, 4, :channel =>  df[!, :label])
 nothing #hide
 ```
 
 ```@example main
 Δbin = 80
-plot_topoplotseries(df,Δbin;positions=positions)
+plot_topoplotseries(df, Δbin; positions = positions)
 ```
 
 
@@ -40,5 +41,5 @@ The labels have to be given into the function seperately:
 !!! important
     currently bugged
 
-`label_scatter` (boolean,true) - Indicates whether the dots should be drawn at the given positions.
+`label_scatter` (boolean, true) - Indicates whether the dots should be drawn at the given positions.
 
