@@ -20,10 +20,10 @@ Plot a Topoplot Series.
 The input `f`
 
 """
-plot_topoplotseries(plotData::DataFrame,Δbin::Real;kwargs...) = plot_topoplotseries!(Figure(), plotData, Δbin;kwargs...)
+plot_topoplotseries(plotData::DataFrame,Δbin::Real;kwargs...) = plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
 
 
-function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin; positions=nothing, labels=nothing,kwargs...)
+function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin; positions=nothing, labels=nothing, kwargs...)
     config = PlotConfig(:topoplotseries)
     config_kwargs!(config;kwargs...)
     
