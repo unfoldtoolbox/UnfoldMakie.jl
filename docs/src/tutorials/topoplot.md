@@ -23,13 +23,13 @@ data, positions = TopoPlots.example_data()
 We select one datapoint, and the first enry of dimension 3 (the mean estimate, the others are p-value and std)
 
 ```@example main
-plot_topoplot(data[:,340,1];positions=positions)
+plot_topoplot(data[:,340,1]; positions = positions)
 ```
 
 ```@example main
 using DataFrames
-df = DataFrame(:estimate=>data[:,340,1])
-plot_topoplot(df;positions=positions)
+df = DataFrame(:estimate => data[:,340,1])
+plot_topoplot(df; positions = positions)
 ```
 
 ### Giving the Positions
@@ -83,5 +83,5 @@ Indicates whether the dots should be drawn at the given positions.
 
 ```@example main
 data, positions = TopoPlots.example_data()
-plot_topoplot(data[1:4,340,1];visual=(;label_scatter = false),  labels=["O1", "F2", "F3", "P4"])
+plot_topoplot(data[1:4,340,1]; visual = (; label_scatter = false), labels=["O1", "F2", "F3", "P4"])
 ```
