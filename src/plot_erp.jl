@@ -196,13 +196,6 @@ struct NullInterpolator <: TopoPlots.Interpolator
 
 end
 
-function (ni::NullInterpolator)(
-    xrange::LinRange, yrange::LinRange,
-    positions::AbstractVector{<:Point{2}}, data::AbstractVector{<:Number})
-
-    return zeros(length(xrange), length(yrange))
-end
-
 function addPvalues(plotData, config)
     p = deepcopy(config.extra.pvalue)
 
