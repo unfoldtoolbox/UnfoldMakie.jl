@@ -1,11 +1,13 @@
 
 
 """
-ax = RelativeAxis(figlike,p::NTuple{4,Float64}; kwargs...)
+ax = RelativeAxis(figlike, p::NTuple{4,Float64}; kwargs...)
 
-Returns an axis which's position is relative to a GridLayout Element (via BBox) and not relative to the Scene (default Axis(...,bbox=BBox()) behavior)
+Returns an axis which's position is relative to a GridLayout Element (via BBox) and not 
+relative to the Scene (default Axis(...,bbox=BBox()) behavior)
 
-p::NTuple{4,Float64}: Give the relative position to the GridPosition, left:right; bottom:up, typical numbers betwen 0 and 1. E.g. (0.25,0.75,0.25,0.75) would center an Axis inside that GridPosition
+p::NTuple{4,Float64}: Give the relative position to the GridPosition, left:right; bottom:up, 
+typical numbers betwen 0 and 1. E.g. (0.25,0.75,0.25,0.75) would center an Axis inside that GridPosition
 
 kwargs... are pasted into Axis
 
