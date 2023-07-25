@@ -17,14 +17,14 @@ We use the test data of `erpcore-N170.jld2`.
 
 ```@example main
 include("../../example_data.jl")
-results_plot,positions = example_data();
+results_plot, positions = example_data();
 ```
 
 ## Plot PCPs
 
 ```@example main
 plot_parallelcoordinates(results_plot,[5,3,2]; # this selects channel 5,3 & 2 
-    mapping = (color=:coefname, y=:estimate))
+    mapping = (color = :coefname, y = :estimate))
 ```
 
 

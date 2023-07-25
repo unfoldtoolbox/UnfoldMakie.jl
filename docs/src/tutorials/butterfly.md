@@ -20,7 +20,7 @@ In case you want to try with different data, look at the [Load Data](@ref test_d
 We filter the data to make it more clearly represented:
 ```@example main
 include("../../example_data.jl")
-df,pos = example_data("TopoPlots.jl")
+df, pos = example_data("TopoPlots.jl")
 first(df,3)
 ```
 
