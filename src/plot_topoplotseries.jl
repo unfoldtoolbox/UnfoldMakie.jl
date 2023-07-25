@@ -32,12 +32,12 @@ function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFram
     # resolve columns with data
     config.mapping = resolveMappings(plotData, config.mapping)
 
-    positions = getTopoPositions(;positions=positions, labels=labels)
+    positions = getTopoPositions(;positions=positions, labels=label)
     
 
     eeg_topoplot_series!(f, plotData, Δbin;
         col_y = config.mapping.y,
-        col_label=:channel,
+        col_label=:label,
         col = config.mapping.col,
         row = config.mapping.row,
         combinefun = config.extra.combinefun,
