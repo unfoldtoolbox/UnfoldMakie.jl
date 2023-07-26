@@ -192,10 +192,6 @@ function topoplotLegend(config, axis, allPositions)
     return topoplot
 end
 
-struct NullInterpolator <: TopoPlots.Interpolator
-
-end
-
 function addPvalues(plotData, config)
     p = deepcopy(config.extra.pvalue)
 
