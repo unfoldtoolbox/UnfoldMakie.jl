@@ -37,7 +37,7 @@ function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFram
 
     eeg_topoplot_series!(f, plotData, Δbin;
         col_y = config.mapping.y,
-        col_label=:label,
+        col_label=plotData.label,
         col = config.mapping.col,
         row = config.mapping.row,
         combinefun = config.extra.combinefun,
