@@ -1,3 +1,5 @@
+#include("setup.jl")
+
 @testset "error cases and warns" begin
     
     @testset "out of error bounds" begin
@@ -12,12 +14,11 @@
 
     @testset "tooManyBoundsErr" begin
         testdf = DataFrame(
-            effect = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
+            estimate = [[4.0,1.0],[4.0,3.0],[4.0,3.0]],
             predictor = [70,80,90],
             )
             
-            @test_throws ErrorException plot_circulareegtopoplot(testdf;   extra=(;predictorBounds=[0,100,360]),          positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],
-            )
+            @test_throws ErrorException plot_circulareegtopoplot(testdf;   extra=(;predictorBounds=[0,100,360]),          positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
 
     end
 end
