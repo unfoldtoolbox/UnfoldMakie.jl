@@ -39,7 +39,7 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
         plotData.label = plotData.channel
     end
 
-    eeg_topoplot_series!(f, plotData, Δbin;/
+    eeg_topoplot_series!(f, plotData, Δbin;
         col_y=config.mapping.y,
         col_label=:label,
         col=config.mapping.col,
