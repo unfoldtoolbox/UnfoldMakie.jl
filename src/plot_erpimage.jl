@@ -2,46 +2,67 @@
 
 
 """
-    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64};kwargs...)
-    function plot_erpimage(data::Matrix{Float64};kwargs...)
+    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64}; kwargs...)
+    function plot_erpimage(data::Matrix{Float64}; kwargs...)
 
 Plot an ERP image.
 ## Arguments:
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::Matrix{Float64}`: Data for the plot visualization
         
-## Extra Data Behavior (...;extra=(;[key]=value)):
-`erpBlur` (Number, `10`) - Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
+## Keyword Arguments
+`blurwidth` (Number, `10`) - Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
 Non-Positive values deactivate the blur.
 
 `sortData` (bool, `false`) - Indicating whether the data is sorted; using sortperm() of Base Julia 
 (sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
 
-`meanPlot`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+`ploterp`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 ## Return Value:
 The input `f`
 """
 
+
+# no times + no figure?
 plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plotData; kwargs...)
-function plot_erpimage!(f::Union{GridPosition,Figure}, plotData::Matrix{<:Real}; kwargs...)
+
+# no times?
+plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
+
+# no figure?
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), times, plotData; kwargs...)
+
+function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, plotData::Matrix{<:Real}; sortvalues=nothing, sortpermutation=nothing, ploterp=true, blurwidth=10, kwargs...)
     config = PlotConfig(:erpimage)
-    config_kwargs!(config; kwargs...)
+    UnfoldMakie.config_kwargs!(config; kwargs...)
 
+
+    !isnothing(sortpermutation) ? @assert(sortpermutation isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
+    if isnothing(sortpermutation)
+        if isnothing(sortvalues)
+            sortpermutation = 1:size(plotData, 2)
+        else
+            sortpermutation = sortperm(sortvalues)
 
-    filtered_data = imfilter(plotData, Kernel.gaussian((0, max(config.extra.erpBlur, 0))))
-
-    if config.extra.sortData
-        ix = sortperm([a[1] for a in argmax(plotData, dims=1)][1, :])   # ix - trials sorted by time of maximum spike
-        hm = heatmap!(ax, (filtered_data[:, ix]); config.visual...)
-    else
-        hm = heatmap!(ax, (filtered_data[:, :]); config.visual...)
+        end
     end
 
-    applyLayoutSettings!(config; fig=f, hm=hm, ax=ax, plotArea=(4, 1))
+    filtered_data = UnfoldMakie.imfilter(plotData[:, sortpermutation], UnfoldMakie.Kernel.gaussian((0, max(blurwidth, 0))))
 
-    if config.extra.meanPlot
+
+
+    yvals = 1:size(filtered_data, 2)
+    if !isnothing(sortvalues)
+        yvals = [minimum(sortvalues), maximum(sortvalues)]
+    end
+
+    hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
+
+    UnfoldMakie.applyLayoutSettings!(config; fig=f, hm=hm, ax=ax, plotArea=(4, 1))
+
+    if ploterp
         # UserInput
         subConfig = deepcopy(config)
         config_kwargs!(subConfig; layout=(;
