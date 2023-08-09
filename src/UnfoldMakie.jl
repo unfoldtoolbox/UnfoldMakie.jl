@@ -20,6 +20,8 @@ using DataFrames
 using SparseArrays
 using CategoricalArrays # for cut for TopoPlotSeries
 
+using CoordinateTransformations # for 3D positions to 2D
+
 import Makie.hidedecorations!
 import Makie.hidespines!
 import AlgebraOfGraphics.hidedecorations!
