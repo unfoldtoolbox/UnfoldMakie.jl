@@ -364,3 +364,56 @@ label_in_channel_order = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9"
 function channelToLabel(channel)
     return label_in_channel_order[channel]
 end
+
+
+
+
+"""
+    convert x/y/z electrode montage positions to spherical coordinate representation. output is a matrix
+"""
+function cart3d_to_spherical(x,y,z)
+    sph = SphericalFromCartesian().(SVector.(x,y,z))
+    sph = [vcat(s.r,s.θ,π/2 - s.ϕ) for s in sph] 
+    sph = hcat(sph...)'
+    return sph
+end
+
+		
+"""
+toPositions(x,y,z;sphere=[0,0,0.])
+toPositions(pos::AbstractMatrix;sphere=[0,0,0.])
+Projects 3D electrode positions to a 2D layout.
+
+The matrix case, assumes `size(pos) = (3,nChannels)`
+Re-implementation of the MNE algorithm.
+"""
+toPositions(pos::AbstractMatrix;kwargs...) = toPositions(pos[1,:],pos[2,:],pos[3,:];kwargs)
+function toPositions(x,y,z;sphere=[0,0,0.])
+	#cart3d_to_spherical(x,y,z)
+	
+# translate to sphere origin
+	x .-= sphere[1]
+	y .-= sphere[2]
+	z .-= sphere[3]
+	
+	# convert to spherical coordinates
+	sph = cart3d_to_spherical(x,y,z)
+
+	# get rid of of the radius for now
+	pol_a = sph[:,3]
+	pol_b = sph[:,2]
+	
+	# use only theta & phi, convert back to cartesian coordinates
+	p_x = pol_a .* cos.(pol_b)
+	p_y = pol_a .* sin.(pol_b)
+
+	# scale by the radius
+	p_x .*= sph[:,1] ./(π/2)
+	p_y .*= sph[:,1] ./(π/2)
+
+	# move back by the sphere coordinates
+	p_x .+= sphere[1]
+	p_y .+= sphere[2]
+
+  return Point2f.(p_x,p_y)
+end
