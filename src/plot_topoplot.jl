@@ -20,14 +20,13 @@ function plot_topoplot!(f::Union{GridPosition,Figure}, plotData::Union{DataFrame
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
-    axis = Axis(f[1, 1]; config.axis...)
+    axis = Axis(f[1, 1]; aspect=DataAspect(), config.axis...)
 
 
     if !(plotData isa Vector)
         config.mapping = resolveMappings(plotData, config.mapping)
         plotData = plotData[:, config.mapping.y]
     end
-
 
     positions = getTopoPositions(; positions=positions, labels=labels)
 
