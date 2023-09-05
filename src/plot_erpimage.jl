@@ -24,13 +24,13 @@ The input `f`
 """
 
 # no times + no figure?
-plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage2!(Figure(), plotData; kwargs...)
+plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plotData; kwargs...)
 
 # no times?
-plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage2!(f, 1:size(plotData, 1), plotData; kwargs...)
+plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
 
 # no figure?
-plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage2!(Figure(), times, plotData; kwargs...)
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), times, plotData; kwargs...)
 
 function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, plotData::Matrix{<:Real}; sortvalues=nothing, sortix=nothing, kwargs...)
     config = PlotConfig(:erpimage)
