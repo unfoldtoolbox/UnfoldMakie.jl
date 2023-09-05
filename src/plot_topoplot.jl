@@ -28,7 +28,6 @@ function plot_topoplot!(f::Union{GridPosition,Figure}, plotData::Union{DataFrame
         plotData = plotData[:, config.mapping.y]
     end
 
-
     positions = getTopoPositions(; positions=positions, labels=labels)
 
     eeg_topoplot!(axis, plotData, labels; positions, config.visual...)
