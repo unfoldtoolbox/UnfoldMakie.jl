@@ -128,6 +128,8 @@ function PlotConfig(T::Val{:topoplot})
             x=(nothing,),
             positions=(:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels=(:labels, :label, :sensor, nothing) # String
+        ), axis=(;
+            aspect=DataAspect()
         ))
     return cfg
 end
