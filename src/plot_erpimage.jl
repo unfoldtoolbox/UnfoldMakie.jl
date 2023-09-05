@@ -50,10 +50,6 @@ function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, pl
 
     filtered_data = UnfoldMakie.imfilter(plotData[:, sortix], UnfoldMakie.Kernel.gaussian((0, max(config.extra.erpBlur, 0))))
 
-
-    #if config.extra.sortix
-    #   ix = sortperm([a[1] for a in argmax(plotData, dims=1)][1, :])   # ix - trials sorted by time of maximum spike
-
     yvals = 1:size(filtered_data, 2)
     if !isnothing(sortvalues)
         yvals = [minimum(sortvalues), maximum(sortvalues)]
@@ -71,9 +67,6 @@ function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, pl
             ),
             axis=(;
                 ylabel=config.colorbar.label === nothing ? "" : config.colorbar.label))
-
-
-        #limits = (config.axis.limits[1], config.axis.limits[2], nothing, nothing)))
 
         axisOffset = (config.layout.showLegend && config.layout.legendPosition == :bottom) ? 1 : 0
         subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
