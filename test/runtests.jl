@@ -9,3 +9,12 @@ end
 @testset "UnfoldMakie.jl" begin
     include("test_toposeries.jl")
 end
+
+@testset "UnfoldMakie.jl" begin
+    include("test_erpimage.jl")
+end
+
+
+@testset "UnfoldMakie.jl" begin
+    include("test_topoplot.jl")
+end

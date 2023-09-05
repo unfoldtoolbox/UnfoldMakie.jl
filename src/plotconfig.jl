@@ -56,43 +56,6 @@ function PlotConfig()# defaults
 
 end
 
-#=
-function updateConfig(cfg::PlotConfig;kwargs)
-
-            this.layout! = function (;kwargs...)
-                # position affects multiple values in legendData
-                kwargsVals = values(kwargs)
-                if haskey(kwargsVals, :legendPosition)
-                    if kwargsVals.legendPosition == :right
-                        sdtLegVal = (;tellwidth = true, tellheight = false, orientation = :vertical)
-                        sdtBarVal = (;tellwidth = true, tellheight = false)
-                    elseif kwargsVals.legendPosition == :bottom
-                        sdtLegVal = (;tellwidth = false, tellheight = true, orientation = :horizontal)
-                        sdtBarVal = (;tellwidth = false, tellheight = true, vertical=false, flipaxis=false)
-                    end
-                    this.legendData = merge(this.legendData, sdtLegVal)
-                    this.colorbarData = merge(this.colorbarData, sdtBarVal)
-                end
-
-                this.layoutData = merge(this.layoutData, kwargs)
-                return this
-            end
-
-            this.axis! = function (;kwargs...)
-                if :xlabel ∈ keys(kwargs)
-                    this.layoutData = merge(this.layoutData, (;xlabelFromMapping = nothing))
-                end
-                if :ylabel ∈ keys(kwargs)
-                    this.layoutData = merge(this.layoutData, (;ylabelFromMapping = nothing))
-                end
-                this.axisData = merge(this.axisData, kwargs)
-
-                return this
-            end
-        return this
-
-end
-=#
 
 """
 Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
@@ -130,6 +93,21 @@ function PlotConfig(T::Val{:circeegtopo})
     return cfg
 end
 
+
+function PlotConfig(T::Val{:topoarray})
+    cfg = PlotConfig(:erp)
+
+    config_kwargs!(cfg; extra=(;
+        ), layout=(;
+        ), colorbar=(;
+        ), mapping=(;
+        ), axis=(;
+        ))
+    return cfg
+end
+
+
+
 function PlotConfig(T::Val{:topoplot})
     cfg = PlotConfig()
 
@@ -150,6 +128,8 @@ function PlotConfig(T::Val{:topoplot})
             x=(nothing,),
             positions=(:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels=(:labels, :label, :sensor, nothing) # String
+        ), axis=(;
+            aspect=DataAspect()
         ))
     return cfg
 end
@@ -268,7 +248,7 @@ function resolveMappings(plotData, mappingData)
         else
             return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                    nothing :
-                   @error("default columns for $key = $choices not found, user must provide one by using plotconfig.mapping=()")
+                   @error("default columns for $key = $choices not found, user must provide one by using plot_plotname(...;mapping=(; $key=:yourColumnName))")
         end
     end
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
