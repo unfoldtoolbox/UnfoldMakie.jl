@@ -23,35 +23,36 @@ Non-Positive values deactivate the blur.
 The input `f`
 """
 
-
 # no times + no figure?
-plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plotData; kwargs...)
+plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage2!(Figure(), plotData; kwargs...)
 
 # no times?
-plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
+plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage2!(f, 1:size(plotData, 1), plotData; kwargs...)
 
 # no figure?
-plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), times, plotData; kwargs...)
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage2!(Figure(), times, plotData; kwargs...)
 
-function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, plotData::Matrix{<:Real}; sortvalues=nothing, sortpermutation=nothing, ploterp=true, blurwidth=10, kwargs...)
+function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, plotData::Matrix{<:Real}; sortvalues=nothing, sortix=nothing, kwargs...)
     config = PlotConfig(:erpimage)
     UnfoldMakie.config_kwargs!(config; kwargs...)
 
 
-    !isnothing(sortpermutation) ? @assert(sortpermutation isa Vector{Int}) : ""
+    !isnothing(sortix) ? @assert(sortix isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
-    if isnothing(sortpermutation)
+    if isnothing(sortix)
         if isnothing(sortvalues)
-            sortpermutation = 1:size(plotData, 2)
+            sortix = 1:size(plotData, 2)
         else
-            sortpermutation = sortperm(sortvalues)
+            sortix = sortperm(sortvalues)
 
         end
     end
 
-    filtered_data = UnfoldMakie.imfilter(plotData[:, sortpermutation], UnfoldMakie.Kernel.gaussian((0, max(blurwidth, 0))))
+    filtered_data = UnfoldMakie.imfilter(plotData[:, sortix], UnfoldMakie.Kernel.gaussian((0, max(config.extra.erpBlur, 0))))
 
 
+    #if config.extra.sortix
+    #   ix = sortperm([a[1] for a in argmax(plotData, dims=1)][1, :])   # ix - trials sorted by time of maximum spike
 
     yvals = 1:size(filtered_data, 2)
     if !isnothing(sortvalues)
@@ -62,7 +63,7 @@ function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, pl
 
     UnfoldMakie.applyLayoutSettings!(config; fig=f, hm=hm, ax=ax, plotArea=(4, 1))
 
-    if ploterp
+    if config.extra.meanPlot
         # UserInput
         subConfig = deepcopy(config)
         config_kwargs!(subConfig; layout=(;
@@ -84,3 +85,4 @@ function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, pl
     return f
 
 end
+
