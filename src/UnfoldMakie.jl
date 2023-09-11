@@ -19,6 +19,9 @@ using DataStructures
 using DataFrames
 using SparseArrays
 using CategoricalArrays # for cut for TopoPlotSeries
+using StaticArrays
+
+using CoordinateTransformations # for 3D positions to 2D
 
 import Makie.hidedecorations!
 import Makie.hidespines!
@@ -63,5 +66,6 @@ export plot_circulareegtopoplot!
 export plot_topoplotseries
 export plot_topoplotseries!
 
-export nonnumeric
+export to_positions
+export nonnumeric # reexport from AoG
 end
