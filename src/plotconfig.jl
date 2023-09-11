@@ -173,6 +173,9 @@ function PlotConfig(T::Val{:butterfly})
             showLegend=false
         ), extra=(;
             topoLegend=true,
+            markersize=10,
+            topowidth=0.25,
+            topoheigth=0.25,
             topoPositionToColorFunction=x -> posToColorRomaO(x)
         ), mapping=(;
             color=(:channel, :channels, :trial, :trials,),

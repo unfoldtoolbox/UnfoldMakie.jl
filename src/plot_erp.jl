@@ -131,11 +131,12 @@ function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions
         # add topoLegend
 
         if (config.extra.topoLegend)
-            topoAxis = Axis(f_grid, width=Relative(0.25), height=Relative(0.25), halign=0.05, valign=0.95, aspect=1)
+            topoAxis = Axis(f_grid, width=Relative(config.extra.topowidth), height=Relative(config.extra.topoheigth), halign=0.05, valign=0.95, aspect=1)
             topoplotLegend(config, topoAxis, allPositions)
         end
         # no extra legend
         mainAxis = Axis(f_grid; config.axis...)
+        hidedecorations!(mainAxis, label = false, ticks = false, ticklabels = false) 
 
         if isnothing(colors)
             drawing = draw!(mainAxis, plotEquation)
@@ -184,7 +185,7 @@ function topoplotLegend(config, axis, allPositions)
         colorrange=(0, length(allPositions)), # add the 0 for the white-first color
         colormap=specialColors,
         head=(color=:black, linewidth=1, model=topoMatrix),
-        label_scatter=(markersize=10, strokewidth=0.5,))
+        label_scatter=(markersize=config.extra.markersize, strokewidth=0.5,))
 
     hidedecorations!(current_axis())
     hidespines!(current_axis())
