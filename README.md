@@ -17,11 +17,12 @@ The supportet visualizations are:
 - Designmatrices
 - Line Plots
 - Butterfly Plots
-- ERP Images
+- ERP Images with option for sorting
 - Topo Plots
+- Topoplot series
 - Parallel Coordinates Plot
 
-![Coordinated Multiple Views](docs/src/images/every_plot.png)
+![Coordinated Multiple Views](docs/src/images/combined_plot_11_09_23.png)
 
 ## Code Notes
 
@@ -38,12 +39,15 @@ If you make use of theses visualizations, please cite [![DOI](https://zenodo.org
 
 ## Authors
 
-It was authored by `Benedikt Ehinger` and has been worked upon by students within the context of a university project (`Fachpraktikum:  Methods in Computational EEG`) at the University of Stuttgart.
+It was authored by `Benedikt Ehinger` and has been worked upon by students and doctoral researchers within the context of a university project (`Fachpraktikum:  Methods in Computational EEG`) at the University of Stuttgart.
 
 The student names are:
 - Baumgartner, Daniel
 - Döring, Sören
 - Gärtner, Niklas
+
+Doctoral reserchers:
+- Vladimir Mikheev
 
 ## Funding
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – project ID 251654672 – TRR 161 (project D05)
