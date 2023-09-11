@@ -12,7 +12,7 @@ using Literate
 using Glob
 
 GENERATED = joinpath(@__DIR__, "src", "literate")
-for subfolder ∈ ["explanations","HowTo","tutorials"]
+for subfolder ∈ ["explanations","HowTo","tutorials","reference"]
     local SOURCE_FILES = Glob.glob(subfolder*"/*.jl", GENERATED)
     foreach(fn -> Literate.markdown(fn, GENERATED*"/"*subfolder), SOURCE_FILES)
 
@@ -61,6 +61,9 @@ makedocs(;
             "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
+        "Reference"  => [
+            "Convert 3D positions / montages to 2D layouts" => "literate/reference/positions.jl"
+        ]
     ],
 )
 
