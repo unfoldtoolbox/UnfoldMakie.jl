@@ -22,7 +22,8 @@ The supportet visualizations are:
 - Topoplot series
 - Parallel Coordinates Plot
 
-![Coordinated Multiple Views](docs/src/images/combined_plot_11_09_23.png)
+![grafik](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/af2801e5-cd64-4932-b84d-9abc1d8470ee)
+
 
 ## Code Notes
 
