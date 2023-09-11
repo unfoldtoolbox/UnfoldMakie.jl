@@ -2,7 +2,7 @@ name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
 
 authors = ["Benedikt Ehinger","Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner"]
-version = "0.3.4"
+version = "0.3.5"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
@@ -43,6 +43,7 @@ GridLayoutBase = "0.9"
 ImageFiltering = "0.7"
 Makie = "0.17,0.18,0.19"
 PyMNE = "0.2"
+StaticArray = "1"
 TopoPlots = "0.1"
 Unfold = "0.3, 0.4, 0.5, 0.6"
 julia = "1"
