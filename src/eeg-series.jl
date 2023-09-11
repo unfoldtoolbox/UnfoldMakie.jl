@@ -74,6 +74,8 @@ function eeg_topoplot_series!(fig, data::DataFrame,
     col=:time,
     row=nothing,
     combinefun=mean,
+    bin_labels = false,
+    rasterize_heatmap = true,
     topoplot_attributes...)
 
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
@@ -116,12 +118,22 @@ function eeg_topoplot_series!(fig, data::DataFrame,
                 sel = sel .&& (data_mean[:, row] .== select_row[r]) # subselect
             end
             df_single = data_mean[sel, :]
+
             # select labels
             labels = df_single[:, col_label]
             # select data
             d_vec = df_single[:, col_y]
             # plot it
-            eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
+            ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
+            
+            if rasterize_heatmap
+                ax2.plots[1].plots[1].rasterize = true
+            end
+            if r == length(select_row) && bin_labels 
+                ax.xlabel = string(df_single.time[1])
+                ax.xlabelvisible = true
+                
+            end
         end
     end
     colgap!(fig.layout, 0)
