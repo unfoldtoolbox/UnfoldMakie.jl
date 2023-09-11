@@ -14,16 +14,18 @@ end
 """
 function eeg_topoplot_series(data::DataFrame,
     Δbin;
-    col_y=:estimate,
-    col_label=:label,
+    y=:estimate,
+    label=:label,
     col=:time,
     row=nothing,
     figure = NamedTuple(),
     combinefun=mean,
+    row_labels = false,
+    col_labels = false,
     topoplot_attributes...
     )
 Plot a series of topoplots. The function automatically takes the `combinefun=mean` over the `:time`` column of `data` in `Δbin` steps.
-Dataframe `data` needs columns `:time` and `col_y(=:erp)`, and `col_label(=:label)`.
+Dataframe `data` needs columns `:time` and `y(=:erp)`, and `label(=:label)`.
 If `data` is a `Matrix`, it is automatically cast to a dataframe, time-bins are then in samples, labels are `string.(1:size(data,1))`
 `
 Δbin in `:time`-units, specifise the time-steps.
@@ -32,6 +34,8 @@ All other keyword arguments are forwarded to the EEG_TopoPlot (eeg_toplot) recip
 `col` and `row` specify the field to split by columns and rows. By default `col=:time`, to split by the time field and `row=nothing`. Useful
 to split by a condition e.g. `...(...,col=:time, row=:condition)` would result in multiple (as many as different values in df.condition) rows of topoplot series
 `figure` allows to include information for the figure generation. Alternatively you can provide a fig object `eeg_topoplot_series!(fig,data::DataFrame,Δbin; kwargs..)`
+    `row_labels` and `col_labels` indicate whether there should be labels in the the plots in the first column indicating the row-value and in the last row to indicate the time (typically timerange)
+    
 # Examples
 Desc
 ```julia-repl
@@ -69,12 +73,13 @@ see eeg_topoplot_series(data,Δbin) for help
 """
 function eeg_topoplot_series!(fig, data::DataFrame,
     Δbin;
-    col_y=:erp,
-    col_label=:label,
+    y=:erp,
+    label=:label,
     col=:time,
     row=nothing,
     combinefun=mean,
-    bin_labels = false,
+    col_labels = false,
+    row_labels = false,
     rasterize_heatmap = true,
     topoplot_attributes...)
 
@@ -88,12 +93,12 @@ function eeg_topoplot_series!(fig, data::DataFrame,
 
     # aggregate the data over time-bins
     data_mean = df_timebin(data, Δbin;
-        col_y=col_y,
+        col_y=y,
         fun=combinefun,
-        grouping=[col_label, col, row])
+        grouping=[label, col, row])
 
     # using same colormap + contour levels for all plots
-    (q_min, q_max) = Statistics.quantile(data_mean[:, col_y], [0.001, 0.999])
+    (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
     # make them symmetrical
     q_min = q_max = max(abs(q_min), abs(q_max))
     q_min = -q_min
@@ -120,19 +125,23 @@ function eeg_topoplot_series!(fig, data::DataFrame,
             df_single = data_mean[sel, :]
 
             # select labels
-            labels = df_single[:, col_label]
+            labels = df_single[:, label]
             # select data
-            d_vec = df_single[:, col_y]
+            d_vec = df_single[:, y]
             # plot it
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
             
             if rasterize_heatmap
                 ax2.plots[1].plots[1].rasterize = true
             end
-            if r == length(select_row) && bin_labels 
+            if r == length(select_row) && col_labels 
                 ax.xlabel = string(df_single.time[1])
                 ax.xlabelvisible = true
-                
+            end
+            if c == 1 && row_labels
+                #@show df_single
+                ax.ylabel = string(df_single.row[1])
+                ax.ylabelvisible = true
             end
         end
     end
