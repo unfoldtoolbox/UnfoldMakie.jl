@@ -137,6 +137,9 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(cfg, extra=(
             combinefun=mean,
+            col_labels=true,
+            row_labels = true,
+            rasterize_heatmaps=true
         ), layout=(
             showLegend=false, # what does it mean to have a topoplotseries legend?
         ), visual=(; label_text=false # true doesnt work again
