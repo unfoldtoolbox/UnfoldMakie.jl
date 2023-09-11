@@ -7,7 +7,7 @@ Plot a Topoplot Series.
 ## Arguments:
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: DataFrame with data, needs a `time` column
-- `Δbin::Real`: A number for how many samples should be moved together to one topoplot
+- `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
 - `kwargs...`: Additional styling behavior. Often used: 
 `plot_topoplotseries(df;mapping=(;col=:time,row=:conditionA))`
 
@@ -41,12 +41,13 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
     end
 
     ftopo = eeg_topoplot_series!(f, plotData, Δbin;
-        col_y=config.mapping.y,
-        col_label=:label,
+        y=config.mapping.y,
+        label=:label,
         col=config.mapping.col,
         row=config.mapping.row,
-        bin_labels = config.extra.bin_labels,
-        rasterize_heatmap = config.extra.rasterize_heatmap,
+        col_labels = config.extra.col_labels,
+        row_labels = config.extra.row_labels,
+        rasterize_heatmaps = config.extra.rasterize_heatmaps,
         combinefun=config.extra.combinefun,
         positions=positions,
         config.visual...
