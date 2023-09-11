@@ -18,7 +18,7 @@ include("../../example_data.jl")
 
 The following code will result in the default configuration. 
 ```@example main
-data,evts = UnfoldSim.predef_eeg(;noiselevel=10,return_epoched=true)
+data, evts = UnfoldSim.predef_eeg(; noiselevel=10, return_epoched=true)
 plot_erpimage(data)
 ```
 
@@ -33,11 +33,11 @@ Since ERP images use a `Matrix` as an input, the library does not need any infor
 (sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
 
 
-- meanPlot (bool, false) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data. If limits are set in the axis values both plots will be aligned.
+- ploterp (bool, false) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data. If limits are set in the axis values both plots will be aligned.
 
 ```@example main
 plot_erpimage(data;
-    extra = (meanPlot = true,),
+    extra = (ploterp = true,),
     colorbar = (label = "Voltage [µV]",),
     visual = (colormap = :viridis, colorrange = (-40, 40)))
 
