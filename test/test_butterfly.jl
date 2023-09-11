@@ -1,4 +1,4 @@
-include("setup.jl")
+
 @testset "markersize change" begin
     include("example_data.jl")
     data, pos = example_data("TopoPlots.jl")
