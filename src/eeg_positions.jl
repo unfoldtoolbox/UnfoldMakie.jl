@@ -380,15 +380,17 @@ end
 
 		
 """
-toPositions(x,y,z;sphere=[0,0,0.])
-toPositions(pos::AbstractMatrix;sphere=[0,0,0.])
+to_positions(x,y,z;sphere=[0,0,0.])
+to_positions(pos::AbstractMatrix;sphere=[0,0,0.])
 Projects 3D electrode positions to a 2D layout.
 
 The matrix case, assumes `size(pos) = (3,nChannels)`
 Re-implementation of the MNE algorithm.
+
+Tipp: You can directly get positions from an MNE object after loading PyMNE and thus activating the UnfoldMakie PyMNE extension
 """
-toPositions(pos::AbstractMatrix;kwargs...) = toPositions(pos[1,:],pos[2,:],pos[3,:];kwargs)
-function toPositions(x,y,z;sphere=[0,0,0.])
+to_positions(pos::AbstractMatrix;kwargs...) = to_positions(pos[1,:],pos[2,:],pos[3,:];kwargs...)
+function to_positions(x,y,z;sphere=[0,0,0.])
 	#cart3d_to_spherical(x,y,z)
 	
 # translate to sphere origin
