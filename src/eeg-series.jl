@@ -138,7 +138,7 @@ function eeg_topoplot_series!(fig, data::DataFrame,
                 ax.xlabel = string(df_single.time[1])
                 ax.xlabelvisible = true
             end
-            if c == 1 && row_labels
+            if c == 1 && length(select_row)>1 && row_labels
                 #@show df_single
                 ax.ylabel = string(df_single.row[1])
                 ax.ylabelvisible = true
