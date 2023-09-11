@@ -62,7 +62,7 @@ makedocs(;
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
         "Reference"  => [
-            "Convert 3D positions / montages to 2D layouts" => "literate/reference/positions.jl"
+            "Convert 3D positions / montages to 2D layouts" => "literate/reference/positions.md"
         ]
     ],
 )
