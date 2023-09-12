@@ -1,7 +1,6 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
-
-authors = ["Benedikt Ehinger","Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner"]
+authors = ["Benedikt Ehinger", "Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner"]
 version = "0.3.5"
 
 [deps]
@@ -36,6 +35,7 @@ CategoricalArrays = "0.10"
 ColorSchemes = "3"
 ColorTypes = "0.11"
 Colors = "0.12"
+CoordinateTransformations = "0.6"
 DataFrames = "1"
 DataStructures = "0.18"
 GeometryBasics = "0.4"
