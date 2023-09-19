@@ -5,22 +5,26 @@ using LinearAlgebra
     function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame;kwargs...)
     function plot_erp(plotData::DataFrame, ;kwargs...)
         
-
 Plot an ERP plot.
+
 ## Arguments:
+
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Data for the line plot visualization.
-
 - `kwargs...`: Additional styling behavior. Often used: `plot_erp(df;mapping=(;color=:coefname,col=:conditionA))`
+
 ## Extra Data Behavior (...;extra=(;[key]=value)):
-`categoricalColor` (bool,`true`) - Indicates whether the column referenced in mapping.color should be used nonnumerically.
-`categoricalGroup` (bool,`true`) - Indicates whether the column referenced in mapping.group should be used nonnumerically.
-`topoLegend` (bool, `false`) - Indicating whether a topo plot is used as a legend.
-`stderror` (bool,`false`) - Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-`pvalue` (Array,[]) - example: `DataFrame(from=[0.1,0.3],to=[0.5,0.7],coefname=["(Intercept)","condition: face"])` -  if coefname not specified, the lines will be black
+
+- `categoricalColor` (bool, `true`) - Indicates whether the column referenced in mapping.color should be used nonnumerically.
+- `categoricalGroup` (bool, `true`) - Indicates whether the column referenced in mapping.group should be used nonnumerically.
+- `topoLegend` (bool, `false`) - Indicating whether a topo plot is used as a legend.
+- `stderror` (bool, `false`) - Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
+- `pvalue` (Array, `[]`) - example: `DataFrame(from=[0.1,0.3],to=[0.5,0.7],coefname=["(Intercept)","condition: face"])` -  if coefname not specified, the lines will be black
+
 
 ## Return Value:
-f - Figure() or the inputed `f`
+
+- f - Figure() or the inputed `f`
 
 """
 plot_erp(plotData::DataFrame; kwargs...) = plot_erp!(Figure(), plotData, ; kwargs...)
@@ -28,7 +32,12 @@ plot_erp(plotData::DataFrame; kwargs...) = plot_erp!(Figure(), plotData, ; kwarg
 """
 Plot Butterfly
 
-see `plot_erp`
+See `plot_erp` for all specifications
+
+## Extra Data Behavior (...;extra=(;[key]=value)):
+`markersize` (Real, `10`) - change the size of the topoplot-inlay electrodes
+
+
 """
 plot_butterfly(plotData::DataFrame; kwargs...) = plot_butterfly!(Figure(), plotData; kwargs...)
 plot_butterfly!(f::Union{GridPosition,<:Figure}, plotData::DataFrame; extra=(;), kwargs...) = plot_erp!(f, plotData, ; extra=merge((; butterfly=true), extra), kwargs...)
