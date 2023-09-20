@@ -58,16 +58,6 @@ Note that only one of `positions` or `labels` have to be set to draw a topo plot
 cfgDefault = UnfoldMakie.PlotConfig()
 cfgDefault.mapping.y
 ```
-`positions`
-```@example main 
-cfgDefault.mapping.positions #hide
-```
-
-`labels`
-```@example main
-cfgDefault.mapping.labels #hide
-```
-
 
 ### label_text (boolean)
 Indicates whether label should drawn next to their position.

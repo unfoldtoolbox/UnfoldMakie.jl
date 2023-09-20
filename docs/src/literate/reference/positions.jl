@@ -16,7 +16,7 @@ data = rand(n_channels,1) * 1e-6
 fake_evoked = PyMNE.EvokedArray(data, fake_info)
 fake_evoked.set_montage(biosemi_montage)
 
-pos = UnfoldMakie.toPositions(fake_evoked)
+pos = to_positions(fake_evoked)
 
 # # project from 3D electrode locations to 2D
 pos3d = hcat(values(pyconvert(Dict,biosemi_montage.get_positions()["ch_pos"]))...)
