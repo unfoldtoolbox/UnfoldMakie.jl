@@ -25,7 +25,7 @@ DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive=
 
 makedocs(;
     modules=[UnfoldMakie],
-    authors="Benedikt Ehinger, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
+    authors="Benedikt Ehinger, Vladimir Mikheev, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
     repo="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
     sitename="UnfoldMakie.jl",
     format=Documenter.HTML(;
