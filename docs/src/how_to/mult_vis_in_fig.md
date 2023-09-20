@@ -18,6 +18,7 @@ uf = example_data("UnfoldLinearModel")
 results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
+times = -0.099609375:0.001953125:1.0
 nothing #hide
 ```
 In this section we discuss how users are able to include multiple visualizations in a single figure.
@@ -66,11 +67,8 @@ plot_erp!(f[2, 1:2], results, extra=(;
 
 plot_designmatrix!(f[2, 3], designmatrix(uf))
 
-#plot_designmatrix!(f[2,4], designmatrix(uf_deconv);visual=(;colormap=:inferno))
-
 plot_topoplot!(f[3, 1], collect(1:64); positions=positions, visual=(; colormap=:viridis))
 plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; label=:channel))
-
 
 res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 
@@ -82,12 +80,10 @@ plot_erp!(f[2, 4:5], res_effects;
     legend=(; nbanks=2),
     layout=(; legendPosition=:right))
 
-
-
 plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
 
-plot_erpimage!(f[1, 4:5], d_singletrial)
-plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :]; 
+plot_erpimage!(f[1, 4:5], times, d_singletrial)
+plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
     positions=positions, predictor=:time, extra=(; predictorBounds=[-0.3, 0.5]))
 
 f
