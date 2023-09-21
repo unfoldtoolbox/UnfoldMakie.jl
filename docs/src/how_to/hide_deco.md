@@ -1,12 +1,12 @@
 # [Hide Axis Spines and Decorations](@id ht_hide_deco)
 
-In this section we discuss how users are able to efficiently hide axis spines and decorations in their plots.
+This section discusses how users can efficiently hide axis spines and decorations in their plots.
 
-While it's possible to hide these axis decorations through setting the axis settings with `axis=(;...)`, `Makie.Axis` features multiple variables for different aspects of the plot. This means that removing all decoration is only possible by setting a lot of variables each time.
+While it's possible to hide these axis decorations by setting the axis settings with `axis=(;...)`, `Makie.Axis` provides multiple variables for different aspects of the plot. This means that removing all decorations is only possible by setting many variables each time.
 
-Makie does feature methods like `hidespines!` and `hidedecorations!`, but the user might not have easy acces to the axis their plot is drawn in.
+Makie does provide methods like `hidespines` and `hidedecorations`, but the user may not have easy access to the axis their plot is drawn in.
 
-So instead these functions can be called by setting variables with `layout = (;)`:
+Instead, these functions can be called by setting variables with `layout = (;)`:
 
 ```
 ... layout = (
@@ -16,11 +16,9 @@ So instead these functions can be called by setting variables with `layout = (;)
 )
 ```
 
-Since these values mirror the input of the function, we can use an empty tuple to remove all decorations or spines respectively
+Since these values reflect the input to the function, we can use an empty tuple to remove all decorations and spines, respectively
 
-
-And using `hidespines = (:r, :t)` results in the removal of the top and right border.
-
+And using `hidespines = (:r, :t)` will remove the top and right borders.
 
 For more information on the input of these functions refer to the [Makie dokumentation on Axis.](https://makie.juliaplots.org/v0.15.2/examples/layoutables/axis/#hiding_axis_spines_and_decorations)
 

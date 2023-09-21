@@ -13,7 +13,7 @@ Furthermore `extra=(;categoricalColor=false)` needs to be `false`.
 ## Other Plots
 In all other Plots the `Colorbar` function of the `Makie` module is used ([documentation](https://makie.juliaplots.org/v0.17.13/examples/blocks/colorbar/index.html)).
 
-The Colorbar will only be used when both `layoutData.showLegend` and `layoutData.useColorbar` are set `true`.
+The Colorbar will only be used when both `layoutData.showLegend` and `layoutData.useColorbar` are set to `true`.
 
 ## Colorbar data default values
 

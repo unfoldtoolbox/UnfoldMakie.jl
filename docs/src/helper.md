@@ -1,19 +1,19 @@
 ```@docs
-eeg_topoplot_series(::Tuple{DataFrame, Any})
-to_positions(::Tuple{AbstractMatrix})
-df_timebin(::Tuple{Any, Any})
-plot_erp(::Tuple{DataFrame})
-plot_circulareegtopoplot(::Tuple{DataFrame})
-plot_designmatrix(::Tuple{Unfold.DesignMatrix})
-cart3d_to_spherical(::Tuple{Any, Any, Any})
-plot_topoplotseries(::Tuple{DataFrame, Real})
-eeg_topoplot_series!(::Tuple{Any, DataFrame, Any})
-plot_butterfly(::Tuple{DataFrame})
-valType_to_symbol(::Tuple{Any})
-RelativeAxis()
-config_kwargs!(::Tuple{PlotConfig})
-eeg_matrix_to_dataframe(::Tuple{Any, Any})
-rel_to_abs_bbox(::Tuple{Any, Any})
-plot_parallelcoordinates(::Tuple{DataFrame, Vector{Int64}})
-plot_topoplot(::Tuple{Union{DataFrame, Vector{Float32}}})
+UnfoldMakie.RelativeAxis
+UnfoldMakie.eeg_topoplot_series
+UnfoldMakie.eeg_topoplot_series!
+UnfoldMakie.config_kwargs!
+UnfoldMakie.eeg_matrix_to_dataframe
+UnfoldMakie.rel_to_abs_bbox
+UnfoldMakie.plot_parallelcoordinates
+UnfoldMakie.plot_topoplot
+UnfoldMakie.to_positions
+UnfoldMakie.df_timebin
+UnfoldMakie.plot_erp
+UnfoldMakie.plot_circulareegtopoplot
+UnfoldMakie.plot_designmatrix
+UnfoldMakie.cart3d_to_spherical
+UnfoldMakie.plot_topoplotseries
+UnfoldMakie.plot_butterfly
+UnfoldMakie.valType_to_symbol
 ```
