@@ -14,8 +14,6 @@ using DataFrames
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
 ## Data
-In case you want to try with different data, look at the [Load Data](@ref test_data) section. 
-
 
 We filter the data to make it more clearly represented:
 ```@example main

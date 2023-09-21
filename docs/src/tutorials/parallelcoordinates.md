@@ -11,7 +11,6 @@ using CairoMakie
 ```
 
 ## Data
-In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 We use the test data of `erpcore-N170.jld2`.
 
