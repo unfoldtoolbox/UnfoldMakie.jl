@@ -1,80 +1,54 @@
-### A Pluto.jl notebook ###
-# v0.19.11
+@testset "testing combined figure" begin
+    include("../docs/example_data.jl")
+    d_topo, positions = example_data("TopoPlots.jl")
+    uf_deconv = example_data("UnfoldLinearModelContinuousTime")
+    uf = example_data("UnfoldLinearModel")
+    results = coeftable(uf)
+    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
 
-using Markdown
-using InteractiveUtils
+    f = Figure(resolution=(2000, 2000))
 
-# ╔═╡ a979aa82-4b9d-11ed-1469-978ebad92bc3
-begin
-using Pkg
-Pkg.activate("..")
+    plot_butterfly!(f[1, 1:3], d_topo; positions=positions)
+
+    pvals = DataFrame(
+        from=[0.1, 0.15],
+        to=[0.2, 0.5],
+        # if coefname not specified, line should be black
+        coefname=["(Intercept)", "category: face"]
+    )
+    plot_erp!(f[2, 1:2], results, extra=(;
+        categoricalColor=false,
+        categoricalGroup=false,
+        pvalue=pvals,
+        stderror=true))
+
+
+    plot_designmatrix!(f[2, 3], designmatrix(uf))
+
+    plot_topoplot!(f[3, 1], collect(1:64); positions=positions, visual=(; colormap=:viridis))
+    plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; label=:channel))
+
+
+    res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
+
+    plot_erp!(f[2, 4:5], res_effects;
+        mapping=(; y=:yhat, color=:continuous, group=:continuous),
+        extra=(; showLegend=true,
+            categoricalColor=false,
+            categoricalGroup=true),
+        legend=(; nbanks=2),
+        layout=(; legendPosition=:right))
+
+
+
+    plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+
+    times = -0.099609375:0.001953125:1.0
+    plot_erpimage!(f[1, 4:5], times, d_singletrial)
+
+    plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
+        positions=positions, predictor=:time, extra=(; predictorBounds=[-0.3, 0.5]))
+
+    f
 end
-
-# ╔═╡ c2e68f1d-23a6-4d8a-bcf2-9ba1620869cf
-using Revise
-
-# ╔═╡ cd201ca2-6256-48af-8184-8744ab24028f
-using UnfoldMakie
-
-# ╔═╡ 87c04057-55cd-4772-918f-9e29ec12e6ea
-using CairoMakie
-
-# ╔═╡ 6219f1b9-1e5b-4e07-81c9-867022baa554
-using TopoPlots
-
-# ╔═╡ 16636c28-95e4-4e8e-aa8d-6a0807f15a74
-using Unfold
-
-# ╔═╡ ea4472d4-d6f4-4270-9483-405d27f09be3
-using DataFrames
-
-# ╔═╡ d6afa7aa-eb8a-4a85-b378-37c01408756d
-data,chanlocs = TopoPlots.example_data();
-
-# ╔═╡ b1a9cd37-f22e-471c-bd7f-c0e508d26adc
-begin
-	df = DataFrame(estimate=Float64[],time=[],channel=[],coefname=[],topoPositions=[],se=[])
-	pos = TopoPlots.points2mat(chanlocs)
-for ch = 1:size(data,1)
-	for t = 1:size(data,2)
-		append!(df,DataFrame(estimate=data[ch,t,1],se=data[ch,t,1],time=t,channel=ch,coefname="A",topoPositions=(pos[1,ch],pos[2,ch])))
-		
-		
-	end
-end
-	dftmp = deepcopy(df)
-	dftmp.estimate .= 0.5 .* dftmp.estimate .+ 0.1.*rand(nrow(df)) .- 0.05
-	dftmp.coefname .= "B"
-	df = vcat(df,dftmp)
-end
-
-# ╔═╡ 5fb731af-d004-4e01-a459-b8ccc5362613
-UnfoldMakie.plot_butterfly(df[df.coefname .=="A",:];setExtraValues=(:topoLegend=>true,),setMappingValues=(:category=>:coefname,))#,topoPositions=chanlocs))
-
-# ╔═╡ 3f25224f-e2a2-4df3-9ee5-94c7e5b3760b
-UnfoldMakie.plot_erp(df[df.channel .==32,:])
-
-# ╔═╡ 01457325-fde5-4c61-95c7-9467175ef4a7
-
-
-# ╔═╡ 4182b4dc-f6bb-4de2-883e-9db5c5e592b8
-UnfoldMakie.plot_topo(df[(df.time .==230) .&&(df.coefname.=="A"),:])
-
-# ╔═╡ 3f7decce-5f15-4298-a304-f42967cb0f9b
-UnfoldMakie.plot_paraCoord(df,collect(20:30),setMappingValues=(:category=>:coefname,))
-
-# ╔═╡ Cell order:
-# ╠═a979aa82-4b9d-11ed-1469-978ebad92bc3
-# ╠═cd201ca2-6256-48af-8184-8744ab24028f
-# ╠═87c04057-55cd-4772-918f-9e29ec12e6ea
-# ╠═6219f1b9-1e5b-4e07-81c9-867022baa554
-# ╠═d6afa7aa-eb8a-4a85-b378-37c01408756d
-# ╠═16636c28-95e4-4e8e-aa8d-6a0807f15a74
-# ╠═ea4472d4-d6f4-4270-9483-405d27f09be3
-# ╠═b1a9cd37-f22e-471c-bd7f-c0e508d26adc
-# ╠═5fb731af-d004-4e01-a459-b8ccc5362613
-# ╠═3f25224f-e2a2-4df3-9ee5-94c7e5b3760b
-# ╠═01457325-fde5-4c61-95c7-9467175ef4a7
-# ╠═4182b4dc-f6bb-4de2-883e-9db5c5e592b8
-# ╠═3f7decce-5f15-4298-a304-f42967cb0f9b
-# ╠═c2e68f1d-23a6-4d8a-bcf2-9ba1620869cf

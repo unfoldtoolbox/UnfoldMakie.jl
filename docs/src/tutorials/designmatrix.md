@@ -13,7 +13,7 @@ using CairoMakie
 ```
 
 ## Data
-In case you do not already have data, look at the [Load Data](@ref test_data) section. 
+
 ```@example main
 include("../../example_data.jl")
 uf = example_data("UnfoldLinearModel")

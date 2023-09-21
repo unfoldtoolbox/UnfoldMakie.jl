@@ -5,23 +5,23 @@ This is the documentation of the UnfoldMakie module for the Julia programming la
 
 ## About
 
-UnfoldMakie aims to allow users to generate different types of visualizations. 
-These include line plots, butterfly plots, designmatrices, parallel coordinates plots, ERP images and topo plots.
-Building on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/) Modules, it also grants users customizability through an input configuration on the plots.
+UnfoldMakie aims to allow users to create different types of visualizations. 
+These include line plots, butterfly plots, design matrices, parallel coordinate plots, ERP images, and topo plots.
+Building on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/) Modules, it also allows users to customize the plots through an input configuration.
 
-As is apparent considering the types of possible visualizations, these config options try to enable users to create plots, that are helpful in the subject area of computational EEG.
-One such example is the possibility of using a topo plot as a legend for a line plot by allowing for multiple visualizations within one figure.
+As can be seen from the types of visualizations possible, these configuration options try to enable the user to create plots that are helpful in the field of computational EEG.
+One such example is the ability to use a topo plot as a legend for a line plot by allowing multiple visualizations within a figure.
 
 ![Coordinated Multiple Views](./images/every_plot.png)
 
 ## Structure
 
-For easy readability, the documentation is divided into sections users can inspect depending on their query.
+For ease of reading, the documentation is divided into sections that users can view based on their questions.
 
-The `Tutorials: Setup` section contains all information to get started including [installation](@ref install_instruct) and how to aquire necessary [data](@ref test_data) for testing if the user has none.
+The `Tutorials: Setup` section contains all the information needed to get started, including [installation](@ref install_instruct).
 
-The `Tutorials: Visualizations` section summarizes all possible visualizations and how users can generate them. 
-It also details their unique configuration options.
+The `Tutorials: Visualizations` section summarizes all possible visualizations and how users can create them. 
+It also describes their unique configuration options. 
 
 These visualizations are:
 - [Designmatrices](@ref dm_vis)
@@ -31,8 +31,9 @@ These visualizations are:
 - [Topo Plots](@ref tp_vis)
 - [Parallel Coordinate Plots](@ref pcp_vis)
 
-The `Plot Configuration` all segments of the config, detailing their contained attributes.
-The plot config is the prime interface allowing the user to access the different visualition options. As the options can be quite different in nature, the plot config is further split into categories.
+The `Plot Configuration` shows all segments of the config, detailing the attributes they contain.
+The plot config is the main interface that allows the user to access the various visualization options. Since the options can be quite different in nature, the plot config is further divided into categories.
+
 These segments are:
 - [Axis Data](@ref config_axis)
 - [Colorbar Data](@ref config_colorbar)
@@ -46,7 +47,7 @@ The `How To` section features information on how to achieve specific goals or de
 
 These segments are:
 - [Fix Parallel Coordinates Plot](@ref ht_fpcp)
-- [Generate a Timeexpanded Designmatrix](@ref ht_gen_te_designmatrix)
+- [Show Out-of-bounds Labels for Designmatrix](@ref ht_soobl)
 - [Hide Axis Spines and Decorations](@ref ht_hide_deco)
 - [Include multiple Visualizations in one Figure](@ref ht_mvf)
 - [Show out of Bounds Label](@ref ht_soobl)

@@ -1,5 +1,5 @@
 # [Extra Data](@id config_extra)
 
-The extra data of the configuration consists of all config options that are unique for the visualizations.
+The configuration extra data consists of all configuration options that are unique to the visualizations.
 
-The available options for each plot are described at the end of their respective tutorial in the `Tutorials: Visualizations` section.
+The options available for each plot are described at the end of each tutorial in the `Tutorials: Visualizations` section.

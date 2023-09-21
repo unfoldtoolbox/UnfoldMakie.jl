@@ -1,8 +1,8 @@
 # [Layout Data](@id config_layout)
 
-The layout data of the configuration consists of config options for the layout such as the legend and labels.
+The layout data of the configuration consists of configuration options for the layout, such as the legend and labels.
 
-The following layout data options exist (the default values may be different for some plots types):
+The following layout data options are available (defaults may be different for some plot types):
 
 ## showLegend (boolean)
 Indicating whether the legend is displayed.
