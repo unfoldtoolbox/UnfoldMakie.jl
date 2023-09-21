@@ -58,27 +58,17 @@ Note that only one of `positions` or `labels` have to be set to draw a topo plot
 cfgDefault = UnfoldMakie.PlotConfig()
 cfgDefault.mapping.y
 ```
-`positions`
-```@example main 
-cfgDefault.mapping.positions #hide
-```
-
-`labels`
-```@example main
-cfgDefault.mapping.labels #hide
-```
-
 
 ### label_text (boolean)
 Indicates whether label should drawn next to their position.
 Obviously the labels have to be provided: `plot_topoplot(...; labels=[...])`
 
-`plot_topoplot(...;visual=(;label_text=true))`
+`plot_topoplot(...;visual=(; label_text=true))`
 
 ### label_scatter (boolean)
 Indicates whether the dots should be drawn at the given positions.
 
-`plot_topoplot(...;visual=(;label_scatter=true))`
+`plot_topoplot(...;visual=(; label_scatter=true))`
 
 
 ```@example main

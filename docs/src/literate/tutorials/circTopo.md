@@ -1,33 +1,33 @@
 ```@meta
-EditURL = "<unknown>/docs/src/literate/tutorials/circTopo.jl"
+EditURL = "circTopo.jl"
 ```
 
-````@example circTopo
 # Circular Topoplot Arrangement
 
-
+````@example circTopo
 using UnfoldMakie
 using CairoMakie
 using TopoPlots # for example data
 using Random
 using DataFrames
-
-data,pos = TopoPlots.example_data();
-
-dat = data[:, 240, 1]
 ````
 
+# Generate data
 Generate a Dataframe. We need to specify the TopoPlot Positions either via position, or via labels (according to TopoPlots.jl)
 
 ````@example circTopo
+data,pos = TopoPlots.example_data();
+dat = data[:, 240, 1]
 df= DataFrame(
     :estimate=>eachcol(Float64.(data[:,100:40:300,1])),
     :circularVariable=>[0,50,80,120,180,210],
     :time=>100:40:300)
-  df = flatten(df,:estimate)
+df = flatten(df,:estimate);
+nothing #hide
 ````
 
-generate the plot
+# Our first plot!
+note how the plots are at the angles of circularVariable`
 
 ````@example circTopo
 plot_circulareegtopoplot(df;positions=pos,axis=(;label="Sac Incoming"),predictor=:circularVariable)

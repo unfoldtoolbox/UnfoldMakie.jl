@@ -11,7 +11,6 @@ using CairoMakie
 ```
 
 ## Data
-In case you do not already have data, look at the [Load Data](@ref test_data) section. 
 
 We use the test data of `erpcore-N170.jld2`.
 
@@ -23,7 +22,7 @@ results_plot, positions = example_data();
 ## Plot PCPs
 
 ```@example main
-plot_parallelcoordinates(results_plot,[5,3,2]; # this selects channel 5,3 & 2 
+plot_parallelcoordinates(results_plot, [5,3,2]; # this selects channel 5,3 & 2 
     mapping = (color = :coefname, y = :estimate))
 ```
 

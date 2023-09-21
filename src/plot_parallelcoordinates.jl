@@ -48,7 +48,7 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
     ch_label_offset = 15
 
     # axis for plot
-    ax = Axis(f; config.axis...)
+    ax = Axis(f[1, 1]; config.axis...)
 
     # colormap border (prevents from using outer parts of color map)
     bord = 0
@@ -107,7 +107,7 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
             labelfont="Arial",
             ticklabelfont="Arial",
             spinevisible=true,
-            labelrotation = 0.0, 
+            labelrotation=0.0,
             ticklabelsize=tick_label_size,
             minorticks=IntervalsBetween(2),
             endpoints=Point2f[(x_values[i], bottom_padding), (x_values[i], y_values[i])],

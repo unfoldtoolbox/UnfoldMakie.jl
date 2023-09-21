@@ -1,10 +1,8 @@
 ```@meta
-EditURL = "<unknown>/docs/src/literate/tutorials/erp.jl"
+EditURL = "erp.jl"
 ```
 
-````@example erp
-# [Line Plot Visualization](@id lp_vis)
-````
+## [Line Plot Visualization](@id lp_vis)
 
 Here we discuss line plot visualization.
 Make sure you have looked into the [installation instructions](@ref install_instruct).
@@ -22,21 +20,22 @@ using UnfoldSim
 using UnfoldMakie
 ````
 
-# Setup things
+## Setup
 Let's generate some data and fit a model of a 2-level categorical and a continuous predictor with interaction.
 
 ````@example erp
 data,evts = UnfoldSim.predef_eeg(;noiselevel=12,return_epoched=true)
 data = reshape(data,(1,size(data)...))
 f = @formula 0 ~ 1+condition+continuous
-se_solver =(x,y)->Unfold.solver_default(x,y,stderror=true)
+se_solver =(x,y)->Unfold.solver_default(x,y,stderror=true);
 
 m = fit(UnfoldModel, Dict(Any=>(f,range(0,step=1/100,length=size(data,2)))), evts, data,solver=se_solver)
 results = coeftable(m)
-res_effects = effects(Dict(:continuous=>-5:0.5:5),m)
+res_effects = effects(Dict(:continuous=>-5:0.5:5),m);
+nothing #hide
 ````
 
-Plot the results
+## Plot the results
 
 ````@example erp
 plot_erp(results; extra=(:stderror=>true,))
@@ -52,9 +51,7 @@ There are multiple default values, that are checked in that order if they exist 
 :y Default is `(:y, :estimate, :yhat)`.
 :color Default is `(:color, :coefname)`.
 
-````@example erp
 # Configuration for Line Plots
-````
 
 ## extra
 `plot_erp(...;extra=(;<name>=<value>,...)`.
@@ -72,21 +69,18 @@ plot_erp(res_effects;
                     categoricalColor=false,
                     categoricalGroup=true),
     legend  = (;nbanks=2),
-    layout  = (;legendPosition=:bottom))
+    layout  = (;legendPosition=:right))
 ````
 
 In the following we will use this "pretty" line plot as a basis for looking into configuration options.
 
-````@example erp
-### pvalue (array)
-````
+## pvalue (array)
 
 !!! important
       this is currently broken!
 
 Is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values.
 Default is `[]` (an empty array).
-
 Shown below is an example in which `pvalue` are given:
 pvals = DataFrame(
 
@@ -98,12 +92,11 @@ pvals = DataFrame(
 ````
 
 plot_erp(results;extra= (;:pvalue=>pvals))
-
 ### stderror (boolean)
 Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror.
 Default is `false`.
 
-#previously we showed `:stderror`- but low/high is possible as well`
+previously we showed `:stderror`- but low/high is possible as well`
 
 ````@example erp
 results.se_low = results.estimate .- 0.5

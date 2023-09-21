@@ -14,7 +14,14 @@ end
     include("test_erpimage.jl")
 end
 
-
 @testset "UnfoldMakie.jl" begin
     include("test_topoplot.jl")
+end
+
+@testset "UnfoldMakie.jl" begin
+    include("test_butterfly.jl")
+end
+
+@testset "UnfoldMakie.jl" begin
+    include("test_all.jl")
 end
