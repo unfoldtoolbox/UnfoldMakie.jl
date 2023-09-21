@@ -47,7 +47,7 @@ The `How To` section features information on how to achieve specific goals or de
 
 These segments are:
 - [Fix Parallel Coordinates Plot](@ref ht_fpcp)
-- [Show Out-of-bounds Labels for Designmatrix](@ref show_oob_labels)
+- [Show Out-of-bounds Labels for Designmatrix](@ref ht_soobl)
 - [Hide Axis Spines and Decorations](@ref ht_hide_deco)
 - [Include multiple Visualizations in one Figure](@ref ht_mvf)
 - [Show out of Bounds Label](@ref ht_soobl)

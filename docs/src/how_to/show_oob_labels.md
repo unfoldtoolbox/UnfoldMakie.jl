@@ -3,7 +3,7 @@
 When visualizing a design matrix, it can happen that the labels on the y-axis get cut off to the left (especially if they are quite long). 
 In the following, we will discuss a possible quick solution to this problem.
 
-We start with the "label-limited" time-expanded designmatrix from the [corresponding Tutorial section](@ref designmatrix), which describes in detail how to generate it.
+We start with the "label-limited" time-expanded designmatrix from the [corresponding Tutorial section](@ref dm_vis), which describes in detail how to generate it.
 
 ```@julia main
 plot_designmatrix(designmatrix!(ufCont,evts), cDesign; setExtraValues=(xTicks=10, sortData=false))
