@@ -32,7 +32,7 @@ plot_butterfly(df)
 or if you provide the channel positions:
 
 ```@example main
-plot_butterfly(df;positions=pos)
+plot_butterfly(df; positions=pos)
 ```
 
 ## Column Mappings for Butterfly Plots

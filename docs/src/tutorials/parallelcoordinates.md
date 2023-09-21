@@ -22,7 +22,7 @@ results_plot, positions = example_data();
 ## Plot PCPs
 
 ```@example main
-plot_parallelcoordinates(results_plot,[5,3,2]; # this selects channel 5,3 & 2 
+plot_parallelcoordinates(results_plot, [5,3,2]; # this selects channel 5,3 & 2 
     mapping = (color = :coefname, y = :estimate))
 ```
 
