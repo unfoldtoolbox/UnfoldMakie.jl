@@ -4,7 +4,7 @@ This section discusses how users can efficiently hide axis spines and decoration
 
 While it's possible to hide these axis decorations by setting the axis settings with `axis=(;...)`, `Makie.Axis` provides multiple variables for different aspects of the plot. This means that removing all decorations is only possible by setting many variables each time.
 
-Makie does provide methods like `hidespines` and `hidedecorations`, but the user may not have easy access to the axis their plot is drawn in.
+Makie does provide methods like `hidespines!` and `hidedecorations!`, but the user may not have easy access to the axis their plot is drawn in.
 
 Instead, these functions can be called by setting variables with `layout = (;)`:
 
