@@ -55,10 +55,10 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
     )
 
     if config.layout.useColorbar
-        @show "leegeeend"
+        @show "colorbar"
         d = ftopo.content[1].scene.plots[1]
 
-        Colorbar(f[1, end+1], colormap=d.colormap, colorrange=d.colorrange, height=100)
+        Colorbar(f[1, end+1], colormap=d.colormap, colorrange=d.colorrange, height=100, flipaxis=false, label="Voltage [µV]")
     end
     return f
 
