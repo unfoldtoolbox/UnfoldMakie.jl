@@ -56,7 +56,7 @@ Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
 
 ## Configurations for Butterfly Plots
 
-Here we look into possible options for configuring the butterfly plot visualization using `(...;extra=(<name>=<value>,...)`.
+Here we look into possible options for configuring the butterfly plot visualization using `(...; extra=(<name>=<value>, ...)`.
 This is the list of unique configuration (extraData):
 
 - topoLegend (boolean)
