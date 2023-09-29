@@ -1,6 +1,6 @@
 """
-    function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame,Δbin::Real;kwargs...)
-    function plot_topoplotseries!(plotData::DataFrame, Δbin::Real;kwargs...)
+    function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin::Real; kwargs...)
+    function plot_topoplotseries!(plotData::DataFrame, Δbin::Real; kwargs...)
         
 
 Plot a Topoplot Series.
@@ -8,10 +8,11 @@ Plot a Topoplot Series.
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: DataFrame with data, needs a `time` column
 - `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
+- `useColorbar`: (default `true`) - show colorbar.
 - `kwargs...`: Additional styling behavior. Often used: 
-`plot_topoplotseries(df;mapping=(;col=:time,row=:conditionA))`
+`plot_topoplotseries(df; mapping=(;col=:time, row=:conditionA))`
 
-## Extra Data Behavior (...;extra=(;[key]=value)):
+## Extra Data Behavior (...; extra=(; [key]=value)):
 `combinefun` (default `mean`) can be used to specify how the samples within `Δbin` are combined.
 `bin_labels` (default `true`) - plot the time-window bin size as xlabels at the last row of the plot
 `rasterize_heatmaps` (deault `true`) - when saving a svg - enforce rasterization of the plot heatmap. This has the benefit that all lines/points are vectors, except the interpolated heatmap. This is typically what you want, because else you get ~500x500 vectors per topoplot, which makes everything super slow...
@@ -53,7 +54,7 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
         config.visual...
     )
 
-    if config.layout.showLegend
+    if config.layout.useColorbar
         @show "leegeeend"
         d = ftopo.content[1].scene.plots[1]
         

@@ -1,7 +1,7 @@
 """
 
-    plot_circulareegtopoplot(plotData::DataFrame;kwargs...)
-    plot_circulareegtopoplot!(figlike, plotData::DataFrame;kwargs...)
+    plot_circulareegtopoplot(plotData::DataFrame; kwargs...)
+    plot_circulareegtopoplot!(figlike, plotData::DataFrame; kwargs...)
 
         
 
@@ -13,15 +13,15 @@ Plot a circular EEG topoplot.
 - `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
 - `kwargs...`: Additional styling behavior.
 
-## Extra Data Behavior (...;extra=(;[key]=value)):
+## Extra Data Behavior (...; extra=( ;[key]=value)):
 
 `predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
 
 
-## Axis Data Behavior (...;axis=(;[key]=value)):
+## Axis Data Behavior (...; axis=(; [key]=value)):
 `label`: default "", the text in the center of the cricle
 
-## Mapping Data Behavior (...;mapping=(;[key]=value)):
+## Mapping Data Behavior (...; mapping=(; [key]=value)):
     
 ## Return Value:
 A figure containing the circular topoplot at given layout position
