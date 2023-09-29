@@ -36,8 +36,10 @@ plot_topoplotseries(df, Δbin; positions=positions, layout = (; useColorbar=true
 ### Positions
 You can give either positions, or labels. If both are provided, positions have priority
 
+
 ### plot_toposeries(...; mapping=(; key=value))
 `mapping=(: y=(:estimate, :yhat, :y))`
+
 
 ### visual=(;)
 `label_text` (boolean, false) Indicates whether label should drawn next to their position.
