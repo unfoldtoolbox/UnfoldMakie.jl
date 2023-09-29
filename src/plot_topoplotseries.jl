@@ -36,7 +36,7 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
 
     positions = getTopoPositions(; positions=positions, labels=labels)
 
-    
+
     if "label" ∉ names(plotData)
         plotData.label = plotData.channel
     end
@@ -46,9 +46,9 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
         label=:label,
         col=config.mapping.col,
         row=config.mapping.row,
-        col_labels = config.extra.col_labels,
-        row_labels = config.extra.row_labels,
-        rasterize_heatmaps = config.extra.rasterize_heatmaps,
+        col_labels=config.extra.col_labels,
+        row_labels=config.extra.row_labels,
+        rasterize_heatmaps=config.extra.rasterize_heatmaps,
         combinefun=config.extra.combinefun,
         positions=positions,
         config.visual...
@@ -57,8 +57,8 @@ function plot_topoplotseries!(f::Union{GridPosition,Figure}, plotData::DataFrame
     if config.layout.useColorbar
         @show "leegeeend"
         d = ftopo.content[1].scene.plots[1]
-        
-        Colorbar(f[1,end+1],colormap=d.colormap,colorrange=d.colorrange,height=100)
+
+        Colorbar(f[1, end+1], colormap=d.colormap, colorrange=d.colorrange, height=100)
     end
     return f
 

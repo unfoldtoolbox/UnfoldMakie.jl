@@ -1,5 +1,5 @@
 """ 
-    function plot_designmatrix(plotData::Unfold.DesignMatrix;kwargs...)
+    function plot_designmatrix(plotData::Unfold.DesignMatrix; kwargs...)
         
 
 Plot a designmatrix. 

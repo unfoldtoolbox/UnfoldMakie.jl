@@ -28,7 +28,7 @@ The following code will result in the default configuration.
 plot_designmatrix(designmatrix(uf))
 ```
 
-# `plot_designmatrix(...;extra=(<name>=<value>,...)`.
+# `plot_designmatrix(...; extra=(<name>=<value>, ...)`.
 
 - sortData (boolean,false)  - Indicating whether the data is sorted; using sortslices() of Base Julia. 
 

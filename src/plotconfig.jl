@@ -138,10 +138,10 @@ function PlotConfig(T::Val{:topoplotseries})
     config_kwargs!(cfg, extra=(
             combinefun=mean,
             col_labels=true,
-            row_labels = true,
+            row_labels=true,
             rasterize_heatmaps=true
         ), layout=(
-            showLegend=false, # what does it mean to have a topoplotseries legend?
+            useColorbar=true,
         ), visual=(; label_text=false # true doesnt work again
         ), mapping=(
             col=(:time,),

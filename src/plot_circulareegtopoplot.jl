@@ -13,7 +13,7 @@ Plot a circular EEG topoplot.
 - `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
 - `kwargs...`: Additional styling behavior.
 
-## Extra Data Behavior (...; extra=( ;[key]=value)):
+## Extra Data Behavior (...; extra=(; [key]=value)):
 
 `predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
 
