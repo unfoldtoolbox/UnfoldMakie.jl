@@ -27,15 +27,25 @@ Plot a circular EEG topoplot.
 A figure containing the circular topoplot at given layout position
 
 """
-plot_circulareegtopoplot(plotData::DataFrame; kwargs...) = plot_circulareegtopoplot!(Figure(), plotData; kwargs...)
-plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) = plot_circulareegtopoplot!(f, plotData; kwargs...)
-function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::DataFrame, ; predictor=:predictor, positions=nothing, labels=nothing, kwargs...)
+plot_circulareegtopoplot(plotData::DataFrame; kwargs...) =
+    plot_circulareegtopoplot!(Figure(), plotData; kwargs...)
+plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) =
+    plot_circulareegtopoplot!(f, plotData; kwargs...)
+function plot_circulareegtopoplot!(
+    f::Union{GridPosition,Figure},
+    plotData::DataFrame,
+    ;
+    predictor = :predictor,
+    positions = nothing,
+    labels = nothing,
+    kwargs...,
+)
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config; kwargs...)
     config.mapping = resolveMappings(plotData, config.mapping)
 
 
-    positions = getTopoPositions(; positions=positions, labels=labels)
+    positions = getTopoPositions(; positions = positions, labels = labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
     predictorValues = plotData[:, predictor]
 
@@ -43,16 +53,23 @@ function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::Data
         error("config.extra.predictorBounds needs exactly two values")
     end
     if (config.extra.predictorBounds[1] >= config.extra.predictorBounds[2])
-        error("config.extra.predictorBounds[1] needs to be smaller than config.extra.predictorBounds[2]")
+        error(
+            "config.extra.predictorBounds[1] needs to be smaller than config.extra.predictorBounds[2]",
+        )
     end
-    if ((length(predictorValues[predictorValues.<config.extra.predictorBounds[1]]) != 0) || (length(predictorValues[predictorValues.>config.extra.predictorBounds[2]]) != 0))
-        error("all values in the plotData's effect column have to be within the config.extra.predictorBounds range")
+    if (
+        (length(predictorValues[predictorValues.<config.extra.predictorBounds[1]]) != 0) ||
+        (length(predictorValues[predictorValues.>config.extra.predictorBounds[2]]) != 0)
+    )
+        error(
+            "all values in the plotData's effect column have to be within the config.extra.predictorBounds range",
+        )
     end
     if (all(predictorValues .<= 2 * pi))
         @warn "insert the predictor values in degrees instead of radian, or change config.extra.predictorBounds"
     end
 
-    ax = Axis(f[1, 1]; aspect=1)
+    ax = Axis(f[1, 1]; aspect = 1)
 
     hidedecorations!(ax)
     hidespines!(ax)
@@ -61,14 +78,28 @@ function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::Data
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
     min, max = calculateGlobalMaxValues(plotData[:, config.mapping.y], predictorValues)
 
-    positions = getTopoPositions(; positions=positions, labels=labels)
-    plotTopoPlots!(ax, plotData[:, config.mapping.y], positions, predictorValues, config.extra.predictorBounds, min, max)
+    positions = getTopoPositions(; positions = positions, labels = labels)
+    plotTopoPlots!(
+        ax,
+        plotData[:, config.mapping.y],
+        positions,
+        predictorValues,
+        config.extra.predictorBounds,
+        min,
+        max,
+    )
     # setting the colorbar to the bottom right of the box.
     # Relative values got determined by checking what subjectively
     # looks best
     #RelativeAxis(ax,(0.85,0.95,0.06,0.25))
-    Colorbar(f[1, 2], colormap=config.colorbar.colormap, colorrange=(min, max), label=config.colorbar.label, height=@lift Fixed($(pixelarea(ax.scene)).widths[2]))
-    applyLayoutSettings!(config; ax=ax)
+    Colorbar(
+        f[1, 2],
+        colormap = config.colorbar.colormap,
+        colorrange = (min, max),
+        label = config.colorbar.label,
+        height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
+    )
+    applyLayoutSettings!(config; ax = ax)
 
     # set the scene's background color according to config
     #set_theme!(Theme(backgroundcolor = config.axisData.backgroundcolor))
@@ -77,7 +108,10 @@ end
 
 function calculateGlobalMaxValues(plotData, predictor)
 
-    x = combine(groupby(DataFrame(:e => plotData, :p => predictor), :p), :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :localMaxVal)
+    x = combine(
+        groupby(DataFrame(:e => plotData, :p => predictor), :p),
+        :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :localMaxVal,
+    )
 
 
     globalMaxVal = maximum(x.localMaxVal)
@@ -91,28 +125,36 @@ function plotCircularAxis!(ax, predictorBounds, label)
     #xlims!(-9,9)
     #ylims!(-9,9)
 
-    lines!(ax, 1 * cos.(LinRange(0, 2 * pi, 500)), 1 * sin.(LinRange(0, 2 * pi, 500)), color=(:black, 0.5), linewidth=3)
+    lines!(
+        ax,
+        1 * cos.(LinRange(0, 2 * pi, 500)),
+        1 * sin.(LinRange(0, 2 * pi, 500)),
+        color = (:black, 0.5),
+        linewidth = 3,
+    )
 
     #minsize = minimum([origin[1]+widths[1],origin[2]+widths[2]])
 
     # labels and label lines for the circle
-    circlepoints_lines = [(1.1 * cos(a), 1.1 * sin(a)) for a in LinRange(0, 2pi, 5)[1:end-1]]
-    circlepoints_labels = [(1.3 * cos(a), 1.3 * sin(a)) for a in LinRange(0, 2pi, 5)[1:end-1]]
+    circlepoints_lines =
+        [(1.1 * cos(a), 1.1 * sin(a)) for a in LinRange(0, 2pi, 5)[1:end-1]]
+    circlepoints_labels =
+        [(1.3 * cos(a), 1.3 * sin(a)) for a in LinRange(0, 2pi, 5)[1:end-1]]
     text!(
         circlepoints_lines,
         # using underscores as lines around the circular axis
-        text=["_", "_", "_", "_"],
-        rotation=LinRange(0, 2pi, 5)[1:end-1],
-        align=(:right, :baseline),
+        text = ["_", "_", "_", "_"],
+        rotation = LinRange(0, 2pi, 5)[1:end-1],
+        align = (:right, :baseline),
         #textsize = round(minsize*0.03)
     )
     text!(
         circlepoints_labels,
-        text=calculateAxisLabels(predictorBounds),
-        align=(:center, :center),
+        text = calculateAxisLabels(predictorBounds),
+        align = (:center, :center),
         #textsize = round(minsize*0.03)
     )
-    text!(ax, 0, 0, text=label, align=(:center, :center))#,textsize = round(minsize*0.04))
+    text!(ax, 0, 0, text = label, align = (:center, :center))#,textsize = round(minsize*0.04))
 
 end
 
@@ -121,24 +163,50 @@ function calculateAxisLabels(predictorBounds)
     nonboundlabels = quantile(predictorBounds, [0.25, 0.5, 0.75])
     # third label is on the left and it tends to cover the circle
     # so added some blank spaces to tackle that
-    return [string(trunc(Int, predictorBounds[1])), string(trunc(Int, nonboundlabels[1])), string(trunc(Int, nonboundlabels[2]), "   "), string(trunc(Int, nonboundlabels[3]))]
+    return [
+        string(trunc(Int, predictorBounds[1])),
+        string(trunc(Int, nonboundlabels[1])),
+        string(trunc(Int, nonboundlabels[2]), "   "),
+        string(trunc(Int, nonboundlabels[3])),
+    ]
 end
 
-function plotTopoPlots!(f, data, positions, predictorValues, predictorBounds, globalmin, globalmax)
+function plotTopoPlots!(
+    f,
+    data,
+    positions,
+    predictorValues,
+    predictorBounds,
+    globalmin,
+    globalmax,
+)
     #for (index, datapoints) in enumerate(data)
     df = DataFrame(:e => data, :p => predictorValues)
     gp = groupby(df, :p)
-    for g = gp
+    for g in gp
 
         bbox = calculateBBox([0, 0], [1, 1], g.p[1], predictorBounds)
 
         # convet BBox to rect
-        rect = (Float64.([bbox.origin[1], bbox.origin[1] + bbox.widths[1], bbox.origin[2], bbox.origin[2] + bbox.widths[2]])...,)
+        rect = (
+            Float64.([
+                bbox.origin[1],
+                bbox.origin[1] + bbox.widths[1],
+                bbox.origin[2],
+                bbox.origin[2] + bbox.widths[2],
+            ])...,
+        )
 
 
-        eegaxis = RelativeAxis(f, rect; aspect=1)
+        eegaxis = RelativeAxis(f, rect; aspect = 1)
 
-        TopoPlots.eeg_topoplot!(eegaxis, g.e; positions=positions, colorrange=(globalmin, globalmax), enlarge=1)
+        TopoPlots.eeg_topoplot!(
+            eegaxis,
+            g.e;
+            positions = positions,
+            colorrange = (globalmin, globalmax),
+            enlarge = 1,
+        )
         hidedecorations!(eegaxis)
         hidespines!(eegaxis)
 
@@ -155,7 +223,10 @@ function calculateBBox(origin, widths, predictorValue, bounds)
     # the middle point of the circle for the topoplot positions
     # has to be moved a bit into the direction of the longer axis
     # to be centered on a scene that's not shaped like a square
-    resShift = [((origin[1] + widths[1]) - widths[1]) / 2, ((origin[2] + widths[2]) - widths[2]) / 2]
+    resShift = [
+        ((origin[1] + widths[1]) - widths[1]) / 2,
+        ((origin[2] + widths[2]) - widths[2]) / 2,
+    ]
     resShift[resShift.<0] .= 0
 
     x = radius * cos(predictorRatio * 2 * pi) + resShift[1]
@@ -166,10 +237,12 @@ function calculateBBox(origin, widths, predictorValue, bounds)
     # right point of the axis. This means that you have to 
     # move the bbox to the bottom left by sizeofbbox/2 to move
     # the center of the axis to a point 
-    return BBox((origin[1] + widths[1]) / 2 - sizeOfBBox / 2 + x,
+    return BBox(
+        (origin[1] + widths[1]) / 2 - sizeOfBBox / 2 + x,
         (origin[1] + widths[1]) / 2 + sizeOfBBox - sizeOfBBox / 2 + x,
         (origin[2] + widths[2]) / 2 - sizeOfBBox / 2 + y,
-        (origin[2] + widths[2]) / 2 + sizeOfBBox - sizeOfBBox / 2 + y)
+        (origin[2] + widths[2]) / 2 + sizeOfBBox - sizeOfBBox / 2 + y,
+    )
 end
 
 

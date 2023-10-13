@@ -7,7 +7,7 @@ Helper function converting a matrix (channel x times) to a tidy dataframe
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
     df[!, :time] .= 1:nrow(df)
-    df = stack(df, Not([:time]); variable_name=:label, value_name="estimate")
+    df = stack(df, Not([:time]); variable_name = :label, value_name = "estimate")
     return df
 end
 
@@ -43,14 +43,15 @@ julia > pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
 julia > eeg_topoplot_series(df, 5; positions=pos)
 ```
 """
-function eeg_topoplot_series(data::DataFrame, Δbin; figure=NamedTuple(), kwargs...)
+function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
     return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)
 end
-function eeg_topoplot_series(data::AbstractMatrix, Δbin; figure=NamedTuple(), kwargs...)
+function eeg_topoplot_series(data::AbstractMatrix, Δbin; figure = NamedTuple(), kwargs...)
     return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)
 end
 # allow to specify Δbin as an keyword for nicer readability
-eeg_topoplot_series(data::DataFrame; Δbin, kwargs...) = eeg_topoplot_series(data, Δbin; kwargs...)
+eeg_topoplot_series(data::DataFrame; Δbin, kwargs...) =
+    eeg_topoplot_series(data, Δbin; kwargs...)
 AbstractMatrix
 function eeg_topoplot_series!(fig, data::AbstractMatrix, Δbin; kwargs...)
     return eeg_topoplot_series!(fig, data, string.(1:size(data, 1)), Δbin; kwargs...)
@@ -65,35 +66,50 @@ function eeg_topoplot_series!(fig, data::AbstractMatrix, labels, Δbin; kwargs..
 end
 
 """
-eeg_topoplot_series!(fig,data::DataFrame,Δbin; kwargs..)
+eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
 In place plotting of topoplot series
-see eeg_topoplot_series(data,Δbin) for help
+see eeg_topoplot_series(data, Δbin) for help
 """
-function eeg_topoplot_series!(fig, data::DataFrame,
+function eeg_topoplot_series!(
+    fig,
+    data::DataFrame,
     Δbin;
-    y=:erp,
-    label=:label,
-    col=:time,
-    row=nothing,
-    combinefun=mean,
+    y = :erp,
+    label = :label,
+    col = :time,
+    row = nothing,
+    combinefun = mean,
     col_labels = false,
     row_labels = false,
     rasterize_heatmap = true,
-    topoplot_attributes...)
+    topoplot_attributes...,
+)
 
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
-    axisOptions = (aspect=1, xgridvisible=false, xminorgridvisible=false, xminorticksvisible=false,
-        xticksvisible=false, xticklabelsvisible=false, xlabelvisible=false, ygridvisible=false,
-        yminorgridvisible=false, yminorticksvisible=false, yticksvisible=false,
-        yticklabelsvisible=false, ylabelvisible=false,
-        leftspinevisible=false, rightspinevisible=false, topspinevisible=false,
-        bottomspinevisible=false, limits=((-0.25, 1.25), (-0.25, 1.25)))
+    axisOptions = (
+        aspect = 1,
+        xgridvisible = false,
+        xminorgridvisible = false,
+        xminorticksvisible = false,
+        xticksvisible = false,
+        xticklabelsvisible = false,
+        xlabelvisible = false,
+        ygridvisible = false,
+        yminorgridvisible = false,
+        yminorticksvisible = false,
+        yticksvisible = false,
+        yticklabelsvisible = false,
+        ylabelvisible = false,
+        leftspinevisible = false,
+        rightspinevisible = false,
+        topspinevisible = false,
+        bottomspinevisible = false,
+        limits = ((-0.25, 1.25), (-0.25, 1.25)),
+    )
 
-    # aggregate the data over time-bins
-    data_mean = df_timebin(data, Δbin;
-        col_y=y,
-        fun=combinefun,
-        grouping=[label, col, row])
+    # aggregate the data over time bins
+    data_mean =
+        df_timebin(data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
 
     # using same colormap + contour levels for all plots
     (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
@@ -101,16 +117,21 @@ function eeg_topoplot_series!(fig, data::DataFrame,
     q_min = q_max = max(abs(q_min), abs(q_max))
     q_min = -q_min
 
-    topoplot_attributes = merge((colorrange=(q_min, q_max), contours=(levels=range(q_min, q_max; length=7),)),
-        topoplot_attributes)
+    topoplot_attributes = merge(
+        (
+            colorrange = (q_min, q_max),
+            contours = (levels = range(q_min, q_max; length = 7),),
+        ),
+        topoplot_attributes,
+    )
 
     # do the col/row plot
 
     select_col = isnothing(col) ? 1 : unique(data_mean[:, col])
     select_row = isnothing(row) ? 1 : unique(data_mean[:, row])
 
-    for r in 1:length(select_row)
-        for c in 1:length(select_col)
+    for r = 1:length(select_row)
+        for c = 1:length(select_col)
             ax = Axis(fig[r, c]; axisOptions...)
             # select one topoplot
             sel = 1 .== ones(size(data_mean, 1)) # select all
@@ -128,15 +149,15 @@ function eeg_topoplot_series!(fig, data::DataFrame,
             d_vec = df_single[:, y]
             # plot it
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
-            
+
             if rasterize_heatmap
                 ax2.plots[1].plots[1].rasterize = true
             end
-            if r == length(select_row) && col_labels 
+            if r == length(select_row) && col_labels
                 ax.xlabel = string(df_single.time[1])
                 ax.xlabelvisible = true
             end
-            if c == 1 && length(select_row)>1 && row_labels
+            if c == 1 && length(select_row) > 1 && row_labels
                 #@show df_single
                 ax.ylabel = string(df_single.row[1])
                 ax.ylabelvisible = true
@@ -157,18 +178,18 @@ Split or combine dataframe according to equally spaced time bins
 - `fun` function to combine, default is `mean`;
 - `grouping` (vector of symbols/strings) default empty vector, columns to group the data by before aggregating. Values of `nothing` are ignored.
 """
-function df_timebin(df, Δbin; col_y=:erp, fun=mean, grouping=[])
+function df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
     tmin = minimum(df.time)
     tmax = maximum(df.time)
 
-    bins = range(; start=tmin, step=Δbin, stop=tmax)
+    bins = range(; start = tmin, step = Δbin, stop = tmax)
     df = deepcopy(df) # cut seems to change stuff inplace
-    df.time = cut(df.time, bins; extend=true)
+    df.time = cut(df.time, bins; extend = true)
 
     grouping = grouping[.!isnothing.(grouping)]
 
     df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
-    #df_m = combine(groupby(df,Not(y)),y=>fun)
+    #df_m = combine(groupby(df, Not(y)), y=>fun)
     rename!(df_m, names(df_m)[end] => col_y) # remove the _fun part of the new column
     return df_m
 end

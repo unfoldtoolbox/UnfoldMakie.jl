@@ -24,15 +24,25 @@ The input `f`
 """
 
 # no times + no figure?
-plot_erpimage(plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plotData; kwargs...)
+plot_erpimage(plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(Figure(), plotData; kwargs...)
 
 # no times?
-plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
+plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
 
 # no figure?
-plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), times, plotData; kwargs...)
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(Figure(), times, plotData; kwargs...)
 
-function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, plotData::Matrix{<:Real}; sortvalues=nothing, sortix=nothing, kwargs...)
+function plot_erpimage!(
+    f::Union{GridPosition,Figure},
+    times::AbstractVector,
+    plotData::Matrix{<:Real};
+    sortvalues = nothing,
+    sortix = nothing,
+    kwargs...,
+)
     config = PlotConfig(:erpimage)
     UnfoldMakie.config_kwargs!(config; kwargs...)
 
@@ -48,7 +58,10 @@ function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, pl
         end
     end
 
-    filtered_data = UnfoldMakie.imfilter(plotData[:, sortix], UnfoldMakie.Kernel.gaussian((0, max(config.extra.erpBlur, 0))))
+    filtered_data = UnfoldMakie.imfilter(
+        plotData[:, sortix],
+        UnfoldMakie.Kernel.gaussian((0, max(config.extra.erpBlur, 0))),
+    )
 
     yvals = 1:size(filtered_data, 2)
     if !isnothing(sortvalues)
@@ -57,25 +70,27 @@ function plot_erpimage!(f::Union{GridPosition,Figure}, times::AbstractVector, pl
 
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
-    UnfoldMakie.applyLayoutSettings!(config; fig=f, hm=hm, ax=ax, plotArea=(4, 1))
+    UnfoldMakie.applyLayoutSettings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
 
     if config.extra.meanPlot
         # UserInput
         subConfig = deepcopy(config)
-        config_kwargs!(subConfig; layout=(;
-                showLegend=false
+        config_kwargs!(
+            subConfig;
+            layout = (; showLegend = false),
+            axis = (;
+                ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
-            axis=(;
-                ylabel=config.colorbar.label === nothing ? "" : config.colorbar.label))
+        )
 
-        axisOffset = (config.layout.showLegend && config.layout.legendPosition == :bottom) ? 1 : 0
+        axisOffset =
+            (config.layout.showLegend && config.layout.legendPosition == :bottom) ? 1 : 0
         subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
 
-        lines!(subAxis, mean(plotData, dims=2)[:, 1])
-        applyLayoutSettings!(subConfig; fig=f, ax=subAxis)
+        lines!(subAxis, mean(plotData, dims = 2)[:, 1])
+        applyLayoutSettings!(subConfig; fig = f, ax = subAxis)
     end
 
     return f
 
 end
-

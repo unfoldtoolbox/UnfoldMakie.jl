@@ -24,13 +24,18 @@ Behavior if specified in configuration:
 ## Return Value:
 A figure displaying the designmatrix. 
 """
-plot_designmatrix(plotData::Unfold.DesignMatrix; kwargs...) = plot_designmatrix!(Figure(), plotData; kwargs...)
-function plot_designmatrix!(f::Union{GridPosition,Figure}, plotData::Unfold.DesignMatrix; kwargs...)
+plot_designmatrix(plotData::Unfold.DesignMatrix; kwargs...) =
+    plot_designmatrix!(Figure(), plotData; kwargs...)
+function plot_designmatrix!(
+    f::Union{GridPosition,Figure},
+    plotData::Unfold.DesignMatrix;
+    kwargs...,
+)
     config = PlotConfig(:designmat)
     config_kwargs!(config; kwargs...)
     designmat = Unfold.get_Xs(plotData)
     if config.extra.standardizeData
-        designmat = designmat ./ std(designmat, dims=1)
+        designmat = designmat ./ std(designmat, dims = 1)
         designmat[isinf.(designmat)] .= 1.0
     end
 
@@ -38,13 +43,13 @@ function plot_designmatrix!(f::Union{GridPosition,Figure}, plotData::Unfold.Desi
         if config.extra.sortData
             @warn "Sorting does not make sense for timeexpanded designmatrices. sortData has been set to `false`"
 
-            config.setExtraValues!(sortData=false)
+            config.setExtraValues!(sortData = false)
         end
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000, :])
     end
 
     if config.extra.sortData
-        designmat = Base.sortslices(designmat, dims=1)
+        designmat = Base.sortslices(designmat, dims = 1)
     end
     labels = Unfold.get_coefnames(plotData)
 
@@ -64,7 +69,7 @@ function plot_designmatrix!(f::Union{GridPosition,Figure}, plotData::Unfold.Desi
         end
 
         # fill in ticks in the middle
-        for i in 1:(lLength-2)
+        for i = 1:(lLength-2)
             # checks if we're at the end of a section, but NO tick on the very last section
             if i % sectionSize < 1 && i < ((config.extra.xTicks - 1) * sectionSize)
                 push!(newLabels, labels[i+1])
@@ -85,7 +90,7 @@ function plot_designmatrix!(f::Union{GridPosition,Figure}, plotData::Unfold.Desi
 
 
     # plot Designmatrix
-    config.axis = merge(config.axis, (; xticks=(1:length(labels), labels)))
+    config.axis = merge(config.axis, (; xticks = (1:length(labels), labels)))
     ax = Axis(f[1, 1]; config.axis...)
     hm = heatmap!(ax, designmat'; config.visual...)
 
@@ -93,7 +98,7 @@ function plot_designmatrix!(f::Union{GridPosition,Figure}, plotData::Unfold.Desi
         ax.yreversed = true
     end
 
-    applyLayoutSettings!(config; fig=f, hm=hm)
+    applyLayoutSettings!(config; fig = f, hm = hm)
 
     return f
 end

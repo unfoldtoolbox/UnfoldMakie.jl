@@ -41,12 +41,24 @@ See `plot_erp` for all specifications
 
 
 """
-plot_butterfly(plotData::DataFrame; kwargs...) = plot_butterfly!(Figure(), plotData; kwargs...)
-plot_butterfly!(f::Union{GridPosition,<:Figure}, plotData::DataFrame; extra=(;), kwargs...) = plot_erp!(f, plotData, ; extra=merge((; butterfly=true), extra), kwargs...)
+plot_butterfly(plotData::DataFrame; kwargs...) =
+    plot_butterfly!(Figure(), plotData; kwargs...)
+plot_butterfly!(
+    f::Union{GridPosition,<:Figure},
+    plotData::DataFrame;
+    extra = (;),
+    kwargs...,
+) = plot_erp!(f, plotData, ; extra = merge((; butterfly = true), extra), kwargs...)
 
 
 
-function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions=nothing, labels=nothing, kwargs...)
+function plot_erp!(
+    f::Union{GridPosition,Figure},
+    plotData::DataFrame;
+    positions = nothing,
+    labels = nothing,
+    kwargs...,
+)
     config = PlotConfig(:erp)
     config_kwargs!(config; kwargs...)
     if config.extra.butterfly
@@ -60,8 +72,12 @@ function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions
     # resolve columns with data
     config.mapping = resolveMappings(plotData, config.mapping)
     #remove mapping values with `nothing`
-    deleteKeys(nt::NamedTuple{names}, keys) where {names} = NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    config.mapping = deleteKeys(config.mapping, keys(config.mapping)[findall(isnothing.(values(config.mapping)))])
+    deleteKeys(nt::NamedTuple{names}, keys) where {names} =
+        NamedTuple{filter(x -> x ∉ keys, names)}(nt)
+    config.mapping = deleteKeys(
+        config.mapping,
+        keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
+    )
 
 
     # turn "nothing" from group columns into :fixef
@@ -79,12 +95,12 @@ function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions
     # Get topocolors for butterfly
     if (config.extra.butterfly)
         if isnothing(positions) && isnothing(labels)
-            config.extra = merge(config.extra, (; topoLegend=false))
+            config.extra = merge(config.extra, (; topoLegend = false))
             #colors =config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plotData)))
             colors = nothing
             #config.mapping = merge(config.mapping,(;color=config.))
         else
-            allPositions = getTopoPositions(; positions=positions, labels=labels)
+            allPositions = getTopoPositions(; positions = positions, labels = labels)
             colors = getTopoColor(allPositions, config)
         end
 
@@ -93,12 +109,14 @@ function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
     if config.extra.categoricalColor && (:color ∈ keys(config.mapping))
-        config.mapping = merge(config.mapping, (; color=config.mapping.color => nonnumeric))
+        config.mapping =
+            merge(config.mapping, (; color = config.mapping.color => nonnumeric))
     end
 
     # converts group column into string
     if config.extra.categoricalGroup && (:group ∈ keys(config.mapping))
-        config.mapping = merge(config.mapping, (; group=config.mapping.group => nonnumeric))
+        config.mapping =
+            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
     #@show colors
     mapp = mapping()
@@ -124,7 +142,7 @@ function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions
     # add band of sdterrors
     if config.extra.stderror
         m_se = mapping(config.mapping.x, :se_low, :se_high)
-        basic = basic + visual(Band, alpha=0.5) * m_se
+        basic = basic + visual(Band, alpha = 0.5) * m_se
     end
 
     basic = basic * data(plotData)
@@ -142,26 +160,33 @@ function plot_erp!(f::Union{GridPosition,Figure}, plotData::DataFrame; positions
         # add topoLegend
 
         if (config.extra.topoLegend)
-            topoAxis = Axis(f_grid, width=Relative(config.extra.topowidth), height=Relative(config.extra.topoheigth), halign=0.05, valign=0.95, aspect=1)
+            topoAxis = Axis(
+                f_grid,
+                width = Relative(config.extra.topowidth),
+                height = Relative(config.extra.topoheigth),
+                halign = 0.05,
+                valign = 0.95,
+                aspect = 1,
+            )
             topoplotLegend(config, topoAxis, allPositions)
         end
         # no extra legend
         mainAxis = Axis(f_grid; config.axis...)
-        hidedecorations!(mainAxis, label=false, ticks=false, ticklabels=false)
+        hidedecorations!(mainAxis, label = false, ticks = false, ticklabels = false)
 
         if isnothing(colors)
             drawing = draw!(mainAxis, plotEquation)
         else
-            drawing = draw!(mainAxis, plotEquation; palettes=(color=colors,))
+            drawing = draw!(mainAxis, plotEquation; palettes = (color = colors,))
         end
     else
         # normal lineplot draw
         #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
 
-        drawing = draw!(f_grid, plotEquation; axis=config.axis)
+        drawing = draw!(f_grid, plotEquation; axis = config.axis)
 
     end
-    applyLayoutSettings!(config; fig=f, ax=drawing, drawing=drawing)#, drawing = drawing)
+    applyLayoutSettings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
 
 
     return f
@@ -173,10 +198,24 @@ function eegHeadMatrix(positions, center, radius)
     oldCenter = mean(positions)
     oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
     radF = radius / oldRadius
-    return Makie.Mat4f(radF, 0, 0, 0,
-        0, radF, 0, 0,
-        0, 0, 1, 0,
-        center[1] - oldCenter[1] * radF, center[2] - oldCenter[2] * radF, 0, 1)
+    return Makie.Mat4f(
+        radF,
+        0,
+        0,
+        0,
+        0,
+        radF,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        center[1] - oldCenter[1] * radF,
+        center[2] - oldCenter[2] * radF,
+        0,
+        1,
+    )
 end
 
 function topoplotLegend(config, axis, allPositions)
@@ -185,18 +224,26 @@ function topoplotLegend(config, axis, allPositions)
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
-    specialColors = ColorScheme(vcat(RGB(1, 1, 1.0), [config.extra.topoPositionToColorFunction(pos) for pos in allPositions]...))
+    specialColors = ColorScheme(
+        vcat(
+            RGB(1, 1, 1.0),
+            [config.extra.topoPositionToColorFunction(pos) for pos in allPositions]...,
+        ),
+    )
 
-    xlims!(low=-0.2, high=1.2)
-    ylims!(low=-0.2, high=1.2)
-    topoplot = eeg_topoplot!(axis, 1:length(allPositions), # go from 1:npos
+    xlims!(low = -0.2, high = 1.2)
+    ylims!(low = -0.2, high = 1.2)
+    topoplot = eeg_topoplot!(
+        axis,
+        1:length(allPositions), # go from 1:npos
         string.(1:length(allPositions));
-        positions=allPositions,
-        interpolation=NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
-        colorrange=(0, length(allPositions)), # add the 0 for the white-first color
-        colormap=specialColors,
-        head=(color=:black, linewidth=1, model=topoMatrix),
-        label_scatter=(markersize=config.extra.markersize, strokewidth=0.5,))
+        positions = allPositions,
+        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
+        colorrange = (0, length(allPositions)), # add the 0 for the white-first color
+        colormap = specialColors,
+        head = (color = :black, linewidth = 1, model = topoMatrix),
+        label_scatter = (markersize = config.extra.markersize, strokewidth = 0.5),
+    )
 
     hidedecorations!(current_axis())
     hidespines!(current_axis())
@@ -234,6 +281,11 @@ function addPvalues(plotData, config)
     posY = stepY * -0.05 + scaleY[1]
     Δt = diff(plotData.time[1:2])[1]
     Δy = 0.01
-    p[!, :segments] = [Makie.Rect(Makie.Vec(x, posY + stepY * (Δy * (n - 1))), Makie.Vec(y - x + Δt, 0.5 * Δy * stepY)) for (x, y, n) in zip(p.from, p.to, p.sigindex)]
+    p[!, :segments] = [
+        Makie.Rect(
+            Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
+            Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
+        ) for (x, y, n) in zip(p.from, p.to, p.sigindex)
+    ]
     return (data(p) * mapping(:segments) * visual(Poly))
 end
