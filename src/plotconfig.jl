@@ -160,7 +160,6 @@ function PlotConfig(T::Val{:designmat})
             ylabelFromMapping = nothing,
         ),
         axis = (; xticklabelrotation = pi / 8),
-        extra = (; xTicks = nothing, sortData = false, standardizeData = false),
     )
     return cfg
 end
