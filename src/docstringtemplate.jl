@@ -8,7 +8,7 @@ function _docstring(cfgsymb::Symbol)
         :erp =>`Makie.lines`,
         :butterfly =>`Makie.lines`,
         :paracoord =>`Makie.lines`,
-        :designmatrix => `Makie.heatmap`,
+        :designmat => `Makie.heatmap`,
         :erpimage => `Makie.heatmap`,
         :channelimage => `Makie.heatmap`,
         :circeegtopo => `Topoplot.eeg_topoplot`,
