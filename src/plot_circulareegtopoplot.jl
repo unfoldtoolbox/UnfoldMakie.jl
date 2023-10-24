@@ -11,12 +11,8 @@ Plot a circular EEG topoplot.
 - `figlike::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Dataframe with keys for data (looks for `:y,:yhat, :estimate`, and :position (looks for `:pos, :positions, :position`), 
 - `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
+- `predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
 - `kwargs...`: Additional styling behavior.
-
-## Extra Data Behavior (...; extra=(; [key]=value)):
-
-`predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
-
 
 ## Axis Data Behavior (...; axis=(; [key]=value)):
 `label`: default "", the text in the center of the cricle
@@ -38,6 +34,7 @@ function plot_circulareegtopoplot!(
     predictor = :predictor,
     positions = nothing,
     labels = nothing,
+    predictorBounds = [0, 360],
     kwargs...,
 )
     config = PlotConfig(:circeegtopo)
@@ -49,24 +46,24 @@ function plot_circulareegtopoplot!(
     # moving the values of the predictor to a different array to perform boolean queries on them
     predictorValues = plotData[:, predictor]
 
-    if (length(config.extra.predictorBounds) != 2)
-        error("config.extra.predictorBounds needs exactly two values")
+    if (length(predictorBounds) != 2)
+        error("predictorBounds needs exactly two values")
     end
-    if (config.extra.predictorBounds[1] >= config.extra.predictorBounds[2])
+    if (predictorBounds[1] >= predictorBounds[2])
         error(
-            "config.extra.predictorBounds[1] needs to be smaller than config.extra.predictorBounds[2]",
+            "predictorBounds[1] needs to be smaller than predictorBounds[2]",
         )
     end
     if (
-        (length(predictorValues[predictorValues.<config.extra.predictorBounds[1]]) != 0) ||
-        (length(predictorValues[predictorValues.>config.extra.predictorBounds[2]]) != 0)
+        (length(predictorValues[predictorValues.<predictorBounds[1]]) != 0) ||
+        (length(predictorValues[predictorValues.>predictorBounds[2]]) != 0)
     )
         error(
-            "all values in the plotData's effect column have to be within the config.extra.predictorBounds range",
+            "all values in the plotData's effect column have to be within the predictorBounds range",
         )
     end
     if (all(predictorValues .<= 2 * pi))
-        @warn "insert the predictor values in degrees instead of radian, or change config.extra.predictorBounds"
+        @warn "insert the predictor values in degrees instead of radian, or change predictorBounds"
     end
 
     ax = Axis(f[1, 1]; aspect = 1)
@@ -74,7 +71,7 @@ function plot_circulareegtopoplot!(
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax, config.extra.predictorBounds, config.axis.label)
+    plotCircularAxis!(ax, predictorBounds, config.axis.label)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
     min, max = calculateGlobalMaxValues(plotData[:, config.mapping.y], predictorValues)
 
@@ -84,7 +81,7 @@ function plot_circulareegtopoplot!(
         plotData[:, config.mapping.y],
         positions,
         predictorValues,
-        config.extra.predictorBounds,
+        predictorBounds,
         min,
         max,
     )
