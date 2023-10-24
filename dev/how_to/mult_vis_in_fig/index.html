@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Include multiple Visualizations in one Figure · UnfoldMakie.jl</title><meta name="title" content="Include multiple Visualizations in one Figure · UnfoldMakie.jl"/><meta property="og:title" content="Include multiple Visualizations in one Figure · UnfoldMakie.jl"/><meta property="twitter:title" content="Include multiple Visualizations in one Figure · UnfoldMakie.jl"/><meta name="description" content="Documentation for UnfoldMakie.jl."/><meta property="og:description" content="Documentation for UnfoldMakie.jl."/><meta property="twitter:description" content="Documentation for UnfoldMakie.jl."/><meta property="og:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><meta property="twitter:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">UnfoldMakie.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">UnfoldMakie Documentation</a></li><li><span class="tocitem">Visualizations-Types</span><ul><li><a class="tocitem" href="../../literate/tutorials/erp/">ERP plot</a></li><li><a class="tocitem" href="../../tutorials/butterfly/">Butterfly Plot</a></li><li><a class="tocitem" href="../../tutorials/designmatrix/">Designmatrix</a></li><li><a class="tocitem" href="../../tutorials/erpimage/">ERP Image</a></li><li><a class="tocitem" href="../../tutorials/parallelcoordinates/">Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplot/">Topo Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplotseries/">Topo Plot Series</a></li><li><a class="tocitem" href="../../literate/tutorials/circTopo/">Circular TopoPlot</a></li></ul></li><li><span class="tocitem">Plot Configuration</span><ul><li><a class="tocitem" href="../../config/axis_data/">Axis Data</a></li><li><a class="tocitem" href="../../config/colorbar_data/">Colorbar Data</a></li><li><a class="tocitem" href="../../config/extra_data/">Extra Data</a></li><li><a class="tocitem" href="../../config/layout_data/">Layout Data</a></li><li><a class="tocitem" href="../../config/legend_data/">Legend Data</a></li><li><a class="tocitem" href="../../config/mapping_data/">Mapping Data</a></li><li><a class="tocitem" href="../../config/visual_data/">Visual Data</a></li></ul></li><li><span class="tocitem">How To</span><ul><li><a class="tocitem" href="../position2color/">Butterfly Colormap</a></li><li><a class="tocitem" href="../fix_pcp/">Fix Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../hide_deco/">Hide Axis Spines and Decorations</a></li><li class="is-active"><a class="tocitem" href>Include multiple Visualizations in one Figure</a></li><li><a class="tocitem" href="../show_oob_labels/">Show out of Bounds Label</a></li></ul></li><li><span class="tocitem">Reference</span><ul><li><a class="tocitem" href="../../literate/reference/positions/">Convert 3D positions / montages to 2D layouts</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">How To</a></li><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/main/docs/src/how_to/mult_vis_in_fig.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="ht_mvf"><a class="docs-heading-anchor" href="#ht_mvf">Include multiple Visualizations in one Figure</a><a id="ht_mvf-1"></a><a class="docs-heading-anchor-permalink" href="#ht_mvf" title="Permalink"></a></h1><pre><code class="language-julia hljs">using UnfoldMakie
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Include multiple Visualizations in one Figure · UnfoldMakie.jl</title><meta name="title" content="Include multiple Visualizations in one Figure · UnfoldMakie.jl"/><meta property="og:title" content="Include multiple Visualizations in one Figure · UnfoldMakie.jl"/><meta property="twitter:title" content="Include multiple Visualizations in one Figure · UnfoldMakie.jl"/><meta name="description" content="Documentation for UnfoldMakie.jl."/><meta property="og:description" content="Documentation for UnfoldMakie.jl."/><meta property="twitter:description" content="Documentation for UnfoldMakie.jl."/><meta property="og:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><meta property="twitter:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/how_to/mult_vis_in_fig/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">UnfoldMakie.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">UnfoldMakie Documentation</a></li><li><span class="tocitem">Visualizations-Types</span><ul><li><a class="tocitem" href="../../literate/tutorials/erp/">ERP plot</a></li><li><a class="tocitem" href="../../tutorials/butterfly/">Butterfly Plot</a></li><li><a class="tocitem" href="../../tutorials/designmatrix/">Designmatrix</a></li><li><a class="tocitem" href="../../tutorials/erpimage/">ERP Image</a></li><li><a class="tocitem" href="../../tutorials/parallelcoordinates/">Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplot/">Topo Plot</a></li><li><a class="tocitem" href="../../tutorials/topoplotseries/">Topo Plot Series</a></li><li><a class="tocitem" href="../../literate/tutorials/circTopo/">Circular TopoPlot</a></li></ul></li><li><span class="tocitem">How To</span><ul><li><a class="tocitem" href="../position2color/">Butterfly Colormap</a></li><li><a class="tocitem" href="../fix_pcp/">Fix Parallel Coordinates Plot</a></li><li><a class="tocitem" href="../hide_deco/">Hide Axis Spines and Decorations</a></li><li class="is-active"><a class="tocitem" href>Include multiple Visualizations in one Figure</a></li><li><a class="tocitem" href="../show_oob_labels/">Show out of Bounds Label</a></li></ul></li><li><span class="tocitem">Reference</span><ul><li><a class="tocitem" href="../../literate/reference/positions/">Convert 3D positions / montages to 2D layouts</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li><li><a class="tocitem" href="../../helper/">Utilities</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">How To</a></li><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Include multiple Visualizations in one Figure</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/main/docs/src/how_to/mult_vis_in_fig.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="ht_mvf"><a class="docs-heading-anchor" href="#ht_mvf">Include multiple Visualizations in one Figure</a><a id="ht_mvf-1"></a><a class="docs-heading-anchor-permalink" href="#ht_mvf" title="Permalink"></a></h1><pre><code class="language-julia hljs">using UnfoldMakie
 using CairoMakie
 using DataFramesMeta
 using UnfoldSim
@@ -12,184 +12,8 @@ uf = example_data(&quot;UnfoldLinearModel&quot;)
 results = coeftable(uf)
 uf_5chan = example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
-times = -0.099609375:0.001953125:1.0</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5, -3], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [5, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, -3]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, 1]
-  contrasts: Dict{Any, Any}
-]
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5, -3], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [5, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, -3]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, 1]
-  contrasts: Dict{Any, Any}
-]
-┌ Warning: Autocorrelation was NOT taken into account. Therefore SE are UNRELIABLE. Use at your own discretion
-└ @ Unfold ~/.julia/packages/Unfold/L0p1m/src/solver.jl:75
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5.0, -0.5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [1, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Float64}((2,)) [5.0, -0.5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [1, 1]
-  contrasts: Dict{Any, Any}
-]
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5.0, -1.0], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [2, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Float64}((2,)) [5.0, -1.0]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [2, 1]
-  contrasts: Dict{Any, Any}
-]
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5.0, -1.5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [3, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Float64}((2,)) [5.0, -1.5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [3, 1]
-  contrasts: Dict{Any, Any}
-]
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5.0, -2.0], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [4, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Float64}((2,)) [5.0, -2.0]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [4, 1]
-  contrasts: Dict{Any, Any}
-]
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5.0, -2.5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [5, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Float64}((2,)) [5.0, -2.5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, 1]
-  contrasts: Dict{Any, Any}
-]
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0], 0 ~ 1, [5], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048, -0.18825509907063326, -0.38873953302184283, -0.6112604669781572, -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0], 0 ~ 1 + condition, [5, -3], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-c = ([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.011689722144956671, 0.04621229016452155, 0.10195346714717812, 0.17630685760908615, 0.265795779650105, 0.3662358307353897, 0.47293054570729126, 0.5808909982763825, 0.6850690776699573, 0.7805935326811911, 0.8629977459615654, 0.9284285880837946, 0.9738265855914012, 0.9970689785771798, 0.9970689785771798, 0.9738265855914012, 0.9284285880837946, 0.8629977459615654, 0.7805935326811911, 0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0], 0 ~ 1 + continuous, [5, 1], Dict{Any, Any}())
-T = UnfoldSim.LinearModelComponent
-components = Any[UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((15,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11697777844051105, 0.41317591116653485, 0.75, 0.9698463103929542, 0.9698463103929542, 0.75, 0.41317591116653485, 0.11697777844051105, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, StatsModels.ConstantTerm{Int64}}
-  β: Array{Int64}((1,)) [5]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((23,)) [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.04951556604879048  …  -0.8117449009293668, -0.9504844339512095, -1.0, -0.9504844339512095, -0.8117449009293668, -0.6112604669781572, -0.38873953302184283, -0.18825509907063326, -0.04951556604879048, -0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, -3]
-  contrasts: Dict{Any, Any}
-, UnfoldSim.LinearModelComponent
-  basis: Array{Float64}((45,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.6850690776699573, 0.5808909982763825, 0.47293054570729126, 0.3662358307353897, 0.265795779650105, 0.17630685760908615, 0.10195346714717812, 0.04621229016452155, 0.011689722144956671, 0.0]
-  formula: StatsModels.FormulaTerm{StatsModels.ConstantTerm{Int64}, Tuple{StatsModels.ConstantTerm{Int64}, StatsModels.Term}}
-  β: Array{Int64}((2,)) [5, 1]
-  contrasts: Dict{Any, Any}
-]</code></pre><p>This section discusses how users can incorporate multiple plots into a single figure.</p><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create multiple coordinated views.</p><p>We start by creating a figure with Makie.Figure. </p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1,1]</code>.</p><pre><code class="language-julia hljs">f = Figure()
+times = -0.099609375:0.001953125:1.0</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Warning: Autocorrelation was NOT taken into account. Therefore SE are UNRELIABLE. Use at your own discretion
+└ @ Unfold ~/.julia/packages/Unfold/AF2na/src/solver.jl:75</code></pre><p>This section discusses how users can incorporate multiple plots into a single figure.</p><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create multiple coordinated views.</p><p>We start by creating a figure with Makie.Figure. </p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1,1]</code>.</p><pre><code class="language-julia hljs">f = Figure()
 plot_erp!(f[1, 1], coeftable(uf_deconv))
 plot_erp!(f[1, 2], effects(Dict(:condition =&gt; [&quot;car&quot;, &quot;face&quot;]), uf_deconv), mapping=(; color=:condition))
 plot_butterfly!(f[2, 1:2], d_topo; positions=positions)
@@ -204,11 +28,11 @@ pvals = DataFrame(
     # if coefname not specified, line should be black
     coefname=[&quot;(Intercept)&quot;, &quot;category: face&quot;]
 )
-plot_erp!(f[2, 1:2], results, extra=(;
+plot_erp!(f[2, 1:2], results,
     categoricalColor=false,
     categoricalGroup=false,
     pvalue=pvals,
-    stderror=true))
+    stderror=true)
 
 
 plot_designmatrix!(f[2, 3], designmatrix(uf))
@@ -220,9 +44,9 @@ res_effects = effects(Dict(:continuous =&gt; -5:0.5:5), uf_deconv)
 
 plot_erp!(f[2, 4:5], res_effects;
     mapping=(; y=:yhat, color=:continuous, group=:continuous),
-    extra=(; showLegend=true,
+    showLegend=true,
         categoricalColor=false,
-        categoricalGroup=true),
+        categoricalGroup=true,
     legend=(; nbanks=2),
     layout=(; legendPosition=:right))
 
@@ -230,6 +54,6 @@ plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
 plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-    positions=positions, predictor=:time, extra=(; predictorBounds=[-0.3, 0.5]))
+    positions=positions, predictor=:time,predictorBounds=[-0.3, 0.5])
 
-f</code></pre><img src="995047e1.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Axis Spines and Decorations</a><a class="docs-footer-nextpage" href="../show_oob_labels/">Show out of Bounds Label »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.0.1 on <span class="colophon-date" title="Thursday 21 September 2023 16:43">Thursday 21 September 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+f</code></pre><img src="5bb3b14d.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Axis Spines and Decorations</a><a class="docs-footer-nextpage" href="../show_oob_labels/">Show out of Bounds Label »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Tuesday 24 October 2023 20:47">Tuesday 24 October 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
