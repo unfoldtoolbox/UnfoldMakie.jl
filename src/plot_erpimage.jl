@@ -11,13 +11,13 @@ Plot an ERP image.
 - `plotData::Matrix{Float64}`: Data for the plot visualization
         
 ## Keyword Arguments
-`blurwidth` (Number, `10`) - Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
+`erpBlur` (Number, `10`) - Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
 Non-Positive values deactivate the blur.
 
-`sortData` (bool, `false`) - Indicating whether the data is sorted; using sortperm() of Base Julia 
+`sortvalues` (bool, `false`) - parameter over which plot will be sorted. Using sortperm() of Base Julia 
 (sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
 
-`ploterp`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+`meanPlot`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 ## Return Value:
 The input `f`
@@ -28,12 +28,20 @@ plot_erpimage(plotData::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(Figure(), plotData; kwargs...)
 
 # no times?
-plot_erpimage!(f::Figure, plotData::Matrix{<:Real}; kwargs...) =
+plot_erpimage!(f::Union{GridPosition,Figure}, plotData::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
 
+
 # no figure?
-plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(Figure(), times, plotData; kwargs...)
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(
+    Figure(),
+    times,
+    plotData;
+    sortix = nothing,
+    meanPlot = false,
+    erpBlur = 10,
+    kwargs...,
+)
 
 function plot_erpimage!(
     f::Union{GridPosition,Figure},
@@ -41,6 +49,8 @@ function plot_erpimage!(
     plotData::Matrix{<:Real};
     sortvalues = nothing,
     sortix = nothing,
+    meanPlot = false,
+    erpBlur = 10,
     kwargs...,
 )
     config = PlotConfig(:erpimage)
@@ -60,7 +70,7 @@ function plot_erpimage!(
 
     filtered_data = UnfoldMakie.imfilter(
         plotData[:, sortix],
-        UnfoldMakie.Kernel.gaussian((0, max(config.extra.erpBlur, 0))),
+        UnfoldMakie.Kernel.gaussian((0, max(erpBlur, 0))),
     )
 
     yvals = 1:size(filtered_data, 2)
@@ -72,7 +82,7 @@ function plot_erpimage!(
 
     UnfoldMakie.applyLayoutSettings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
 
-    if config.extra.meanPlot
+    if meanPlot
         # UserInput
         subConfig = deepcopy(config)
         config_kwargs!(

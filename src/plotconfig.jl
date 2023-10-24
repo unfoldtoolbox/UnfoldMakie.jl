@@ -191,7 +191,6 @@ function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        extra = (; sortData = true, meanPlot = false, erpBlur = 10),
         layout = (; useColorbar = true),
         colorbar = (; label = "Voltage [µV]"),
         axis = (xlabel = "Time", ylabel = "Sorted trials"),
@@ -210,15 +209,6 @@ function PlotConfig(T::Val{:paracoord})
             hidedecorations = (; label = false),
         ),
         mapping = (; channel = :channel, category = :category, time = :time),
-        extra = (;
-            # paracoord fix-values
-            pc_aspect_ratio = 0.55,
-            pc_right_padding = 15,
-            pc_left_padding = 25,
-            pc_top_padding = 26,
-            pc_bottom_padding = 16,
-            pc_tick_label_size = 14,
-        ),
     )
     return cfg
 end
