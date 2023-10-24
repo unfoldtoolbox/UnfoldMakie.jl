@@ -11,11 +11,10 @@ using ColorTypes
     holds various different fields, that can modify various different plotting aspects.
 
 """
-
 mutable struct PlotConfig
     figure::NamedTuple
-    layout::NamedTuple
     axis::NamedTuple
+    layout::NamedTuple
     mapping::NamedTuple
     visual::NamedTuple
     legend::NamedTuple

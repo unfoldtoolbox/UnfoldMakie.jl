@@ -45,15 +45,6 @@ makedocs(;
             "Topo Plot Series" => "tutorials/topoplotseries.md",
 	     "Circular TopoPlot" => "literate/tutorials/circTopo.md",
         ],
-        "Plot Configuration" => [
-            "Axis Data" => "config/axis_data.md",
-            "Colorbar Data" => "config/colorbar_data.md",
-            "Extra Data" => "config/extra_data.md",
-            "Layout Data" => "config/layout_data.md",
-            "Legend Data" => "config/legend_data.md",
-            "Mapping Data" => "config/mapping_data.md",
-            "Visual Data" => "config/visual_data.md",
-        ],
         "How To" => [
             "Butterfly Colormap" => "how_to/position2color.md",
             "Fix Parallel Coordinates Plot" => "how_to/fix_pcp.md",
@@ -63,7 +54,8 @@ makedocs(;
         ],
         "Reference"  => [
             "Convert 3D positions / montages to 2D layouts" => "literate/reference/positions.md"
-        ]
+        ],
+        "API" => "api.md",
     ],
 )
 

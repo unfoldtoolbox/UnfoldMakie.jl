@@ -19,6 +19,8 @@ Non-Positive values deactivate the blur.
 
 `ploterp`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
+$(_docstring(:erpimage))
+
 ## Return Value:
 The input `f`
 """

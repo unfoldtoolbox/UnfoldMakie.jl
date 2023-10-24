@@ -1,5 +1,5 @@
 """ 
-    function plot_designmatrix(plotData::Unfold.DesignMatrix;kwargs...)
+    plot_designmatrix(plotData::Unfold.DesignMatrix;kwargs...)
         
 
 Plot a designmatrix. 
@@ -20,6 +20,8 @@ Behavior if specified in configuration:
 - xTicks = 2: first and last possible labels are placed.
 - 2 < xTicks < `number of labels`: Equally distribute the labels.
 - xTicks ≥ `number of labels`: all labels are placed.
+
+$(_docstring(:designmatrix))
 
 ## Return Value:
 A figure displaying the designmatrix. 

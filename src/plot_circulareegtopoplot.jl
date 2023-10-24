@@ -1,9 +1,6 @@
 """
-
     plot_circulareegtopoplot(plotData::DataFrame;kwargs...)
     plot_circulareegtopoplot!(figlike, plotData::DataFrame;kwargs...)
-
-        
 
 Plot a circular EEG topoplot.
 ## Arguments:
@@ -11,25 +8,25 @@ Plot a circular EEG topoplot.
 - `figlike::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Dataframe with keys for data (looks for `:y,:yhat, :estimate`, and :position (looks for `:pos, :positions, :position`), 
 - `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
-- `kwargs...`: Additional styling behavior.
+- `predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
+- `centerlabel`: default "", the text in the center of the cricle
+- `positions` (nothing) - positions for the [`plot_topoplot`](@Ref)
+- `labels` (nothing) - labels for the [`plot_topoplot`](@Ref)
 
-## Extra Data Behavior (...;extra=(;[key]=value)):
-
-`predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
+- `kwargs...`: Additional styling behavior, see below.
 
 
-## Axis Data Behavior (...;axis=(;[key]=value)):
-`label`: default "", the text in the center of the cricle
+$(_docstring(:circeegtopo))
 
-## Mapping Data Behavior (...;mapping=(;[key]=value)):
-    
+
+
 ## Return Value:
 A figure containing the circular topoplot at given layout position
 
 """
 plot_circulareegtopoplot(plotData::DataFrame; kwargs...) = plot_circulareegtopoplot!(Figure(), plotData; kwargs...)
 plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) = plot_circulareegtopoplot!(f, plotData; kwargs...)
-function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::DataFrame, ; predictor=:predictor, positions=nothing, labels=nothing, kwargs...)
+function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::DataFrame, ; predictor=:predictor, positions=nothing, labels=nothing, centerlabel = "",kwargs...)
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config; kwargs...)
     config.mapping = resolveMappings(plotData, config.mapping)
@@ -57,7 +54,7 @@ function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::Data
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax, config.extra.predictorBounds, config.axis.label)
+    plotCircularAxis!(ax, config.extra.predictorBounds, centerlabel)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
     min, max = calculateGlobalMaxValues(plotData[:, config.mapping.y], predictorValues)
 
