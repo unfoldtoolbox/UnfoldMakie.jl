@@ -25,6 +25,8 @@ By adapting the padding, aspect ratio and tick label size in px for a new use ca
 
 `pc_tick_label_size`  Default : `14`
 
+$(_docstring(:paracoord))
+
 ## Return Value:
 The input `f`
 """

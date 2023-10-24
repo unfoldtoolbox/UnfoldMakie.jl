@@ -19,6 +19,8 @@ Plot an ERP plot.
 `stderror` (bool,`false`) - Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 `pvalue` (Array,[]) - example: `DataFrame(from=[0.1,0.3],to=[0.5,0.7],coefname=["(Intercept)","condition: face"])` -  if coefname not specified, the lines will be black
 
+$(_docstring(:erp))
+
 ## Return Value:
 f - Figure() or the inputed `f`
 
@@ -28,7 +30,9 @@ plot_erp(plotData::DataFrame; kwargs...) = plot_erp!(Figure(), plotData, ; kwarg
 """
 Plot Butterfly
 
-see `plot_erp`
+$(_docstring(:butterfly))
+
+see also [`plot_erp`](@Ref)
 """
 plot_butterfly(plotData::DataFrame; kwargs...) = plot_butterfly!(Figure(), plotData; kwargs...)
 plot_butterfly!(f::Union{GridPosition,<:Figure}, plotData::DataFrame; extra=(;), kwargs...) = plot_erp!(f, plotData, ; extra=merge((; butterfly=true), extra), kwargs...)

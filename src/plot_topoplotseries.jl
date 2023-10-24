@@ -1,6 +1,6 @@
 """
-    function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame,Δbin::Real;kwargs...)
-    function plot_topoplotseries!(plotData::DataFrame, Δbin::Real;kwargs...)
+    plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame,Δbin::Real;kwargs...)
+    plot_topoplotseries!(plotData::DataFrame, Δbin::Real;kwargs...)
         
 
 Plot a Topoplot Series.
@@ -16,6 +16,7 @@ Plot a Topoplot Series.
 `bin_labels` (default `true`) - plot the time-window bin size as xlabels at the last row of the plot
 `rasterize_heatmaps` (deault `true`) - when saving a svg - enforce rasterization of the plot heatmap. This has the benefit that all lines/points are vectors, except the interpolated heatmap. This is typically what you want, because else you get ~500x500 vectors per topoplot, which makes everything super slow...
 
+$(_docstring(:topoplotseries))
 
 ## Return Value:
 The input `f`
