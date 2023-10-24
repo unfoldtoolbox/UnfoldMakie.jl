@@ -5,15 +5,8 @@ UnfoldMakie.eeg_topoplot_series!
 UnfoldMakie.config_kwargs!
 UnfoldMakie.eeg_matrix_to_dataframe
 UnfoldMakie.rel_to_abs_bbox
-UnfoldMakie.plot_parallelcoordinates
-UnfoldMakie.plot_topoplot
 UnfoldMakie.to_positions
 UnfoldMakie.df_timebin
-UnfoldMakie.plot_erp
-UnfoldMakie.plot_circulareegtopoplot
-UnfoldMakie.plot_designmatrix
 UnfoldMakie.cart3d_to_spherical
-UnfoldMakie.plot_topoplotseries
-UnfoldMakie.plot_butterfly
 UnfoldMakie.valType_to_symbol
 ```

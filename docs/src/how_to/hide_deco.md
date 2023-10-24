@@ -24,13 +24,16 @@ For more information on the input of these functions refer to the [Makie dokumen
 
 Since some plots hide features by default, the hiding can be reverted by setting the variables to `nothing`
 
-```
-plot_xxx(...;layout=(;
+```@example main
+using TopoPlots
+using UnfoldMakie
+using CairoMakie
+
+data, positions = TopoPlots.example_data()
+plot_topoplot(data[:,340,1]; 
+    positions = positions, 
+    layout=(;
     hidespines = nothing,
     hidedecorations = nothing
-)
+    ),)
 ```
-
-
-![Topoplot with all axis spines and decorations enabled](../images/spine_topo.png)
-
