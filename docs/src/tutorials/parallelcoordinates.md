@@ -35,8 +35,6 @@ plot_parallelcoordinates(results_plot, [5,3,2]; # this selects channel 5,3 & 2
 
 Since PCPs use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
-For more informations about mapping values, look into the [Mapping Data](@ref config_mapping) section of the documentation.
-
 While there are multiple default values that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 
 ### y

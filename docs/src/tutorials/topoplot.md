@@ -43,9 +43,7 @@ To get the positions from the labels we use a [database](https://raw.githubuserc
 
 ## Column Mappings for Topo Plots
 
-When using topo plots with a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
-
-For more informations about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+When using topo plots with a `DataFrame` as an input, the library needs to know the names of the columns used for plotting. This is specified using the `mapping=(;)` kwargs.
 
 While there are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 

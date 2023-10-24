@@ -3,7 +3,10 @@ using Documenter
 using DocStringExtensions
 
 # preload once
+
 using CairoMakie
+const Makie = CairoMakie # - for references
+using AlgebraOfGraphics
 using Unfold
 using DataFrames
 using DataFramesMeta
@@ -54,6 +57,7 @@ makedocs(;
 
         ],
         "API" => "api.md",
+        "Utilities" => "helper.md",
     ],
 
 )
