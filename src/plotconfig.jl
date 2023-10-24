@@ -81,7 +81,6 @@ function PlotConfig(T::Val{:circeegtopo})
 
     config_kwargs!(
         cfg;
-        extra = (; predictorBounds = [0, 360]),
         layout = (; showLegend = false),
         colorbar = (; label = "Voltage [µV]", colormap = Reverse(:RdBu)),
         mapping = (;),
@@ -143,12 +142,6 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        extra = (
-            combinefun = mean,
-            col_labels = true,
-            row_labels = true,
-            rasterize_heatmaps = true,
-        ),
         layout = (useColorbar = true,),
         visual = (;
             label_text = false # true doesnt work again

@@ -27,8 +27,7 @@
     plot_designmatrix!(f[2, 3], designmatrix(uf))
 
     plot_topoplot!(f[3, 1], collect(1:64); positions=positions, visual=(; colormap=:viridis))
-    plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; label=:channel))
-
+    plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
 
     res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 
@@ -48,7 +47,9 @@
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
 
     plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-        positions=positions, predictor=:time, extra=(; predictorBounds=[-0.3, 0.5]))
+        positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
 
     f
+    #save("test.png", f)
 end
+
