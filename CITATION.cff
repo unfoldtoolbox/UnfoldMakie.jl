@@ -1,0 +1,28 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: UnfoldMakie
+message: 'If you use this page, please cite it as below.'
+type: software
+authors:
+  - given-names: Benedikt
+    family-names: Ehinger
+    orcid: 'https://orcid.org/0000-0002-6276-3332'
+  - given-names: Sören
+    family-names: Döring
+  - given-names: Niklas
+    family-names: Gärtner
+  - given-names: Vladimir
+    family-names: Mikheev
+    orcid: 'https://orcid.org/0000-0002-4738-6655'
+  - given-names: René
+    family-names: Skukies
+    orcid: 'https://orcid.org/0000-0002-4124-4584'
+
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.6531996
+repository-code: 'https://github.com/unfoldtoolbox/UnfoldMakie.jl'
+version: 0.3.5
+date-released: '2023-10-24'

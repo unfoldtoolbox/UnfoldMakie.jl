@@ -16,17 +16,23 @@ using UnfoldMakie
 
 # ## Setup
 # Let's generate some data and fit a model of a 2-level categorical and a continuous predictor with interaction.
-data,evts = UnfoldSim.predef_eeg(;noiselevel=12,return_epoched=true)
-data = reshape(data,(1,size(data)...))
-f = @formula 0 ~ 1+condition+continuous 
-se_solver =(x,y)->Unfold.solver_default(x,y,stderror=true);
+data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+data = reshape(data, (1, size(data)...))
+f = @formula 0 ~ 1 + condition + continuous
+se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true);
 
-m = fit(UnfoldModel, Dict(Any=>(f,range(0,step=1/100,length=size(data,2)))), evts, data,solver=se_solver)
+m = fit(
+    UnfoldModel,
+    Dict(Any => (f, range(0, step = 1 / 100, length = size(data, 2)))),
+    evts,
+    data,
+    solver = se_solver,
+)
 results = coeftable(m)
-res_effects = effects(Dict(:continuous=>-5:0.5:5),m);
+res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
 # ## Plot the results
-plot_erp(results; extra=(:stderror=>true,))
+plot_erp(results; :stderror => true,)
 
 
 
@@ -42,8 +48,8 @@ plot_erp(results; extra=(:stderror=>true,))
 
 # # Configuration for Line Plots
 
-# ## extra
-# `plot_erp(...;extra=(;<name>=<value>,...)`.
+# ## key values
+# `plot_erp(...; <name>=<value>,...)`.
 # - categoricalColor (boolean, true) - in case of numeric `:color` column, is color a continuous or categorical variable?
 # - categoricalGroup (boolean, true) - in case of numeric `:group` column, treat `:group` as categorical variable by default
 # - stderror (boolean, false) - add an error-ribbon based on the `:stderror` column
@@ -51,13 +57,13 @@ plot_erp(results; extra=(:stderror=>true,))
 
 # Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 
-plot_erp(res_effects;
-    mapping = (;y=:yhat,color=:continuous, group=:continuous),
-    extra=(;showLegend=true,
-                    categoricalColor=false,
-                    categoricalGroup=true),
-    legend  = (;nbanks=2),
-    layout  = (;legendPosition=:right))
+plot_erp(
+    res_effects;
+    mapping = (; y = :yhat, color = :continuous, group = :continuous),
+    legend = (; nbanks = 2),
+    layout = (; legendPosition = :right),
+    showLegend = true, categoricalColor = false, categoricalGroup = true,
+)
 
 
 
@@ -78,7 +84,7 @@ plot_erp(res_effects;
 #		coefname=["(Intercept)","condition: face"] # if coefname not specified, line should be black
 #	)
 #
-# plot_erp(results;extra= (;:pvalue=>pvals))
+# plot_erp(results; :pvalue=>pvals)
 # ### stderror (boolean)
 # Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 # Default is `false`.
@@ -86,10 +92,7 @@ plot_erp(res_effects;
 # previously we showed `:stderror`- but low/high is possible as well`
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
-plot_erp(select(results,Not(:stderror));extra= (;stderror=true))
+plot_erp(select(results, Not(:stderror)); stderror = true)
 
 # !!! note
 #        as in the above code,`:stderror` has precedence over `:se_low`/`:se_high`
-
-
-

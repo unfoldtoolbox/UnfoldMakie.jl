@@ -1,5 +1,5 @@
 """
-    function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
+    plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
 Plot a PCP (parallel coordinates plot).
 ## Arguments:
@@ -8,7 +8,7 @@ Plot a PCP (parallel coordinates plot).
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
-## Extra Data Behavior (...;setExtraValues=(;[key]=value)):
+## Extra Data Behavior (...; setExtraValues=(; [key]=value)):
 
 PCP has problems with size changes of the view window.
 By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a Coordinated Multiple Views System
@@ -30,19 +30,31 @@ $(_docstring(:paracoord))
 ## Return Value:
 The input `f`
 """
-plot_parallelcoordinates(plotData::DataFrame, channels::Vector{Int64}; kwargs...) = plot_parallelcoordinates!(Figure(), plotData, channels; kwargs...)
-function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::DataFrame, channels::Vector{Int64}; kwargs...)
+plot_parallelcoordinates(plotData::DataFrame, channels::Vector{Int64}; kwargs...) =
+    plot_parallelcoordinates!(Figure(), plotData, channels; kwargs...)
+function plot_parallelcoordinates!(
+    f::Union{GridPosition,Figure},
+    plotData::DataFrame,
+    channels::Vector{Int64};
+    pc_aspect_ratio = 0.55,
+    pc_right_padding = 15,
+    pc_left_padding = 25,
+    pc_top_padding = 26,
+    pc_bottom_padding = 16,
+    pc_tick_label_size = 14,
+    kwargs...,
+)
     config = PlotConfig(:paracoord)
     config_kwargs!(config; kwargs...)
     # We didn't find a good formula to set these automatically
     # have to be set manually for now
     # if size of the plot-area changes the padding gets weird
-    aspect_ratio = config.extra.pc_aspect_ratio
-    right_padding = config.extra.pc_right_padding
-    left_padding = config.extra.pc_left_padding
-    top_padding = config.extra.pc_top_padding
-    bottom_padding = config.extra.pc_bottom_padding
-    tick_label_size = config.extra.pc_tick_label_size
+    aspect_ratio = pc_aspect_ratio
+    right_padding = pc_right_padding
+    left_padding = pc_left_padding
+    top_padding = pc_top_padding
+    bottom_padding = pc_bottom_padding
+    tick_label_size = pc_tick_label_size
 
     # have to be set now to reduce weird behaviour
     width = 500
@@ -50,7 +62,7 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
     ch_label_offset = 15
 
     # axis for plot
-    ax = Axis(f; config.axis...)
+    ax = Axis(f[1, 1]; config.axis...)
 
     # colormap border (prevents from using outer parts of color map)
     bord = 0
@@ -67,7 +79,11 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
     # height of the upper labels
     y_values = fill(height, chaLeng)
 
-    colormap = cgrad(config.visual.colormap, (catLeng < 2) ? 2 + (bord * 2) : catLeng + (bord * 2), categorical=true)
+    colormap = cgrad(
+        config.visual.colormap,
+        (catLeng < 2) ? 2 + (bord * 2) : catLeng + (bord * 2),
+        categorical = true,
+    )
 
     colors = Dict{String,RGBA{Float64}}()
 
@@ -96,25 +112,27 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
     end
 
     # Draw vertical line for each channel
-    for i in 1:n
+    for i = 1:n
         x = (i - 1) / (n - 1) * width
         if i == 1
             switch = true
         else
             switch = false
         end
-        Makie.LineAxis(ax.scene;
-            limits=limits[i],
-            spinecolor=:black,
-            labelfont="Arial",
-            ticklabelfont="Arial",
-            spinevisible=true,
-            labelrotation = 0.0, 
-            ticklabelsize=tick_label_size,
-            minorticks=IntervalsBetween(2),
-            endpoints=Point2f[(x_values[i], bottom_padding), (x_values[i], y_values[i])],
-            ticklabelalign=(:right, :center),
-            labelvisible=false)
+        Makie.LineAxis(
+            ax.scene;
+            limits = limits[i],
+            spinecolor = :black,
+            labelfont = "Arial",
+            ticklabelfont = "Arial",
+            spinevisible = true,
+            labelrotation = 0.0,
+            ticklabelsize = tick_label_size,
+            minorticks = IntervalsBetween(2),
+            endpoints = Point2f[(x_values[i], bottom_padding), (x_values[i], y_values[i])],
+            ticklabelalign = (:right, :center),
+            labelvisible = false,
+        )
     end
 
     # Draw colored line through all channels for each time entry 
@@ -132,9 +150,13 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
 
             values = map(1:n, dfInOrder[:, config.mapping.y], limits) do q, d, l # axes, data, limis
                 x = (q - 1) / (n - 1) * width
-                Point2f(x_values[q], (d - l[1]) ./ (l[2] - l[1]) * (y_values[q] - bottom_padding) + bottom_padding)
+                Point2f(
+                    x_values[q],
+                    (d - l[1]) ./ (l[2] - l[1]) * (y_values[q] - bottom_padding) +
+                    bottom_padding,
+                )
             end
-            lines!(ax.scene, values; color=colors[cat], config.visual...)
+            lines!(ax.scene, values; color = colors[cat], config.visual...)
         end
     end
 
@@ -142,21 +164,36 @@ function plot_parallelcoordinates!(f::Union{GridPosition,Figure}, plotData::Data
 
     # helper, because without them they wouldn#t have an entry in legend
     for cat in color
-        lines!(ax, 1, 1, 1, label=cat, color=colors[cat])
+        lines!(ax, 1, 1, 1, label = cat, color = colors[cat])
     end
 
     # labels
-    text!(x_values, y_values, text=channelNames, align=(:center, :center),
-        offset=(0, ch_label_offset * 2),
-        color=:blue)
+    text!(
+        x_values,
+        y_values,
+        text = channelNames,
+        align = (:center, :center),
+        offset = (0, ch_label_offset * 2),
+        color = :blue,
+    )
     # lower limit text
-    text!(x_values, fill(0, chaLeng), align=(:right, :bottom), text=string.(round.(l_low, digits=1)))
+    text!(
+        x_values,
+        fill(0, chaLeng),
+        align = (:right, :bottom),
+        text = string.(round.(l_low, digits = 1)),
+    )
     # upper limit text
-    text!(x_values, y_values, align=(:right, :bottom), text=string.(round.(l_up, digits=1)))
-    Makie.xlims!(low=0, high=width + right_padding)
-    Makie.ylims!(low=0, high=height + top_padding)
+    text!(
+        x_values,
+        y_values,
+        align = (:right, :bottom),
+        text = string.(round.(l_up, digits = 1)),
+    )
+    Makie.xlims!(low = 0, high = width + right_padding)
+    Makie.ylims!(low = 0, high = height + top_padding)
 
-    applyLayoutSettings!(config; fig=f, ax=ax)
+    applyLayoutSettings!(config; fig = f, ax = ax)
 
     # ensures the axis numbers aren't squished
     #ax.aspect = DataAspect()

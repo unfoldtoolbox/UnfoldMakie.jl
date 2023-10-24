@@ -14,14 +14,12 @@ using DataFrames
 Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
 ## Data
-In case you want to try with different data, look at the [Load Data](@ref test_data) section. 
-
 
 We filter the data to make it more clearly represented:
 ```@example main
 include("../../example_data.jl")
 df, pos = example_data("TopoPlots.jl")
-first(df,3)
+first(df, 3)
 ```
 
 ## Plot Butterfly Plots
@@ -34,16 +32,17 @@ plot_butterfly(df)
 or if you provide the channel positions:
 
 ```@example main
-plot_butterfly(df;positions=pos)
+plot_butterfly(df; positions=pos)
 ```
 
 ## Column Mappings for Butterfly Plots
 
-Since butterfly plots use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting. You can set these mapping values by `plot_butterfly(...; mapping=(;:x=:time,))`, that is, providing a `NamedTuple` (note the  `;` just after the opening-brackets
+Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time,))`, that is, by specifying a `NamedTuple` (note the `;` right after the opening parentheses).
 
-For more information about mapping values look into the [Mapping Data](@ref config_mapping) section of the documentation.
+For more information on mapping values, see the [Mapping Data](@ref config_mapping) section of the documentation.
 
-While there are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+While there are several default values that will be checked in that order if they exist in the `DataFrame`, a custom name may need to be chosen:
+
 
 ### x
 Default is `(:x, :time)`.
@@ -57,8 +56,11 @@ Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
 
 ## Configurations for Butterfly Plots
 
-Here we look into possible options for configuring the butterfly plot visualization using `(...;extra=(<name>=<value>,...)`.
-This is the list of unique configuration (extraData):
+
+Here we look into possible options for configuring the butterfly plot visualization using `(...; <name>=<value>, ...)`.
+This is the list of unique configuration (key values):
+
+
 - topoLegend (boolean)
 
 ### topoLegend (boolean)

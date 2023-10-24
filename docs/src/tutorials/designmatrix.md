@@ -13,7 +13,7 @@ using CairoMakie
 ```
 
 ## Data
-In case you do not already have data, look at the [Load Data](@ref test_data) section. 
+
 ```@example main
 include("../../example_data.jl")
 uf = example_data("UnfoldLinearModel")
@@ -28,20 +28,20 @@ The following code will result in the default configuration.
 plot_designmatrix(designmatrix(uf))
 ```
 
-# `plot_designmatrix(...;extra=(<name>=<value>,...)`.
+# kwargs `plot_designmatrix(...; ...)`.
+
 
 - sortData (boolean,false)  - Indicating whether the data is sorted; using sortslices() of Base Julia. 
 
 
 In order to make the designmatrix easier to read, you may want to sort it.
 ```
-plot_designmatrix(designmatrix(uf);extra=(;sortData=true))
+plot_designmatrix(designmatrix(uf); sortData=true)
 ```
 
-- standardizeData (boolean,false) - Indicating whether the data is standardized, mapping the values between 0 and 1. 
+- standardizeData (boolean, false) - Indicating whether the data is standardized, mapping the values between 0 and 1. 
+- xTicks (number, nothing)
 
-
-- xTicks (number,nothing)
 Indicating the number of labels on the x-axis. Behavior if specified in configuration:
     - xTicks = 0: no labels are placed.
     - xTicks = 1: first possible label is placed.

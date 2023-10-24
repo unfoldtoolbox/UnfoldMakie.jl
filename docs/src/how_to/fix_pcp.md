@@ -1,11 +1,11 @@
 # [Fix Parallel Coordinates Plot](@id ht_fpcp)
 
-Since Makie didn't have a native function to draw PCPs our version is somewhat experimental for broad applications.
+Since Makie doesn't have a native function to draw PCPs, our version is somewhat experimental for general use.
 
-Under certain circumstances the PCP is not properly visualized.
-This leads to cut off edges of the PCP, and unused space.
+Under certain circumstances the PCP is not visualized correctly.
+This leads to truncated edges of the PCP and unused space.
 
-Especially when changing the container size by customizing the figure resolution, or adding multiple plots into one figure, the PCP can have problems fitting inside.
+In particular, if the container size is changed by adjusting the figure resolution, or if multiple plots are added to a figure, the PCP may not fit.
 
 ![PCP with cutoff and bad spacing](../images/broken_PCP.png)
 
