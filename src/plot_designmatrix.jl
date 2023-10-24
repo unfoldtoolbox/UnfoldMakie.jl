@@ -21,7 +21,7 @@ Behavior if specified in configuration:
 - 2 < xTicks < `number of labels`: Equally distribute the labels.
 - xTicks ≥ `number of labels`: all labels are placed.
 
-$(_docstring(:designmatrix))
+$(_docstring(:designmat))
 
 ## Return Value:
 A figure displaying the designmatrix. 

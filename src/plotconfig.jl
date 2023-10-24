@@ -26,6 +26,7 @@ end
 function PlotConfig()# defaults
     PlotConfig(
         (;), #figure
+        (;), # axis
         (; # layout
             showLegend=true,
             legendPosition=:right,
@@ -33,7 +34,6 @@ function PlotConfig()# defaults
             ylabelFromMapping=:y,
             useColorbar=false
         ),
-        (;), # axis
         (#maping
             x=(:time,),
             y=(:estimate, :yhat, :y,),
