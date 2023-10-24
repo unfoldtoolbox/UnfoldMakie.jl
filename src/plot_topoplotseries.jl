@@ -69,7 +69,7 @@ function plot_topoplotseries!(
 
     if config.layout.useColorbar
         #println(fieldnames(typeof(ftopo.layout.content[5].content.content[2].content)))
-        @show "colorbar"
+        #@show "colorbar"
         if typeof(ftopo) == Figure
 
             d = ftopo.content[1].scene.plots[1]

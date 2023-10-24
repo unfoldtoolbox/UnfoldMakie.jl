@@ -72,7 +72,7 @@ function plot_circulareegtopoplot!(
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax, config.extra.predictorBounds, centerlabel)
+    plotCircularAxis!(ax, predictorBounds, centerlabel)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
     min, max = calculateGlobalMaxValues(plotData[:, config.mapping.y], predictorValues)
 

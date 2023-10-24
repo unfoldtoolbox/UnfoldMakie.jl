@@ -46,7 +46,7 @@ function plot_designmatrix!(
         if sortData
             @warn "Sorting does not make sense for timeexpanded designmatrices. sortData has been set to `false`"
 
-            config.setExtraValues!(sortData = false)
+           sortData = false
         end
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000, :])
     end

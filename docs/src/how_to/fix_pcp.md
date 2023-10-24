@@ -10,13 +10,6 @@ In particular, if the container size is changed by adjusting the figure resoluti
 ![PCP with cutoff and bad spacing](../images/broken_PCP.png)
 
 
-We can set some variables to fix these issues using
-
-```
-paraConfig.setExtraValues(
-    ...
-)
-```
 
 Since the plot could have more space above and below, we can change the aspect ratio of the plot with:
 ```
