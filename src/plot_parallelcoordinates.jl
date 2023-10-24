@@ -34,6 +34,12 @@ function plot_parallelcoordinates!(
     f::Union{GridPosition,Figure},
     plotData::DataFrame,
     channels::Vector{Int64};
+    pc_aspect_ratio = 0.55,
+    pc_right_padding = 15,
+    pc_left_padding = 25,
+    pc_top_padding = 26,
+    pc_bottom_padding = 16,
+    pc_tick_label_size = 14,
     kwargs...,
 )
     config = PlotConfig(:paracoord)
@@ -41,12 +47,12 @@ function plot_parallelcoordinates!(
     # We didn't find a good formula to set these automatically
     # have to be set manually for now
     # if size of the plot-area changes the padding gets weird
-    aspect_ratio = config.extra.pc_aspect_ratio
-    right_padding = config.extra.pc_right_padding
-    left_padding = config.extra.pc_left_padding
-    top_padding = config.extra.pc_top_padding
-    bottom_padding = config.extra.pc_bottom_padding
-    tick_label_size = config.extra.pc_tick_label_size
+    aspect_ratio = pc_aspect_ratio
+    right_padding = pc_right_padding
+    left_padding = pc_left_padding
+    top_padding = pc_top_padding
+    bottom_padding = pc_bottom_padding
+    tick_label_size = pc_tick_label_size
 
     # have to be set now to reduce weird behaviour
     width = 500
