@@ -1,4 +1,5 @@
-# UnfoldMakie
+# ![UnfoldMakie](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/57703446/26b770b3-afa0-4652-b654-82d2f737f42f)
+
 
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev)
 [![Build Status](https://github.com/unfoldtoolbox/UnfoldMakie.jl/workflows/CI/badge.svg)](https://github.com/unfoldtoolbox/UnfoldMakie.jl/actions)
@@ -22,33 +23,96 @@ The supportet visualizations are:
 - Topoplot series
 - Parallel Coordinates Plot
 
+<details>
+<summary>Click to see example plots</summary>
+  
 ![grafik](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/af2801e5-cd64-4932-b84d-9abc1d8470ee)
 
-## Structure
-### Code Notes
+</details>
 
-The code files can be found in the `src` folder.
+## Discover the Unfold-Family & Friends
 
-### Documentation Notes
+<details>
+<summary>Click to expand</summary>
+  
+| | Link to Toolbox|
+|---|---|
+Regression modeling of EEG data! | ![[Unfold.jl](https://github.com/unfoldtoolbox/Unfold.jl/tree/main)](https://github.com/unfoldtoolbox/Unfold.jl/assets/10183650/757575d0-aeb9-4d94-a5f8-832f13dcd2dd)
+Simulate your own EEG data! | ![[UnfoldSim.jl](https://github.com/unfoldtoolbox/UnfoldSim.jl)](https://github.com/unfoldtoolbox/Unfold.jl/assets/10183650/328a4ccd-8860-4b13-9fb6-64d3df9e2091)
+Easily load BIDS formatted EEG data! |![[UnfoldBIDS.jl](https://github.com/ReneSkukies/UnfoldBIDS.jl)](https://github.com/unfoldtoolbox/Unfold.jl/assets/10183650/2956ca20-9c48-4066-9e50-c5d25c50f0d1)
+Decoding of EEG data made easy  | ![[UnfoldDecode.jl](unfoldbids.com)](https://github.com/unfoldtoolbox/Unfold.jl/assets/10183650/802002c0-a1f2-4236-9123-562684d39dcf)
+Statistically test your models! | ![[UnfoldStats.jl](unfoldstats.com)](https://github.com/unfoldtoolbox/Unfold.jl/assets/10183650/4c8f2b5a-ea84-4ee3-82f9-01ef05b4f4c6)
+You are here | ![[UnfoldMakie.jl](unfoldmakie.com)](https://github.com/unfoldtoolbox/Unfold.jl/assets/10183650/37af35a0-c99c-4374-827b-40fc37de7c2b)
+Julia interface to MNE-Python via PythonCall | [PyMNE.jl](https://github.com/beacon-biosignals/PyMNE.jl/tree/main)
+</details>
 
-The documentation can be found in the `doc` folder. We use `Documenter.jl` and plan to use `Literate.jl` for future usage.
-In the `src` folder contained within it exists as "raw" `.md` files and in the `build` folder contained within it exists as `.html` after running the `make.jl` file.
-These are specifically the "index" file with more files in sub folders.
+## Install
+
+### Installing Julia
+
+<details>
+<summary>Click to expand</summary>
+
+The recommended way to install julia is [juliaup](https://github.com/JuliaLang/juliaup).
+It allows you to, e.g., easily update Julia at a later point, but also test out alpha/beta versions etc.
+
+TL:DR; If you dont want to read the explicit instructions, just copy the following command
+
+#### Windows
+
+AppStore -> JuliaUp,  or `winget install julia -s msstore` in CMD
+
+#### Mac & Linux
+
+`curl -fsSL https://install.julialang.org | sh` in any shell
+</details>
+
+### Installing Unfold
+
+```julia
+using Pkg
+Pkg.add("UnfoldMakie")
+```
+
+## Quickstart
+
+```julia
+using UnfoldMakie
+using CairoMakie
+
+# TBA
+```
+
+## Contributions
+
+Contributions are very welcome. These could be typos, bugreports, feature-requests, speed-optimization, new solvers, better code, better documentation.
+
+### How-to Contribute
+
+You are very welcome to raise issues and start pull requests!
+
+### Adding Documentation
+
+1. We recommend to write a Literate.jl document and place it in `docs/_literate/FOLDER/FILENAME.jl` with `FOLDER` being `HowTo`, `Explanation`, `Tutorial` or `Reference` ([recommended reading on the 4 categories](https://documentation.divio.com/)).
+2. Literate.jl converts the `.jl` file to a `.md` automatically and places it in `doc/src/_literate/FILENAME.jl`.
+3. Edit [make.jl](https://github.com/unfoldtoolbox/Unfold.jl/blob/main/docs/make.jl) with a reference to `doc/src/_literate/FILENAME.jl`
 
 ## Citation
-If you make use of theses visualizations, please cite [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6531996.svg)](https://doi.org/10.5281/zenodo.6531996)
 
-## Authors
+If you make use of theses visualizations, please cite:
 
-It was authored by `Benedikt Ehinger` and has been worked upon by students and doctoral researchers within the context of a university project (`Fachpraktikum:  Methods in Computational EEG`) at the University of Stuttgart.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6531996.svg)](https://doi.org/10.5281/zenodo.6531996)
 
-The student names are:
-- Baumgartner, Daniel
-- Döring, Sören
-- Gärtner, Niklas
+## Contributors (alphabetically)
 
-Doctoral reserchers:
-- Vladimir Mikheev
+- **Daniel Baumgartner**
+- **Benedikt Ehinger**
+- **Sören Döring**
+- **Niklas Gärtner**
+- **Vladimir Mikheev**
 
-## Funding
+## Acknowledgements
+
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – project ID 251654672 – TRR 161 (project D05)
+
+Funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany´s Excellence Strategy – EXC 2075 – 390740016
