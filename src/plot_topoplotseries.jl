@@ -1,9 +1,5 @@
 """
     function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin::Real; kwargs...)
-using GeometryBasics: attributes
-using Base: concatenate_setindex!
-using GeometryBasics: attributes
-using Base: _fieldnames
     function plot_topoplotseries!(plotData::DataFrame, Δbin::Real; kwargs...)
         
 
@@ -14,7 +10,7 @@ Plot a Topoplot Series.
 - `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
 - `useColorbar`: (default `true`) - show colorbar.
 
-### kwargs
+### key arguments
 
 - `combinefun` (default `mean`) can be used to specify how the samples within `Δbin` are combined.
 - `rasterize_heatmaps` (deault `true`) - enforce rasterization of the plot heatmap when saving in svg format.
@@ -49,13 +45,13 @@ function plot_topoplotseries!(
 
     # resolve columns with data
     config.mapping = resolveMappings(plotData, config.mapping)
-
     positions = getTopoPositions(; positions = positions, labels = labels)
 
 
     if "label" ∉ names(plotData)
         plotData.label = plotData.channel
     end
+
 
     ftopo = eeg_topoplot_series!(
         f,

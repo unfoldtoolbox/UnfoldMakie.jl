@@ -12,6 +12,7 @@ end
     Δbin=80
     UnfoldMakie.plot_topoplotseries(df, Δbin; positions=positions, layout = (; useColorbar=true))
 
+
 end
 
 @testset "testing with colorbar" begin
@@ -44,4 +45,4 @@ end
 
     f
 
-end
+en

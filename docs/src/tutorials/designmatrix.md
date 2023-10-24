@@ -30,6 +30,7 @@ plot_designmatrix(designmatrix(uf))
 
 # kwargs `plot_designmatrix(...; ...)`.
 
+
 - sortData (boolean,false)  - Indicating whether the data is sorted; using sortslices() of Base Julia. 
 
 
@@ -39,9 +40,8 @@ plot_designmatrix(designmatrix(uf); sortData=true)
 ```
 
 - standardizeData (boolean, false) - Indicating whether the data is standardized, mapping the values between 0 and 1. 
-
-
 - xTicks (number, nothing)
+
 Indicating the number of labels on the x-axis. Behavior if specified in configuration:
     - xTicks = 0: no labels are placed.
     - xTicks = 1: first possible label is placed.

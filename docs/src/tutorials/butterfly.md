@@ -56,8 +56,10 @@ Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
 
 ## Configurations for Butterfly Plots
 
+
 Here we look into possible options for configuring the butterfly plot visualization using `(...; <name>=<value>, ...)`.
 This is the list of unique configuration (key values):
+
 
 - topoLegend (boolean)
 
