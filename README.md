@@ -24,12 +24,12 @@ The supportet visualizations are:
 
 ![grafik](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/af2801e5-cd64-4932-b84d-9abc1d8470ee)
 
-
-## Code Notes
+## Structure
+### Code Notes
 
 The code files can be found in the `src` folder.
 
-## Documentation Notes
+### Documentation Notes
 
 The documentation can be found in the `doc` folder. We use `Documenter.jl` and plan to use `Literate.jl` for future usage.
 In the `src` folder contained within it exists as "raw" `.md` files and in the `build` folder contained within it exists as `.html` after running the `make.jl` file.
