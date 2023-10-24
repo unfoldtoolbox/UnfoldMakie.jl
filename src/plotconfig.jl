@@ -169,13 +169,6 @@ function PlotConfig(T::Val{:butterfly})
     config_kwargs!(
         cfg;
         layout = (; showLegend = false),
-        extra = (;
-            topoLegend = true,
-            markersize = 10,
-            topowidth = 0.25,
-            topoheigth = 0.25,
-            topoPositionToColorFunction = x -> posToColorRomaO(x),
-        ),
         mapping = (;
             color = (:channel, :channels, :trial, :trials),
             positions = (:pos, :positions, :position, :topoPositions, :x, nothing),
@@ -190,13 +183,6 @@ function PlotConfig(T::Val{:erp})
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
         layout = (; showLegend = true, hidespines = (:r, :t)),
-        extra = (;
-            butterfly = false,
-            categoricalColor = true,
-            categoricalGroup = true,
-            stderror = false, # XXX if it exists, should be plotted
-            pvalue = [],
-        ),
     )
 
     return cfg

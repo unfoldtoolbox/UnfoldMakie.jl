@@ -13,7 +13,7 @@ Plot an ERP plot.
 - `plotData::DataFrame`: Data for the line plot visualization.
 - `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`
 
-## Extra Data Behavior (...; extra = (; [key]=value)):
+## kwargs (...; ...):
 
 - `categoricalColor` (bool, `true`) - Indicates whether the column referenced in mapping.color should be used nonnumerically.
 - `categoricalGroup` (bool, `true`) - Indicates whether the column referenced in mapping.group should be used nonnumerically.
@@ -34,7 +34,7 @@ Plot Butterfly
 
 See `plot_erp` for all specifications
 
-## Extra Data Behavior (...; extra=(; [key]=value)):
+## kwargs: (...; ...):
 `markersize` (Real, `10`) - change the size of the markers, topoplot-inlay electrodes
 `topowidth` (Real, `0.25`) - change the size of the inlay topoplot width
 `topoheigth` (Real, `0.25`) - change the size of the inlay topoplot height
@@ -43,12 +43,19 @@ See `plot_erp` for all specifications
 """
 plot_butterfly(plotData::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plotData; kwargs...)
-plot_butterfly!(
-    f::Union{GridPosition,<:Figure},
-    plotData::DataFrame;
-    extra = (;),
-    kwargs...,
-) = plot_erp!(f, plotData, ; extra = merge((; butterfly = true), extra), kwargs...)
+
+plot_butterfly!(f::Union{GridPosition,<:Figure}, plotData::DataFrame; kwargs...) =
+    plot_erp!(
+        f,
+        plotData;
+        butterfly = true,
+        topoLegend = true,
+        markersize = 10,
+        topowidth = 0.25,
+        topoheigth = 0.25,
+        topoPositionToColorFunction = x -> posToColorRomaO(x),
+        kwargs...,
+    )
 
 
 
@@ -57,11 +64,21 @@ function plot_erp!(
     plotData::DataFrame;
     positions = nothing,
     labels = nothing,
+    categoricalColor = true,
+    categoricalGroup = true,
+    stderror = false, # XXX if it exists, should be plotted
+    pvalue = [],
+    butterfly = false,
+    topoLegend = nothing,
+    markersize = nothing,
+    topowidth = nothing,
+    topoheigth = nothing,
+    topoPositionToColorFunction = nothing,
     kwargs...,
 )
     config = PlotConfig(:erp)
     config_kwargs!(config; kwargs...)
-    if config.extra.butterfly
+    if butterfly
         config = PlotConfig(:butterfly)
         config_kwargs!(config; kwargs...)
     end
@@ -86,35 +103,35 @@ function plot_erp!(
     end
 
     # check if stderror values exist and create new collumsn with high and low band
-    if "stderror" ∈ names(plotData) && config.extra.stderror
+    if "stderror" ∈ names(plotData) && stderror
         plotData.stderror = plotData.stderror .|> a -> isnothing(a) ? 0.0 : a
         plotData[!, :se_low] = plotData[:, config.mapping.y] .- plotData.stderror
         plotData[!, :se_high] = plotData[:, config.mapping.y] .+ plotData.stderror
     end
 
     # Get topocolors for butterfly
-    if (config.extra.butterfly)
+    if (butterfly)
         if isnothing(positions) && isnothing(labels)
-            config.extra = merge(config.extra, (; topoLegend = false))
-            #colors =config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plotData)))
+            topoLegend = false
+            #colors = config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plotData)))
             colors = nothing
             #config.mapping = merge(config.mapping,(;color=config.))
         else
             allPositions = getTopoPositions(; positions = positions, labels = labels)
-            colors = getTopoColor(allPositions, config)
+            colors = getTopoColor(allPositions, topoPositionToColorFunction)
         end
 
 
     end
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
-    if config.extra.categoricalColor && (:color ∈ keys(config.mapping))
+    if categoricalColor && (:color ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; color = config.mapping.color => nonnumeric))
     end
 
     # converts group column into string
-    if config.extra.categoricalGroup && (:group ∈ keys(config.mapping))
+    if categoricalGroup && (:group ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
@@ -140,7 +157,7 @@ function plot_erp!(
 
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
-    if config.extra.stderror
+    if stderror
         m_se = mapping(config.mapping.x, :se_low, :se_high)
         basic = basic + visual(Band, alpha = 0.5) * m_se
     end
@@ -148,7 +165,7 @@ function plot_erp!(
     basic = basic * data(plotData)
 
     # add the pvalues
-    if !isempty(config.extra.pvalue)
+    if !isempty(pvalue)
         basic = basic + addPvalues(plotData, config)
     end
 
@@ -156,19 +173,19 @@ function plot_erp!(
 
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
-    if config.extra.butterfly
+    if butterfly
         # add topoLegend
 
-        if (config.extra.topoLegend)
+        if (topoLegend)
             topoAxis = Axis(
                 f_grid,
-                width = Relative(config.extra.topowidth),
-                height = Relative(config.extra.topoheigth),
+                width = Relative(topowidth),
+                height = Relative(topoheigth),
                 halign = 0.05,
                 valign = 0.95,
                 aspect = 1,
             )
-            topoplotLegend(config, topoAxis, allPositions)
+            topoplotLegend(topoAxis, markersize, topoPositionToColorFunction, allPositions)
         end
         # no extra legend
         mainAxis = Axis(f_grid; config.axis...)
@@ -218,17 +235,14 @@ function eegHeadMatrix(positions, center, radius)
     )
 end
 
-function topoplotLegend(config, axis, allPositions)
+function topoplotLegend(axis, markersize, topoPositionToColorFunction, allPositions)
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(
-        vcat(
-            RGB(1, 1, 1.0),
-            [config.extra.topoPositionToColorFunction(pos) for pos in allPositions]...,
-        ),
+        vcat(RGB(1, 1, 1.0), [topoPositionToColorFunction(pos) for pos in allPositions]...),
     )
 
     xlims!(low = -0.2, high = 1.2)
@@ -242,7 +256,7 @@ function topoplotLegend(config, axis, allPositions)
         colorrange = (0, length(allPositions)), # add the 0 for the white-first color
         colormap = specialColors,
         head = (color = :black, linewidth = 1, model = topoMatrix),
-        label_scatter = (markersize = config.extra.markersize, strokewidth = 0.5),
+        label_scatter = (markersize = markersize, strokewidth = 0.5),
     )
 
     hidedecorations!(current_axis())
@@ -252,7 +266,7 @@ function topoplotLegend(config, axis, allPositions)
 end
 
 function addPvalues(plotData, config)
-    p = deepcopy(config.extra.pvalue)
+    p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
     if "group" ∉ names(p)

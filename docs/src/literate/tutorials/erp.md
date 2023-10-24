@@ -44,7 +44,7 @@ nothing #hide
 ## Plot the results
 
 ````@example erp
-plot_erp(results; extra=(:stderror=>true,))
+plot_erp(results; :stderror=>true,)
 ````
 
 ## Column Mappings for Line Plots
@@ -59,8 +59,8 @@ There are multiple default values, that are checked in that order if they exist 
 
 # Configuration for Line Plots
 
-## extra
-`plot_erp(...;extra=(;<name>=<value>,...)`.
+## key variables
+`plot_erp(...; <name>=<value>,...)`.
 - categoricalColor (boolean, true) - in case of numeric `:color` column, is color a continuous or categorical variable?
 - categoricalGroup (boolean, true) - in case of numeric `:group` column, treat `:group` as categorical variable by default
 - stderror (boolean, false) - add an error-ribbon based on the `:stderror` column
@@ -72,9 +72,9 @@ Using some general configurations we can pretty up the default visualization. He
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
-    extra = (; showLegend = true, categoricalColor = false, categoricalGroup = true),
     legend = (; nbanks = 2),
     layout = (; legendPosition = :right),
+    showLegend = true, categoricalColor = false, categoricalGroup = true,
 )
 ````
 
@@ -97,7 +97,8 @@ pvals = DataFrame(
 #	)
 ````
 
-plot_erp(results;extra= (;:pvalue=>pvals))
+plot_erp(results; :pvalue=>pvals)
+
 ### stderror (boolean)
 Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror.
 Default is `false`.
@@ -107,7 +108,7 @@ previously we showed `:stderror`- but low/high is possible as well`
 ````@example erp
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
-plot_erp(select(results, Not(:stderror)); extra= (;stderror=true))
+plot_erp(select(results, Not(:stderror)); stderror=true)
 ````
 
 !!! note

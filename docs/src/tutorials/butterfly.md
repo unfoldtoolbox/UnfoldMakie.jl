@@ -19,7 +19,7 @@ We filter the data to make it more clearly represented:
 ```@example main
 include("../../example_data.jl")
 df, pos = example_data("TopoPlots.jl")
-first(df,3)
+first(df, 3)
 ```
 
 ## Plot Butterfly Plots
@@ -37,7 +37,7 @@ plot_butterfly(df; positions=pos)
 
 ## Column Mappings for Butterfly Plots
 
-Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(;:x=:time,))`, that is, by specifying a `NamedTuple` (note the `;` right after the opening parentheses).
+Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time,))`, that is, by specifying a `NamedTuple` (note the `;` right after the opening parentheses).
 
 For more information on mapping values, see the [Mapping Data](@ref config_mapping) section of the documentation.
 
@@ -56,8 +56,8 @@ Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
 
 ## Configurations for Butterfly Plots
 
-Here we look into possible options for configuring the butterfly plot visualization using `(...; extra=(<name>=<value>, ...)`.
-This is the list of unique configuration (extraData):
+Here we look into possible options for configuring the butterfly plot visualization using `(...; <name>=<value>, ...)`.
+This is the list of unique configuration (key values):
 
 - topoLegend (boolean)
 
