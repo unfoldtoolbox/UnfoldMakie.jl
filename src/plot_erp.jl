@@ -169,7 +169,7 @@ function plot_erp!(
 
     # add the pvalues
     if !isempty(pvalue)
-        basic = basic + addPvalues(plotData, config)
+        basic = basic + addPvalues(plotData, pvalue,config)
     end
 
     plotEquation = basic * mapp
@@ -268,7 +268,7 @@ function topoplotLegend(axis, topomarkersize, topoPositionToColorFunction, allPo
     return topoplot
 end
 
-function addPvalues(plotData, config)
+function addPvalues(plotData, pvalue,config)
     p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
@@ -283,7 +283,7 @@ function addPvalues(plotData, config)
             p[!, :group] .= 1
         end
     end
-    @show config.mapping
+    #@show config.mapping
     if :color ∈ keys(config.mapping)
         c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
         un = unique(p[!, c])
