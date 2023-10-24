@@ -1,20 +1,21 @@
 
 
 """
-ax = RelativeAxis(figlike, p::NTuple{4,Float64}; kwargs...)
+ax = RelativeAxis(figlike, p::NTuple{4, Float64}; kwargs...)
 
 Returns an axis which's position is relative to a GridLayout Element (via BBox) and not 
-relative to the Scene (default Axis(...,bbox=BBox()) behavior)
+relative to the Scene (default Axis(..., bbox=BBox()) behavior)
 
 p::NTuple{4,Float64}: Give the relative position to the GridPosition, left:right; bottom:up, 
-typical numbers betwen 0 and 1. E.g. (0.25,0.75,0.25,0.75) would center an Axis inside that GridPosition
+typical numbers betwen 0 and 1. E.g. (0.25, 0.75, 0.25, 0.75) would center an Axis inside that GridPosition
 
 kwargs... are pasted into Axis
 
 f = Figure()
-ax = RelativeAxis(f[1,2],(0.25,0.75,0.25,0.75))	 # returns Axis centered within f[1,2]
+ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1,2]
 
 """
+
 struct RelativeAxis
     layoutobservables::GridLayoutBase.LayoutObservables{GridLayout}
     relative_bbox::NTuple

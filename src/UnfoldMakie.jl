@@ -33,7 +33,7 @@ import AlgebraOfGraphics.hidedecorations!
 include("plotconfig.jl")
 include("docstringtemplate.jl")
 
-include("eeg-series.jl")
+include("eeg_series.jl")
 include("plot_topoplotseries.jl")
 
 include("plot_erp.jl")

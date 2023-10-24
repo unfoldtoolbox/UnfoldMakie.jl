@@ -1,18 +1,27 @@
 #include("setup.jl")
 @testset "testing no bottom erp plot" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel=10, return_epoched=true)
-    plot_erpimage(data; ploterp=false)
+    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+    plot_erpimage(data;)
 end
 
 @testset "testing with bottom erp plot" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel=10, return_epoched=true)
-    plot_erpimage(data; ploterp=true)
+    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+    plot_erpimage(data; meanPlot = true)
 end
 
 @testset "testing no bottom erp plot in extra mode" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel=10, return_epoched=true)
-    plot_erpimage(data; extra=(ploterp=true,))
+    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+    plot_erpimage(data; meanPlot = true)
 end
+
+
+@testset "testing no bottom erp plot in extra mode" begin
+    f = Figure()
+    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+    plot_erpimage!(f[1, 1], data; meanPlot = true)
+    #save("erpimage.eps", f)
+end
+
 
 #=
 @testset "testing better sorting" begin

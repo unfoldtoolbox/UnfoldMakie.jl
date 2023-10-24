@@ -18,7 +18,7 @@
             predictor = [70,80,90],
             )
             
-            @test_throws ErrorException plot_circulareegtopoplot(testdf;   extra=(;predictorBounds=[0,100,360]),          positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
+            @test_throws ErrorException plot_circulareegtopoplot(testdf; predictorBounds=[0,100,360], positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
 
     end
 end
