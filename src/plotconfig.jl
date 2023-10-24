@@ -28,30 +28,31 @@ function PlotConfig()# defaults
     PlotConfig(
         (;), #figure
         (; # layout
-            showLegend=true,
-            legendPosition=:right,
-            xlabelFromMapping=:x,
-            ylabelFromMapping=:y,
-            useColorbar=false
+            showLegend = true,
+            legendPosition = :right,
+            xlabelFromMapping = :x,
+            ylabelFromMapping = :y,
+            useColorbar = false,
         ),
         (;), # axis
         (#maping
-            x=(:time,),
-            y=(:estimate, :yhat, :y,),
+            x = (:time,),
+            y = (:estimate, :yhat, :y),
         ),
         (; # visual
-            colormap=:roma
-        ), (;#legend
-            orientation=:vertical,
-            tellwidth=true,
-            tellheight=false
+            colormap = :roma
+        ),
+        (;#legend
+            orientation = :vertical,
+            tellwidth = true,
+            tellheight = false,
         ),
         (;#colorbar
-            vertical=true,
-            tellwidth=true,
-            tellheight=false
+            vertical = true,
+            tellwidth = true,
+            tellheight = false,
         ),
-        (;)
+        (;),
     )
 
 end
@@ -78,18 +79,16 @@ PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 function PlotConfig(T::Val{:circeegtopo})
     cfg = PlotConfig(:topoplot)
 
-    config_kwargs!(cfg; extra=(;
-            predictorBounds=[0, 360]
-        ), layout=(;
-            showLegend=false
-        ), colorbar=(;
-            label="Voltage [µV]",
-            colormap=Reverse(:RdBu)
-        ), mapping=(;
-        ), axis=(;
-            label=""
+    config_kwargs!(
+        cfg;
+        layout = (; showLegend = false),
+        colorbar = (; label = "Voltage [µV]", colormap = Reverse(:RdBu)),
+        mapping = (;),
+        axis = (;
+            label = ""
             #backgroundcolor = RGB(0.98, 0.98, 0.98),
-        ))
+        ),
+    )
     return cfg
 end
 
@@ -97,12 +96,14 @@ end
 function PlotConfig(T::Val{:topoarray})
     cfg = PlotConfig(:erp)
 
-    config_kwargs!(cfg; extra=(;
-        ), layout=(;
-        ), colorbar=(;
-        ), mapping=(;
-        ), axis=(;
-        ))
+    config_kwargs!(
+        cfg;
+        extra = (;),
+        layout = (;),
+        colorbar = (;),
+        mapping = (;),
+        axis = (;),
+    )
     return cfg
 end
 
@@ -111,132 +112,104 @@ end
 function PlotConfig(T::Val{:topoplot})
     cfg = PlotConfig()
 
-    config_kwargs!(cfg; layout=(
-            showLegend=true,
-            xlabelFromMapping=nothing,
-            ylabelFromMapping=nothing,
-            useColorbar=true,
-            hidespines=(),
-            hidedecorations=()
-        ), visual=(;
-            contours=(color=:white, linewidth=2),
-            label_scatter=true,
-            label_text=true,
-            bounding_geometry=Circle,
-            colormap=Reverse(:RdBu)
-        ), mapping=(;
-            x=(nothing,),
-            positions=(:pos, :positions, :position, nothing), # Point / Array / Tuple
-            labels=(:labels, :label, :sensor, nothing) # String
-        ), axis=(;
-            aspect=DataAspect()
-        ))
+    config_kwargs!(
+        cfg;
+        layout = (
+            showLegend = true,
+            xlabelFromMapping = nothing,
+            ylabelFromMapping = nothing,
+            useColorbar = true,
+            hidespines = (),
+            hidedecorations = (),
+        ),
+        visual = (;
+            contours = (color = :white, linewidth = 2),
+            label_scatter = true,
+            label_text = true,
+            bounding_geometry = Circle,
+            colormap = Reverse(:RdBu),
+        ),
+        mapping = (;
+            x = (nothing,),
+            positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
+            labels = (:labels, :label, :sensor, nothing), # String
+        ),
+        axis = (; aspect = DataAspect()),
+    )
     return cfg
 end
 function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
-    config_kwargs!(cfg, extra=(
-            combinefun=mean,
-            col_labels=true,
-            row_labels=true,
-            rasterize_heatmaps=true
-        ), layout=(
-            useColorbar=true,
-        ), visual=(; label_text=false # true doesnt work again
-        ), mapping=(
-            col=(:time,),
-            row=(nothing,)
-        ))
+    config_kwargs!(
+        cfg,
+        layout = (useColorbar = true,),
+        visual = (;
+            label_text = false # true doesnt work again
+        ),
+        mapping = (col = (:time,), row = (nothing,)),
+    )
     return cfg
 end
 function PlotConfig(T::Val{:designmat})
     cfg = PlotConfig()
-    config_kwargs!(cfg; layout=(;
-            useColorbar=true,
-            xlabelFromMapping=nothing,
-            ylabelFromMapping=nothing
-        ), axis=(;
-            xticklabelrotation=pi / 8
-        ), extra=(;
-            xTicks=nothing,
-            sortData=false,
-            standardizeData=false
-        )
+    config_kwargs!(
+        cfg;
+        layout = (;
+            useColorbar = true,
+            xlabelFromMapping = nothing,
+            ylabelFromMapping = nothing,
+        ),
+        axis = (; xticklabelrotation = pi / 8),
     )
     return cfg
 end
 
 function PlotConfig(T::Val{:butterfly})
     cfg = PlotConfig(:erp)
-    config_kwargs!(cfg;
-        layout=(;
-            showLegend=false
-        ), extra=(;
-            topoLegend=true,
-            markersize=10,
-            topowidth=0.25,
-            topoheigth=0.25,
-            topoPositionToColorFunction=x -> posToColorRomaO(x)
-        ), mapping=(;
-            color=(:channel, :channels, :trial, :trials,),
-            positions=(:pos, :positions, :position, :topoPositions, :x, nothing),
-            labels=(:labels, :label, :topoLabels, :sensor, nothing)))
+    config_kwargs!(
+        cfg;
+        layout = (; showLegend = false),
+        mapping = (;
+            color = (:channel, :channels, :trial, :trials),
+            positions = (:pos, :positions, :position, :topoPositions, :x, nothing),
+            labels = (:labels, :label, :topoLabels, :sensor, nothing),
+        ),
+    )
     return cfg
 end
 function PlotConfig(T::Val{:erp})
     cfg = PlotConfig()
-    config_kwargs!(cfg; mapping=(;
-            color=(:color, :coefname, nothing)
-        ), layout=(;
-            showLegend=true,
-            hidespines=(:r, :t)
-        ), extra=(;
-            butterfly=false,
-            categoricalColor=true,
-            categoricalGroup=true,
-            stderror=false, # XXX if it exists, should be plotted
-            pvalue=[]
-        ))
+    config_kwargs!(
+        cfg;
+        mapping = (; color = (:color, :coefname, nothing)),
+        layout = (; showLegend = true, hidespines = (:r, :t)),
+    )
 
     return cfg
 end
 function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
-    config_kwargs!(cfg; extra=(;
-            sortData=true,
-            meanPlot=false,
-            erpBlur=10
-        ), layout=(;
-            useColorbar=true
-        ), colorbar=(;
-            label="Voltage [µV]"
-        ), axis=(
-            xlabel="Time",
-            ylabel="Sorted trials"), visual=(;
-            colormap=Reverse("RdBu")
-        ))
+    config_kwargs!(
+        cfg;
+        layout = (; useColorbar = true),
+        colorbar = (; label = "Voltage [µV]"),
+        axis = (xlabel = "Time", ylabel = "Sorted trials"),
+        visual = (; colormap = Reverse("RdBu")),
+    )
     return cfg
 end
 function PlotConfig(T::Val{:paracoord})
     cfg = PlotConfig()
-    config_kwargs!(cfg; layout=(;
-            xlabelFromMapping=:channel,
-            ylabelFromMapping=:y,
-            hidespines=(),
-            hidedecorations=(; label=false)
-        ), mapping=(;
-            channel=:channel,
-            category=:category,
-            time=:time
-        ), extra=(;
-            # paracoord fix-values
-            pc_aspect_ratio=0.55,
-            pc_right_padding=15,
-            pc_left_padding=25,
-            pc_top_padding=26,
-            pc_bottom_padding=16,
-            pc_tick_label_size=14
-        ))
+    config_kwargs!(
+        cfg;
+        layout = (;
+            xlabelFromMapping = :channel,
+            ylabelFromMapping = :y,
+            hidespines = (),
+            hidedecorations = (; label = false),
+        ),
+        mapping = (; channel = :channel, category = :category, time = :time),
+    )
     return cfg
 end
 
@@ -254,7 +227,9 @@ function resolveMappings(plotData, mappingData)
         else
             return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                    nothing :
-                   @error("default columns for $key = $choices not found, user must provide one by using plot_plotname(...;mapping=(; $key=:yourColumnName))")
+                   @error(
+                "default columns for $key = $choices not found, user must provide one by using plot_plotname(...;mapping=(; $key=:yourColumnName))"
+            )
         end
     end
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices

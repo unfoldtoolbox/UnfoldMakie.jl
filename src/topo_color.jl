@@ -8,9 +8,7 @@ function getTopoPositions(; labels=nothing, positions=nothing)
     return positions .|> (p -> Point2f(p[1], p[2]))
 end
 
-function getTopoColor(positions, config)
-    posToColor = config.extra.topoPositionToColorFunction
-    #    positions = getTopoPositions(plotData,config)
+function getTopoColor(positions, posToColor)
     if isnothing(positions)
         return nothing
     end
