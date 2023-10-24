@@ -28,6 +28,7 @@ makedocs(;
     authors="Benedikt Ehinger, Vladimir Mikheev, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
     repo="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
     sitename="UnfoldMakie.jl",
+    warnonly =  :cross_references,
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://unfoldtoolbox.github.io/UnfoldMakie.jl",
