@@ -7,4 +7,4 @@
 
 /Manifest.toml
 /docs/build/
-/docs/src/literate/*/*.md
+/docs/src/generated
