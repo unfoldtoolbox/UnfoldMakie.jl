@@ -39,6 +39,7 @@ include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")
 include("plot_circulareegtopoplot.jl")
+include("plot_erpgrid.jl")
 
 include("layout_helper.jl")
 include("eeg_positions.jl")
@@ -65,6 +66,8 @@ export plot_circulareegtopoplot!
 
 export plot_topoplotseries
 export plot_topoplotseries!
+export plot_erpgrid
+export plot_erpgrid!
 
 export to_positions
 export nonnumeric # reexport from AoG
