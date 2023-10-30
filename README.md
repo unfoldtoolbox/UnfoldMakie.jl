@@ -32,6 +32,7 @@ Channel images
 - ![icon_parallel_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/dab097c3-bcd6-4405-a44b-71cbe3e5fac9)
 Parallel coordinates
 - Designmatrices
+- Circular topoplots
 
 
 ## Install
