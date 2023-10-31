@@ -11,34 +11,26 @@ Plot an ERP image.
 ## Keyword Arguments
 - `chanNum` (Number, `30`) - Number of channels.
 - `drawLabels` (bool, `false`) - Draw channels labels over each waveform. 
-- `times`: () - TBD.
+- `times`: (Vector, `1:size(plotData, 2)`) - Vector of size()
 
 ## Return Value:
 The input `f`
 """
 
 # no figure?
-plot_erpgrid(plotData::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...) = plot_erpgrid!(
-    Figure(),
-    plotData,
-    pos;
-    chanNum = 30,
-    drawLabels = false,
-    times = nothing,
-    kwargs...,
-)
+plot_erpgrid(plotData::Matrix{<:Real}, pos; kwargs...) =
+    plot_erpgrid!(Figure(), plotData, pos; kwargs...)
 
 function plot_erpgrid!(
     f::Union{GridPosition,Figure},
     plotData::Matrix{<:Real},
-    pos::Vector{Point{2,Float}};
+    pos;
     chanNum = 30,
     drawLabels = false,
-    times = nothing,
+    times = 1:size(plotData, 2),
     kwargs...,
 )
-    plotData = plotData[1:chanNum, :, 1]
-    times = isnothing(times) ? (1:size(plotData, 2)) : times
+    plotData = plotData[1:chanNum, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)
 
     pos = pos[:, 1:chanNum]

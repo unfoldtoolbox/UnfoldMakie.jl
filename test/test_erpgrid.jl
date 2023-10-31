@@ -1,14 +1,12 @@
+data, pos = TopoPlots.example_data()
+data = data[:, :, 1]
 
 @testset "basic" begin
     f = Figure()
-    data, pos = TopoPlots.example_data()
     plot_erpgrid!(f[1, 1], data, pos)
 end
 
 
 @testset "basic" begin
-    f = Figure()
-    data, pos = TopoPlots.example_data()
-    plot_erpgrid(f, data, pos)
-    #save("erpimage.eps", f)
+    plot_erpgrid(data, pos)
 end
