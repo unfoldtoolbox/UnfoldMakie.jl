@@ -7,8 +7,8 @@ message: 'If you use this page, please cite it as below.'
 type: software
 authors:
 - given-names: Vladimir
-    family-names: Mikheev
-    orcid: 'https://orcid.org/0000-0002-4738-6655'
+  family-names: Mikheev
+  orcid: 'https://orcid.org/0000-0002-4738-6655'
 - given-names: Sören
   family-names: Döring
 - given-names: Niklas
