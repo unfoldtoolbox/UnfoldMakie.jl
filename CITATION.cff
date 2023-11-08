@@ -9,15 +9,15 @@ authors:
 - given-names: Vladimir
     family-names: Mikheev
     orcid: 'https://orcid.org/0000-0002-4738-6655'
-  - given-names: Sören
-    family-names: Döring
-  - given-names: Niklas
-    family-names: Gärtner
-  - given-names: Daniel
-    family-names: Baumgartner
-  - given-names: Benedikt
-    family-names: Ehinger
-    orcid: 'https://orcid.org/0000-0002-6276-3332'
+- given-names: Sören
+  family-names: Döring
+- given-names: Niklas
+  family-names: Gärtner
+- given-names: Daniel
+  family-names: Baumgartner
+- given-names: Benedikt
+  family-names: Ehinger
+  orcid: 'https://orcid.org/0000-0002-6276-3332'
 identifiers:
   - type: doi
     value: 10.5281/zenodo.6531996
