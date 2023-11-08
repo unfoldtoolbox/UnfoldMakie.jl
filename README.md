@@ -1,4 +1,4 @@
-# ![UnfoldMakie](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/57703446/26b770b3-afa0-4652-b654-82d2f737f42f)
+# ![UnfoldMakie - Advanced EEG and ERP Plotting](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/57703446/26b770b3-afa0-4652-b654-82d2f737f42f)
 
 
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev)
