@@ -105,6 +105,7 @@ If you make use of theses visualizations, please cite:
 - **Benedikt Ehinger**
 - **Sören Döring**
 - **Niklas Gärtner**
+- **Furkan Lokman**
 - **Vladimir Mikheev**
 
 ## Acknowledgements
