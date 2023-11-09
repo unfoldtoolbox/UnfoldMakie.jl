@@ -1,5 +1,6 @@
 """
     function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin::Real; kwargs...)
+using Makie: bar_label_formatter
     function plot_topoplotseries!(plotData::DataFrame, Δbin::Real; kwargs...)
         
 
@@ -53,7 +54,7 @@ function plot_topoplotseries!(
     end
 
 
-    ftopo = eeg_topoplot_series!(
+    ftopo, axlist = eeg_topoplot_series!(
         f,
         plotData,
         Δbin;
@@ -70,13 +71,8 @@ function plot_topoplotseries!(
     )
 
     if config.layout.useColorbar
-        #println(fieldnames(typeof(ftopo.layout.content[5].content.content[2].content)))
-        @show "colorbar"
         if typeof(ftopo) == Figure
-
             d = ftopo.content[1].scene.plots[1]
-            #println(d.colorrange)
-            #println(d.colormap)
             Colorbar(
                 f[1, end+1],
                 colormap = d.colormap,
@@ -85,20 +81,17 @@ function plot_topoplotseries!(
                 flipaxis = false,
                 label = "Voltage [µV]",
             )
-        else # temporal
-            if length(ftopo.layout.content) > 2
-                d = ftopo.layout.content[5].content.content[2].content.scene.plots[1].attributes
-            else
-                d = ftopo.layout.content[2].content.content[1].content.scene.plots[1].plots[1].attributes
-            end
+        else
+            # println(fieldnames(typeof((axlist[1]))))
+            d = axlist[1].scene.plots[1].attributes
             Colorbar(
-                f[1, ftopo.layout.size[2]+1],
+                f[:, :][1, length(axlist)+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
                 height = 100,
                 flipaxis = false,
                 label = "Voltage [µV]",
-            ) # why end is not working????
+            )
         end
     end
     return f
