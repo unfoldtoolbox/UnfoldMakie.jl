@@ -1,5 +1,5 @@
 """
-    function plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
+    plot_parallelcoordinates!(f::Union{GridPosition, Figure}, plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
 Plot a PCP (parallel coordinates plot).
 ## Arguments:
@@ -8,7 +8,6 @@ Plot a PCP (parallel coordinates plot).
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
-## Extra Data Behavior (...; setExtraValues=(; [key]=value)):
 
 PCP has problems with size changes of the view window.
 By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a Coordinated Multiple Views System
@@ -24,6 +23,8 @@ By adapting the padding, aspect ratio and tick label size in px for a new use ca
 `pc_bottom_padding`  Default : `16`
 
 `pc_tick_label_size`  Default : `14`
+
+$(_docstring(:paracoord))
 
 ## Return Value:
 The input `f`

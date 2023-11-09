@@ -15,6 +15,8 @@ using Colors
 using ColorSchemes
 using ColorTypes
 
+using DocStringExtensions # for $SIGNATURES
+
 using DataStructures
 using DataFrames
 using SparseArrays
@@ -29,6 +31,7 @@ import AlgebraOfGraphics.hidedecorations!
 #import AlgebraOfGraphics.hidespines!
 
 include("plotconfig.jl")
+include("docstringtemplate.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")

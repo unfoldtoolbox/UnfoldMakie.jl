@@ -11,22 +11,21 @@ using ColorTypes
     holds various different fields, that can modify various different plotting aspects.
 
 """
-
 mutable struct PlotConfig
     figure::NamedTuple
-    layout::NamedTuple
     axis::NamedTuple
+    layout::NamedTuple
     mapping::NamedTuple
     visual::NamedTuple
     legend::NamedTuple
     colorbar::NamedTuple
-    extra::NamedTuple
 end
 
 
 function PlotConfig()# defaults
     PlotConfig(
         (;), #figure
+        (;), # axis
         (; # layout
             showLegend = true,
             legendPosition = :right,
@@ -34,7 +33,6 @@ function PlotConfig()# defaults
             ylabelFromMapping = :y,
             useColorbar = false,
         ),
-        (;), # axis
         (#maping
             x = (:time,),
             y = (:estimate, :yhat, :y),
@@ -52,7 +50,7 @@ function PlotConfig()# defaults
             tellwidth = true,
             tellheight = false,
         ),
-        (;),
+        (;)
     )
 
 end
@@ -62,8 +60,9 @@ end
 Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
-    list = fieldnames(PlotConfig)#[:extra,:layout,:visual,:mapping,:legend,:colorbar,:axis]
+    list = fieldnames(PlotConfig)#[:layout,:visual,:mapping,:legend,:colorbar,:axis]
     keyList = collect(keys(kwargs))
+    :extra ∈ keyList ? @warn("Extra is deprecated in 0.4 and extra-keyword args have to be used directly as key-word arguments") : ""
     applyTo = keyList[in.(keyList, Ref(list))]
     for k ∈ applyTo
         setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
@@ -96,14 +95,12 @@ end
 function PlotConfig(T::Val{:topoarray})
     cfg = PlotConfig(:erp)
 
-    config_kwargs!(
-        cfg;
-        extra = (;),
-        layout = (;),
-        colorbar = (;),
-        mapping = (;),
-        axis = (;),
-    )
+    config_kwargs!(cfg; extra=(;
+        ), layout=(;
+        ), colorbar=(;
+        ), mapping=(;
+        ), axis=(;
+        ))
     return cfg
 end
 

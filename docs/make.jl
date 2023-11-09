@@ -3,7 +3,10 @@ using Documenter
 using DocStringExtensions
 
 # preload once
+
 using CairoMakie
+const Makie = CairoMakie # - for references
+using AlgebraOfGraphics
 using Unfold
 using DataFrames
 using DataFramesMeta
@@ -11,9 +14,10 @@ using DataFramesMeta
 using Literate
 using Glob
 
-GENERATED = joinpath(@__DIR__, "src", "literate")
+GENERATED = joinpath(@__DIR__, "src", "generated")
+SOURCE = joinpath(@__DIR__, "literate")
 for subfolder ∈ ["explanations", "HowTo", "tutorials", "reference"]
-    local SOURCE_FILES = Glob.glob(subfolder * "/*.jl", GENERATED)
+    local SOURCE_FILES = Glob.glob(subfolder * "/*.jl", SOURCE)
     foreach(fn -> Literate.markdown(fn, GENERATED * "/" * subfolder), SOURCE_FILES)
 
 end
@@ -25,6 +29,7 @@ makedocs(;
     authors="Benedikt Ehinger, Vladimir Mikheev, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
     repo="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
     sitename="UnfoldMakie.jl",
+    warnonly =  :cross_references,
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://unfoldtoolbox.github.io/UnfoldMakie.jl",
@@ -33,23 +38,14 @@ makedocs(;
     pages=[
         "UnfoldMakie Documentation" => "index.md",
         "Visualizations-Types" => [
-            "ERP plot" => "literate/tutorials/erp.md",
+            "ERP plot" => "generated/tutorials/erp.md",
             "Butterfly Plot" => "tutorials/butterfly.md",
             "Designmatrix" => "tutorials/designmatrix.md",
             "ERP Image" => "tutorials/erpimage.md",
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
             "Topo Plot" => "tutorials/topoplot.md",
             "Topo Plot Series" => "tutorials/topoplotseries.md",
-            "Circular TopoPlot" => "literate/tutorials/circTopo.md",
-        ],
-        "Plot Configuration" => [
-            "Axis Data" => "config/axis_data.md",
-            "Colorbar Data" => "config/colorbar_data.md",
-            "Extra Data" => "config/extra_data.md",
-            "Layout Data" => "config/layout_data.md",
-            "Legend Data" => "config/legend_data.md",
-            "Mapping Data" => "config/mapping_data.md",
-            "Visual Data" => "config/visual_data.md",
+            "Circular TopoPlot" => "generated/tutorials/circTopo.md",
         ],
         "How To" => [
             "Butterfly Colormap" => "how_to/position2color.md",
@@ -59,9 +55,13 @@ makedocs(;
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
         "Reference" => [
-            "Convert 3D positions / montages to 2D layouts" => "literate/reference/positions.md"
-        ]
-    ]
+            "Convert 3D positions / montages to 2D layouts" => "generated/reference/positions.md"
+
+        ],
+        "API" => "api.md",
+        "Utilities" => "helper.md",
+    ],
+
 )
 
 deploydocs(;

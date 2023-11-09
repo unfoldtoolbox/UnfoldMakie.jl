@@ -6,10 +6,9 @@ In the following, we will discuss a possible quick solution to this problem.
 We start with the "label-limited" time-expanded designmatrix from the [corresponding Tutorial section](@ref dm_vis), which describes in detail how to generate it.
 
 ```@julia main
-plot_designmatrix(designmatrix!(ufCont,evts), cDesign; setExtraValues=(xTicks=10, sortData=false))
+plot_designmatrix(designmatrix!(ufCont,evts), cDesign; xTicks=10, sortData=false)
 ```
 
-#![Label Limited Timeexpanded Designmatrix](../images/designmatrix_te_12_labels.png)
 
 While the plot automatically sets its height according to the labels, the labels are cut off on the left side.
 
@@ -27,5 +26,3 @@ plot_design(f[1,2:6], designmatrix!(ufCont, evts), cDesign; setExtraValues=(xTic
 
 f
 ```
-
-#![Label Limited Timeexpanded Designmatrix](../images/label_fix.png)

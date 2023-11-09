@@ -2,8 +2,8 @@
 
 
 """
-    function plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64}; kwargs...)
-    function plot_erpimage(data::Matrix{Float64}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64}; kwargs...)
+    plot_erpimage(data::Matrix{Float64}; kwargs...)
 
 Plot an ERP image.
 ## Arguments:
@@ -18,6 +18,8 @@ Non-Positive values deactivate the blur.
 (sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
 
 `meanPlot`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+
+$(_docstring(:erpimage))
 
 ## Return Value:
 The input `f`

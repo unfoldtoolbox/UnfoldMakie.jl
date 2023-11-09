@@ -25,8 +25,22 @@ The input `f`
 """
 plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
+plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
+    plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
 
 
+function plot_topoplotseries!(
+    f::Union{GridPosition,Figure},
+    plotData::DataFrame,
+    Δbin;
+    positions = nothing,
+    labels = nothing,
+    combinefun = mean,
+    col_labels = true,
+    row_labels = true,
+    rasterize_heatmaps = true,
+    kwargs...,
+)
 function plot_topoplotseries!(
     f::Union{GridPosition,Figure},
     plotData::DataFrame,
@@ -46,6 +60,7 @@ function plot_topoplotseries!(
 
     # resolve columns with data
     config.mapping = resolveMappings(plotData, config.mapping)
+    positions = getTopoPositions(; positions = positions, labels = labels)
     positions = getTopoPositions(; positions = positions, labels = labels)
 
 

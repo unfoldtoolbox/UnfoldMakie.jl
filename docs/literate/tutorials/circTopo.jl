@@ -31,6 +31,7 @@ plot_circulareegtopoplot(
 
 
 # In case the bounding variable is not between 0 and 360, as here we use actually time, we have to specify it. e.g.
+
 plot_circulareegtopoplot(
     df;
     positions = pos,
@@ -38,3 +39,4 @@ plot_circulareegtopoplot(
     predictor = :time,
     predictorBounds = [80, 320],
 )
+

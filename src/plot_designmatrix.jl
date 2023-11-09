@@ -1,5 +1,5 @@
 """ 
-    function plot_designmatrix(plotData::Unfold.DesignMatrix; kwargs...)
+    plot_designmatrix(plotData::Unfold.DesignMatrix;kwargs...)
         
 
 Plot a designmatrix. 
@@ -18,6 +18,8 @@ Behavior if specified in configuration:
 - xTicks = 2: first and last possible labels are placed.
 - 2 < xTicks < `number of labels`: Equally distribute the labels.
 - xTicks ≥ `number of labels`: all labels are placed.
+
+$(_docstring(:designmat))
 
 ## Return Value:
 A figure displaying the designmatrix. 
@@ -44,7 +46,7 @@ function plot_designmatrix!(
         if sortData
             @warn "Sorting does not make sense for timeexpanded designmatrices. sortData has been set to `false`"
 
-            config.setExtraValues!(sortData = false)
+           sortData = false
         end
         designmat = Matrix(designmat[end÷2-2000:end÷2+2000, :])
     end

@@ -15,7 +15,6 @@ f = Figure()
 ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1,2]
 
 """
-
 struct RelativeAxis
     layoutobservables::GridLayoutBase.LayoutObservables{GridLayout}
     relative_bbox::NTuple

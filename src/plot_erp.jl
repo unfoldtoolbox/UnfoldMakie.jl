@@ -2,8 +2,8 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    function plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame; kwargs...)
-    function plot_erp(plotData::DataFrame; kwargs...)
+    plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame; kwargs...)
+    plot_erp(plotData::DataFrame; kwargs...)
         
 Plot an ERP plot.
 
@@ -22,6 +22,8 @@ Plot an ERP plot.
 - `pvalue` (Array, `[]`) - example: `DataFrame(from=[0.1,0.3], to=[0.5,0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname not specified, the lines will be black
 
 
+$(_docstring(:erp))
+
 ## Return Value:
 
 - f - Figure() or the inputed `f`
@@ -32,14 +34,15 @@ plot_erp(plotData::DataFrame; kwargs...) = plot_erp!(Figure(), plotData, ; kwarg
 """
 Plot Butterfly
 
-See `plot_erp` for all specifications
+$(_docstring(:butterfly))
 
-## kwargs: (...; ...):
-`markersize` (Real, `10`) - change the size of the markers, topoplot-inlay electrodes
-`topowidth` (Real, `0.25`) - change the size of the inlay topoplot width
-`topoheigth` (Real, `0.25`) - change the size of the inlay topoplot height
+## key-word arguments
 
+- `topomarkersize` (Real, `10`) - change the size of the markers, topoplot-inlay electrodes
+- `topowidth` (Real, `0.25`) - change the size of the inlay topoplot width
+- `topoheigth` (Real, `0.25`) - change the size of the inlay topoplot height
 
+see also [`plot_erp`](@Ref)
 """
 plot_butterfly(plotData::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plotData; kwargs...)
@@ -50,7 +53,7 @@ plot_butterfly!(f::Union{GridPosition,<:Figure}, plotData::DataFrame; kwargs...)
         plotData;
         butterfly = true,
         topoLegend = true,
-        markersize = 10,
+        topomarkersize = 10,
         topowidth = 0.25,
         topoheigth = 0.25,
         topoPositionToColorFunction = x -> posToColorRomaO(x),
@@ -70,7 +73,7 @@ function plot_erp!(
     pvalue = [],
     butterfly = false,
     topoLegend = nothing,
-    markersize = nothing,
+    topomarkersize = nothing,
     topowidth = nothing,
     topoheigth = nothing,
     topoPositionToColorFunction = nothing,
@@ -146,10 +149,6 @@ function plot_erp!(
         mapp = mapp * mapping(; config.mapping.group)
     end
 
-
-
-
-
     # remove x / y
     mappingOthers = deleteKeys(config.mapping, [:x, :y])
 
@@ -166,7 +165,7 @@ function plot_erp!(
 
     # add the pvalues
     if !isempty(pvalue)
-        basic = basic + addPvalues(plotData, config)
+        basic = basic + addPvalues(plotData, pvalue, config)
     end
 
     plotEquation = basic * mapp
@@ -185,7 +184,7 @@ function plot_erp!(
                 valign = 0.95,
                 aspect = 1,
             )
-            topoplotLegend(topoAxis, markersize, topoPositionToColorFunction, allPositions)
+            topoplotLegend(topoAxis, topomarkersize, topoPositionToColorFunction, allPositions)
         end
         # no extra legend
         mainAxis = Axis(f_grid; config.axis...)
@@ -235,7 +234,7 @@ function eegHeadMatrix(positions, center, radius)
     )
 end
 
-function topoplotLegend(axis, markersize, topoPositionToColorFunction, allPositions)
+function topoplotLegend(axis, topomarkersize, topoPositionToColorFunction, allPositions)
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
@@ -256,7 +255,7 @@ function topoplotLegend(axis, markersize, topoPositionToColorFunction, allPositi
         colorrange = (0, length(allPositions)), # add the 0 for the white-first color
         colormap = specialColors,
         head = (color = :black, linewidth = 1, model = topoMatrix),
-        label_scatter = (markersize = markersize, strokewidth = 0.5),
+        label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
     )
 
     hidedecorations!(current_axis())
@@ -265,7 +264,7 @@ function topoplotLegend(axis, markersize, topoPositionToColorFunction, allPositi
     return topoplot
 end
 
-function addPvalues(plotData, config)
+function addPvalues(plotData, pvalue, config)
     p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
@@ -280,7 +279,7 @@ function addPvalues(plotData, config)
             p[!, :group] .= 1
         end
     end
-    @show config.mapping
+    #@show config.mapping
     if :color ∈ keys(config.mapping)
         c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
         un = unique(p[!, c])

@@ -26,7 +26,6 @@ plot_erpimage(data)
 
 Since ERP images use a `Matrix` as an input, the library does not need any informations about the mapping.
 
-## extra=(;)
 - erpBlur (number, 10) - Is a number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module. Negative values deactivate the blur.
 
 - sortvalues - Indicating whether the data is sorted; using sortperm() of Base Julia 
