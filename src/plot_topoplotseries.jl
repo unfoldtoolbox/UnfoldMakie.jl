@@ -1,23 +1,21 @@
 """
-    function plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin::Real; kwargs...)
-using Makie: bar_label_formatter
-    function plot_topoplotseries!(plotData::DataFrame, Δbin::Real; kwargs...)
+    plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame,Δbin::Real;kwargs...)
+    plot_topoplotseries!(plotData::DataFrame, Δbin::Real;kwargs...)
         
+Multiple miniature topoplots in regular distances 
 
-Plot a Topoplot Series.
 ## Arguments:
+
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: DataFrame with data, needs a `time` column
 - `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
-- `useColorbar`: (default `true`) - show colorbar.
-
-### key arguments
-
 - `combinefun` (default `mean`) can be used to specify how the samples within `Δbin` are combined.
 - `rasterize_heatmaps` (deault `true`) - enforce rasterization of the plot heatmap when saving in svg format.
  This has the benefit that all lines/points are vectors, except the interpolated heatmap. 
  This is typically what you want, because else you get ~500x500 vectors per topoplot, which makes everything super slow.
 - `col_labels`, `row_labels` - shows column and row labels. 
+
+$(_docstring(:topoplotseries))
 
 ## Return Value:
 The input `f`
@@ -25,9 +23,6 @@ The input `f`
 """
 plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
-plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
-    plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
-
 
 function plot_topoplotseries!(
     f::Union{GridPosition,Figure},
@@ -41,18 +36,7 @@ function plot_topoplotseries!(
     rasterize_heatmaps = true,
     kwargs...,
 )
-function plot_topoplotseries!(
-    f::Union{GridPosition,Figure},
-    plotData::DataFrame,
-    Δbin;
-    positions = nothing,
-    labels = nothing,
-    combinefun = mean,
-    col_labels = true,
-    row_labels = true,
-    rasterize_heatmaps = true,
-    kwargs...,
-)
+
     config = PlotConfig(:topoplotseries)
     config_kwargs!(config; kwargs...)
 
@@ -60,7 +44,6 @@ function plot_topoplotseries!(
 
     # resolve columns with data
     config.mapping = resolveMappings(plotData, config.mapping)
-    positions = getTopoPositions(; positions = positions, labels = labels)
     positions = getTopoPositions(; positions = positions, labels = labels)
 
 

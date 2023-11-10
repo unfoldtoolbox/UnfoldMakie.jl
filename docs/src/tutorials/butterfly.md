@@ -39,8 +39,6 @@ plot_butterfly(df; positions=pos)
 
 Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time,))`, that is, by specifying a `NamedTuple` (note the `;` right after the opening parentheses).
 
-For more information on mapping values, see the [Mapping Data](@ref config_mapping) section of the documentation.
-
 While there are several default values that will be checked in that order if they exist in the `DataFrame`, a custom name may need to be chosen:
 
 

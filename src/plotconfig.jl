@@ -50,7 +50,6 @@ function PlotConfig()# defaults
             tellwidth = true,
             tellheight = false,
         ),
-        (;)
     )
 
 end
@@ -95,12 +94,13 @@ end
 function PlotConfig(T::Val{:topoarray})
     cfg = PlotConfig(:erp)
 
-    config_kwargs!(cfg; extra=(;
-        ), layout=(;
-        ), colorbar=(;
-        ), mapping=(;
-        ), axis=(;
-        ))
+    config_kwargs!(
+        cfg;
+        layout = (;),
+        colorbar = (;),
+        mapping = (;),
+        axis = (;),
+    )
     return cfg
 end
 

@@ -24,9 +24,20 @@ $(_docstring(:circeegtopo))
 A figure containing the circular topoplot at given layout position
 
 """
-plot_circulareegtopoplot(plotData::DataFrame; kwargs...) = plot_circulareegtopoplot!(Figure(), plotData; kwargs...)
-plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) = plot_circulareegtopoplot!(f, plotData; kwargs...)
-function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::DataFrame, ; predictor=:predictor, positions=nothing, labels=nothing, kwargs...)
+plot_circulareegtopoplot(plotData::DataFrame; kwargs...) =
+    plot_circulareegtopoplot!(Figure(), plotData; kwargs...)
+plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) =
+    plot_circulareegtopoplot!(f, plotData; kwargs...)
+function plot_circulareegtopoplot!(
+    f::Union{GridPosition,Figure},
+    plotData::DataFrame;
+    predictor = :predictor,
+    positions = nothing,
+    labels = nothing,
+    centerlabel = "",
+    predictorBounds = [0, 360],
+    kwargs...,
+)
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config; kwargs...)
     config.mapping = resolveMappings(plotData, config.mapping)
@@ -61,7 +72,7 @@ function plot_circulareegtopoplot!(f::Union{GridPosition,Figure}, plotData::Data
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax, config.extra.predictorBounds, config.axis.label)
+    plotCircularAxis!(ax, predictorBounds, centerlabel)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
     min, max = calculateGlobalMaxValues(plotData[:, config.mapping.y], predictorValues)
 

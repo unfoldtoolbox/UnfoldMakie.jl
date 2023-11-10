@@ -70,9 +70,6 @@ eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
 In place plotting of topoplot series
 see eeg_topoplot_series(data, Δbin) for help
 """
-
-
-
 function eeg_topoplot_series!(
     fig,
     data::DataFrame,
@@ -87,8 +84,6 @@ function eeg_topoplot_series!(
     rasterize_heatmap = true,
     topoplot_attributes...,
 )
-
-    #fig = fig[:,:] # make sure we plot over the specified ranges
 
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
     axisOptions = (
