@@ -9,7 +9,6 @@ Plot an ERP image.
 - `pos::Vector{Point{2,Float}}`: electrode positions.
         
 ## Keyword Arguments
-- `chanNum` (Number, `30`) - Number of channels.
 - `drawLabels` (bool, `false`) - Draw channels labels over each waveform. 
 - `times`: (Vector, `1:size(plotData, 2)`) - Vector of size()
 
@@ -25,11 +24,12 @@ function plot_erpgrid!(
     f::Union{GridPosition,Figure},
     plotData::Matrix{<:Real},
     pos;
-    chanNum = 30,
     drawLabels = false,
-    times = 1:size(plotData, 2),
+    times = -1:size(plotData, 2)-2, #arbitrary strat just for fun
     kwargs...,
 )
+    chanNum = size(plotData, 1)
+    println(size(plotData, 1), " ", size(plotData, 2))
     plotData = plotData[1:chanNum, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)
 
