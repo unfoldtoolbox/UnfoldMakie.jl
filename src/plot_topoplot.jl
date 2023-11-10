@@ -40,7 +40,14 @@ function plot_topoplot!(
 
     eeg_topoplot!(axis, plotData, labels; positions, config.visual...)
 
-    config_kwargs!(config, colorbar = (; limits = (min(plotData...), max(plotData...))))
+    clims = (min(plotData...), max(plotData...))
+    if clims[1] ≈ clims[2]
+        @warn """automatic colorlimits are the same, maybe all data is identical? Deactivating colorbar.
+         note: this might lead to an error later about interpolation when actually plotting the topoplot"""
+        config_kwargs!(config, layout = (; useColorbar=false,showLegend=false))
+    else
+        config_kwargs!(config, colorbar = (; limits = clims))
+    end
     applyLayoutSettings!(config; fig = f)
 
     return f
