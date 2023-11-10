@@ -35,15 +35,8 @@ plot_erpimage!(f::Union{GridPosition,Figure}, plotData::Matrix{<:Real}; kwargs..
 
 
 # no figure?
-plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) = plot_erpimage!(
-    Figure(),
-    times,
-    plotData;
-    sortix = nothing,
-    meanPlot = false,
-    erpBlur = 10,
-    kwargs...,
-)
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(Figure(), times, plotData; kwargs...)
 
 function plot_erpimage!(
     f::Union{GridPosition,Figure},

@@ -1,4 +1,4 @@
-
+using UnfoldMakie
 include("setup.jl")
 #include("../src/UnfoldMakie.jl")
 

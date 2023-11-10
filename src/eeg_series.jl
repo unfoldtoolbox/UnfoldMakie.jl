@@ -130,9 +130,10 @@ function eeg_topoplot_series!(
     select_col = isnothing(col) ? 1 : unique(data_mean[:, col])
     select_row = isnothing(row) ? 1 : unique(data_mean[:, row])
 
+    axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
-            ax = Axis(fig[r, c]; axisOptions...)
+            ax = Axis(fig[:, :][r, c]; axisOptions...)
             # select one topoplot
             sel = 1 .== ones(size(data_mean, 1)) # select all
             if !isnothing(col)
@@ -159,14 +160,15 @@ function eeg_topoplot_series!(
             end
             if c == 1 && length(select_row) > 1 && row_labels
                 #@show df_single
-                ax.ylabel = string(df_single.row[1])
+                ax.ylabel = string(df_single[1, row])
                 ax.ylabelvisible = true
             end
+            push!(axlist, ax)
         end
     end
     colgap!(fig.layout, 0)
 
-    return fig
+    return fig, axlist
 end
 
 """
