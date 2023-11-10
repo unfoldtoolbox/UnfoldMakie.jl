@@ -1,4 +1,4 @@
-@testset "testing standart" begin
+@testset "basic with results" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
     data = reshape(data, (1, size(data)...))
     f = @formula 0 ~ 1 + condition + continuous
@@ -19,7 +19,7 @@
 end
 
 
-@testset "testing standart with more arguments" begin
+@testset "basic with res_effects" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
     data = reshape(data, (1, size(data)...))
     f = @formula 0 ~ 1 + condition + continuous

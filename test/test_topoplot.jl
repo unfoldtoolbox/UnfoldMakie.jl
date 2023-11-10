@@ -1,4 +1,10 @@
+data, positions = TopoPlots.example_data()
+
 @testset "testing topoplot" begin
-    data, positions = TopoPlots.example_data()
     plot_topoplot(data[:, 150, 1]; positions=positions, t=150)
+end
+
+@testset "testing topoplot" begin
+    f = Figure()
+    plot_topoplot!(f[1, 1], data[:, 150, 1]; positions=positions, t=220)
 end
