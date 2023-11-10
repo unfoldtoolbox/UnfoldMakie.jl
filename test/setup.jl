@@ -1,4 +1,3 @@
-using UnfoldMakie
 using UnfoldSim
 using Test
 using CairoMakie

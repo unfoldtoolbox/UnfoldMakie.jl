@@ -1,21 +1,20 @@
 #include("setup.jl")
-@testset "testing no bottom erp plot" begin
+@testset "basic" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
     plot_erpimage(data;)
 end
 
-@testset "testing with bottom erp plot" begin
+@testset "with mean erp plot" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
     plot_erpimage(data; meanPlot = true)
 end
 
-@testset "testing no bottom erp plot in extra mode" begin
+@testset "changing erpBlur to zero" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage(data; meanPlot = true)
+    plot_erpimage(data; meanPlot = true, erpBlur = 0)
 end
 
-
-@testset "testing no bottom erp plot in extra mode" begin
+@testset "GridPosition" begin
     f = Figure()
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
     plot_erpimage!(f[1, 1], data; meanPlot = true)

@@ -149,10 +149,6 @@ function plot_erp!(
         mapp = mapp * mapping(; config.mapping.group)
     end
 
-
-
-
-
     # remove x / y
     mappingOthers = deleteKeys(config.mapping, [:x, :y])
 
@@ -169,7 +165,7 @@ function plot_erp!(
 
     # add the pvalues
     if !isempty(pvalue)
-        basic = basic + addPvalues(plotData, pvalue,config)
+        basic = basic + addPvalues(plotData, pvalue, config)
     end
 
     plotEquation = basic * mapp
@@ -268,7 +264,7 @@ function topoplotLegend(axis, topomarkersize, topoPositionToColorFunction, allPo
     return topoplot
 end
 
-function addPvalues(plotData, pvalue,config)
+function addPvalues(plotData, pvalue, config)
     p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
