@@ -84,7 +84,7 @@ end
 
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions, t=150)
     plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
-    plot_erpgrid!(f[3, 1], data, pos)
+    plot_erpgrid!(f[3, 1], data[:, :, 1], positions)
 
    
     times = -0.099609375:0.001953125:1.0
