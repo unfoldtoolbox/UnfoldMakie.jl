@@ -140,6 +140,12 @@ function PlotConfig(T::Val{:topoplotseries})
     config_kwargs!(
         cfg,
         layout = (useColorbar = true,),
+        colorbar = (;
+            height = 300, # why even should i made it manually?
+            flipaxis = true, 
+            labelrotation = 4.7, 
+            label = "Voltage [µV]"
+        ), 
         visual = (;
             label_text = false # true doesnt work again
         ),
@@ -190,7 +196,7 @@ function PlotConfig(T::Val{:erpimage})
     config_kwargs!(
         cfg;
         layout = (; useColorbar = true),
-        colorbar = (; label = "Voltage [µV]"),
+        colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
         axis = (xlabel = "Time", ylabel = "Sorted trials"),
         visual = (; colormap = Reverse("RdBu")),
     )

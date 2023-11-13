@@ -24,6 +24,7 @@ The input `f`
 plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
 
+
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure},
     plotData::DataFrame,
@@ -75,9 +76,10 @@ function plot_topoplotseries!(
                 f[1, end+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
-                height = 100,
-                flipaxis = false,
-                label = "Voltage [µV]",
+                height = config.colorbar.height,
+                flipaxis = config.colorbar.flipaxis,
+                labelrotation = config.colorbar.labelrotation,
+                label = config.colorbar.label,
             )
         else
             # println(fieldnames(typeof((axlist[1]))))
@@ -86,9 +88,10 @@ function plot_topoplotseries!(
                 f[:, :][1, length(axlist)+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
-                height = 100,
-                flipaxis = false,
-                label = "Voltage [µV]",
+                height = config.colorbar.height,
+                flipaxis = config.colorbar.flipaxis,
+                labelrotation = config.colorbar.labelrotation,
+                label = config.colorbar.label,
             )
         end
     end

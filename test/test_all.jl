@@ -38,7 +38,8 @@
     plot_erp!(ga, results; :stderror=>true, legend=(; framevisible = false))
     plot_butterfly!(gb, d_topo; positions=pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
     plot_topoplot!(gc, data[:,340,1]; positions = positions)
-    plot_topoplotseries!(gd, df, 80; positions=positions, layout = (; useColorbar=true))
+    plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
+        layout = (; useColorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
     plot_erpimage!(gf, times, d_singletrial)
     plot_parallelcoordinates!(gh, uf_5chan, [1, 2, 3, 4, 5]; 
