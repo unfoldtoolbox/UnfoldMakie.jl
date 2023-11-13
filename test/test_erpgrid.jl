@@ -15,3 +15,10 @@ end
     f = Figure()
     plot_erpgrid!(f[1, 1], data, pos)
 end
+
+@testset "erpgrid plot in GridLayout" begin
+    f = Figure(resolution=(1200, 1400))
+    ga = f[1, 1] = GridLayout()
+    plot_erpgrid!(ga, data, pos)
+    f
+end

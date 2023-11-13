@@ -5,7 +5,7 @@
     plot_butterfly(data; positions = pos)
 end
 
-@testset "markersize change" begin
+@testset "topomarkersize change" begin
     include("../docs/example_data.jl")
     data, pos = example_data("TopoPlots.jl")
     plot_butterfly(

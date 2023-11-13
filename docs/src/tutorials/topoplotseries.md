@@ -27,10 +27,10 @@ nothing #hide
 plot_topoplotseries(df, Δbin; positions = positions)
 ```
 
-With colorbar:
+Without colorbar:
 
 ```@example main
-plot_topoplotseries(df, Δbin; positions=positions, layout = (; useColorbar=true))
+plot_topoplotseries(df, Δbin; positions=positions, layout = (; useColorbar=false))
 ```
 
 ### Positions

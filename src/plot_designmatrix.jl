@@ -1,9 +1,11 @@
 """ 
-    plot_designmatrix(plotData::Unfold.DesignMatrix;kwargs...)
+    plot_designmatrix!(f::Union{GridPosition, GridLayout, Figure}, plotData::Unfold.DesignMatrix; kwargs...)
+    plot_designmatrix(plotData::Unfold.DesignMatrix; kwargs...)
         
 
 Plot a designmatrix. 
 ## Arguments:
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition (e.g. f[2, 3]) that the plot should be drawn into. New axis is created.
 - `plotData::Unfold.DesignMatrix`: Data for the plot visualization.
 
 ## kwargs
@@ -27,7 +29,7 @@ A figure displaying the designmatrix.
 plot_designmatrix(plotData::Unfold.DesignMatrix; kwargs...) =
     plot_designmatrix!(Figure(), plotData; kwargs...)
 function plot_designmatrix!(
-    f::Union{GridPosition,Figure},
+    f::Union{GridPosition,GridLayout,Figure},
     plotData::Unfold.DesignMatrix;
     xTicks = nothing,
     sortData = false,
