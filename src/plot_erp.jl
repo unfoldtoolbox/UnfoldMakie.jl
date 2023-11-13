@@ -210,8 +210,6 @@ function plot_erp!(
 
     end
     applyLayoutSettings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
-
-
     return f
 
 end
@@ -222,22 +220,10 @@ function eegHeadMatrix(positions, center, radius)
     oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
     radF = radius / oldRadius
     return Makie.Mat4f(
-        radF,
-        0,
-        0,
-        0,
-        0,
-        radF,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
+        radF, 0, 0, 0, 0,
+        radF, 0, 0, 0, 0, 1, 0,
         center[1] - oldCenter[1] * radF,
-        center[2] - oldCenter[2] * radF,
-        0,
-        1,
+        center[2] - oldCenter[2] * radF, 0, 1,
     )
 end
 

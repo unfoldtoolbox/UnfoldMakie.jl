@@ -21,24 +21,28 @@
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1], string.(1:length(positions)));
 
-    pvals = DataFrame(
-        from=[0.1, 0.15],
-        to=[0.2, 0.5],
-        # if coefname not specified, line should be black
-        coefname=["(Intercept)", "category: face"]
+    data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+    data_erp = reshape(data_erp, (1, size(data_erp)...))
+    form = @formula 0 ~ 1 + condition + continuous
+    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true);
+    m = fit(
+        UnfoldModel,
+        Dict(Any => (form, range(0, step = 1 / 100, length = size(data_erp, 2)))),
+        evts,
+        data_erp,
+        solver = se_solver,
     )
-    plot_erp!(ga, results, extra=(;
-        categoricalColor=false,
-        categoricalGroup=false,
-        pvalue=pvals,
-        stderror=true))
+    results = coeftable(m)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
-    plot_butterfly!(gb, d_topo; positions=pos)
+    plot_erp!(ga, results; :stderror=>true, legend=(; framevisible = false))
+    plot_butterfly!(gb, d_topo; positions=pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
     plot_topoplot!(gc, data[:,340,1]; positions = positions)
     plot_topoplotseries!(gd, df, 80; positions=positions, layout = (; useColorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
     plot_erpimage!(gf, times, d_singletrial)
-    plot_parallelcoordinates!(gf, uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+    plot_parallelcoordinates!(gh, uf_5chan, [1, 2, 3, 4, 5]; 
+        mapping=(; color=:coefname), layout=(; legendPosition=:bottom), legend=(; tellwidth =false))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
         Label(layout[1, 1, TopLeft()], label,

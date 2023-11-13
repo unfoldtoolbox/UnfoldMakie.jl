@@ -179,7 +179,8 @@ function PlotConfig(T::Val{:erp})
     config_kwargs!(
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
-        layout = (; showLegend = true, hidespines = (:r, :t)),
+        layout = (; showLegend = true,  hidespines = (:r, :t)),
+        legend = (; framevisible = false),
     )
 
     return cfg

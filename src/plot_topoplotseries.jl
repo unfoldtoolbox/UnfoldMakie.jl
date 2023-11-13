@@ -1,6 +1,6 @@
 """
-    plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame,Δbin::Real;kwargs...)
-    plot_topoplotseries!(plotData::DataFrame, Δbin::Real;kwargs...)
+    plot_topoplotseries!(f::Union{GridPosition, Figure}, plotData::DataFrame, Δbin::Real; kwargs...)
+    plot_topoplotseries!(plotData::DataFrame, Δbin::Real; kwargs...)
         
 Multiple miniature topoplots in regular distances 
 
