@@ -1,11 +1,11 @@
 """
-    plot_circulareegtopoplot(plotData::DataFrame;kwargs...)
-    plot_circulareegtopoplot!(figlike, plotData::DataFrame;kwargs...)
+    plot_circulareegtopoplot(plotData::DataFrame; kwargs...)
+    plot_circulareegtopoplot!(figlike, plotData::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
 ## Arguments:
 
-- `figlike::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `figlike::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Dataframe with keys for data (looks for `:y,:yhat, :estimate`, and :position (looks for `:pos, :positions, :position`), 
 - `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
 - `predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
@@ -29,7 +29,7 @@ plot_circulareegtopoplot(plotData::DataFrame; kwargs...) =
 plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) =
     plot_circulareegtopoplot!(f, plotData; kwargs...)
 function plot_circulareegtopoplot!(
-    f::Union{GridPosition,Figure},
+    f::Union{GridPosition,GridLayout,Figure},
     plotData::DataFrame;
     predictor = :predictor,
     positions = nothing,

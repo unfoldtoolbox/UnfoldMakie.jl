@@ -1,10 +1,10 @@
 """
-    function plot_erpgrid!(f::Union{GridPosition, Figure}, data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
+    function plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
     function plot_erpgrid(data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into;
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into;
 - `plotData::Matrix{<:Real}`: Data for the plot visualization;
 - `pos::Vector{Point{2,Float}}`: electrode positions.
         
@@ -21,7 +21,7 @@ plot_erpgrid(plotData::Matrix{<:Real}, pos; kwargs...) =
     plot_erpgrid!(Figure(), plotData, pos; kwargs...)
 
 function plot_erpgrid!(
-    f::Union{GridPosition,Figure},
+    f::Union{GridPosition,GridLayout,Figure},
     plotData::Matrix{<:Real},
     pos;
     drawLabels = false,
@@ -29,7 +29,7 @@ function plot_erpgrid!(
     kwargs...,
 )
     chanNum = size(plotData, 1)
-    println(size(plotData, 1), " ", size(plotData, 2))
+    #println(size(plotData, 1), " ", size(plotData, 2))
     plotData = plotData[1:chanNum, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)
 

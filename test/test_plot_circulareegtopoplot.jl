@@ -9,7 +9,7 @@
             
         )
         
-    @test_throws ErrorException plot_circulareegtopoplot(testdf;positions=[Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
+    @test_throws ErrorException plot_circulareegtopoplot(testdf; positions=[Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
     end
 
     @testset "tooManyBoundsErr" begin
@@ -46,3 +46,18 @@ end
     @test UnfoldMakie.calculateBBox([0, 0], [1000, 1000], -180, [-180, 180]) == BBox(750.0, 950.0, 400.0, 600.0)
 end
 
+@testset "circularplot plot in GridLayout" begin
+    f = Figure(resolution=(1200, 1400))
+    data, pos = TopoPlots.example_data();
+    dat = data[:, 240, 1]
+    df = DataFrame(
+        :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
+        :circularVariable => [0, 50, 80, 120, 180, 210],
+        :time => 100:40:300,
+    )
+    df = flatten(df, :estimate);
+    ga = f[1, 1] = GridLayout()
+    plot_circulareegtopoplot!(ga, df; positions = pos,    
+        axis = (; label = "Time?!"), predictor = :time, predictorBounds = [80, 320],)
+    f
+end

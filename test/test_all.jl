@@ -1,3 +1,108 @@
+@testset "8 plots" begin
+    f = Figure(resolution=(1200, 1400))
+    ga = f[1, 1] = GridLayout()
+    gc = f[2, 1] = GridLayout()
+    ge = f[3, 1] = GridLayout()
+    gg = f[4, 1] = GridLayout()
+    geh = f[1:4, 2] = GridLayout()
+    gb = geh[1, 1] = GridLayout()
+    gd = geh[2, 1] = GridLayout()
+    gf = geh[3, 1] = GridLayout()
+    gh = geh[4, 1] = GridLayout()
+
+    include("../docs/example_data.jl")
+    d_topo, positions = example_data("TopoPlots.jl")
+    uf_deconv = example_data("UnfoldLinearModelContinuousTime")
+    uf = example_data("UnfoldLinearModel")
+    results = coeftable(uf)
+    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
+
+
+    pvals = DataFrame(
+        from=[0.1, 0.15],
+        to=[0.2, 0.5],
+        # if coefname not specified, line should be black
+        coefname=["(Intercept)", "category: face"]
+    )
+    plot_erp!(ga, results, extra=(;
+        categoricalColor=false,
+        categoricalGroup=false,
+        pvalue=pvals,
+        stderror=true))
+
+    plot_butterfly!(gb, d_topo; positions=positions)
+    plot_topoplot!(gc, collect(1:64); positions=positions)
+    plot_topoplotseries!(gd, d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
+    #data, pos = TopoPlots.example_data()
+    #data = data[:, :, 1]
+    #plot_erpgrid!(ge, data[1:6, 1:20], evts)
+
+   
+    times = -0.099609375:0.001953125:1.0
+    plot_erpimage!(gf, times, d_singletrial)
+
+    plot_parallelcoordinates!(gf, uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+
+    for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize=26,
+            font=:bold,
+            padding=(0, 5, 5, 0),
+            halign=:right)
+    end
+    f
+end
+
+
+@testset "8 plots with a Figure" begin
+    f = Figure(resolution=(1200, 1400))
+
+    include("../docs/example_data.jl")
+    d_topo, positions = example_data("TopoPlots.jl")
+    data, positions = TopoPlots.example_data()
+    uf = example_data("UnfoldLinearModel")
+    results = coeftable(uf)
+    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
+
+
+    pvals = DataFrame(
+        from=[0.1, 0.15],
+        to=[0.2, 0.5],
+        # if coefname not specified, line should be black
+        coefname=["(Intercept)", "category: face"]
+    )
+     plot_erp!(f[1, 1], results, extra=(;
+        categoricalColor=false,
+        categoricalGroup=false,
+        pvalue=pvals,
+        stderror=true)) 
+
+    plot_butterfly!(f[1, 2], d_topo; positions=positions)
+
+    plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions, t=150)
+    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
+    plot_erpgrid!(f[3, 1], data, pos)
+
+   
+    times = -0.099609375:0.001953125:1.0
+    plot_erpimage!(f[3, 2], times, d_singletrial)
+
+    plot_parallelcoordinates!(f[4, 2], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+
+    for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], 
+        [f[1, 1], f[1, 2], f[2, 1], f[2, 2], f[3, 1], f[3, 2], f[4, 1], f[4, 2]])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize=26,
+            font=:bold,
+            padding=(0, 5, 5, 0),
+            halign=:right)
+    end
+    f
+end
+
+
 @testset "testing combined figure" begin
     include("../docs/example_data.jl")
     d_topo, positions = example_data("TopoPlots.jl")

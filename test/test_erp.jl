@@ -46,3 +46,27 @@ end
         categoricalGroup = true,
     )
 end
+
+
+@testset "erp plot in GridLayout" begin
+    f = Figure(resolution=(1200, 1400))
+    ga = f[1, 1] = GridLayout()
+
+    include("../docs/example_data.jl")
+    uf = example_data("UnfoldLinearModel")
+    results = coeftable(uf)
+
+    pvals = DataFrame(
+        from=[0.1, 0.15],
+        to=[0.2, 0.5],
+        # if coefname not specified, line should be black
+        coefname=["(Intercept)", "category: face"]
+    )
+    plot_erp!(ga, results, extra=(;
+        categoricalColor=false,
+        categoricalGroup=false,
+        pvalue=pvals,
+        stderror=true)) 
+
+    f
+end

@@ -6,7 +6,7 @@ Multiple miniature topoplots in regular distances
 
 ## Arguments:
 
-- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: DataFrame with data, needs a `time` column
 - `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
 - `combinefun` (default `mean`) can be used to specify how the samples within `Δbin` are combined.
@@ -25,7 +25,7 @@ plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
 
 function plot_topoplotseries!(
-    f::Union{GridPosition,Figure},
+    f::Union{GridPosition,GridLayout,Figure},
     plotData::DataFrame,
     Δbin;
     positions = nothing,

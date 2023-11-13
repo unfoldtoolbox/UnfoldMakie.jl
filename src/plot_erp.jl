@@ -2,14 +2,14 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_erp!(f::Union{GridPosition, Figure}, plotData::DataFrame; kwargs...)
+    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plotData::DataFrame; kwargs...)
     plot_erp(plotData::DataFrame; kwargs...)
         
 Plot an ERP plot.
 
 ## Arguments:
 
-- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: Data for the line plot visualization.
 - `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`
 
@@ -47,23 +47,26 @@ see also [`plot_erp`](@Ref)
 plot_butterfly(plotData::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plotData; kwargs...)
 
-plot_butterfly!(f::Union{GridPosition,<:Figure}, plotData::DataFrame; kwargs...) =
-    plot_erp!(
-        f,
-        plotData;
-        butterfly = true,
-        topoLegend = true,
-        topomarkersize = 10,
-        topowidth = 0.25,
-        topoheigth = 0.25,
-        topoPositionToColorFunction = x -> posToColorRomaO(x),
-        kwargs...,
-    )
+plot_butterfly!(
+    f::Union{GridPosition,GridLayout,<:Figure},
+    plotData::DataFrame;
+    kwargs...,
+) = plot_erp!(
+    f,
+    plotData;
+    butterfly = true,
+    topoLegend = true,
+    topomarkersize = 10,
+    topowidth = 0.25,
+    topoheigth = 0.25,
+    topoPositionToColorFunction = x -> posToColorRomaO(x),
+    kwargs...,
+)
 
 
 
 function plot_erp!(
-    f::Union{GridPosition,Figure},
+    f::Union{GridPosition,GridLayout,Figure},
     plotData::DataFrame;
     positions = nothing,
     labels = nothing,
@@ -85,7 +88,6 @@ function plot_erp!(
         config = PlotConfig(:butterfly)
         config_kwargs!(config; kwargs...)
     end
-
 
     plotData = deepcopy(plotData) # XXX why?
 
@@ -184,7 +186,12 @@ function plot_erp!(
                 valign = 0.95,
                 aspect = 1,
             )
-            topoplotLegend(topoAxis, topomarkersize, topoPositionToColorFunction, allPositions)
+            topoplotLegend(
+                topoAxis,
+                topomarkersize,
+                topoPositionToColorFunction,
+                allPositions,
+            )
         end
         # no extra legend
         mainAxis = Axis(f_grid; config.axis...)
