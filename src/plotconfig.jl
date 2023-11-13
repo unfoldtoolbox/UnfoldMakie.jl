@@ -59,6 +59,21 @@ end
 Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
+    is_namedtuple = [isa(t,NamedTuple) for t in values(kwargs)]
+    @debug is_namedtuple
+    @assert(all(is_namedtuple),
+    """ Keyword-Argument specification (kwargs...)
+
+    All your specified config-groups need to be `NamedTuples`, but: `$(keys(kwargs)[.!is_namedtuple])` was not.
+    Maybe you forgot the semicolon (;) in your specification? It should be:
+     
+    plot_example(...;layout = (;showColorbar=true))
+     
+    and not:
+     
+    plot_example(...;layout = (showColorbar=true))
+     
+     The former creates a NamedTuple as required, the later doesn't do something helpful in this case.""")
     list = fieldnames(PlotConfig)#[:layout,:visual,:mapping,:legend,:colorbar,:axis]
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ? @warn("Extra is deprecated in 0.4 and extra-keyword args have to be used directly as key-word arguments") : ""
