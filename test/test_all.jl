@@ -11,13 +11,15 @@
     gh = geh[4, 1] = GridLayout()
 
     include("../docs/example_data.jl")
-    d_topo, positions = example_data("TopoPlots.jl")
+    d_topo, pos = example_data("TopoPlots.jl")
     uf_deconv = example_data("UnfoldLinearModelContinuousTime")
     uf = example_data("UnfoldLinearModel")
     results = coeftable(uf)
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
-
+    times = -0.099609375:0.001953125:1.0
+    data, positions = TopoPlots.example_data()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1], string.(1:length(positions)));
 
     pvals = DataFrame(
         from=[0.1, 0.15],
@@ -31,17 +33,11 @@
         pvalue=pvals,
         stderror=true))
 
-    plot_butterfly!(gb, d_topo; positions=positions)
-    plot_topoplot!(gc, collect(1:64); positions=positions)
-    plot_topoplotseries!(gd, d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
-    #data, pos = TopoPlots.example_data()
-    #data = data[:, :, 1]
-    #plot_erpgrid!(ge, data[1:6, 1:20], evts)
-
-   
-    times = -0.099609375:0.001953125:1.0
+    plot_butterfly!(gb, d_topo; positions=pos)
+    plot_topoplot!(gc, data[:,340,1]; positions = positions)
+    plot_topoplotseries!(gd, df, 80; positions=positions, layout = (; useColorbar=true))
+    plot_erpgrid!(ge, data[:, :, 1], positions)
     plot_erpimage!(gf, times, d_singletrial)
-
     plot_parallelcoordinates!(gf, uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
