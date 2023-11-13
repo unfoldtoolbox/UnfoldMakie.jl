@@ -5,8 +5,7 @@
 Multiple miniature topoplots in regular distances 
 
 ## Arguments:
-
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: DataFrame with data, needs a `time` column
 - `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
 - `combinefun` (default `mean`) can be used to specify how the samples within `Δbin` are combined.
@@ -23,7 +22,6 @@ The input `f`
 """
 plot_topoplotseries(plotData::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), plotData, Δbin; kwargs...)
-
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -76,23 +74,24 @@ function plot_topoplotseries!(
                 f[1, end+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
-                height = config.colorbar.height,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
+                height = 100,
+                flipaxis = false,
+                label = "Voltage [µV]",
             )
-        else
-            # println(fieldnames(typeof((axlist[1]))))
-            d = axlist[1].scene.plots[1].attributes
+        else # temporal
+            if length(ftopo.layout.content) > 2
+                d = ftopo.layout.content[5].content.content[2].content.scene.plots[1].attributes
+            else
+                d = ftopo.layout.content[2].content.content[1].content.scene.plots[1].plots[1].attributes
+            end
             Colorbar(
                 f[:, :][1, length(axlist)+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
-                height = config.colorbar.height,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
+                height = 100,
+                flipaxis = false,
+                label = "Voltage [µV]",
+            ) # why end is not working????
         end
     end
     return f

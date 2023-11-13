@@ -29,7 +29,6 @@ function plot_erpgrid!(
     kwargs...,
 )
     chanNum = size(plotData, 1)
-    #println(size(plotData, 1), " ", size(plotData, 2))
     plotData = plotData[1:chanNum, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)
 
