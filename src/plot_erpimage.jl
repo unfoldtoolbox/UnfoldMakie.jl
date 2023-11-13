@@ -2,12 +2,12 @@
 
 
 """
-    plot_erpimage!(f::Union{GridPosition, Figure}, data::Matrix{Float64}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{Float64}; kwargs...)
     plot_erpimage(data::Matrix{Float64}; kwargs...)
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::Matrix{Float64}`: Data for the plot visualization
         
 ## Keyword Arguments
@@ -30,7 +30,7 @@ plot_erpimage(plotData::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(Figure(), plotData; kwargs...)
 
 # no times?
-plot_erpimage!(f::Union{GridPosition,Figure}, plotData::Matrix{<:Real}; kwargs...) =
+plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plotData::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
 
 
@@ -39,7 +39,7 @@ plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(Figure(), times, plotData; kwargs...)
 
 function plot_erpimage!(
-    f::Union{GridPosition,Figure},
+    f::Union{GridPosition,GridLayout,Figure},
     times::AbstractVector,
     plotData::Matrix{<:Real};
     sortvalues = nothing,
