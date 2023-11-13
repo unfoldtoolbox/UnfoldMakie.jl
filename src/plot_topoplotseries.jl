@@ -5,6 +5,7 @@
 Multiple miniature topoplots in regular distances 
 
 ## Arguments:
+
 - `f::Union{GridPosition, Figure}`: Figure or GridPosition that the plot should be drawn into
 - `plotData::DataFrame`: DataFrame with data, needs a `time` column
 - `Δbin::Real`: A number for how large one bin should be. Δbin is in units of the `plotData.time` column
@@ -78,12 +79,9 @@ function plot_topoplotseries!(
                 flipaxis = false,
                 label = "Voltage [µV]",
             )
-        else # temporal
-            if length(ftopo.layout.content) > 2
-                d = ftopo.layout.content[5].content.content[2].content.scene.plots[1].attributes
-            else
-                d = ftopo.layout.content[2].content.content[1].content.scene.plots[1].plots[1].attributes
-            end
+        else
+            # println(fieldnames(typeof((axlist[1]))))
+            d = axlist[1].scene.plots[1].attributes
             Colorbar(
                 f[:, :][1, length(axlist)+1],
                 colormap = d.colormap,
@@ -91,7 +89,7 @@ function plot_topoplotseries!(
                 height = 100,
                 flipaxis = false,
                 label = "Voltage [µV]",
-            ) # why end is not working????
+            )
         end
     end
     return f
