@@ -83,7 +83,7 @@ end
     plot_butterfly!(f[1, 2], d_topo; positions=positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions)
     plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, visual=(label_scatter=false,), layout = (; useColorbar=true))
-    plot_erpgrid!(f[3, 1], data[:, :, 1], pos)
+    plot_erpgrid!(f[3, 1], data[:, :, 1], positions)
    
     times = -0.099609375:0.001953125:1.0
     plot_erpimage!(f[3, 2], times, d_singletrial)
@@ -112,6 +112,7 @@ end
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
     data, positions = TopoPlots.example_data()
+    times = -0.099609375:0.001953125:1.0
 
     f = Figure(resolution=(2000, 2000))
 
