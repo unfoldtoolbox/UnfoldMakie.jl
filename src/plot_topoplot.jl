@@ -42,8 +42,9 @@ function plot_topoplot!(
 
     clims = (min(plotData...), max(plotData...))
     if clims[1] ≈ clims[2]
-        @warn """automatic colorlimits are the same, maybe all data is identical? Deactivating colorbar.
-         note: this might lead to an error later about interpolation when actually plotting the topoplot"""
+        @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
+We disable the color bar in this figure.
+Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; useColorbar=false,showLegend=false))
     else
         config_kwargs!(config, colorbar = (; limits = clims))
