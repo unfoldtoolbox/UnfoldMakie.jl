@@ -82,15 +82,16 @@ end
 
     plot_butterfly!(f[1, 2], d_topo; positions=positions)
 
-    plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions, t=150)
-    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
-    plot_erpgrid!(f[3, 1], data, pos)
+    plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions)
+    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions,visual=(label_scatter=false,), layout = (; useColorbar=true))
+    plot_erpgrid!(f[3, 1], data[:, :, 1], pos)
 
    
     times = -0.099609375:0.001953125:1.0
     plot_erpimage!(f[3, 2], times, d_singletrial)
 
-    plot_parallelcoordinates!(f[4, 2], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+    plot_parallelcoordinates!(f[4, 2], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), 
+        layout=(; legendPosition=:bottom), legend=(; tellwidth =false))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], 
         [f[1, 1], f[1, 2], f[2, 1], f[2, 2], f[3, 1], f[3, 2], f[4, 1], f[4, 2]])
@@ -104,7 +105,7 @@ end
 end
 
 
-@testset "testing combined figure" begin
+@testset "testing combined figure (a Figure from mult_viz_in_fig from docs)" begin
     include("../docs/example_data.jl")
     d_topo, positions = example_data("TopoPlots.jl")
     uf_deconv = example_data("UnfoldLinearModelContinuousTime")
@@ -112,6 +113,7 @@ end
     results = coeftable(uf)
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
+    data, positions = TopoPlots.example_data()
 
     f = Figure(resolution=(2000, 2000))
 
@@ -123,38 +125,31 @@ end
         # if coefname not specified, line should be black
         coefname=["(Intercept)", "category: face"]
     )
-    plot_erp!(f[2, 1:2], results, extra=(;
+    plot_erp!(f[2, 1:2], results, 
         categoricalColor=false,
         categoricalGroup=false,
         pvalue=pvals,
-        stderror=true))
-
-
+        stderror=true)
+    
+    
     plot_designmatrix!(f[2, 3], designmatrix(uf))
-
-    plot_topoplot!(f[3, 1], collect(1:64); positions=positions, visual=(; colormap=:viridis))
-    plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, layout = (; useColorbar=true))
-
+    
+    plot_topoplot!(f[3, 1], data[:, 150, 1]; positions=positions)
+    plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; label=:channel))
+    
     res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
-
-    plot_erp!(f[2, 4:5], res_effects;
+    
+    plot_erp!(f[2, 4:5], res_effects; categoricalColor=false, categoricalGroup=true,
         mapping=(; y=:yhat, color=:continuous, group=:continuous),
-        extra=(; showLegend=true,
-            categoricalColor=false,
-            categoricalGroup=true),
         legend=(; nbanks=2),
-        layout=(; legendPosition=:right))
-
-
-
+        layout=(; showLegend=true, legendPosition=:right))
+    
     plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
-
-    times = -0.099609375:0.001953125:1.0
+    
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
-
     plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
         positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
-
+    
     f
     #save("test.png", f)
 end
