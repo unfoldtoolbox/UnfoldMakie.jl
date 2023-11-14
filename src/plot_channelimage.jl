@@ -1,7 +1,7 @@
 function plot_channelimage!(
     f::Union{GridPosition,GridLayout,Figure},
     position::Vector{Point{2, Float32}},
-    plotData::Matrix{<:Real}
+    plotData::Matrix{<:Real},
     raw_ch_names::Vector{String};
     kwargs...,
     )
