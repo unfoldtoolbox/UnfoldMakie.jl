@@ -6,7 +6,7 @@ include("setup.jl")
 @testset "Test Config" begin
     include("test_config.jl")
 end
-@testset "CircularEEGTopoPlot" begin
+@testset "Circular EEG topoplot" begin
     include("test_plot_circulareegtopoplot.jl")
 end
 
@@ -14,11 +14,11 @@ end
     include("test_toposeries.jl")
 end
 
-@testset "ERPImage" begin
+@testset "ERP Image" begin
     include("test_erpimage.jl")
 end
 
-@testset "TopoPlot" begin
+@testset "Topoplot" begin
     include("test_topoplot.jl")
 end
 
@@ -26,6 +26,6 @@ end
     include("test_butterfly.jl")
 end
 
-@testset "AllPlots" begin
+@testset "All plots" begin
     include("test_all.jl")
 end
