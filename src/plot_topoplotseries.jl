@@ -71,28 +71,22 @@ function plot_topoplotseries!(
     if config.layout.useColorbar
         if typeof(ftopo) == Figure
             d = ftopo.content[1].scene.plots[1]
-            Colorbar(
-                f[1, end+1],
-                colormap = d.colormap,
-                colorrange = d.colorrange,
-                height = config.colorbar.height,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
+            f_colorbar = f[1, end+1]
+            
         else
-            # println(fieldnames(typeof((axlist[1]))))
+            #@debug axlist
+            f_colorbar =  f[:, :][1, length(axlist)+1]
             d = axlist[1].scene.plots[1].attributes
-            Colorbar(
-                f[:, :][1, length(axlist)+1],
-                colormap = d.colormap,
-                colorrange = d.colorrange,
-                height = config.colorbar.height,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
         end
+        Colorbar(
+            f_colorbar,
+            colormap = d.colormap,
+            colorrange = d.colorrange,
+            #height = config.colorbar.height,
+            flipaxis = config.colorbar.flipaxis,
+            labelrotation = config.colorbar.labelrotation,
+            label = config.colorbar.label,
+        )
     end
     return f
 

@@ -141,9 +141,9 @@ function PlotConfig(T::Val{:topoplotseries})
         cfg,
         layout = (useColorbar = true,),
         colorbar = (;
-            height = 300, # why even should i made it manually?
+            #height = 300, 
             flipaxis = true, 
-            labelrotation = 4.7, 
+            labelrotation = -π/2, 
             label = "Voltage [µV]"
         ), 
         visual = (;

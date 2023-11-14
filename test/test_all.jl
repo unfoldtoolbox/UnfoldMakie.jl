@@ -1,14 +1,13 @@
 @testset "8 plots" begin
     f = Figure(resolution=(1200, 1400))
-    ga = f[1, 1] = GridLayout()
-    gc = f[2, 1] = GridLayout()
-    ge = f[3, 1] = GridLayout()
-    gg = f[4, 1] = GridLayout()
-    geh = f[1:4, 2] = GridLayout()
-    gb = geh[1, 1] = GridLayout()
-    gd = geh[2, 1] = GridLayout()
-    gf = geh[3, 1] = GridLayout()
-    gh = geh[4, 1] = GridLayout()
+    ga = f[1, 1]
+    gc = f[2, 1]
+    ge = f[3, 1]
+    gg = f[4, 1]
+    gb = f[1, 2]
+    gd = f[2, 2]
+    gf = f[3, 2]
+    gh = f[4, 2]
 
     include("../docs/example_data.jl")
     d_topo, pos = example_data("TopoPlots.jl")
@@ -54,7 +53,6 @@
     end
     f
 end
-
 
 @testset "8 plots with a Figure" begin
     f = Figure(resolution=(1200, 1400))
