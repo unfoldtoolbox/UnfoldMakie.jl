@@ -81,11 +81,9 @@ end
         stderror=true)) 
 
     plot_butterfly!(f[1, 2], d_topo; positions=positions)
-
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions)
-    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions,visual=(label_scatter=false,), layout = (; useColorbar=true))
+    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, visual=(label_scatter=false,), layout = (; useColorbar=true))
     plot_erpgrid!(f[3, 1], data[:, :, 1], pos)
-
    
     times = -0.099609375:0.001953125:1.0
     plot_erpimage!(f[3, 2], times, d_singletrial)
