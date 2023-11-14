@@ -19,6 +19,7 @@ results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
 times = -0.099609375:0.001953125:1.0
+data, positions = TopoPlots.example_data()
 nothing #hide
 ```
 This section discusses how users can incorporate multiple plots into a single figure.
@@ -66,18 +67,16 @@ plot_erp!(f[2, 1:2], results,
 
 plot_designmatrix!(f[2, 3], designmatrix(uf))
 
-plot_topoplot!(f[3, 1], collect(1:64); positions=positions, visual=(; colormap=:viridis))
+#plot_topoplot!(f[3, 1], collect(1:64); positions=positions, visual=(; colormap=:viridis))
+plot_topoplot!(f[3, 1], data[:, 150, 1]; positions=positions)
 plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; label=:channel))
 
 res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 
-plot_erp!(f[2, 4:5], res_effects;
-    mapping=(; y=:yhat, color=:continuous, group=:continuous,
-    showLegend=true,
-        categoricalColor=false,
-        categoricalGroup=true),
+plot_erp!(f[2, 4:5], res_effects; categoricalColor=false, categoricalGroup=true,
+    mapping=(; y=:yhat, color=:continuous, group=:continuous),
     legend=(; nbanks=2),
-    layout=(; legendPosition=:right))
+    layout=(; showLegend=true, legendPosition=:right))
 
 plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
 
