@@ -40,7 +40,14 @@
     plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
         layout = (; useColorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
-    plot_erpimage!(gf, times, d_singletrial)
+
+    dat, evts = UnfoldSim.predef_eeg(;onset=LogNormalOnset(μ=3.5, σ=0.4), noiselevel = 5)
+    dat_e, times = Unfold.epoch(dat,evts, [-0.1,1], 100)
+    evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
+    evts.Δlatency =  diff(vcat(evts.latency, 0))
+    dat_e = dat_e[1,:,:]
+    plot_erpimage!(gf, times, dat_e; sortvalues=evts.Δlatency)
+    #plot_erpimage!(gf, times, d_singletrial)
     plot_parallelcoordinates!(gh, uf_5chan, [1, 2, 3, 4, 5]; 
         mapping=(; color=:coefname), layout=(; legendPosition=:bottom), legend=(; tellwidth =false))
 
