@@ -13,21 +13,21 @@ fake_evoked = PyMNE.EvokedArray(data, fake_info)
 fake_evoked.set_montage(biosemi_montage)
 
 pos = to_positions(fake_evoked)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">64-element Vector{Point2{Float64}}:
- [0.34935274876763395, 0.8914697618166454]
+ [0.34935274876763384, 0.8914697618166454]
  [0.2285454515991697, 0.8299153694246765]
- [0.323920743478968, 0.8210416675361911]
+ [0.3239207434789678, 0.8210416675361911]
  [0.38009721906796695, 0.7346772379558053]
  [0.28116929732806945, 0.7288908776450373]
- [0.19598811803244956, 0.729048111114921]
+ [0.19598811803244962, 0.729048111114921]
  [0.13267223773863893, 0.7340421555641459]
  [0.07111784534666996, 0.6132348583956815]
- [0.13813781256287347, 0.6118022611559794]
+ [0.1381378125628734, 0.6118022611559795]
  [0.2400936018380034, 0.6086174147856195]
  ⋮
  [0.612772564740614, 0.34981504242270145]
- [0.5864401194985319, 0.2239606378043266]
+ [0.5864401194985318, 0.2239606378043266]
  [0.6853680412384293, 0.2297469981150946]
- [0.7705492205340493, 0.22958976464521094]
+ [0.7705492205340492, 0.22958976464521094]
  [0.8338651008278599, 0.22459572019598625]
  [0.8710458357539724, 0.19758233504967118]
  [0.7379918869673291, 0.12872250633545543]
@@ -39,4 +39,4 @@ pos2 = to_positions(pos3d)
 f = Figure(resolution=(600,300))
 scatter(f[1,1],pos3d[1:2,:])
 scatter(f[1,2],pos2)
-f</code></pre><img src="a31d64a3.png" alt="Example block output"/><p>as one can see, the &quot;naive&quot; transform of just dropping the third dimension doesnt really work (left). We rather have to project the chanels to a sphere and unfold it (right)</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../../how_to/show_oob_labels/">« Show out of Bounds Label</a><a class="docs-footer-nextpage" href="../../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Monday 13 November 2023 20:21">Monday 13 November 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+f</code></pre><img src="a31d64a3.png" alt="Example block output"/><p>as one can see, the &quot;naive&quot; transform of just dropping the third dimension doesnt really work (left). We rather have to project the chanels to a sphere and unfold it (right)</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../../how_to/show_oob_labels/">« Show out of Bounds Label</a><a class="docs-footer-nextpage" href="../../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Tuesday 14 November 2023 11:27">Tuesday 14 November 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
