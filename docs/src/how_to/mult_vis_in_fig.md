@@ -72,10 +72,10 @@ plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; lab
 res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 
 plot_erp!(f[2, 4:5], res_effects;
-    mapping=(; y=:yhat, color=:continuous, group=:continuous),
+    mapping=(; y=:yhat, color=:continuous, group=:continuous,
     showLegend=true,
         categoricalColor=false,
-        categoricalGroup=true,
+        categoricalGroup=true),
     legend=(; nbanks=2),
     layout=(; legendPosition=:right))
 
