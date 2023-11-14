@@ -61,8 +61,8 @@ plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
     legend = (; nbanks = 2),
-    layout = (; legendPosition = :right),
-    showLegend = true, categoricalColor = false, categoricalGroup = true,
+    layout = (; showLegend = true, legendPosition = :right),
+    categoricalColor = false, categoricalGroup = true,
 )
 
 
