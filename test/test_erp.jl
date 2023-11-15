@@ -42,8 +42,8 @@ end
         legend = (; nbanks = 2),
         layout = (; legendPosition = :right),
         showLegend = true,
-        categoricalColor = false,
-        categoricalGroup = true,
+        categorical_color = false,
+        categorical_group = true,
     )
 end
 
@@ -62,11 +62,11 @@ end
         # if coefname not specified, line should be black
         coefname=["(Intercept)", "category: face"]
     )
-    plot_erp!(ga, results, extra=(;
-        categoricalColor=false,
-        categoricalGroup=false,
+    plot_erp!(ga, results;
+        categorical_color=false,
+        categorical_group=false,
         pvalue=pvals,
-        stderror=true)) 
+        stderror=true)
 
     f
 end
