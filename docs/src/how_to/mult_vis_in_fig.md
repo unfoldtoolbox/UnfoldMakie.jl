@@ -82,7 +82,7 @@ plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
 plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-    positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
+    positions=positions, predictor=:time, predictor_bounds=[-0.3, 0.5])
 
 f
 ```
