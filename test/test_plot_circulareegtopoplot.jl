@@ -18,7 +18,7 @@
             predictor = [70,80,90],
             )
             
-            @test_throws ErrorException plot_circulareegtopoplot(testdf; predictorBounds=[0,100,360], positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
+            @test_throws ErrorException plot_circulareegtopoplot(testdf; predictor_bounds=[0,100,360], positions = [Point(1.0,2.0), Point(1.0,2.0), Point(1.0,2.0)],)
 
     end
 end
@@ -58,7 +58,7 @@ end
     df = flatten(df, :estimate);
     ga = f[1, 1] = GridLayout()
     plot_circulareegtopoplot!(ga, df; positions = pos,    
-        axis = (; label = "Time?!"), predictor = :time, predictorBounds = [80, 320],)
+        axis = (; label = "Time?!"), predictor = :time, predictor_bounds = [80, 320],)
     f
 end
 
@@ -66,6 +66,6 @@ end
     d_topo, positions = example_data("TopoPlots.jl")
     f = Figure(resolution=(2000, 2000))
     plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-        positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
+        positions=positions, predictor=:time, predictor_bounds=[-0.3, 0.5])
     f 
 end

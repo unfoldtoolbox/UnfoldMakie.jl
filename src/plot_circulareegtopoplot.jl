@@ -1,19 +1,19 @@
 """
-    plot_circulareegtopoplot(plotData::DataFrame; kwargs...)
-    plot_circulareegtopoplot!(figlike, plotData::DataFrame; kwargs...)
+    plot_circulareegtopoplot(data::DataFrame; kwargs...)
+    plot_circulareegtopoplot!(f, data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
 ## Arguments:
 
-- `figlike::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::DataFrame`: Dataframe with keys for data (looks for `:y,:yhat, :estimate`, and :position (looks for `:pos, :positions, :position`), 
-- `predictor` (optional; default :predictor) the circular predictor value, defines position of topoplot, is mapped around `predictorBounds`
-- `predictorBounds`: Default: `[0,360]` - The bounds of the predictor. This is relevant for the axis labels.
-- `centerlabel`: default "", the text in the center of the cricle
-- `positions` (nothing) - positions for the [`plot_topoplot`](@Ref)
-- `labels` (nothing) - labels for the [`plot_topoplot`](@Ref)
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into
+- `data::DataFrame`: DataFrame with keys for data (looks for `:y, :yhat, :estimate`), and :position (looks for `:pos, :position, :positions`), 
+- `predictor` (optional; default :predictor): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`
+- `predictor_bounds` (default: `[0,360]`): the bounds of the predictor. This is relevant for the axis labels.
+- `positions` (default: nothing): positions for the [`plot_topoplot`](@Ref)
+- `center_label` (default: ""): the text in the center of the cricle
+- `labels` (default: nothing): labels for the [`plot_topoplot`](@Ref)
 
-- `kwargs...`: Additional styling behavior, see below.
+- `kwargs...`: additional styling behavior, see below.
 
 
 $(_docstring(:circeegtopo))
@@ -24,47 +24,47 @@ $(_docstring(:circeegtopo))
 A figure containing the circular topoplot at given layout position
 
 """
-plot_circulareegtopoplot(plotData::DataFrame; kwargs...) =
-    plot_circulareegtopoplot!(Figure(), plotData; kwargs...)
-plot_circulareegtopoplot!(f, plotData::DataFrame; kwargs...) =
-    plot_circulareegtopoplot!(f, plotData; kwargs...)
+plot_circulareegtopoplot(data::DataFrame; kwargs...) =
+    plot_circulareegtopoplot!(Figure(), data; kwargs...)
+plot_circulareegtopoplot!(f, data::DataFrame; kwargs...) =
+    plot_circulareegtopoplot!(f, data; kwargs...)
 function plot_circulareegtopoplot!(
     f::Union{GridPosition,GridLayout,Figure},
-    plotData::DataFrame;
+    data::DataFrame;
     predictor = :predictor,
+    predictor_bounds = [0, 360],
     positions = nothing,
     labels = nothing,
-    centerlabel = "",
-    predictorBounds = [0, 360],
+    center_label = "",
     kwargs...,
 )
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config; kwargs...)
-    config.mapping = resolveMappings(plotData, config.mapping)
+    config.mapping = resolveMappings(data, config.mapping)
 
 
     positions = getTopoPositions(; positions = positions, labels = labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
-    predictorValues = plotData[:, predictor]
+    predictorValues = data[:, predictor]
 
-    if (length(predictorBounds) != 2)
-        error("predictorBounds needs exactly two values")
+    if (length(predictor_bounds) != 2)
+        error("predictor_bounds needs exactly two values")
     end
-    if (predictorBounds[1] >= predictorBounds[2])
+    if (predictor_bounds[1] >= predictor_bounds[2])
         error(
-            "predictorBounds[1] needs to be smaller than predictorBounds[2]",
+            "predictor_bounds[1] needs to be smaller than predictor_bounds[2]",
         )
     end
     if (
-        (length(predictorValues[predictorValues.<predictorBounds[1]]) != 0) ||
-        (length(predictorValues[predictorValues.>predictorBounds[2]]) != 0)
+        (length(predictorValues[predictorValues.<predictor_bounds[1]]) != 0) ||
+        (length(predictorValues[predictorValues.>predictor_bounds[2]]) != 0)
     )
         error(
-            "all values in the plotData's effect column have to be within the predictorBounds range",
+            "all values in the data's effect column have to be within the predictor_bounds range",
         )
     end
     if (all(predictorValues .<= 2 * pi))
-        @warn "insert the predictor values in degrees instead of radian, or change predictorBounds"
+        @warn "insert the predictor values in degrees instead of radian, or change predictor_bounds"
     end
 
     ax = Axis(f[1, 1]; aspect = 1)
@@ -72,17 +72,17 @@ function plot_circulareegtopoplot!(
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax, predictorBounds, centerlabel)
+    plotCircularAxis!(ax, predictor_bounds, center_label)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
-    min, max = calculateGlobalMaxValues(plotData[:, config.mapping.y], predictorValues)
+    min, max = calculateGlobalMaxValues(data[:, config.mapping.y], predictorValues)
 
     positions = getTopoPositions(; positions = positions, labels = labels)
     plotTopoPlots!(
         ax,
-        plotData[:, config.mapping.y],
+        data[:, config.mapping.y],
         positions,
         predictorValues,
-        predictorBounds,
+        predictor_bounds,
         min,
         max,
     )
@@ -104,10 +104,10 @@ function plot_circulareegtopoplot!(
     return f
 end
 
-function calculateGlobalMaxValues(plotData, predictor)
+function calculateGlobalMaxValues(data, predictor)
 
     x = combine(
-        groupby(DataFrame(:e => plotData, :p => predictor), :p),
+        groupby(DataFrame(:e => data, :p => predictor), :p),
         :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :localMaxVal,
     )
 
@@ -116,7 +116,7 @@ function calculateGlobalMaxValues(plotData, predictor)
     return (-globalMaxVal, globalMaxVal)
 end
 
-function plotCircularAxis!(ax, predictorBounds, label)
+function plotCircularAxis!(ax, predictor_bounds, label)
     # the axis position is always the middle of the
     # screen (means it uses the GridLayout's full size)
     #circleAxis = Axis(f,aspect = 1)#typeof(f) == Figure ? Axis(f[1:f.layout.size[1],1:f.layout.size[2]], aspect = 1, backgroundcolor = bgcolor) : Axis(f[1,1], aspect = 1, backgroundcolor = bgcolor)
@@ -148,7 +148,7 @@ function plotCircularAxis!(ax, predictorBounds, label)
     )
     text!(
         circlepoints_labels,
-        text = calculateAxisLabels(predictorBounds),
+        text = calculateAxisLabels(predictor_bounds),
         align = (:center, :center),
         #textsize = round(minsize*0.03)
     )
@@ -157,12 +157,12 @@ function plotCircularAxis!(ax, predictorBounds, label)
 end
 
 # four labels around the circle, middle values are the 0.25, 0.5, and 0.75 quantiles
-function calculateAxisLabels(predictorBounds)
-    nonboundlabels = quantile(predictorBounds, [0.25, 0.5, 0.75])
+function calculateAxisLabels(predictor_bounds)
+    nonboundlabels = quantile(predictor_bounds, [0.25, 0.5, 0.75])
     # third label is on the left and it tends to cover the circle
     # so added some blank spaces to tackle that
     return [
-        string(trunc(Int, predictorBounds[1])),
+        string(trunc(Int, predictor_bounds[1])),
         string(trunc(Int, nonboundlabels[1])),
         string(trunc(Int, nonboundlabels[2]), "   "),
         string(trunc(Int, nonboundlabels[3])),
@@ -174,7 +174,7 @@ function plotTopoPlots!(
     data,
     positions,
     predictorValues,
-    predictorBounds,
+    predictor_bounds,
     globalmin,
     globalmax,
 )
@@ -183,7 +183,7 @@ function plotTopoPlots!(
     gp = groupby(df, :p)
     for g in gp
 
-        bbox = calculateBBox([0, 0], [1, 1], g.p[1], predictorBounds)
+        bbox = calculateBBox([0, 0], [1, 1], g.p[1], predictor_bounds)
 
         # convet BBox to rect
         rect = (
