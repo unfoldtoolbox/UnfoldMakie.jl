@@ -10,7 +10,7 @@ end
     include("test_plot_circulareegtopoplot.jl")
 end
 
-@testset "TopoSeries" begin
+@testset "Topoplot series" begin
     include("test_toposeries.jl")
 end
 
