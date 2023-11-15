@@ -260,15 +260,15 @@ function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositio
     return topoplot
 end
 
-function addPvalues(plotData, pvalue, config)
+function addPvalues(data, pvalue, config)
     p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
     if "group" ∉ names(p)
         # group not specified using first
-        if "group" ∈ names(plotData)
-            p[!, :group] .= plotData[1, :group]
-            if length(unique(plotData.group)) > 1
+        if "group" ∈ names(data)
+            p[!, :group] .= data[1, :group]
+            if length(unique(data.group)) > 1
                 @warn "multiple groups found, choosing first one"
             end
         else
@@ -285,10 +285,10 @@ function addPvalues(plotData, pvalue, config)
     end
     # define an index to dodge the lines vertically
 
-    scaleY = [minimum(plotData.estimate), maximum(plotData.estimate)]
+    scaleY = [minimum(data.estimate), maximum(data.estimate)]
     stepY = scaleY[2] - scaleY[1]
     posY = stepY * -0.05 + scaleY[1]
-    Δt = diff(plotData.time[1:2])[1]
+    Δt = diff(data.time[1:2])[1]
     Δy = 0.01
     p[!, :segments] = [
         Makie.Rect(
