@@ -10,7 +10,7 @@ end
     include("test_plot_circulareegtopoplot.jl")
 end
 
-@testset "TopoSeries" begin
+@testset "Topoplot series" begin
     include("test_toposeries.jl")
 end
 
@@ -26,6 +26,6 @@ end
     include("test_butterfly.jl")
 end
 
-@testset "All plots" begin
+@testset "Combined plots" begin
     include("test_all.jl")
 end
