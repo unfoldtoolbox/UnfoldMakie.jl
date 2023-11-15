@@ -125,11 +125,10 @@ end
         coefname=["(Intercept)", "category: face"]
     )
     plot_erp!(f[2, 1:2], results, 
-        categoricalColor=false,
-        categoricalGroup=false,
+        categorical_color=false,
+        categorical_group=false,
         pvalue=pvals,
         stderror=true)
-    
     
     plot_designmatrix!(f[2, 3], designmatrix(uf))
     
@@ -138,7 +137,7 @@ end
     
     res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
     
-    plot_erp!(f[2, 4:5], res_effects; categoricalColor=false, categoricalGroup=true,
+    plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=true,
         mapping=(; y=:yhat, color=:continuous, group=:continuous),
         legend=(; nbanks=2),
         layout=(; showLegend=true, legendPosition=:right))
@@ -147,7 +146,7 @@ end
     
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
     plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-        positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
+        positions=positions, predictor=:time, predictor_bounds=[-0.3, 0.5])
     
     f
     #save("test.png", f)
