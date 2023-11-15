@@ -26,7 +26,7 @@ This section discusses how users can incorporate multiple plots into a single fi
 
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create multiple coordinated views.
 
-We start by creating a figure with Makie.Figure. 
+We will start by creating a figure with Makie.Figure. 
 
 `f = Figure()`
 
@@ -60,8 +60,8 @@ pvals = DataFrame(
     coefname=["(Intercept)", "category: face"]
 )
 plot_erp!(f[2, 1:2], results, 
-    categoricalColor=false,
-    categoricalGroup=false,
+    categorical_color=false,
+    categorical_group=false,
     pvalue=pvals,
     stderror=true)
 
@@ -73,7 +73,7 @@ plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; lab
 
 res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 
-plot_erp!(f[2, 4:5], res_effects; categoricalColor=false, categoricalGroup=true,
+plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=true,
     mapping=(; y=:yhat, color=:continuous, group=:continuous),
     legend=(; nbanks=2),
     layout=(; showLegend=true, legendPosition=:right))

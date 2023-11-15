@@ -1,6 +1,6 @@
 # ## [Line Plot Visualization](@id lp_vis)
 
-# Here we discuss line plot visualization. 
+# Here we discuss ERP plot visualization. 
 # Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 # ## Include used Modules
@@ -15,7 +15,7 @@ using UnfoldSim
 using UnfoldMakie
 
 # ## Setup
-# Let's generate some data and fit a model of a 2-level categorical and a continuous predictor with interaction.
+# Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
 data = reshape(data, (1, size(data)...))
 f = @formula 0 ~ 1 + condition + continuous
@@ -40,7 +40,7 @@ plot_erp(results; :stderror => true,)
 # `plot_erp` use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
 # There are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name can be chosen using
-# `plot_erp(...;mapping=(; :y=:myEstimate)`
+# `plot_erp(...; mapping=(; :y=:my_estimate)`
 
 # :x Default is `(:x, :time)`.
 # :y Default is `(:y, :estimate, :yhat)`.
@@ -50,10 +50,11 @@ plot_erp(results; :stderror => true,)
 
 # ## key values
 # `plot_erp(...; <name>=<value>,...)`.
-# - categoricalColor (boolean, true) - in case of numeric `:color` column, is color a continuous or categorical variable?
-# - categoricalGroup (boolean, true) - in case of numeric `:group` column, treat `:group` as categorical variable by default
-# - stderror (boolean, false) - add an error-ribbon based on the `:stderror` column
-# - pvalue (see below)
+# - categorical_color (boolean, true) - in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
+# - categorical_group (boolean, true) - in case of numeric `:group` column, treat `:group` as categorical variable by default.
+# - `topolegend` (bool, `false`): add an inlay topoplot with corresponding electrodes.
+# - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+# - `pvalue` (Array, `[]`): show a pvalue (see below). 
 
 # Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 
@@ -62,10 +63,8 @@ plot_erp(
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
     legend = (; nbanks = 2),
     layout = (; showLegend = true, legendPosition = :right),
-    categoricalColor = false, categoricalGroup = true,
+    categorical_color = false, categorical_group = true,
 )
-
-
 
 
 # In the following we will use this "pretty" line plot as a basis for looking into configuration options.
@@ -77,11 +76,11 @@ plot_erp(
 #
 # Is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values. 
 # Default is `[]` (an empty array).
-# Shown below is an example in which `pvalue` are given:
+# Below is an example in which `pvalue` are given:
 # pvals = DataFrame(
 #		from=[0.1,0.3],
 #		to=[0.5,0.7],
-#		coefname=["(Intercept)","condition: face"] # if coefname not specified, line should be black
+#		coefname=["(Intercept)", "condition: face"] # if coefname not specified, line should be black
 #	)
 #
 # plot_erp(results; :pvalue=>pvals)
