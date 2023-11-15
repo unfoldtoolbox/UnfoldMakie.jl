@@ -37,7 +37,7 @@ plot_butterfly(df; positions=pos)
 
 ## Column Mappings for Butterfly Plots
 
-Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time,))`, that is, by specifying a `NamedTuple` (note the `;` right after the opening parentheses).
+Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time))`, that is, by specifying a `NamedTuple` (note the `;` right after the opening parentheses).
 
 While there are several default values that will be checked in that order if they exist in the `DataFrame`, a custom name may need to be chosen:
 
@@ -54,21 +54,17 @@ Default is `(:labels, :label, :topoLabels, :sensor, :nothing)`
 
 ## Configurations for Butterfly Plots
 
-
 Here we look into possible options for configuring the butterfly plot visualization using `(...; <name>=<value>, ...)`.
-This is the list of unique configuration (key values):
+
+## key values
+- `butterfly` (bool, `true`): create a butterfly plot.
+- `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes.
+- `topomarkersize` (Real, `10`): change the size of the markers, topoplot-inlay electrodes.
+- `topowidth` (Real, `0.25`): change the size of the inlay topoplot width.
+- `topoheigth` (Real, `0.25`): change the size of the inlay topoplot height.
+- `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´).
 
 
-- topoLegend (boolean)
-
-### topoLegend (boolean)
-Indicating whether the topo legend is displayed.
-Default is `true`.
-
-
-For more general options look into the `Plot Configuration` section of the documentation.
-
-
-Since the configurations for line plots can be applied to butterfly plots as well.
-[Here](@ref lp_vis) you can find the configurations for line plots, 
+Since the configurations for ERP plots can be applied to butterfly plots as well.
+[Here](@ref lp_vis) you can find the configurations for ERP plots.
 

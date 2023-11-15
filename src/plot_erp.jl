@@ -9,17 +9,18 @@ Plot an ERP plot.
 
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
 - `plotData::DataFrame`: Data for the line plot visualization.
-- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`
+- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`.
 
 ## kwargs (...; ...):
 
-- `categoricalColor` (bool, `true`) - Indicates whether the column referenced in mapping.color should be used nonnumerically.
-- `categoricalGroup` (bool, `true`) - Indicates whether the column referenced in mapping.group should be used nonnumerically.
-- `topoLegend` (bool, `false`) - Indicating whether a topo plot is used as a legend.
-- `stderror` (bool, `false`) - Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-- `pvalue` (Array, `[]`) - example: `DataFrame(from=[0.1,0.3], to=[0.5,0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname not specified, the lines will be black
+- `categorical_color` (bool, `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
+- `categorical_group` (bool, `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
+- `topolegend` (bool, `false`): add an inlay topoplot with corresponding electrodes.
+- `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+- `pvalue` (Array, `[]`): show a pvalue.
+    - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black
 
 
 $(_docstring(:erp))
@@ -32,16 +33,18 @@ $(_docstring(:erp))
 plot_erp(plotData::DataFrame; kwargs...) = plot_erp!(Figure(), plotData, ; kwargs...)
 
 """
-Plot Butterfly
+Plot a butterfly plot
+
+## kwargs (...; ...):
+
+- `butterfly` (bool, `true`): create a butterfly plot.
+- `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes.
+- `topomarkersize` (Real, `10`): change the size of the markers, topoplot-inlay electrodes.
+- `topowidth` (Real, `0.25`): change the size of the inlay topoplot width.
+- `topoheigth` (Real, `0.25`): change the size of the inlay topoplot height.
+- `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´).
 
 $(_docstring(:butterfly))
-
-## key-word arguments
-
-- `topomarkersize` (Real, `10`) - change the size of the markers, topoplot-inlay electrodes
-- `topowidth` (Real, `0.25`) - change the size of the inlay topoplot width
-- `topoheigth` (Real, `0.25`) - change the size of the inlay topoplot height
-
 see also [`plot_erp`](@Ref)
 """
 plot_butterfly(plotData::DataFrame; kwargs...) =
@@ -55,11 +58,11 @@ plot_butterfly!(
     f,
     plotData;
     butterfly = true,
-    topoLegend = true,
+    topolegend = true,
     topomarkersize = 10,
     topowidth = 0.25,
     topoheigth = 0.25,
-    topoPositionToColorFunction = x -> posToColorRomaO(x),
+    topopositions_to_color = x -> posToColorRomaO(x),
     kwargs...,
 )
 
@@ -70,16 +73,16 @@ function plot_erp!(
     plotData::DataFrame;
     positions = nothing,
     labels = nothing,
-    categoricalColor = true,
-    categoricalGroup = true,
+    categorical_color = true,
+    categorical_group = true,
     stderror = false, # XXX if it exists, should be plotted
     pvalue = [],
     butterfly = false,
-    topoLegend = nothing,
+    topolegend = nothing,
     topomarkersize = nothing,
     topowidth = nothing,
     topoheigth = nothing,
-    topoPositionToColorFunction = nothing,
+    topopositions_to_color = nothing,
     kwargs...,
 )
     config = PlotConfig(:erp)
@@ -117,26 +120,26 @@ function plot_erp!(
     # Get topocolors for butterfly
     if (butterfly)
         if isnothing(positions) && isnothing(labels)
-            topoLegend = false
+            topolegend = false
             #colors = config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plotData)))
             colors = nothing
             #config.mapping = merge(config.mapping,(;color=config.))
         else
             allPositions = getTopoPositions(; positions = positions, labels = labels)
-            colors = getTopoColor(allPositions, topoPositionToColorFunction)
+            colors = getTopoColor(allPositions, topopositions_to_color)
         end
 
 
     end
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
-    if categoricalColor && (:color ∈ keys(config.mapping))
+    if categorical_color && (:color ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; color = config.mapping.color => nonnumeric))
     end
 
     # converts group column into string
-    if categoricalGroup && (:group ∈ keys(config.mapping))
+    if categorical_group && (:group ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
@@ -175,9 +178,9 @@ function plot_erp!(
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
     if butterfly
-        # add topoLegend
+        # add topolegend
 
-        if (topoLegend)
+        if (topolegend)
             topoAxis = Axis(
                 f_grid,
                 width = Relative(topowidth),
@@ -189,7 +192,7 @@ function plot_erp!(
             topoplotLegend(
                 topoAxis,
                 topomarkersize,
-                topoPositionToColorFunction,
+                topopositions_to_color,
                 allPositions,
             )
         end
@@ -227,14 +230,14 @@ function eegHeadMatrix(positions, center, radius)
     )
 end
 
-function topoplotLegend(axis, topomarkersize, topoPositionToColorFunction, allPositions)
+function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositions)
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(
-        vcat(RGB(1, 1, 1.0), [topoPositionToColorFunction(pos) for pos in allPositions]...),
+        vcat(RGB(1, 1, 1.0), [topopositions_to_color(pos) for pos in allPositions]...),
     )
 
     xlims!(low = -0.2, high = 1.2)
