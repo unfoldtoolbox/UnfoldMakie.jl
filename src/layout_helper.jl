@@ -11,7 +11,7 @@ function applyLayoutSettings!(config::PlotConfig; fig=nothing, hm=nothing,
             # set f[] position depending on legendPosition
             legendPosition = config.layout.legendPosition == :right ? fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]]
             if isnothing(drawing)
-                if (config.layout.useColorbar)
+                if (config.layout.use_colorbar)
                     if isnothing(hm)
                         Colorbar(legendPosition; colormap=config.visual.colormap, config.colorbar...)
                     else

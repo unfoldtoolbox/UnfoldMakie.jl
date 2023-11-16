@@ -39,7 +39,7 @@
     plot_butterfly!(gb, d_topo; positions=pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
     plot_topoplot!(gc, data[:,340,1]; positions = positions)
     plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
-        layout = (; useColorbar=true))
+        layout = (; use_colorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
     plot_erpimage!(gf, times, d_singletrial)
     plot_parallelcoordinates!(gh, uf_5chan, [1, 2, 3, 4, 5]; 
@@ -82,7 +82,7 @@ end
 
     plot_butterfly!(f[1, 2], d_topo; positions=positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions)
-    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, visual=(label_scatter=false,), layout = (; useColorbar=true))
+    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, visual=(label_scatter=false,), layout = (; use_colorbar=true))
     plot_erpgrid!(f[3, 1], data[:, :, 1], positions)
    
     times = -0.099609375:0.001953125:1.0
