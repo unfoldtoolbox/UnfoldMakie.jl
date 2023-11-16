@@ -65,9 +65,9 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
     Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
     
-    plot_example(...; layout = (; showColorbar=true))
+    plot_example(...; layout = (; use_colorbar=true))
     
-    plot_example(...; layout = (showColorbar=true))
+    plot_example(...; layout = (use_colorbar=true))
      
     The first is correct and creates a NamedTuple as required. The second is wrong and its call is ignored.""")
     list = fieldnames(PlotConfig)#[:layout,:visual,:mapping,:legend,:colorbar,:axis]

@@ -12,12 +12,12 @@ Plot a PCP (parallel coordinates plot).
 PCP has problems with size changes of the view window.
 By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a complex figures.
 
-- `pc_aspect_ratio`  (default: `0.55`) -
-- `pc_right_padding`  (default: `15`) -
-- `pc_left_padding`  (default: `25`) -
-- `pc_top_padding`  (default: `26`) -
-- `pc_bottom_padding`  (default: `16`) -
-- `pc_tick_label_size`  (default: `14`) - 
+- `pc_aspect_ratio` (default: `0.55`) -
+- `pc_right_padding` (default: `15`) -
+- `pc_left_padding` (default: `25`) -
+- `pc_top_padding` (default: `26`) -
+- `pc_bottom_padding` (default: `16`) -
+- `pc_tick_label_size` (default: `14`) - 
 
 $(_docstring(:paracoord))
 
