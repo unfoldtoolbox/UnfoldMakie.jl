@@ -12,11 +12,11 @@ Plot a designmatrix.
 - `standardize_data` (bool,`true`): indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
 - `sort_data` (bool, `true`): indicates whether the data is sorted; using sortslices() of Base Julia. 
 - `xticks` (`nothing`): returns the number of labels on the x-axis. Behavior is set in the configuration:
-    - xticks = 0: no labels are placed.
-    - xticks = 1: first possible label is placed.
-    - xticks = 2: first and last possible labels are placed.
-    - 2 < xticks < `number of labels`: equally distribute the labels.
-    - xticks ≥ `number of labels`: all labels are placed.
+    - `xticks` = 0: no labels are placed.
+    - `xticks` = 1: first possible label is placed.
+    - `xticks` = 2: first and last possible labels are placed.
+    - 2 < `xticks` < `number of labels`: equally distribute the labels.
+    - `xticks` ≥ `number of labels`: all labels are placed.
 
 $(_docstring(:designmat))
 

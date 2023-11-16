@@ -31,7 +31,7 @@ function PlotConfig()# defaults
             legendPosition = :right,
             xlabelFromMapping = :x,
             ylabelFromMapping = :y,
-            useColorbar = false,
+            use_colorbar = false,
         ),
         (#maping
             x = (:time,),
@@ -126,7 +126,7 @@ function PlotConfig(T::Val{:topoplot})
             showLegend = true,
             xlabelFromMapping = nothing,
             ylabelFromMapping = nothing,
-            useColorbar = true,
+            use_colorbar = true,
             hidespines = (),
             hidedecorations = (),
         ),
@@ -150,7 +150,7 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        layout = (useColorbar = true,),
+        layout = (use_colorbar = true,),
         colorbar = (;
             height = 300, # why even should i made it manually?
             flipaxis = true, 
@@ -169,7 +169,7 @@ function PlotConfig(T::Val{:designmat})
     config_kwargs!(
         cfg;
         layout = (;
-            useColorbar = true,
+            use_colorbar = true,
             xlabelFromMapping = nothing,
             ylabelFromMapping = nothing,
         ),
@@ -206,7 +206,7 @@ function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (; useColorbar = true),
+        layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
         axis = (xlabel = "Time", ylabel = "Sorted trials"),
         visual = (; colormap = Reverse("RdBu")),

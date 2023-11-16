@@ -1,4 +1,4 @@
-# [Topo Plot SeriesVisualization](@id tpseries_vis)
+# [Topoplot Series Visualization](@id tpseries_vis)
 
 
 ## Include used Modules
@@ -10,9 +10,9 @@ using DataFrames
 using CairoMakie
 using TopoPlots
 ```
-## Plot Topo Plots Series
+## Plot Topoplot Series
 
-### Giving the Data
+### Example data
 
 In case you do not already have data, you can get example data from the `TopoPlots` module. 
 You can do it like this:
@@ -26,11 +26,25 @@ nothing #hide
 Δbin = 80
 plot_topoplotseries(df, Δbin; positions = positions)
 ```
+### Arguments usage
 
-Without colorbar:
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into.
+- `data::DataFrame`: DataFrame with data, needs a `time` column.
+- `Δbin::Real`: A number for how large one time bin should be. Δbin is in units of the `data.time` column.
+
+### Key arguments
+- `combinefun` (default: `mean`) - can be used to specify how the samples within `Δbin` are combined.
+- `rasterize_heatmaps` (default: `true`) - enforce rasterization of the plot heatmap when saving in svg format.
+    This has the benefit that all lines/points are vectors, except the interpolated heatmap. 
+    This is typically what you want, otherwise you get ~500x500 vectors per topoplot, which makes everything super slow.
+- `col_labels`, `row_labels` - shows column and row labels. 
+- labels (default: `nothing`) - .
+- positions (default: `nothing`) - .
+
+Disabling colorbar:
 
 ```@example main
-plot_topoplotseries(df, Δbin; positions=positions, layout = (; useColorbar=false))
+plot_topoplotseries(df, Δbin; positions=positions, layout = (; use_colorbar=false))
 ```
 
 ### Positions

@@ -13,7 +13,7 @@ Plot an ERP image.
 ## Keyword Arguments
 - `erpblur` (Number, `10`) - Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
 Non-Positive values deactivate the blur.
-- `sortix` (): .
+- `sortix` (default: `nothing`): .
 - `sortvalues` (bool, `false`) - parameter over which plot will be sorted. Using sortperm() of Base Julia. 
     - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
 - `meanplot`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
