@@ -40,7 +40,7 @@ end
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
         legend = (; nbanks = 2),
-        layout = (; legendPosition = :right, showLegend = false),
+        layout = (; legend_position = :right, show_legend = false),
         categorical_color = false,
         categorical_group = true,
     )

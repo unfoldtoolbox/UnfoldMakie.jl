@@ -27,8 +27,8 @@ function PlotConfig()# defaults
         (;), #figure
         (;), # axis
         (; # layout
-            showLegend = true,
-            legendPosition = :right,
+            show_legend = true,
+            legend_position = :right,
             xlabelFromMapping = :x,
             ylabelFromMapping = :y,
             use_colorbar = false,
@@ -90,7 +90,7 @@ function PlotConfig(T::Val{:circeegtopo})
 
     config_kwargs!(
         cfg;
-        layout = (; showLegend = false),
+        layout = (; show_legend = false),
         colorbar = (; label = "Voltage [µV]", colormap = Reverse(:RdBu)),
         mapping = (;),
         axis = (;
@@ -123,7 +123,7 @@ function PlotConfig(T::Val{:topoplot})
     config_kwargs!(
         cfg;
         layout = (
-            showLegend = true,
+            show_legend = true,
             xlabelFromMapping = nothing,
             ylabelFromMapping = nothing,
             use_colorbar = true,
@@ -154,7 +154,7 @@ function PlotConfig(T::Val{:topoplotseries})
         colorbar = (;
             height = 300, # why even should i made it manually?
             flipaxis = true, 
-            labelrotation = 4.7, 
+            label_rotation = 4.7, 
             label = "Voltage [µV]"
         ), 
         visual = (;
@@ -182,10 +182,10 @@ function PlotConfig(T::Val{:butterfly})
     cfg = PlotConfig(:erp)
     config_kwargs!(
         cfg;
-        layout = (; showLegend = false),
+        layout = (; show_legend = false),
         mapping = (;
             color = (:channel, :channels, :trial, :trials),
-            positions = (:pos, :positions, :position, :topoPositions, :x, nothing),
+            positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
         ),
     )
@@ -196,7 +196,7 @@ function PlotConfig(T::Val{:erp})
     config_kwargs!(
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
-        layout = (; showLegend = true,  hidespines = (:r, :t)),
+        layout = (; show_legend = true,  hidespines = (:r, :t)),
         legend = (; framevisible = false),
     )
 
@@ -207,7 +207,7 @@ function PlotConfig(T::Val{:erpimage})
     config_kwargs!(
         cfg;
         layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
+        colorbar = (; label = "Voltage [µV]", label_rotation = 4.7),
         axis = (xlabel = "Time", ylabel = "Sorted trials"),
         visual = (; colormap = Reverse("RdBu")),
     )

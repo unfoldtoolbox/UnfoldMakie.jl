@@ -45,7 +45,7 @@ function plot_topoplot!(
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
 We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
-        config_kwargs!(config, layout = (; use_colorbar=false,showLegend=false))
+        config_kwargs!(config, layout = (; use_colorbar=false, show_legend=false))
     else
         config_kwargs!(config, colorbar = (; limits = clims))
     end

@@ -13,6 +13,6 @@ end
 
     f = Figure()
     plot_parallelcoordinates!(f[1, 1], uf_5chan, [1, 2, 3, 4, 5]; 
-        mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+        mapping=(; color=:coefname), layout=(; legend_position=:bottom))
     f
 end
