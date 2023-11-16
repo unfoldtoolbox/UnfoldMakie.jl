@@ -1,7 +1,6 @@
 
 include("../docs/example_data.jl")
 data, pos = example_data("TopoPlots.jl")
-using Colors
 
 @testset "basic" begin
     plot_butterfly(data; positions = pos)
