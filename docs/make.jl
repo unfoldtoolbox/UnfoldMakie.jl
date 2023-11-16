@@ -22,20 +22,20 @@ for subfolder ∈ ["explanations", "HowTo", "tutorials", "reference"]
 
 end
 
-DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive=true)
+DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive = true)
 
 makedocs(;
-    modules=[UnfoldMakie],
-    authors="Benedikt Ehinger, Vladimir Mikheev, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
-    repo="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
-    sitename="UnfoldMakie.jl",
-    warnonly =  :cross_references,
-    format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://unfoldtoolbox.github.io/UnfoldMakie.jl",
-        assets=String[]
+    modules = [UnfoldMakie],
+    authors = "Benedikt Ehinger, Vladimir Mikheev, Daniel Baumgartner, Niklas Gärtner, Sören Döring",
+    repo = "https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
+    sitename = "UnfoldMakie.jl",
+    warnonly = :cross_references,
+    format = Documenter.HTML(;
+        prettyurls = get(ENV, "CI", "false") == "true",
+        canonical = "https://unfoldtoolbox.github.io/UnfoldMakie.jl",
+        assets = String[],
     ),
-    pages=[
+    pages = [
         "UnfoldMakie Documentation" => "index.md",
         "Visualizations-Types" => [
             "ERP plot" => "generated/tutorials/erp.md",
@@ -55,16 +55,11 @@ makedocs(;
             "Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
         "Reference" => [
-            "Convert 3D positions / montages to 2D layouts" => "generated/reference/positions.md"
-
+            "Convert 3D positions / montages to 2D layouts" => "generated/reference/positions.md",
         ],
         "API" => "api.md",
         "Utilities" => "helper.md",
     ],
-
 )
 
-deploydocs(;
-    repo="github.com/unfoldtoolbox/UnfoldMakie.jl",
-    devbranch="main"
-)
+deploydocs(; repo = "github.com/unfoldtoolbox/UnfoldMakie.jl", devbranch = "main")

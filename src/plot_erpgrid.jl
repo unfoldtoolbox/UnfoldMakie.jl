@@ -4,32 +4,32 @@
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into;
-- `plotData::Matrix{<:Real}`: Data for the plot visualization;
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into.
+- `data::Matrix{<:Real}`: data for the plot visualization.
 - `pos::Vector{Point{2,Float}}`: electrode positions.
         
 ## Keyword Arguments
-- `drawLabels` (bool, `false`) - Draw channels labels over each waveform. 
-- `times`: (Vector, `1:size(plotData, 2)`) - Vector of size()
+- `drawlabels` (bool, `false`): draw channels labels over each waveform. 
+- `times`: (Vector, `1:size(data, 2)`): vector of size().
 
 ## Return Value:
 The input `f`
 """
 
 # no figure?
-plot_erpgrid(plotData::Matrix{<:Real}, pos; kwargs...) =
-    plot_erpgrid!(Figure(), plotData, pos; kwargs...)
+plot_erpgrid(data::Matrix{<:Real}, pos; kwargs...) =
+    plot_erpgrid!(Figure(), data, pos; kwargs...)
 
 function plot_erpgrid!(
     f::Union{GridPosition,GridLayout,Figure},
-    plotData::Matrix{<:Real},
+    data::Matrix{<:Real},
     pos;
-    drawLabels = false,
-    times = -1:size(plotData, 2)-2, #arbitrary strat just for fun
+    drawlabels = false,
+    times = -1:size(data, 2)-2, #arbitrary strat just for fun
     kwargs...,
 )
-    chanNum = size(plotData, 1)
-    plotData = plotData[1:chanNum, :]
+    chanNum = size(data, 1)
+    data = data[1:chanNum, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)
 
     pos = pos[:, 1:chanNum]
@@ -52,7 +52,7 @@ function plot_erpgrid!(
             halign = x,
             valign = y,
         )# title = raw_ch_names[1:30])
-        if drawLabels
+        if drawlabels
             text!(
                 ax,
                 rel_zeropoint + 0.1,
@@ -72,10 +72,10 @@ function plot_erpgrid!(
     hlines!.(axlist, Ref([0.0]), color = :gray, linewidth = 0.5)
     vlines!.(axlist, Ref([0.0]), color = :gray, linewidth = 0.5)
 
-    times = isnothing(times) ? (1:size(plotData, 2)) : times
+    times = isnothing(times) ? (1:size(data, 2)) : times
 
     # todo: add customizable kwargs
-    h = lines!.(axlist, Ref(times), eachrow(plotData))
+    h = lines!.(axlist, Ref(times), eachrow(data))
 
     linkaxes!(axlist...)
     hidedecorations!.(axlist)

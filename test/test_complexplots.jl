@@ -39,11 +39,11 @@
     plot_butterfly!(gb, d_topo; positions=pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
     plot_topoplot!(gc, data[:,340,1]; positions = positions)
     plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
-        layout = (; useColorbar=true))
+        layout = (; use_colorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
     plot_erpimage!(gf, times, d_singletrial)
     plot_parallelcoordinates!(gh, uf_5chan, [1, 2, 3, 4, 5]; 
-        mapping=(; color=:coefname), layout=(; legendPosition=:bottom), legend=(; tellwidth =false))
+        mapping=(; color=:coefname), layout=(; legend_position=:bottom), legend=(; tellwidth =false))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
         Label(layout[1, 1, TopLeft()], label,
@@ -82,14 +82,14 @@ end
 
     plot_butterfly!(f[1, 2], d_topo; positions=positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions=positions)
-    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, visual=(label_scatter=false,), layout = (; useColorbar=true))
+    plot_topoplotseries!(f[2, 2], d_topo, 0.1; positions=positions, visual=(label_scatter=false,), layout = (; use_colorbar=true))
     plot_erpgrid!(f[3, 1], data[:, :, 1], positions)
    
     times = -0.099609375:0.001953125:1.0
     plot_erpimage!(f[3, 2], times, d_singletrial)
 
     plot_parallelcoordinates!(f[4, 2], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), 
-        layout=(; legendPosition=:bottom), legend=(; tellwidth =false))
+        layout=(; legend_position=:bottom), legend=(; tellwidth =false))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], 
         [f[1, 1], f[1, 2], f[2, 1], f[2, 2], f[3, 1], f[3, 2], f[4, 1], f[4, 2]])
@@ -125,11 +125,10 @@ end
         coefname=["(Intercept)", "category: face"]
     )
     plot_erp!(f[2, 1:2], results, 
-        categoricalColor=false,
-        categoricalGroup=false,
+        categorical_color=false,
+        categorical_group=false,
         pvalue=pvals,
         stderror=true)
-    
     
     plot_designmatrix!(f[2, 3], designmatrix(uf))
     
@@ -138,18 +137,17 @@ end
     
     res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
     
-    plot_erp!(f[2, 4:5], res_effects; categoricalColor=false, categoricalGroup=true,
+    plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=true,
         mapping=(; y=:yhat, color=:continuous, group=:continuous),
         legend=(; nbanks=2),
-        layout=(; showLegend=true, legendPosition=:right))
+        layout=(; show_legend=true, legend_position=:right))
     
-    plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+    plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legend_position=:bottom))
     
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
     plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-        positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
+        positions=positions, predictor=:time, predictor_bounds=[-0.3, 0.5])
     
     f
     #save("test.png", f)
 end
-

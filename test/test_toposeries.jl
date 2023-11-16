@@ -13,7 +13,7 @@ end
         df,
         Δbin;
         positions = positions,
-        layout = (; useColorbar = false),
+        layout = (; use_colorbar = false),
     )
 
 end
@@ -30,7 +30,7 @@ end
         df,
         Δbin;
         positions = positions,
-        layout = (; useColorbar = true),
+        layout = (; use_colorbar = true),
     )
     hidespines!(ax)
     hidedecorations!(ax, label = false)
