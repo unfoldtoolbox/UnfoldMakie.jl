@@ -79,7 +79,7 @@ function plot_topoplotseries!(
                 colorrange = d.colorrange,
                 height = config.colorbar.height,
                 flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
+                label_rotation = config.colorbar.label_rotation,
                 label = config.colorbar.label,
             )
         else
@@ -91,7 +91,7 @@ function plot_topoplotseries!(
                 colorrange = d.colorrange,
                 height = config.colorbar.height,
                 flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
+                label_rotation = config.colorbar.label_rotation,
                 label = config.colorbar.label,
             )
         end

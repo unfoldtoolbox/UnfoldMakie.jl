@@ -81,14 +81,14 @@ function plot_erpimage!(
         subConfig = deepcopy(config)
         config_kwargs!(
             subConfig;
-            layout = (; showLegend = false),
+            layout = (; show_legend = false),
             axis = (;
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
 
         axisOffset =
-            (config.layout.showLegend && config.layout.legendPosition == :bottom) ? 1 : 0
+            (config.layout.show_legend && config.layout.legend_position == :bottom) ? 1 : 0
         subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
 
         lines!(subAxis, mean(plot, dims = 2)[:, 1])

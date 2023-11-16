@@ -76,9 +76,10 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=true,
     mapping=(; y=:yhat, color=:continuous, group=:continuous),
     legend=(; nbanks=2),
-    layout=(; showLegend=true, legendPosition=:right))
+    layout=(; show_legend=true, legend_position=:right))
 
-plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), 
+    layout=(; legend_position=:bottom))
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
 plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];

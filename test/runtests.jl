@@ -15,16 +15,20 @@ end
     include("test_butterfly.jl")
 end
 
-@testset "Topoplot series" begin
-    include("test_toposeries.jl")
-end
-
 @testset "ERP Image" begin
     include("test_erpimage.jl")
 end
 
 @testset "Topoplot" begin
     include("test_topoplot.jl")
+end
+
+@testset "Topoplot series" begin
+    include("test_toposeries.jl")
+end
+
+@testset "Parallel coordinates plot" begin
+    include("test_pcp.jl")
 end
 
 @testset "Circular EEG topoplot" begin
