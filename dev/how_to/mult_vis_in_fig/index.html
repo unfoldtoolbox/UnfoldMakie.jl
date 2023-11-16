@@ -14,7 +14,7 @@ uf_5chan = example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
 times = -0.099609375:0.001953125:1.0
 data, positions = TopoPlots.example_data()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Warning: Autocorrelation was NOT taken into account. Therefore SE are UNRELIABLE. Use at your own discretion
-└ @ Unfold ~/.julia/packages/Unfold/LwbaS/src/solver.jl:75</code></pre><p>This section discusses how users can incorporate multiple plots into a single figure.</p><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create multiple coordinated views.</p><p>We start by creating a figure with Makie.Figure. </p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>.</p><pre><code class="language-julia hljs">f = Figure()
+└ @ Unfold ~/.julia/packages/Unfold/LwbaS/src/solver.jl:75</code></pre><p>This section discusses how users can incorporate multiple plots into a single figure.</p><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create multiple coordinated views.</p><p>We will start by creating a figure with Makie.Figure. </p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>.</p><pre><code class="language-julia hljs">f = Figure()
 plot_erp!(f[1, 1], coeftable(uf_deconv))
 plot_erp!(f[1, 2], effects(Dict(:condition =&gt; [&quot;car&quot;, &quot;face&quot;]), uf_deconv),
     mapping=(; color=:condition))
@@ -31,8 +31,8 @@ pvals = DataFrame(
     coefname=[&quot;(Intercept)&quot;, &quot;category: face&quot;]
 )
 plot_erp!(f[2, 1:2], results,
-    categoricalColor=false,
-    categoricalGroup=false,
+    categorical_color=false,
+    categorical_group=false,
     pvalue=pvals,
     stderror=true)
 
@@ -44,15 +44,16 @@ plot_topoplotseries!(f[4, 1:3], d_topo, 0.1; positions=positions, mapping=(; lab
 
 res_effects = effects(Dict(:continuous =&gt; -5:0.5:5), uf_deconv)
 
-plot_erp!(f[2, 4:5], res_effects; categoricalColor=false, categoricalGroup=true,
+plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=true,
     mapping=(; y=:yhat, color=:continuous, group=:continuous),
     legend=(; nbanks=2),
-    layout=(; showLegend=true, legendPosition=:right))
+    layout=(; show_legend=true, legend_position=:right))
 
-plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), layout=(; legendPosition=:bottom))
+plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname),
+    layout=(; legend_position=:bottom))
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
 plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-    positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
+    positions=positions, predictor=:time, predictor_bounds=[-0.3, 0.5])
 
-f</code></pre><img src="7189a7e8.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Axis Spines and Decorations</a><a class="docs-footer-nextpage" href="../show_oob_labels/">Show out of Bounds Label »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Tuesday 14 November 2023 16:28">Tuesday 14 November 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+f</code></pre><img src="7189a7e8.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Axis Spines and Decorations</a><a class="docs-footer-nextpage" href="../show_oob_labels/">Show out of Bounds Label »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Thursday 16 November 2023 18:52">Thursday 16 November 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
