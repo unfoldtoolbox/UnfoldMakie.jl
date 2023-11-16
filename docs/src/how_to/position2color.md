@@ -21,17 +21,20 @@ We can switch the colorscale of the position-map, by giving a function that maps
 
 ### Similar to MNE
 ```@example main
-plot_butterfly(results; positions=positions, extra=(; topoPositionToColorFunction = pos -> UnfoldMakie.posToColorRGB(pos)))
+plot_butterfly(results; 
+    positions=positions, 
+    topopositions_to_color = pos -> UnfoldMakie.posToColorRGB(pos)
+)
 ```
 
 ### HSV-Space
 ```@example main
-plot_butterfly(results; positions=positions, extra=(; topoPositionToColorFunction=UnfoldMakie.posToColorHSV))
+plot_butterfly(results; positions=positions, topopositions_to_color=UnfoldMakie.posToColorHSV)
 ```
 
 ### Uniform Color
 To highlight the flexibility, we can also make all lines `gray`, or any other arbitrary color, or function of electrode-`position`.
+
 ```@example main
-using Colors
-plot_butterfly(results; positions=positions, extra=(; topoPositionToColorFunction = x -> Colors.RGB(0.5)))
+plot_butterfly(results; positions=positions, topopositions_to_color = x -> Colors.RGB(0.5))
 ```
