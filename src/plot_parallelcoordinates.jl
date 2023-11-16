@@ -1,11 +1,11 @@
 """
     plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, 
-        plotData::DataFrame, config::PlotConfig; channels::Vector{Int64})
+        data::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
 Plot a PCP (parallel coordinates plot).
 ## Arguments:
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::DataFrame`: Data for the plot visualization.
+- `data::DataFrame`: Data for the plot visualization.
 - `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
 - `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
@@ -24,11 +24,11 @@ $(_docstring(:paracoord))
 ## Return Value:
 The input `f`
 """
-plot_parallelcoordinates(plotData::DataFrame, channels::Vector{Int64}; kwargs...) =
-    plot_parallelcoordinates!(Figure(), plotData, channels; kwargs...)
+plot_parallelcoordinates(data::DataFrame, channels::Vector{Int64}; kwargs...) =
+    plot_parallelcoordinates!(Figure(), data, channels; kwargs...)
 function plot_parallelcoordinates!(
     f::Union{GridPosition,GridLayout,Figure},
-    plotData::DataFrame,
+    data::DataFrame,
     channels::Vector{Int64};
     pc_aspect_ratio = 0.55,
     pc_right_padding = 15,
@@ -61,9 +61,9 @@ function plot_parallelcoordinates!(
     # colormap border (prevents from using outer parts of color map)
     bord = 0
 
-    config.mapping = resolveMappings(plotData, config.mapping)
+    config.mapping = resolveMappings(data, config.mapping)
 
-    color = unique(plotData[:, config.mapping.color])
+    color = unique(data[:, config.mapping.color])
 
     catLeng = length(color)
     chaLeng = length(channels)
@@ -97,7 +97,7 @@ function plot_parallelcoordinates!(
 
     # get extrema for each channel
     for cha in channels
-        tmp = filter(x -> (x[config.mapping.channel] == cha), plotData)
+        tmp = filter(x -> (x[config.mapping.channel] == cha), data)
         w = extrema.([tmp[:, config.mapping.y]])
         append!(limits, w)
         append!(l_up, w[1][2])
@@ -130,11 +130,11 @@ function plot_parallelcoordinates!(
     end
 
     # Draw colored line through all channels for each time entry 
-    for time in unique(plotData[:, config.mapping.time])
-        tmp1 = filter(x -> (x[config.mapping.time] == time), plotData) #1 timepoint, 10 rows (2 conditions, 5 channels)
+    for time in unique(data[:, config.mapping.time])
+        tmp1 = filter(x -> (x[config.mapping.time] == time), data) #1 timepoint, 10 rows (2 conditions, 5 channels)
         for cat in color
             # df with the order of the channels
-            dfInOrder = plotData[[], :]
+            dfInOrder = data[[], :]
             tmp2 = filter(x -> (x[config.mapping.color] == cat), tmp1)
 
             # create new dataframe with the right order
