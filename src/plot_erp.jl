@@ -2,24 +2,25 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plotData::DataFrame; kwargs...)
-    plot_erp(plotData::DataFrame; kwargs...)
+    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
+    plot_erp(plot_data::DataFrame; kwargs...)
         
 Plot an ERP plot.
 
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plotData::DataFrame`: Data for the line plot visualization.
-- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
+- `plot_data::DataFrame`: Data for the line plot visualization.
+- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`.
 
 ## kwargs (...; ...):
 
-- `categoricalColor` (bool, `true`) - Indicates whether the column referenced in mapping.color should be used nonnumerically.
-- `categoricalGroup` (bool, `true`) - Indicates whether the column referenced in mapping.group should be used nonnumerically.
-- `topoLegend` (bool, `false`) - Indicating whether a topo plot is used as a legend.
-- `stderror` (bool, `false`) - Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-- `pvalue` (Array, `[]`) - example: `DataFrame(from=[0.1,0.3], to=[0.5,0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname not specified, the lines will be black
+- `categorical_color` (bool, `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
+- `categorical_group` (bool, `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
+- `topolegend` (bool, `false`): add an inlay topoplot with corresponding electrodes.
+- `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+- `pvalue` (Array, `[]`): show a pvalue.
+    - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black
 
 
 $(_docstring(:erp))
@@ -29,37 +30,39 @@ $(_docstring(:erp))
 - f - Figure() or the inputed `f`
 
 """
-plot_erp(plotData::DataFrame; kwargs...) = plot_erp!(Figure(), plotData, ; kwargs...)
+plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
 
 """
-Plot Butterfly
+Plot a butterfly plot
+
+## kwargs (...; ...):
+
+- `butterfly` (bool, `true`): create a butterfly plot.
+- `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes.
+- `topomarkersize` (Real, `10`): change the size of the markers, topoplot-inlay electrodes.
+- `topowidth` (Real, `0.25`): change the size of the inlay topoplot width.
+- `topoheigth` (Real, `0.25`): change the size of the inlay topoplot height.
+- `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´).
 
 $(_docstring(:butterfly))
-
-## key-word arguments
-
-- `topomarkersize` (Real, `10`) - change the size of the markers, topoplot-inlay electrodes
-- `topowidth` (Real, `0.25`) - change the size of the inlay topoplot width
-- `topoheigth` (Real, `0.25`) - change the size of the inlay topoplot height
-
 see also [`plot_erp`](@Ref)
 """
-plot_butterfly(plotData::DataFrame; kwargs...) =
-    plot_butterfly!(Figure(), plotData; kwargs...)
+plot_butterfly(plot_data::DataFrame; kwargs...) =
+    plot_butterfly!(Figure(), plot_data; kwargs...)
 
 plot_butterfly!(
     f::Union{GridPosition,GridLayout,<:Figure},
-    plotData::DataFrame;
+    plot_data::DataFrame;
     kwargs...,
 ) = plot_erp!(
     f,
-    plotData;
+    plot_data;
     butterfly = true,
-    topoLegend = true,
+    topolegend = true,
     topomarkersize = 10,
     topowidth = 0.25,
     topoheigth = 0.25,
-    topoPositionToColorFunction = x -> posToColorRomaO(x),
+    topopositions_to_color = x -> posToColorRomaO(x),
     kwargs...,
 )
 
@@ -67,19 +70,19 @@ plot_butterfly!(
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
-    plotData::DataFrame;
+    plot_data::DataFrame;
     positions = nothing,
     labels = nothing,
-    categoricalColor = true,
-    categoricalGroup = true,
+    categorical_color = true,
+    categorical_group = true,
     stderror = false, # XXX if it exists, should be plotted
     pvalue = [],
     butterfly = false,
-    topoLegend = nothing,
+    topolegend = nothing,
     topomarkersize = nothing,
     topowidth = nothing,
     topoheigth = nothing,
-    topoPositionToColorFunction = nothing,
+    topopositions_to_color = nothing,
     kwargs...,
 )
     config = PlotConfig(:erp)
@@ -89,10 +92,10 @@ function plot_erp!(
         config_kwargs!(config; kwargs...)
     end
 
-    plotData = deepcopy(plotData) # XXX why?
+    plot_data = deepcopy(plot_data) # XXX why?
 
     # resolve columns with data
-    config.mapping = resolveMappings(plotData, config.mapping)
+    config.mapping = resolveMappings(plot_data, config.mapping)
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -103,40 +106,40 @@ function plot_erp!(
 
 
     # turn "nothing" from group columns into :fixef
-    if "group" ∈ names(plotData)
-        plotData.group = plotData.group .|> a -> isnothing(a) ? :fixef : a
+    if "group" ∈ names(plot_data)
+        plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
     end
 
     # check if stderror values exist and create new collumsn with high and low band
-    if "stderror" ∈ names(plotData) && stderror
-        plotData.stderror = plotData.stderror .|> a -> isnothing(a) ? 0.0 : a
-        plotData[!, :se_low] = plotData[:, config.mapping.y] .- plotData.stderror
-        plotData[!, :se_high] = plotData[:, config.mapping.y] .+ plotData.stderror
+    if "stderror" ∈ names(plot_data) && stderror
+        plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
+        plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
+        plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
     end
 
     # Get topocolors for butterfly
     if (butterfly)
         if isnothing(positions) && isnothing(labels)
-            topoLegend = false
-            #colors = config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plotData)))
+            topolegend = false
+            #colors = config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plot_data)))
             colors = nothing
             #config.mapping = merge(config.mapping,(;color=config.))
         else
             allPositions = getTopoPositions(; positions = positions, labels = labels)
-            colors = getTopoColor(allPositions, topoPositionToColorFunction)
+            colors = getTopoColor(allPositions, topopositions_to_color)
         end
 
 
     end
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
-    if categoricalColor && (:color ∈ keys(config.mapping))
+    if categorical_color && (:color ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; color = config.mapping.color => nonnumeric))
     end
 
     # converts group column into string
-    if categoricalGroup && (:group ∈ keys(config.mapping))
+    if categorical_group && (:group ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
@@ -163,11 +166,11 @@ function plot_erp!(
         basic = basic + visual(Band, alpha = 0.5) * m_se
     end
 
-    basic = basic * data(plotData)
+    basic = basic * data(plot_data)
 
     # add the pvalues
     if !isempty(pvalue)
-        basic = basic + addPvalues(plotData, pvalue, config)
+        basic = basic + addPvalues(plot_data, pvalue, config)
     end
 
     plotEquation = basic * mapp
@@ -175,9 +178,9 @@ function plot_erp!(
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
     if butterfly
-        # add topoLegend
+        # add topolegend
 
-        if (topoLegend)
+        if (topolegend)
             topoAxis = Axis(
                 f_grid,
                 width = Relative(topowidth),
@@ -189,7 +192,7 @@ function plot_erp!(
             topoplotLegend(
                 topoAxis,
                 topomarkersize,
-                topoPositionToColorFunction,
+                topopositions_to_color,
                 allPositions,
             )
         end
@@ -227,14 +230,14 @@ function eegHeadMatrix(positions, center, radius)
     )
 end
 
-function topoplotLegend(axis, topomarkersize, topoPositionToColorFunction, allPositions)
+function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositions)
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
     # colorscheme where first entry is 0, and exactly length(positions)+1 entries
     specialColors = ColorScheme(
-        vcat(RGB(1, 1, 1.0), [topoPositionToColorFunction(pos) for pos in allPositions]...),
+        vcat(RGB(1, 1, 1.0), [topopositions_to_color(pos) for pos in allPositions]...),
     )
 
     xlims!(low = -0.2, high = 1.2)
@@ -257,15 +260,15 @@ function topoplotLegend(axis, topomarkersize, topoPositionToColorFunction, allPo
     return topoplot
 end
 
-function addPvalues(plotData, pvalue, config)
+function addPvalues(plot_data, pvalue, config)
     p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
     if "group" ∉ names(p)
         # group not specified using first
-        if "group" ∈ names(plotData)
-            p[!, :group] .= plotData[1, :group]
-            if length(unique(plotData.group)) > 1
+        if "group" ∈ names(plot_data)
+            p[!, :group] .= plot_data[1, :group]
+            if length(unique(plot_data.group)) > 1
                 @warn "multiple groups found, choosing first one"
             end
         else
@@ -282,16 +285,17 @@ function addPvalues(plotData, pvalue, config)
     end
     # define an index to dodge the lines vertically
 
-    scaleY = [minimum(plotData.estimate), maximum(plotData.estimate)]
+    scaleY = [minimum(plot_data.estimate), maximum(plot_data.estimate)]
     stepY = scaleY[2] - scaleY[1]
     posY = stepY * -0.05 + scaleY[1]
-    Δt = diff(plotData.time[1:2])[1]
+    Δt = diff(plot_data.time[1:2])[1]
     Δy = 0.01
     p[!, :segments] = [
         Makie.Rect(
             Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
             Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
         ) for (x, y, n) in zip(p.from, p.to, p.sigindex)
-    ]
-    return (data(p) * mapping(:segments) * visual(Poly))
+    ]    
+    res = data(p) * mapping(:segments) * visual(Poly)
+    return (res)
 end

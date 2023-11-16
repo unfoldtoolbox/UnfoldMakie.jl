@@ -15,18 +15,18 @@ data, pos = TopoPlots.example_data();
 dat = data[:, 240, 1]
 df = DataFrame(
     :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
-    :circularVariable => [0, 50, 80, 120, 180, 210],
+    :circular_variable => [0, 50, 80, 120, 180, 210],
     :time => 100:40:300,
 )
 df = flatten(df, :estimate);
 
 # # Our first plot!
-# note how the plots are at the angles of circularVariable`
+# note how the plots are at the angles of circular_variable`
 plot_circulareegtopoplot(
     df;
     positions = pos,
-    axis = (; label = "Sac Incoming"),
-    predictor = :circularVariable,
+    axis = (; label = "Incoming saccade"),
+    predictor = :circular_variable,
 )
 
 
@@ -37,6 +37,6 @@ plot_circulareegtopoplot(
     positions = pos,
     axis = (; label = "Time?!"),
     predictor = :time,
-    predictorBounds = [80, 320],
+    predictor_bounds = [80, 320],
 )
 

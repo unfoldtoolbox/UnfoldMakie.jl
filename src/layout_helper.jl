@@ -4,25 +4,25 @@ function applyLayoutSettings!(config::PlotConfig; fig=nothing, hm=nothing,
         ax = current_axis()
     end
 
-    if (config.layout.showLegend)
+    if (config.layout.show_legend)
         if isnothing(fig)
             @error "Legend needs figure parameter"
         else
-            # set f[] position depending on legendPosition
-            legendPosition = config.layout.legendPosition == :right ? fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]]
+            # set f[] position depending on legend_position
+            legend_position = config.layout.legend_position == :right ? fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]]
             if isnothing(drawing)
-                if (config.layout.useColorbar)
+                if (config.layout.use_colorbar)
                     if isnothing(hm)
-                        Colorbar(legendPosition; colormap=config.visual.colormap, config.colorbar...)
+                        Colorbar(legend_position; colormap=config.visual.colormap, config.colorbar...)
                     else
-                        Colorbar(legendPosition, hm; config.colorbar...)
+                        Colorbar(legend_position, hm; config.colorbar...)
                     end
                 else
-                    Legend(legendPosition, ax; config.legend...)
+                    Legend(legend_position, ax; config.legend...)
                 end
             else
-                legend!(legendPosition, drawing; config.legend...)
-                colorbar!(legendPosition, drawing; config.colorbar...)
+                legend!(legend_position, drawing; config.legend...)
+                colorbar!(legend_position, drawing; config.colorbar...)
             end
         end
     end

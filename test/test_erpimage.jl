@@ -6,18 +6,18 @@ end
 
 @testset "with mean erp plot" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage(data; meanPlot = true)
+    plot_erpimage(data; meanplot = true)
 end
 
-@testset "changing erpBlur to zero" begin
+@testset "changing erpblur to zero" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage(data; meanPlot = true, erpBlur = 0)
+    plot_erpimage(data; meanplot = true, erpblur = 0)
 end
 
 @testset "GridPosition" begin
     f = Figure()
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage!(f[1, 1], data; meanPlot = true)
+    plot_erpimage!(f[1, 1], data; meanplot = true)
     #save("erpimage.eps", f)
 end
 
