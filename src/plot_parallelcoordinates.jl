@@ -1,23 +1,23 @@
 """
-    plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, 
+    ?\(f::Union{GridPosition, GridLayout, Figure}, 
         data::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
 Plot a PCP (parallel coordinates plot).
 ## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `data::DataFrame`: Data for the plot visualization.
-- `config::PlotConfig`: Instance of PlotConfig being applied to the visualization.
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into.
+- `data::DataFrame`: data for the plot visualization.
+- `config::PlotConfig`: instance of PlotConfig being applied to the visualization.
 - `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
 PCP has problems with size changes of the view window.
-By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a Coordinated Multiple Views System
+By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a complex figures.
 
-- `pc_aspect_ratio`  Default : `0.55`
-- `pc_right_padding`  Default : `15`
-- `pc_left_padding`  Default : `25`
-- `pc_top_padding`  Default : `26`
-- `pc_bottom_padding`  Default : `16`
-- `pc_tick_label_size`  Default : `14`
+- `pc_aspect_ratio`  (default: `0.55`) -
+- `pc_right_padding`  (default: `15`) -
+- `pc_left_padding`  (default: `25`) -
+- `pc_top_padding`  (default: `26`) -
+- `pc_bottom_padding`  (default: `16`) -
+- `pc_tick_label_size`  (default: `14`) - 
 
 $(_docstring(:paracoord))
 

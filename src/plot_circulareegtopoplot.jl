@@ -7,7 +7,7 @@ Plot a circular EEG topoplot.
 
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into
 - `data::DataFrame`: DataFrame with keys for data (looks for `:y, :yhat, :estimate`), and :position (looks for `:pos, :position, :positions`), 
-- `predictor` (optional; default :predictor): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`
+- `predictor` (optional; default: predictor): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`
 - `predictor_bounds` (default: `[0,360]`): the bounds of the predictor. This is relevant for the axis labels.
 - `positions` (default: nothing): positions for the [`plot_topoplot`](@Ref)
 - `center_label` (default: ""): the text in the center of the cricle
