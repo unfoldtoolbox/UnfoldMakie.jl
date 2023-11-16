@@ -6,12 +6,13 @@ include("setup.jl")
 @testset "Test Config" begin
     include("test_config.jl")
 end
-@testset "Circular EEG topoplot" begin
-    include("test_plot_circulareegtopoplot.jl")
+
+@testset "ERP plot" begin
+    include("test_erp.jl")
 end
 
-@testset "TopoSeries" begin
-    include("test_toposeries.jl")
+@testset "Butterfly" begin
+    include("test_butterfly.jl")
 end
 
 @testset "ERP Image" begin
@@ -22,10 +23,18 @@ end
     include("test_topoplot.jl")
 end
 
-@testset "Butterfly" begin
-    include("test_butterfly.jl")
+@testset "Topoplot series" begin
+    include("test_toposeries.jl")
 end
 
-@testset "All plots" begin
-    include("test_all.jl")
+@testset "Parallel coordinates plot" begin
+    include("test_pcp.jl")
+end
+
+@testset "Circular EEG topoplot" begin
+    include("test_plot_circulareegtopoplot.jl")
+end
+
+@testset "Complex plots" begin
+    include("test_complexplots.jl")
 end
