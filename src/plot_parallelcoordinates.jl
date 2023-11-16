@@ -1,5 +1,5 @@
 """
-    ?\(f::Union{GridPosition, GridLayout, Figure}, 
+    plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, 
         data::DataFrame, config::PlotConfig; channels::Vector{Int64})
 
 Plot a PCP (parallel coordinates plot).
