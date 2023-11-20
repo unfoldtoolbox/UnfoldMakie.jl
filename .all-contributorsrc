@@ -60,6 +60,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "SorenDoring",
+      "name": "SorenDoring",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54365184?v=4",
+      "profile": "https://github.com/SorenDoring",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
