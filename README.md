@@ -1,6 +1,6 @@
 # ![UnfoldMakie - Advanced EEG and ERP Plotting](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/57703446/26b770b3-afa0-4652-b654-82d2f737f42f)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
@@ -118,6 +118,9 @@ If you make use of theses visualizations, please cite:
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SorenDoring"><img src="https://avatars.githubusercontent.com/u/54365184?v=4?s=100" width="100px;" alt="SorenDoring"/><br /><sub><b>SorenDoring</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=SorenDoring" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=SorenDoring" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/lokmanfl"><img src="https://avatars.githubusercontent.com/u/44772645?v=4?s=100" width="100px;" alt="lokmanfl"/><br /><sub><b>lokmanfl</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=lokmanfl" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=lokmanfl" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jschepers"><img src="https://avatars.githubusercontent.com/u/22366977?v=4?s=100" width="100px;" alt="Judith Schepers"/><br /><sub><b>Judith Schepers</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/issues?q=author%3Ajschepers" title="Bug reports">🐛</a> <a href="#ideas-jschepers" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=jschepers" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://reneskukies.de/"><img src="https://avatars.githubusercontent.com/u/57703446?v=4?s=100" width="100px;" alt="René Skukies"/><br /><sub><b>René Skukies</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=ReneSkukies" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
