@@ -26,7 +26,6 @@
       ]
     },
     {
-
       "login": "Link250",
       "name": "Quantum",
       "avatar_url": "https://avatars.githubusercontent.com/u/4541950?v=4",
@@ -35,7 +34,8 @@
         "code",
         "doc"
       ]
-    },{
+    },
+    {
       "login": "vladdez",
       "name": "Vladimir Mikheev",
       "avatar_url": "https://avatars.githubusercontent.com/u/33777074?v=4",
@@ -49,6 +49,16 @@
         "review",
         "test",
         "tutorial"
+      ]
+    },
+    {
+      "login": "NiklasMGaertner",
+      "name": "NiklasMGaertner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54365174?v=4",
+      "profile": "https://github.com/NiklasMGaertner",
+      "contributions": [
+        "code",
+        "doc"
       ]
     }
   ],
