@@ -1,6 +1,6 @@
 # ![UnfoldMakie - Advanced EEG and ERP Plotting](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/57703446/26b770b3-afa0-4652-b654-82d2f737f42f)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
@@ -112,6 +112,7 @@ If you make use of theses visualizations, please cite:
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://www.benediktehinger.de"><img src="https://avatars.githubusercontent.com/u/10183650?v=4?s=100" width="100px;" alt="Benedikt Ehinger"/><br /><sub><b>Benedikt Ehinger</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/issues?q=author%3Abehinger" title="Bug reports">🐛</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=behinger" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=behinger" title="Documentation">📖</a> <a href="#ideas-behinger" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-behinger" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-behinger" title="Maintenance">🚧</a> <a href="#question-behinger" title="Answering Questions">💬</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/pulls?q=is%3Apr+reviewed-by%3Abehinger" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=behinger" title="Tests">⚠️</a> <a href="#tutorial-behinger" title="Tutorials">✅</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vladdez"><img src="https://avatars.githubusercontent.com/u/33777074?v=4?s=100" width="100px;" alt="Vladimir Mikheev"/><br /><sub><b>Vladimir Mikheev</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/issues?q=author%3Avladdez" title="Bug reports">🐛</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=vladdez" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=vladdez" title="Documentation">📖</a> <a href="#ideas-vladdez" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-vladdez" title="Maintenance">🚧</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/pulls?q=is%3Apr+reviewed-by%3Avladdez" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=vladdez" title="Tests">⚠️</a> <a href="#tutorial-vladdez" title="Tutorials">✅</a></td>
     </tr>
   </tbody>
 </table>
