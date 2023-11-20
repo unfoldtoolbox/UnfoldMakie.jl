@@ -102,9 +102,7 @@ If you make use of theses visualizations, please cite:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6531996.svg)](https://doi.org/10.5281/zenodo.6531996)
 
-## Contributors (alphabetically)
-
-- **Daniel Baumgartner**
+## Contributors
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -129,11 +127,6 @@ If you make use of theses visualizations, please cite:
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-- **Benedikt Ehinger**
-- **Sören Döring**
-- **Niklas Gärtner**
-- **Furkan Lokman**
-- **Vladimir Mikheev**
 
 ## Acknowledgements
 
