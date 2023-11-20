@@ -24,6 +24,22 @@
         "test",
         "tutorial"
       ]
+    },
+    {
+      "login": "vladdez",
+      "name": "Vladimir Mikheev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33777074?v=4",
+      "profile": "https://github.com/vladdez",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "maintenance",
+        "review",
+        "test",
+        "tutorial"
+      ]
     }
   ],
   "contributorsPerLine": 7,
