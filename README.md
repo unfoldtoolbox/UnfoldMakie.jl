@@ -1,6 +1,6 @@
 # ![UnfoldMakie - Advanced EEG and ERP Plotting](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/57703446/26b770b3-afa0-4652-b654-82d2f737f42f)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
@@ -115,6 +115,7 @@ If you make use of theses visualizations, please cite:
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Link250"><img src="https://avatars.githubusercontent.com/u/4541950?v=4?s=100" width="100px;" alt="Quantum"/><br /><sub><b>Quantum</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=Link250" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=Link250" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/vladdez"><img src="https://avatars.githubusercontent.com/u/33777074?v=4?s=100" width="100px;" alt="Vladimir Mikheev"/><br /><sub><b>Vladimir Mikheev</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/issues?q=author%3Avladdez" title="Bug reports">🐛</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=vladdez" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=vladdez" title="Documentation">📖</a> <a href="#ideas-vladdez" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-vladdez" title="Maintenance">🚧</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/pulls?q=is%3Apr+reviewed-by%3Avladdez" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=vladdez" title="Tests">⚠️</a> <a href="#tutorial-vladdez" title="Tutorials">✅</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/NiklasMGaertner"><img src="https://avatars.githubusercontent.com/u/54365174?v=4?s=100" width="100px;" alt="NiklasMGaertner"/><br /><sub><b>NiklasMGaertner</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=NiklasMGaertner" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=NiklasMGaertner" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/SorenDoring"><img src="https://avatars.githubusercontent.com/u/54365184?v=4?s=100" width="100px;" alt="SorenDoring"/><br /><sub><b>SorenDoring</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=SorenDoring" title="Code">💻</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=SorenDoring" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
