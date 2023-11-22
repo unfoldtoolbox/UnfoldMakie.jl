@@ -21,7 +21,9 @@ Plot an ERP plot.
 - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `pvalue` (Array, `[]`): show a pvalue.
     - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black
-
+- `positions` (nothing): see plot_butterfly.
+Internal:
+- `butterfly` (bool, `true`): a butterfly plot.
 
 $(_docstring(:erp))
 
@@ -34,15 +36,17 @@ plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwa
 
 """
 Plot a butterfly plot
+    plot_butterfly(plot_data::DataFrame; positions=nothing) =
 
 ## kwargs (...; ...):
-
-- `butterfly` (bool, `true`): create a butterfly plot.
+- `positions` (bool, `nothing`): Provide 2D layout positions to add a inset based on channel location and color the lines in a logical way
 - `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes.
 - `topomarkersize` (Real, `10`): change the size of the markers, topoplot-inlay electrodes.
 - `topowidth` (Real, `0.25`): change the size of the inlay topoplot width.
 - `topoheigth` (Real, `0.25`): change the size of the inlay topoplot height.
 - `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´).
+
+
 
 $(_docstring(:butterfly))
 see also [`plot_erp`](@Ref)
