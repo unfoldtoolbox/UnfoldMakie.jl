@@ -10,8 +10,8 @@ raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7",
 
 end
 
-@testset "channel image basic" begin
+@testset "channel image with Figure" begin
     f = Figure()
-    plot_channelimage!(f, data[:, :, 1], positions[1:30], raw_ch_names; )
+    plot_channelimage!(f, data, pos, raw_ch_names; )
 
 end
