@@ -47,7 +47,7 @@
     dat, evts = UnfoldSim.predef_eeg(;onset=LogNormalOnset(μ=3.5, σ=0.4), noiselevel = 5)
     dat_e, times = Unfold.epoch(dat,evts, [-0.1,1], 100)
     evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
-    evts.Δlatency =  diff(vcat(evts.latency, 0))
+    evts.Δlatency =  diff(vcat(evts.latency, 0)) *-1
     dat_e = dat_e[1,:,:]
     plot_erpimage!(gf, times, dat_e; sortvalues=evts.Δlatency)
     plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names; )
