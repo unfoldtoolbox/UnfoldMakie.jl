@@ -2,26 +2,30 @@ using UnfoldMakie
 include("setup.jl")
 #include("../src/UnfoldMakie.jl")
 
-@testset "UnfoldMakie.jl" begin
+
+@testset "Test Config" begin
+    include("test_config.jl")
+end
+@testset "Circular EEG topoplot" begin
     include("test_plot_circulareegtopoplot.jl")
 end
 
-@testset "UnfoldMakie.jl" begin
+@testset "TopoSeries" begin
     include("test_toposeries.jl")
 end
 
-@testset "UnfoldMakie.jl" begin
+@testset "ERP Image" begin
     include("test_erpimage.jl")
 end
 
-@testset "UnfoldMakie.jl" begin
+@testset "Topoplot" begin
     include("test_topoplot.jl")
 end
 
-@testset "UnfoldMakie.jl" begin
+@testset "Butterfly" begin
     include("test_butterfly.jl")
 end
 
-@testset "UnfoldMakie.jl" begin
+@testset "All plots" begin
     include("test_all.jl")
 end

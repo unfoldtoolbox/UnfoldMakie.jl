@@ -61,3 +61,11 @@ end
         axis = (; label = "Time?!"), predictor = :time, predictorBounds = [80, 320],)
     f
 end
+
+@testset "circularplot plot in GridLayout" begin
+    d_topo, positions = example_data("TopoPlots.jl")
+    f = Figure(resolution=(2000, 2000))
+    plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
+        positions=positions, predictor=:time, predictorBounds=[-0.3, 0.5])
+    f 
+end
