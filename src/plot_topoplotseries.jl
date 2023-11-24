@@ -1,5 +1,5 @@
 """
-    plot_topoplotseries!(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame, Δbin::Real; kwargs...)
+    plot_topoplotseries(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame, Δbin::Real; kwargs...)
     plot_topoplotseries!(data::DataFrame, Δbin::Real; kwargs...)
         
 Multiple miniature topoplots in regular distances 
@@ -77,7 +77,6 @@ function plot_topoplotseries!(
                 f[1, end+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
-                height = config.colorbar.height,
                 flipaxis = config.colorbar.flipaxis,
                 labelrotation  = config.colorbar.labelrotation ,
                 label = config.colorbar.label,
@@ -89,7 +88,6 @@ function plot_topoplotseries!(
                 f[:, :][1, length(axlist)+1],
                 colormap = d.colormap,
                 colorrange = d.colorrange,
-                height = config.colorbar.height,
                 flipaxis = config.colorbar.flipaxis,
                 labelrotation  = config.colorbar.labelrotation ,
                 label = config.colorbar.label,

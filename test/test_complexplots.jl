@@ -19,6 +19,9 @@
     times = -0.099609375:0.001953125:1.0
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1], string.(1:length(positions)));
+    raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", 
+"PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
+"C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
 
     data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
     data_erp = reshape(data_erp, (1, size(data_erp)...))
@@ -47,7 +50,7 @@
     evts.Δlatency =  diff(vcat(evts.latency, 0))
     dat_e = dat_e[1,:,:]
     plot_erpimage!(gf, times, dat_e; sortvalues=evts.Δlatency)
-    #plot_erpimage!(gf, times, d_singletrial)
+    plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names; )
     plot_parallelcoordinates!(gh, uf_5chan, [1, 2, 3, 4, 5]; 
         mapping=(; color=:coefname), layout=(; legend_position=:bottom), legend=(; tellwidth =false))
 

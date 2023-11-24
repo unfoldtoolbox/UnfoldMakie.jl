@@ -8,15 +8,16 @@
 Plot an ERP image.
 ## Arguments:
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plot::Matrix{Float64}`: Data for the plot visualization
+- `plotData::Matrix{Float64}`: Data for the plot visualization
         
 ## Keyword Arguments
-- `erpblur` (Number, `10`): number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
+`erpBlur` (Number, `10`) - Number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
 Non-Positive values deactivate the blur.
-- `sortix` (default: `nothing`): .
-- `sortvalues` (bool, `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
-    - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
-- `meanplot` (bool, `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+
+`sortvalues` (bool, `false`) - parameter over which plot will be sorted. Using sortperm() of Base Julia 
+(sortperm() computes a permutation of the array's indices that puts the array into sorted order). 
+
+`meanPlot`: (bool, `false`) - Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 $(_docstring(:erpimage))
 
@@ -25,26 +26,26 @@ The input `f`
 """
 
 # no times + no figure?
-plot_erpimage(plot::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(Figure(), plot; kwargs...)
+plot_erpimage(plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(Figure(), plotData; kwargs...)
 
 # no times?
-plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(f, 1:size(plot, 1), plot; kwargs...)
+plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(f, 1:size(plotData, 1), plotData; kwargs...)
 
 
 # no figure?
-plot_erpimage(times::AbstractVector, plot::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(Figure(), times, plot; kwargs...)
+plot_erpimage(times::AbstractVector, plotData::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(Figure(), times, plotData; kwargs...)
 
 function plot_erpimage!(
     f::Union{GridPosition,GridLayout,Figure},
     times::AbstractVector,
-    plot::Matrix{<:Real};
+    plotData::Matrix{<:Real};
     sortvalues = nothing,
     sortix = nothing,
-    meanplot = false,
-    erpblur = 10,
+    meanPlot = false,
+    erpBlur = 10,
     kwargs...,
 )
     config = PlotConfig(:erpimage)
@@ -55,7 +56,7 @@ function plot_erpimage!(
     ax = Axis(f[1:4, 1]; config.axis...)
     if isnothing(sortix)
         if isnothing(sortvalues)
-            sortix = 1:size(plot, 2)
+            sortix = 1:size(plotData, 2)
         else
             sortix = sortperm(sortvalues)
 
@@ -63,8 +64,8 @@ function plot_erpimage!(
     end
 
     filtered_data = UnfoldMakie.imfilter(
-        plot[:, sortix],
-        UnfoldMakie.Kernel.gaussian((0, max(erpblur, 0))),
+        plotData[:, sortix],
+        UnfoldMakie.Kernel.gaussian((0, max(erpBlur, 0))),
     )
 
     yvals = 1:size(filtered_data, 2)
@@ -76,22 +77,22 @@ function plot_erpimage!(
 
     UnfoldMakie.applyLayoutSettings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
 
-    if meanplot
+    if meanPlot
         # UserInput
         subConfig = deepcopy(config)
         config_kwargs!(
             subConfig;
-            layout = (; show_legend = false),
+            layout = (; showLegend = false),
             axis = (;
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
 
         axisOffset =
-            (config.layout.show_legend && config.layout.legend_position == :bottom) ? 1 : 0
+            (config.layout.showLegend && config.layout.legendPosition == :bottom) ? 1 : 0
         subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
 
-        lines!(subAxis, mean(plot, dims = 2)[:, 1])
+        lines!(subAxis, mean(plotData, dims = 2)[:, 1])
         applyLayoutSettings!(subConfig; fig = f, ax = subAxis)
     end
 

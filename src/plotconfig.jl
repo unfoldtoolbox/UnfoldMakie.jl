@@ -59,7 +59,7 @@ end
 Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
-    is_namedtuple = [isa(t,NamedTuple) for t in values(kwargs)]
+    is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
     @debug is_namedtuple
     @assert(all(is_namedtuple),
     """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
@@ -70,7 +70,7 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     plot_example(...; layout = (use_colorbar=true))
      
     The first is correct and creates a NamedTuple as required. The second is wrong and its call is ignored.""")
-    list = fieldnames(PlotConfig)#[:layout,:visual,:mapping,:legend,:colorbar,:axis]
+    list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ? @warn("Extra is deprecated in 0.4 and extra-keyword args have to be used directly as key-word arguments") : ""
     applyTo = keyList[in.(keyList, Ref(list))]
@@ -152,7 +152,6 @@ function PlotConfig(T::Val{:topoplotseries})
         cfg,
         layout = (use_colorbar = true,),
         colorbar = (;
-            #height = 300, 
             flipaxis = true, 
             labelrotation = -π/2, 
             label = "Voltage [µV]"
@@ -200,6 +199,17 @@ function PlotConfig(T::Val{:erp})
         legend = (; framevisible = false),
     )
 
+    return cfg
+end
+function PlotConfig(T::Val{:channelimage})
+    cfg = PlotConfig()
+    config_kwargs!(
+        cfg;
+        #layout = (; use_colorbar = true),
+        colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
+        axis = (xlabel = "Time [s]", ylabel = "Channels", yticklabelsize = 14),
+        visual = (; colormap = Reverse("RdBu")), #cork
+    )
     return cfg
 end
 function PlotConfig(T::Val{:erpimage})
