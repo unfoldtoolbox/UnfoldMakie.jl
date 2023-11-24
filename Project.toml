@@ -1,6 +1,6 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
-authors = ["Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner","Furkan Lokman","Benedikt Ehinger"]
+authors = ["Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner", "Furkan Lokman", "Benedikt Ehinger"]
 version = "0.3.6"
 
 [deps]
@@ -41,10 +41,10 @@ DataFrames = "1"
 DataStructures = "0.18"
 DocStringExtensions = "0.9"
 GeometryBasics = "0.4"
-GridLayoutBase = "0.9"
+GridLayoutBase = "0.9, 0.10"
 ImageFiltering = "0.7"
 LinearAlgebra = "1"
-Makie = "0.17, 0.18, 0.19"
+Makie = "0.17, 0.18, 0.19, 0.20"
 PyMNE = "0.2"
 SparseArrays = "1"
 StaticArrays = "1"

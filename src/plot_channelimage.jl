@@ -12,15 +12,6 @@ function plot_channelimage!(
     ch_names::Vector{String};
     kwargs...,
 )
-    #=    raw = PyMNE.io.read_raw_eeglab(p, preload=true)
-    dat_e =  load("data/dat_e.jld2")["1"]
-    mon = PyMNE.channels.make_standard_montage("standard_1020")
-    raw.set_channel_types(Dict("HEOG_left"=>"eog","HEOG_right"=>"eog","VEOG_lower"=>"eog"))
-    raw.set_montage(mon,match_case=false)
-    pos = PyMNE.channels.make_eeg_layout(raw.info).pos
-    pos = pyconvert(Array,pos) 
-    pos = [Point2f(pos[k,1], pos[k,2]) for k in 1:size(pos,1)]
-    ch_names = pyconvert(Array, raw.ch_names) =#
 
     x = [i[1] for i in position]
     y = [i[2] for i in position]
@@ -32,7 +23,6 @@ function plot_channelimage!(
     a = sort!(DataFrame(d), [:2, :1], rev = [true, false])
     b = a[!, :4]
     c = a[!, :3]
-    #c = pyconvert(Array, c)
     c = [string(x) for x in c]
 
     ix = range(-0.3, 1.2, length = size(data, 2))

@@ -36,16 +36,14 @@ function _docstring(cfgsymb::Symbol)
         
     return """## Shared plot configuration options
         The shared plot options can be used as follows:
-        `type=(;key=value,...))` - for example `plot_x(...,layout=(showLegend=true,legendPosition=:right))`. Multiple defaults will be cycled until match.
+        `type=(; key=value,...))` - for example `plot_x(..., layout=(show_legend=true, legend_position=:right))`. 
+        Multiple defaults will be cycled until match.
 
         $(out)
         """
         
   end
   
-
-
-
 """ 
     $(TYPEDSIGNATURES)
 $(_docstring(:erp))

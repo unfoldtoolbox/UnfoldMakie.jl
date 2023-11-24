@@ -1,0 +1,111 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "behinger",
+      "name": "Benedikt Ehinger",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10183650?v=4",
+      "profile": "http://www.benediktehinger.de",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "question",
+        "review",
+        "test",
+        "tutorial"
+      ]
+    },
+    {
+      "login": "Link250",
+      "name": "Quantum",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4541950?v=4",
+      "profile": "https://github.com/Link250",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "vladdez",
+      "name": "Vladimir Mikheev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33777074?v=4",
+      "profile": "https://github.com/vladdez",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "maintenance",
+        "review",
+        "test",
+        "tutorial"
+      ]
+    },
+    {
+      "login": "NiklasMGaertner",
+      "name": "NiklasMGaertner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54365174?v=4",
+      "profile": "https://github.com/NiklasMGaertner",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "SorenDoring",
+      "name": "SorenDoring",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54365184?v=4",
+      "profile": "https://github.com/SorenDoring",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "lokmanfl",
+      "name": "lokmanfl",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44772645?v=4",
+      "profile": "https://github.com/lokmanfl",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "jschepers",
+      "name": "Judith Schepers",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22366977?v=4",
+      "profile": "https://github.com/jschepers",
+      "contributions": [
+        "bug",
+        "ideas",
+        "doc"
+      ]
+    },
+    {
+      "login": "ReneSkukies",
+      "name": "René Skukies",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57703446?v=4",
+      "profile": "https://reneskukies.de/",
+      "contributions": [
+        "doc"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "UnfoldMakie.jl",
+  "projectOwner": "unfoldtoolbox"
+}

@@ -27,11 +27,11 @@ function PlotConfig()# defaults
         (;), #figure
         (;), # axis
         (; # layout
-            showLegend = true,
-            legendPosition = :right,
+            show_legend = true,
+            legend_position = :right,
             xlabelFromMapping = :x,
             ylabelFromMapping = :y,
-            useColorbar = false,
+            use_colorbar = false,
         ),
         (#maping
             x = (:time,),
@@ -65,9 +65,9 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
     Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
     
-    plot_example(...; layout = (; showColorbar=true))
+    plot_example(...; layout = (; use_colorbar=true))
     
-    plot_example(...; layout = (showColorbar=true))
+    plot_example(...; layout = (use_colorbar=true))
      
     The first is correct and creates a NamedTuple as required. The second is wrong and its call is ignored.""")
     list = fieldnames(PlotConfig)#[:layout,:visual,:mapping,:legend,:colorbar,:axis]
@@ -90,7 +90,7 @@ function PlotConfig(T::Val{:circeegtopo})
 
     config_kwargs!(
         cfg;
-        layout = (; showLegend = false),
+        layout = (; show_legend = false),
         colorbar = (; label = "Voltage [µV]", colormap = Reverse(:RdBu)),
         mapping = (;),
         axis = (;
@@ -123,10 +123,10 @@ function PlotConfig(T::Val{:topoplot})
     config_kwargs!(
         cfg;
         layout = (
-            showLegend = true,
+            show_legend = true,
             xlabelFromMapping = nothing,
             ylabelFromMapping = nothing,
-            useColorbar = true,
+            use_colorbar = true,
             hidespines = (),
             hidedecorations = (),
         ),
@@ -150,7 +150,7 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        layout = (useColorbar = true,),
+        layout = (use_colorbar = true,),
         colorbar = (;
             #height = 300, 
             flipaxis = true, 
@@ -169,7 +169,7 @@ function PlotConfig(T::Val{:designmat})
     config_kwargs!(
         cfg;
         layout = (;
-            useColorbar = true,
+            use_colorbar = true,
             xlabelFromMapping = nothing,
             ylabelFromMapping = nothing,
         ),
@@ -182,10 +182,10 @@ function PlotConfig(T::Val{:butterfly})
     cfg = PlotConfig(:erp)
     config_kwargs!(
         cfg;
-        layout = (; showLegend = false),
+        layout = (; show_legend = false),
         mapping = (;
             color = (:channel, :channels, :trial, :trials),
-            positions = (:pos, :positions, :position, :topoPositions, :x, nothing),
+            positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
         ),
     )
@@ -196,7 +196,7 @@ function PlotConfig(T::Val{:erp})
     config_kwargs!(
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
-        layout = (; showLegend = true,  hidespines = (:r, :t)),
+        layout = (; show_legend = true,  hidespines = (:r, :t)),
         legend = (; framevisible = false),
     )
 
@@ -206,7 +206,7 @@ function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (; useColorbar = true),
+        layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
         axis = (xlabel = "Time", ylabel = "Sorted trials"),
         visual = (; colormap = Reverse("RdBu")),
