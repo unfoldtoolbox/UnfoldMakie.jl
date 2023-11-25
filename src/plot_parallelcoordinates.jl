@@ -1,195 +1,225 @@
 """
     plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, 
-        data::DataFrame, config::PlotConfig; channels::Vector{Int64})
+        data::DataFrame)
 
 Plot a PCP (parallel coordinates plot).
+
 ## Arguments:
+
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into.
 - `data::DataFrame`: data for the plot visualization.
-- `config::PlotConfig`: instance of PlotConfig being applied to the visualization.
-- `channels::Vector{Int64}`: vector with all the channels representing an axis used in the PCP in given order.
 
-PCP has problems with size changes of the view window.
-By adapting the padding, aspect ratio and tick label size in px for a new use case, the PCP can even be added into a complex figures.
+## key word argumets (kwargs)
 
-- `pc_aspect_ratio` (default: `0.55`) -
-- `pc_right_padding` (default: `15`) -
-- `pc_left_padding` (default: `25`) -
-- `pc_top_padding` (default: `26`) -
-- `pc_bottom_padding` (default: `16`) -
-- `pc_tick_label_size` (default: `14`) - 
+- normalize (default `nothing`): can be `:minmax` to normalize each axis to their respective min-max range
+- ax_labels (default `nothing`): can be a vector of labels with the length of number of `mapping.x` unique values - typically the channel name
+
+## Defining the axes
+
+- By setting `..(...;mapping=(;x=:channel,y=:estimate))` (the default), one could overwrite what should be on the x and the y axes
+- By setting `..(...;mapping=(;color=:colorcolumn))` one defines the split by color. The default color is defined by `...(...;visual=(;color=:black))`
+
+## Change Transparency
+use `...(...;visual=(;alpha=0.5))` to change transparency
+
 
 $(_docstring(:paracoord))
 
 ## Return Value:
 The input `f`
 """
-plot_parallelcoordinates(data::DataFrame, channels::Vector{Int64}; kwargs...) =
-    plot_parallelcoordinates!(Figure(), data, channels; kwargs...)
-function plot_parallelcoordinates!(
-    f::Union{GridPosition,GridLayout,Figure},
-    data::DataFrame,
-    channels::Vector{Int64};
-    pc_aspect_ratio = 0.55,
-    pc_right_padding = 15,
-    pc_left_padding = 25,
-    pc_top_padding = 26,
-    pc_bottom_padding = 16,
-    pc_tick_label_size = 14,
-    kwargs...,
-)
-    config = PlotConfig(:paracoord)
-    config_kwargs!(config; kwargs...)
-    # We didn't find a good formula to set these automatically
-    # have to be set manually for now
-    # if size of the plot-area changes the padding gets weird
-    aspect_ratio = pc_aspect_ratio
-    right_padding = pc_right_padding
-    left_padding = pc_left_padding
-    top_padding = pc_top_padding
-    bottom_padding = pc_bottom_padding
-    tick_label_size = pc_tick_label_size
+plot_parallelcoordinates(data::DataFrame; kwargs...) =
+    plot_parallelcoordinates(Figure(), data; kwargs...)
 
-    # have to be set now to reduce weird behaviour
-    width = 500
-    height = aspect_ratio * width
-    ch_label_offset = 15
+function plot_parallelcoordinates(f,data::DataFrame;ax_labels = nothing,normalize=nothing,kwargs...)
+        config = PlotConfig(:paracoord)
+        UnfoldMakie.config_kwargs!(config; kwargs...)
+    
+        config.mapping = UnfoldMakie.resolveMappings(data, config.mapping)
+        
 
-    # axis for plot
-    ax = Axis(f[1, 1]; config.axis...)
+        # remove all unspecified columns
+        d=select(data,config.mapping...)
+        
+        # stack the data to a matrix-like (still list of list of lists!)
+        d2 = unstack(d,Not(config.mapping.x,config.mapping.y),config.mapping.x,config.mapping.y,combine=copy)
+        
+        # remove the non x/y columns, we want a matrix at the end
+        rm_col = filter(x->x!=config.mapping.x && x != config.mapping.y,[config.mapping...])
+        d3 = select(d2,Not(rm_col)) 
+        
+        # give use list of matrix
+        d4 = reduce.(hcat,eachrow(Array(d3)))
 
-    # colormap border (prevents from using outer parts of color map)
-    bord = 0
-
-    config.mapping = resolveMappings(data, config.mapping)
-
-    color = unique(data[:, config.mapping.color])
-
-    catLeng = length(color)
-    chaLeng = length(channels)
-
-    # x position of the axes
-    x_values = Array(left_padding:(width-left_padding)/(chaLeng-1):width)
-    # height of the upper labels
-    y_values = fill(height, chaLeng)
-
-    colormap = cgrad(
-        config.visual.colormap,
-        (catLeng < 2) ? 2 + (bord * 2) : catLeng + (bord * 2),
-        categorical = true,
-    )
-
-    colors = Dict{String,RGBA{Float64}}()
-
-    # get a colormap for each category
-    for i in eachindex(color)
-        setindex!(colors, colormap[i+bord], color[i])
-    end
-
-    n = length(channels) # number of axis
-    k = 20
-
-    # axes
-
-    limits = []
-    l_low = []
-    l_up = []
-
-    # get extrema for each channel
-    for cha in channels
-        tmp = filter(x -> (x[config.mapping.channel] == cha), data)
-        w = extrema.([tmp[:, config.mapping.y]])
-        append!(limits, w)
-        append!(l_up, w[1][2])
-        append!(l_low, w[1][1])
-
-    end
-
-    # Draw vertical line for each channel
-    for i = 1:n
-        x = (i - 1) / (n - 1) * width
-        if i == 1
-            switch = true
+        # give us a single matrix
+        d5 = reduce(vcat,d4)'
+        
+        # figure out the color vector
+        if :color ∈ keys(config.mapping)
+            c_split = map((c,n)->repeat([c],n),d2[:,config.mapping.color],size.(d4,1))
+            c = vcat(c_split...)
+            line_labels = string.(c)
         else
-            switch = false
-        end
-        Makie.LineAxis(
-            ax.scene;
-            limits = limits[i],
-            spinecolor = :black,
-            labelfont = "Arial",
-            ticklabelfont = "Arial",
-            spinevisible = true,
-            labelrotation   = 0.0,
-            ticklabelsize = tick_label_size,
-            minorticks = IntervalsBetween(2),
-            endpoints = Point2f[(x_values[i], bottom_padding), (x_values[i], y_values[i])],
-            ticklabelalign = (:right, :center),
-            labelvisible = false,
-        )
-    end
-
-    # Draw colored line through all channels for each time entry 
-    for time in unique(data[:, config.mapping.time])
-        tmp1 = filter(x -> (x[config.mapping.time] == time), data) #1 timepoint, 10 rows (2 conditions, 5 channels)
-        for cat in color
-            # df with the order of the channels
-            dfInOrder = data[[], :]
-            tmp2 = filter(x -> (x[config.mapping.color] == cat), tmp1)
-
-            # create new dataframe with the right order
-            for cha in channels
-                append!(dfInOrder, filter(x -> (x[config.mapping.channel] == cha), tmp2))
+            c = config.visual.color
+            line_labels = nothing
+            if config.layout.show_legend
+                @warn "Deactivating legend, as there was no color-choice"
+                UnfoldMakie.config_kwargs!(config; layout=(;show_legend=false))
             end
+        end
+        UnfoldMakie.config_kwargs!(config; visual=(;color=c))
+        
+        f,ax,axlist,hlines = parallelplot(f,d5;normalize=normalize,
+                                color=c,
+                                line_labels = line_labels,
+                                ax_labels = ax_labels,
+                                config.visual...)
+        applyLayoutSettings!(config; fig = f, ax = ax)
 
-            values = map(1:n, dfInOrder[:, config.mapping.y], limits) do q, d, l # axes, data, limis
-                x = (q - 1) / (n - 1) * width
-                Point2f(
-                    x_values[q],
-                    (d - l[1]) ./ (l[2] - l[1]) * (y_values[q] - bottom_padding) +
-                    bottom_padding,
-                )
-            end
-            lines!(ax.scene, values; color = colors[cat], config.visual...)
+        return isa(f,Figure) ? Makie.FigureAxisPlot(f,[ax,axlist],hlines[1]) :
+                             Makie.AxisPlot([ax,axlist],hlines[1])
+end
+  
+
+
+function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
+                        data::AbstractMatrix;
+                        color=nothing,
+                        line_labels = nothing,
+                        colormap=Makie.wong_colors(),
+                        ax_labels=nothing,
+                        normalize=:minmax,
+                        alpha = 0.3,
+                        )
+    @assert size(data,2) > 1 "currently more than one line has to be plotted for parallelplot to work"
+    if isa(color,AbstractVector)
+        @assert size(data,2) == length(color)
+    end
+    x_pos = 1:size(data,1)
+    ax = f[1,1] = Axis(f)
+    scene = ax.parent.scene
+
+    ax_labels = isnothing(ax_labels) ? string.(1:size(data,1)) : ax_labels
+    
+    # normalize the data?
+    minlist = minimum.(eachrow((data)))
+    maxlist = maximum.(eachrow((data)))
+    if normalize == :minmax
+        function norm_minmax(x,min,max)
+            
+            return (x .- min) ./ (max -min)
+        end
+        plotdata = deepcopy(data)
+        for (mi,ma,r) = zip(minlist,maxlist,eachrow(plotdata))
+            r .= norm_minmax(r,mi,ma)
+        end
+    else
+        plotdata = data
+        minlist = minimum(plotdata)
+        maxlist = maximum(plotdata)
+    end
+    
+    crange = [1,2] # default
+    if isnothing(color)
+        color = 1
+    elseif isa(color,AbstractVector) 
+        if isa(color[1],String)
+            # categorical colors
+            un_c = unique(color)
+            color_ix = [findfirst(un_c .==c) for c in color]
+            color = cgrad(colormap,length(un_c))[color_ix]
+            #crange = [1,length(unique(color))]
+        else
+            # continuous color
+            crange = [minimum(color),maximum(color)]
         end
     end
 
-    channelNames = channelToLabel(channels)
-
-    # helper, because without them they wouldn#t have an entry in legend
-    for cat in color
-        lines!(ax, 1, 1, 1, label = cat, color = colors[cat])
+    # plot the lines - this way it will be easy to curve them too
+    hlines = [];
+    for (ix,r) in enumerate(eachcol(plotdata))
+        
+        h = lines!(ax,r;alpha=alpha,
+        color = isa(color,AbstractVector) ? color[ix] : color,
+        colormap=colormap,
+        colorrange=crange,
+        label=isa(line_labels,AbstractVector) ? line_labels[ix] : line_labels)
+        append!(hlines,[h])
     end
 
-    # labels
-    text!(
-        x_values,
-        y_values,
-        text = channelNames,
-        align = (:center, :center),
-        offset = (0, ch_label_offset * 2),
-        color = :blue,
-    )
-    # lower limit text
-    text!(
-        x_values,
-        fill(0, chaLeng),
-        align = (:right, :bottom),
-        text = string.(round.(l_low, digits = 1)),
-    )
-    # upper limit text
-    text!(
-        x_values,
-        y_values,
-        align = (:right, :bottom),
-        text = string.(round.(l_up, digits = 1)),
-    )
-    Makie.xlims!(low = 0, high = width + right_padding)
-    Makie.ylims!(low = 0, high = height + top_padding)
+    # put the right limits + hide the data axes
+    xlims!(ax,1,size(data,1))
+    hidespines!(ax)
+    hidedecorations!(ax)
 
-    applyLayoutSettings!(config; fig = f, ax = ax)
 
-    # ensures the axis numbers aren't squished
-    #ax.aspect = DataAspect()
-    return f
+    # get some defaults - necessary for LinkAxis
+    def = Makie.default_attribute_values(Axis,nothing)
+    axesOptions =  (;
+                    spinecolor = :black,
+                    spinevisible = true,
+                    labelfont = def[:ylabelfont],
+                    labelrotation   = def[:ylabelrotation],
+                    labelvisible = false,
+                    ticklabelfont = def[:yticklabelfont],
+                    ticklabelsize = def[:yticklabelsize],
+                    ticklabelalign = (:right, :center),
+                    minorticks = def[:yminorticks],
+    )
+
+
+# generate the overlay parallel axes
+axlist = Makie.LineAxis[]
+for i = eachindex(x_pos)
+    # link them to the parent axes size
+    axis_endpoints = lift(ax.scene.px_area) do area
+            center(x_pos[i],x_pos[end],area)
+    end
+    if isa(minlist,AbstractArray)
+        limits = [minlist[i],maxlist[i]]
+    else
+        limits = [minlist,maxlist]
+    end
+    
+    ax_pcp = Makie.LineAxis(scene;
+        limits = limits,
+        endpoints= axis_endpoints,
+        axesOptions...);    
+    pcp_title!(scene,ax_pcp.attributes.endpoints,ax_labels[i];titlegap=def[:titlegap])
+    append!(axlist,[ax_pcp])
+end
+
+# add some space to the left and top
+pro = ax.layoutobservables.protrusions[]
+ax.layoutobservables.protrusions[] = GridLayoutBase.RectSides((axlist[1].protrusion[]),pro.right,pro.bottom,pro.top+def[:titlegap])
+
+return f,ax,axlist,hlines
+end
+
+
+function center(x_pos,x_max,area)
+    r = Rect2f(area)
+    x = range(r.origin[1],r.origin[1]+r.widths[1],length=x_max)[x_pos]
+    y = r.origin[2] 
+    Point2f[(x,y),(x,(y+r.widths[2]))]
+end
+
+function pcp_title!(topscene,endpoints::Observable,title::String;titlegap=Observable(4.0f0))
+    titlepos = lift(endpoints, titlegap) do a, titlegap
+            x = a[1][1]
+            y = a[2][2] + titlegap
+            Point2(x, y)
+    end
+
+    titlet = text!(
+    topscene, title,
+    position = titlepos,
+    #visible = titlevisible,
+    #textsize = titlesize,
+    align = (:center,:bottom),
+    #font = titlefont,
+    #color = titlecolor,
+    space = :data,
+    #show_axis=false,
+    inspectable = false)
 end

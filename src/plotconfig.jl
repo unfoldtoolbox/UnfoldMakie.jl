@@ -44,6 +44,7 @@ function PlotConfig()# defaults
             orientation = :vertical,
             tellwidth = true,
             tellheight = false,
+            merge = true,
         ),
         (;#colorbar
             vertical = true,
@@ -60,7 +61,6 @@ Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the d
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
     is_namedtuple = [isa(t,NamedTuple) for t in values(kwargs)]
-    @debug is_namedtuple
     @assert(all(is_namedtuple),
     """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
     Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
@@ -217,13 +217,12 @@ function PlotConfig(T::Val{:paracoord})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (;
-            xlabelFromMapping = :channel,
-            ylabelFromMapping = :y,
-            hidespines = (),
-            hidedecorations = (; label = false),
+        visual = (;
+            colormap = Makie.wong_colors(),
+            color = :black, # default linecolor
+            alpha = 0.3,
         ),
-        mapping = (; channel = :channel, category = :category, time = :time),
+        mapping = (; x = :channel),
     )
     return cfg
 end

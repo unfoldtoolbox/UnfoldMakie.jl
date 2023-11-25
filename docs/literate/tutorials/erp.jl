@@ -62,7 +62,7 @@ plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
     legend = (; nbanks = 2),
-    layout = (; showLegend = true, legend_position = :right),
+    layout = (; show_legend = true, legend_position = :right),
     categorical_color = false, categorical_group = true,
 )
 

@@ -11,41 +11,45 @@ using CairoMakie
 ```
 
 ## Data
-
-We use the test data of `erpcore-N170.jld2`.
-
 ```@example main
 include("../../example_data.jl")
-results_plot, positions = example_data();
+r1, positions = example_data();
+r2 = deepcopy(r1)
+r2.coefname .= "B" # we need a second category
+r2.estimate .+= rand(length(r2.estimate))*0.1
+results_plot = vcat(r1,r2);
+nothing #hide
 ```
 
 ## Plot PCPs
 
 ```@example main
-plot_parallelcoordinates(results_plot, [5,3,2]; # this selects channel 5,3 & 2 
-    mapping = (color = :coefname, y = :estimate))
+plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5); 
+    mapping = (;color = :coefname))
+
 ```
 
 
+## Normalization
+Typically, parallelplots are normalized per axis (if that makes sense for channel x estimate, we dont know)
 
-!!! important
-    the following is still outdated...
-    
-## Column Mappings for PCPs
+```@example main
+f = Figure()
+plot_parallelcoordinates(f[1,1],subset(results_plot,:channel=>x->x.<10); 
+    mapping = (;color = :coefname));
+    plot_parallelcoordinates(f[2,1],subset(results_plot,:channel=>x->x.<10); 
+    mapping = (;color = :coefname),normalize=:minmax);
+    f
 
-Since PCPs use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
 
-While there are multiple default values that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
+```
 
-### y
-Default is `(:y, :estimate, :yhat)`.
+## Labels
+You can also provide labels for the axes
 
-### channel
-Default is `:channel`.
+```@example main
+plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5); 
+    visual = (;color = :darkblue),ax_labels=["Fz","Cz","O1","O2"])
 
-### color
-XXX Default is `:coef`.
-
-### time
-Default is `:time`.
+```
 
