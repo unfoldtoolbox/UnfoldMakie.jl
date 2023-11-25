@@ -17,6 +17,8 @@ using ColorTypes
 
 using DocStringExtensions # for $SIGNATURES
 
+using Interpolations # for parallelplot
+
 using DataStructures
 using DataFrames
 using SparseArrays

@@ -44,7 +44,6 @@ function PlotConfig()# defaults
             orientation = :vertical,
             tellwidth = true,
             tellheight = false,
-            merge = true,
         ),
         (;#colorbar
             vertical = true,
@@ -222,6 +221,9 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
+        legend = (;
+            merge = true,
+        )
         mapping = (; x = :channel),
     )
     return cfg

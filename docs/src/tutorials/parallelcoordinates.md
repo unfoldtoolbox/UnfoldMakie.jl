@@ -53,3 +53,12 @@ plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5);
 
 ```
 
+
+## Bending the parallel plot
+it can be helpful to "bend" the lines
+
+```@example main
+plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5); 
+    visual = (;color = :darkblue),ax_labels=["Fz","Cz","O1","O2"])
+
+```

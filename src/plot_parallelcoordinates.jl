@@ -13,6 +13,7 @@ Plot a PCP (parallel coordinates plot).
 
 - normalize (default `nothing`): can be `:minmax` to normalize each axis to their respective min-max range
 - ax_labels (default `nothing`): can be a vector of labels with the length of number of `mapping.x` unique values - typically the channel name
+- bend (default `false`): adds spline interpolation between the axes to "bend" the parallel plot
 
 ## Defining the axes
 
@@ -31,7 +32,7 @@ The input `f`
 plot_parallelcoordinates(data::DataFrame; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)
 
-function plot_parallelcoordinates(f,data::DataFrame;ax_labels = nothing,normalize=nothing,kwargs...)
+function plot_parallelcoordinates(f,data::DataFrame;ax_labels = nothing,normalize=nothing,bend=false,kwargs...)
         config = PlotConfig(:paracoord)
         UnfoldMakie.config_kwargs!(config; kwargs...)
     
@@ -71,6 +72,7 @@ function plot_parallelcoordinates(f,data::DataFrame;ax_labels = nothing,normaliz
         
         f,ax,axlist,hlines = parallelplot(f,d5;normalize=normalize,
                                 color=c,
+                                bend = bend,
                                 line_labels = line_labels,
                                 ax_labels = ax_labels,
                                 config.visual...)
@@ -90,6 +92,7 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
                         ax_labels=nothing,
                         normalize=:minmax,
                         alpha = 0.3,
+                        bend = false,
                         )
     @assert size(data,2) > 1 "currently more than one line has to be plotted for parallelplot to work"
     if isa(color,AbstractVector)
@@ -119,6 +122,22 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
         maxlist = maximum(plotdata)
     end
     
+    # edge bending / bundling
+    
+    if !bend
+        x_plotdata = x_pos
+        plotdata_int = plotdata
+    else
+        x_plotdata = range(1,x_pos[end],step=0.05)
+        plotdata_int = Array{Float64}(undef,length(x_plotdata),size(plotdata,2))
+        @debug size(plotdata)
+        for k = 1:size(plotdata,2)
+            itp = cubic_spline_interpolation(x_pos, plotdata[:,k])
+            plotdata_int[:,k] = itp.(x_plotdata)
+        end
+    end
+   
+    # color
     crange = [1,2] # default
     if isnothing(color)
         color = 1
@@ -137,9 +156,9 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
 
     # plot the lines - this way it will be easy to curve them too
     hlines = [];
-    for (ix,r) in enumerate(eachcol(plotdata))
+    for (ix,r) in enumerate(eachcol(plotdata_int))
         
-        h = lines!(ax,r;alpha=alpha,
+        h = lines!(ax,x_plotdata,r;alpha=alpha,
         color = isa(color,AbstractVector) ? color[ix] : color,
         colormap=colormap,
         colorrange=crange,
