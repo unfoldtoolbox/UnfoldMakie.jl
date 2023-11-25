@@ -146,7 +146,13 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
             # categorical colors
             un_c = unique(color)
             color_ix = [findfirst(un_c .==c) for c in color]
-            color = cgrad(colormap,length(un_c))[color_ix]
+            #@assert length(un_c) == 1 "Only single color found, please don't specify color, "
+            if length(un_c) == 1
+                @warn "only a single unique value found in specified color-vec"
+                color = cgrad(colormap,2)[color_ix]
+            else
+                color = cgrad(colormap,length(un_c))[color_ix]
+            end
             #crange = [1,length(unique(color))]
         else
             # continuous color

@@ -223,7 +223,7 @@ function PlotConfig(T::Val{:paracoord})
         ),
         legend = (;
             merge = true,
-        )
+        ),
         mapping = (; x = :channel),
     )
     return cfg
