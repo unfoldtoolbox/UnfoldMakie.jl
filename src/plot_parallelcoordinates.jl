@@ -99,7 +99,7 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
         @assert size(data,2) == length(color)
     end
     x_pos = 1:size(data,1)
-    ax = f[1,1] = Axis(f)
+    ax = Axis(f[1,1])
     scene = ax.parent.scene
 
     ax_labels = isnothing(ax_labels) ? string.(1:size(data,1)) : ax_labels
@@ -132,7 +132,11 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
         plotdata_int = Array{Float64}(undef,length(x_plotdata),size(plotdata,2))
         @debug size(plotdata)
         for k = 1:size(plotdata,2)
-            itp = cubic_spline_interpolation(x_pos, plotdata[:,k])
+            #itp = cubic_spline_interpolation(x_pos, plotdata[:,k])
+            
+            itp = interpolate(plotdata[:,k], BSpline(Quadratic(Reflect(OnGrid()))))
+            
+            
             plotdata_int[:,k] = itp.(x_plotdata)
         end
     end
