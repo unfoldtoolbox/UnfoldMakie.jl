@@ -1,3 +1,4 @@
+
 """
     plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, 
         data::DataFrame)
@@ -13,7 +14,7 @@ Plot a PCP (parallel coordinates plot).
 
 - normalize (default `nothing`): can be `:minmax` to normalize each axis to their respective min-max range
 - ax_labels (default `nothing`): can be a vector of labels with the length of number of `mapping.x` unique values - typically the channel name
-- ax_ticklabels (default `:all`): can be `:none`,`:left` and `:outmost`. `:none` removes all labels, `:outmost` surpresses the inner labels at each axis, only showing the ticks and the outmost tick-labels. `:left` does the same, except for the left-most axis.
+- ax_ticklabels (default `:outmost`): can be `:none`,`:left` and `:all`. `:none` removes all labels, `:outmost` surpresses the inner labels at each axis, only showing the ticks and the outmost tick-labels. `:left` does the same, except for the left-most axis. 
 - bend (default `false`): adds spline interpolation between the axes to "bend" the parallel plot
 
 ## Defining the axes
@@ -33,7 +34,7 @@ The input `f`
 plot_parallelcoordinates(data::DataFrame; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)
 
-function plot_parallelcoordinates(f,data::DataFrame;ax_ticklabels=:all,ax_labels = nothing,normalize=nothing,bend=false,kwargs...)
+function plot_parallelcoordinates(f,data::DataFrame;ax_ticklabels=:outmost,ax_labels = nothing,normalize=nothing,bend=false,kwargs...)
         config = PlotConfig(:paracoord)
         UnfoldMakie.config_kwargs!(config; kwargs...)
     
@@ -92,7 +93,7 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
                         line_labels = nothing,
                         colormap=Makie.wong_colors(),
                         ax_labels=nothing,
-                        ax_ticklabels = :all, # :outmost, :left
+                        ax_ticklabels = :outmost, # :all, :left,:none
                         normalize=:minmax,
                         alpha = 0.3,
                         bend = false,
@@ -217,9 +218,8 @@ for i = eachindex(x_pos)
         tickformater = x->repeat([""],length(x))
     end
 
-
     ax_pcp = Makie.LineAxis(scene;
-        limits = limits,
+        limits = limits,ticks=PCPTicks(),
         endpoints= axis_endpoints,tickformat = tickformater,
         axesOptions...);    
     pcp_title!(scene,ax_pcp.attributes.endpoints,ax_labels[i];titlegap=def[:titlegap])
@@ -275,4 +275,30 @@ function pcp_title!(topscene,endpoints::Observable,title::String;titlegap=Observ
     space = :data,
     #show_axis=false,
     inspectable = false)
+end
+
+
+"""
+Used to inject extrema ticks and round them if necessary
+"""
+struct PCPTicks
+end
+
+function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
+   # @debug "here"
+   tickvalues = Makie.get_tickvalues(Makie.WilkinsonTicks(5), scale, vmin, vmax)
+    
+    
+   
+   ticklabels_without = Makie.get_ticklabels(formatter, tickvalues)
+   tickvalues = [vmin,tickvalues...,vmax]
+   ticklabels = Makie.get_ticklabels(formatter, tickvalues)
+   maxlen = length(ticklabels_without[1])
+   if length(ticklabels[1]) != maxlen
+        ticklabels = first.(ticklabels,maxlen)
+        ticklabels[1] = "~"*ticklabels[1]
+        ticklabels[end] = "~"*ticklabels[end]
+   end
+    
+    return tickvalues, ticklabels
 end

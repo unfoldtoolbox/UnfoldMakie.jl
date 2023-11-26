@@ -58,9 +58,11 @@ There are three different options for the tick-labels
 
 ```@example main
 f = Figure()
-plot_parallelcoordinates(f[1,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:all,normalize=:minmax) #default
-plot_parallelcoordinates(f[2,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:outmost,normalize=:minmax) # only show extrema
-plot_parallelcoordinates(f[3,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:left,normalize=:minmax) # a compromise?
+plot_parallelcoordinates(f[1,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:all,normalize=:minmax) # all tickets
+plot_parallelcoordinates(f[2,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:left,normalize=:minmax) # extrema + tickets on the left
+plot_parallelcoordinates(f[3,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:outmost,normalize=:minmax) # only show outmost
+
+plot_parallelcoordinates(f[4,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:none,normalize=:minmax) #  show none
 f
 ```
 
