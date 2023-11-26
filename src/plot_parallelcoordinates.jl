@@ -285,13 +285,19 @@ struct PCPTicks
 end
 
 function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
-   # @debug "here"
+   #@debug "get_ticks custom",vmin,vmax
    tickvalues = Makie.get_tickvalues(Makie.WilkinsonTicks(5), scale, vmin, vmax)
     
     
    
    ticklabels_without = Makie.get_ticklabels(formatter, tickvalues)
-   tickvalues = [vmin,tickvalues...,vmax]
+   if !(tickvalues[1] ≈ vmin)
+        tickvalues = [vmin,tickvalues...]
+   end
+   if !(tickvalues[end] ≈ vmax)
+        tickvalues = [tickvalues...,vmax]
+   end
+
    ticklabels = Makie.get_ticklabels(formatter, tickvalues)
    maxlen = length(ticklabels_without[1])
    if length(ticklabels[1]) != maxlen
@@ -299,6 +305,6 @@ function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
         ticklabels[1] = "~"*ticklabels[1]
         ticklabels[end] = "~"*ticklabels[end]
    end
-    
+    #@debug tickvalues,ticklabels
     return tickvalues, ticklabels
 end
