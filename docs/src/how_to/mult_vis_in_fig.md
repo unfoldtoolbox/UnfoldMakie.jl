@@ -78,7 +78,7 @@ plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=tru
     legend=(; nbanks=2),
     layout=(; show_legend=true, legend_position=:right))
 
-plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), 
+plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping=(; color=:coefname), 
     layout=(; legend_position=:bottom))
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)

@@ -21,7 +21,7 @@ results = coeftable(m); nothing
 # # Styling your plot
 # ## Mapping's
 # everything you can put in a mapping(...) AoG group can be modified, for instance:
-plot_results(results,linestyle=:coefname)
+plot_results(results,mapping=(;linestyle=:coefname))
 
 # ## Adding P-values
 # You can provide a dataframe with columns (must): `:from`,`:to`,future versions might allow a `:pvalue` column
