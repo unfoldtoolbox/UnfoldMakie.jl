@@ -53,6 +53,17 @@ plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5);
 
 ```
 
+## tick-labels
+There are three different options for the tick-labels
+
+```@example main
+f = Figure()
+plot_parallelcoordinates(f[1,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:all,normalize=:minmax) #default
+plot_parallelcoordinates(f[2,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:outmost,normalize=:minmax) # only show extrema
+plot_parallelcoordinates(f[3,1],subset(results_plot,:channel=>x->x.<5); ax_ticklabels=:left,normalize=:minmax) # a compromise?
+f
+```
+
 
 ## Bending the parallel plot
 it can be helpful to "bend" the lines

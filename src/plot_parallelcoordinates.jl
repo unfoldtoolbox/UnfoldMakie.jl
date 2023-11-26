@@ -13,6 +13,7 @@ Plot a PCP (parallel coordinates plot).
 
 - normalize (default `nothing`): can be `:minmax` to normalize each axis to their respective min-max range
 - ax_labels (default `nothing`): can be a vector of labels with the length of number of `mapping.x` unique values - typically the channel name
+- ax_ticklabels (default `:all`): can be `:none`,`:left` and `:outmost`. `:none` removes all labels, `:outmost` surpresses the inner labels at each axis, only showing the ticks and the outmost tick-labels. `:left` does the same, except for the left-most axis.
 - bend (default `false`): adds spline interpolation between the axes to "bend" the parallel plot
 
 ## Defining the axes
@@ -32,7 +33,7 @@ The input `f`
 plot_parallelcoordinates(data::DataFrame; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)
 
-function plot_parallelcoordinates(f,data::DataFrame;ax_labels = nothing,normalize=nothing,bend=false,kwargs...)
+function plot_parallelcoordinates(f,data::DataFrame;ax_ticklabels=:all,ax_labels = nothing,normalize=nothing,bend=false,kwargs...)
         config = PlotConfig(:paracoord)
         UnfoldMakie.config_kwargs!(config; kwargs...)
     
@@ -75,6 +76,7 @@ function plot_parallelcoordinates(f,data::DataFrame;ax_labels = nothing,normaliz
                                 bend = bend,
                                 line_labels = line_labels,
                                 ax_labels = ax_labels,
+                                ax_ticklabels = ax_ticklabels,
                                 config.visual...)
         applyLayoutSettings!(config; fig = f, ax = ax)
 
@@ -90,9 +92,11 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
                         line_labels = nothing,
                         colormap=Makie.wong_colors(),
                         ax_labels=nothing,
+                        ax_ticklabels = :all, # :outmost, :left
                         normalize=:minmax,
                         alpha = 0.3,
                         bend = false,
+
                         )
     @assert size(data,2) > 1 "currently more than one line has to be plotted for parallelplot to work"
     if isa(color,AbstractVector)
@@ -121,7 +125,7 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
         minlist = minimum(plotdata)
         maxlist = maximum(plotdata)
     end
-    
+#    @debug plotdata
     # edge bending / bundling
     
     if !bend
@@ -205,22 +209,46 @@ for i = eachindex(x_pos)
         limits = [minlist,maxlist]
     end
     
+    tickformater = Makie.automatic # default
+    if ax_ticklabels ==:outmost  || (i != 1 && ax_ticklabels == :left)
+        tickformater = surpress_inner_labels
+    end
+    if ax_ticklabels == :none
+        tickformater = x->repeat([""],length(x))
+    end
+
+
     ax_pcp = Makie.LineAxis(scene;
         limits = limits,
-        endpoints= axis_endpoints,
+        endpoints= axis_endpoints,tickformat = tickformater,
         axesOptions...);    
     pcp_title!(scene,ax_pcp.attributes.endpoints,ax_labels[i];titlegap=def[:titlegap])
+
+ 
+
     append!(axlist,[ax_pcp])
 end
+
 
 # add some space to the left and top
 pro = ax.layoutobservables.protrusions[]
 ax.layoutobservables.protrusions[] = GridLayoutBase.RectSides((axlist[1].protrusion[]),pro.right,pro.bottom,pro.top+def[:titlegap])
-ylims!(ax,minimum(minlist),maximum(maxlist))
+if normalize == :minmax
+    ylims!(ax,0,1)
+else
+    ylims!(ax,minimum(minlist),maximum(maxlist))
+end
 
 return f,ax,axlist,hlines
 end
 
+function surpress_inner_labels(val)
+    lbl = Makie.Showoff.showoff(val)
+    if length(lbl)>2
+        lbl[2:end-1] .= ""
+    end
+    return lbl
+end
 
 function center(x_pos,x_max,area)
     r = Rect2f(area)

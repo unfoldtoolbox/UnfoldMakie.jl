@@ -16,3 +16,10 @@ end
         mapping=(; color=:coefname), layout=(; legend_position=:bottom));
     f
 end
+
+@testset "Bending" begin
+    # check that the points actually go through the provided points
+    f,b,c,d = UnfoldMakie.parallelplot(Figure(),[0 1 0 2 0 3 0 4.; -1 0 -2 0 -3 0 -4 0]',normalize=:no,bend=true);
+    f
+    
+end
