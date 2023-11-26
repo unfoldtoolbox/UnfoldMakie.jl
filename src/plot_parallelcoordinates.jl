@@ -130,13 +130,8 @@ function parallelplot(f::Union{<:Figure,<:GridPosition,<:GridLayout},
     else
         x_plotdata = range(1,x_pos[end],step=0.05)
         plotdata_int = Array{Float64}(undef,length(x_plotdata),size(plotdata,2))
-        @debug size(plotdata)
         for k = 1:size(plotdata,2)
-            #itp = cubic_spline_interpolation(x_pos, plotdata[:,k])
-            
-            itp = interpolate(plotdata[:,k], BSpline(Quadratic(Reflect(OnGrid()))))
-            
-            
+            itp = interpolate(plotdata[:,k], BSpline(Cubic(Interpolations.Line(OnGrid()))))
             plotdata_int[:,k] = itp.(x_plotdata)
         end
     end
@@ -221,6 +216,7 @@ end
 # add some space to the left and top
 pro = ax.layoutobservables.protrusions[]
 ax.layoutobservables.protrusions[] = GridLayoutBase.RectSides((axlist[1].protrusion[]),pro.right,pro.bottom,pro.top+def[:titlegap])
+ylims!(ax,minimum(minlist),maximum(maxlist))
 
 return f,ax,axlist,hlines
 end
