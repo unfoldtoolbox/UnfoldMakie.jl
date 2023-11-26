@@ -58,7 +58,9 @@ plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5);
 it can be helpful to "bend" the lines
 
 ```@example main
-plot_parallelcoordinates(subset(results_plot,:channel=>x->x.<5); 
-    visual = (;color = :darkblue),ax_labels=["Fz","Cz","O1","O2"])
+f = Figure()
+plot_parallelcoordinates(f[1,1],subset(results_plot,:channel=>x->x.<10))
+plot_parallelcoordinates(f[2,1],subset(results_plot,:channel=>x->x.<10),bend=true)
+f
 
 ```

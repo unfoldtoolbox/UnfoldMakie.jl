@@ -63,7 +63,7 @@ export plot_erpimage!
 export plot_topoplot
 export plot_topoplot!
 export plot_parallelcoordinates
-export plot_parallelcoordinates!
+
 export plot_butterfly
 export plot_butterfly!
 export plot_circulareegtopoplot
