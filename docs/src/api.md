@@ -7,4 +7,5 @@ Internally, we use a `PlotConfig` struct to keep track of common plot options, i
 
 ```@docs
 PlotConfig
+PCPTicks
 ```
