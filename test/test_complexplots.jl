@@ -43,7 +43,8 @@
     plot_erpgrid!(ge, data[:, :, 1], positions)
     plot_erpimage!(gf, times, d_singletrial)
     plot_parallelcoordinates(gh, uf_5chan; 
-        mapping=(; color=:coefname), layout=(; legend_position=:bottom), legend=(; tellwidth =false))
+        mapping=(; color=:coefname), 
+        layout=(; legend_position=:right))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
         Label(layout[1, 1, TopLeft()], label,
@@ -89,7 +90,7 @@ end
     plot_erpimage!(f[3, 2], times, d_singletrial)
 
     plot_parallelcoordinates(f[4, 2], uf_5chan; mapping=(; color=:coefname), 
-        layout=(; legend_position=:bottom), legend=(; tellwidth =false))
+        layout=(; legend_position=:right))
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], 
         [f[1, 1], f[1, 2], f[2, 1], f[2, 2], f[3, 1], f[3, 2], f[4, 1], f[4, 2]])
@@ -142,7 +143,7 @@ end
         legend=(; nbanks=2),
         layout=(; show_legend=true, legend_position=:right))
     
-    plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping=(; color=:coefname), layout=(; legend_position=:bottom))
+    plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping=(; color=:coefname), layout=(; legend_position=:right))
     
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
     plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];

@@ -1,7 +1,6 @@
 
 """
     plot_parallelcoordinates(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame; kwargs)
-    plot_parallelcoordinates!(data::DataFrame; kwargs)
 
 Plot a PCP (parallel coordinates plot).
 
@@ -12,14 +11,16 @@ Plot a PCP (parallel coordinates plot).
 
 ## key word argumets (kwargs)
 
-- normalize (default: `nothing`) - if `:minmax`, normalize each axis to their respective min-max range.
-- ax_labels (default: `nothing`) - can be a vector of labels with the length of number of `mapping.x` unique values - typically the channel name.
-- ax_ticklabels (default `:outmost`) - can be `:outmost`, `:none`,`:left` and `:all`. 
-    - `:outmost` surpresses the inner labels at each axis, only showing the ticks and the outmost tick-labels. 
-    - `:none` removes all labels. 
-    - `:left` does the same, except for the left-most axis. 
-    - `:all` - ???. 
-- bend (default `false`) - change straight lines between the axes to curved ("bent") lines using spline interpolation.
+- `normalize` (default: `nothing`) - if `:minmax`, normalize each axis to their respective min-max range.
+- `ax_labels` (Array, default: `nothing`) - specify axis names. 
+    Should be a vector of labels with the length of number of `mapping.x` unique values.
+    Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"]
+- `ax_ticklabels` (default `:outmost`) - specify tick labels on axis.
+    - `:all` - show all labels on all axes.
+    - `:left` - show all labels on the left axis, but only min and max on others. 
+    - `:outmost` - show labels on min and max of all axes. 
+    - `:none` - removes all labels. 
+- `bend` (default `false`) - change straight lines between the axes to curved ("bent") lines using spline interpolation.
 
 ## Defining the axes
 
