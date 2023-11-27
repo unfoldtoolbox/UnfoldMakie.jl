@@ -17,11 +17,11 @@ Plot an ERP plot.
 
 - `categorical_color` (bool, `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
 - `categorical_group` (bool, `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
-- `topolegend` (bool, `false`): (see `plot_butterfly`) add an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
 - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `pvalue` (Array, `[]`): show a pvalue.
-    - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black
-- `positions` (nothing): see plot_butterfly.
+    - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
+- `positions` (Array, `[]`): see plot_butterfly.
+- `topolegend` (bool, `false`): (see `plot_butterfly`).
 
 Internal-use only:
 - `butterfly` (bool, `true`): a butterfly plot instead of an ERP-plot. See  `plot_butterfly`
@@ -40,12 +40,13 @@ Plot a butterfly plot
     plot_butterfly(plot_data::DataFrame; positions=nothing) =
 
 ## kwargs (...; ...):
-- `positions` (bool, `nothing`): must be the same length as plot_data. If specified, adds an topoplot-inset-legend of the provided channel-positions. Changes to color of the channel-lines. Uses the `topoposition_to_color` function.
-- `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided
+- `positions` (Array, `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
+    To change the colors of the channel lines use the `topoposition_to_color` function.
+- `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
 - `topomarkersize` (Real, `10`): change the size of the markers, topoplot-inlay electrodes.
 - `topowidth` (Real, `0.25`): change the size of the inlay topoplot width.
 - `topoheigth` (Real, `0.25`): change the size of the inlay topoplot height.
-- `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´).
+- `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´): change the colors of the channel lines.
 
 
 
