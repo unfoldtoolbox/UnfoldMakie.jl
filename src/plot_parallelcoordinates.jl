@@ -13,22 +13,22 @@ Plot a PCP (parallel coordinates plot).
 
 - `normalize` (default: `nothing`) - if `:minmax`, normalize each axis to their respective min-max range.
 - `ax_labels` (Array, default: `nothing`) - specify axis names. 
-    Should be a vector of labels with the length of number of `mapping.x` unique values.
-    Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"]
+    Should be a vector of labels with length equal to the number of unique `mapping.x` values.
+    Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"].
 - `ax_ticklabels` (default `:outmost`) - specify tick labels on axis.
     - `:all` - show all labels on all axes.
     - `:left` - show all labels on the left axis, but only min and max on others. 
-    - `:outmost` - show labels on min and max of all axes. 
-    - `:none` - removes all labels. 
+    - `:outmost` - show labels on min and max of all other axes. 
+    - `:none` - remove all labels. 
 - `bend` (default `false`) - change straight lines between the axes to curved ("bent") lines using spline interpolation.
 
 ## Defining the axes
 
-- By setting `..(...; mapping=(; x=:channel, y=:estimate))` (the default), one could overwrite what should be on the x and the y axes.
-- By setting `..(...; mapping=(; color=:colorcolumn))` one defines the split by color. 
+- Default: `...(...; mapping=(; x=:channel, y=:estimate))` - one could overwrite what should be on the x and the y axes.
+- By setting `...(...; mapping=(; color=:colorcolumn))` one defines conditions splitted by color. 
     The default color is defined by `...(...; visual=(; color=:black))`.
 
-## Change Transparency
+## Change transparency
 use `...(...; visual=(; alpha=0.5))` to change transparency.
 
 
@@ -93,7 +93,7 @@ function plot_parallelcoordinates(
     end
     UnfoldMakie.config_kwargs!(config; visual = (; color = c))
 
-    f, ax, axlist, hlines = parallelplot(
+    f, ax, axlist, hlines = parallelcoordinates(
         f,
         d5;
         normalize = normalize,
@@ -111,8 +111,7 @@ function plot_parallelcoordinates(
 end
 
 
-
-function parallelplot(
+function parallelcoordinates(
     f::Union{<:Figure,<:GridPosition,<:GridLayout},
     data::AbstractMatrix;
     color = nothing,
@@ -337,8 +336,6 @@ struct PCPTicks end
 function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
     #@debug "get_ticks custom",vmin,vmax
     tickvalues = Makie.get_tickvalues(Makie.WilkinsonTicks(5), scale, vmin, vmax)
-
-
 
     ticklabels_without = Makie.get_ticklabels(formatter, tickvalues)
     if !(tickvalues[1] ≈ vmin)

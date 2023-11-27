@@ -32,7 +32,7 @@ nothing #hide
 
 
 ## Normalization
-On the first image, there is no normalization and the extremes of all axes are the same.
+On the first image, there is no normalization and the extremes of all axes are the same and equal to the max and min values across all chanells. 
 On the second image, there is a `minmax normalization``, so each axis has its own extremes based on the min and max of the data.
 
 Typically, parallelplots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.
@@ -111,6 +111,29 @@ Bending the linescan be helpful to make them more visible.
         subset(results_plot, :channel=>x->x.<10))
     plot_parallelcoordinates(f[2,1], 
         subset(results_plot, :channel=>x->x.<10), bend=true)
+    f
+
+```
+
+## Transparancy 
+```@example main
+    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        uf_5chan;
+        mapping = (; color = :coefname),
+        layout = (; legend_position = :right),
+        visual=(; alpha=0.1)
+    )
+    plot_parallelcoordinates(
+        f[2, 1],
+        uf_5chan;
+        mapping = (; color = :coefname),
+        layout = (; legend_position = :right),
+        visual=(; alpha=0.9)
+    )
     f
 
 ```
