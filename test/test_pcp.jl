@@ -1,21 +1,16 @@
-
+include("../docs/example_data.jl")
+results_plot, positions = example_data()
 @testset "pcp with Figure, 64 channels, 1 condition" begin
-    include("../docs/example_data.jl")
-    results_plot, positions = example_data()
     plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
 end
 
 
 @testset "pcp with Figure, 5 channels (filtered), 1 condition" begin
-    include("../docs/example_data.jl")
-    results_plot, positions = example_data()
-    results_plot = filter(row -> row.channel <= 5, results_plot) # select channels
-    plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
+    results_plot2 = filter(row -> row.channel <= 5, results_plot) # select channels
+    plot_parallelcoordinates(results_plot2; mapping = (color = :coefname, y = :estimate))
 end
 
 @testset "pcp with Figure, 5 channels (subsetted), 1 condition" begin
-    include("../docs/example_data.jl")
-    results_plot, positions = example_data()
     plot_parallelcoordinates(
         subset(results_plot, :channel => x -> x .<= 5);
         mapping = (; color = :coefname),
@@ -24,9 +19,6 @@ end
 
 
 @testset "pcp with GridPosition" begin
-    include("../docs/example_data.jl")
-    results_plot, positions = example_data()
-
     f = Figure()
     plot_parallelcoordinates(
         f[1, 1],
@@ -38,7 +30,6 @@ end
 
 @testset "pcp with 3 conditions and 5 channels" begin
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
-
     plot_parallelcoordinates(
         uf_5chan;
         mapping = (; color = :coefname),
