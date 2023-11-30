@@ -15,8 +15,12 @@ end
     include("test_butterfly.jl")
 end
 
-@testset "ERP Image" begin
+@testset "ERP image" begin
     include("test_erpimage.jl")
+end
+
+@testset "Channel image" begin
+    include("test_channelimage.jl")
 end
 
 @testset "Topoplot" begin

@@ -1,14 +1,13 @@
 @testset "8 plots" begin
     f = Figure(resolution=(1200, 1400))
-    ga = f[1, 1] = GridLayout()
-    gc = f[2, 1] = GridLayout()
-    ge = f[3, 1] = GridLayout()
-    gg = f[4, 1] = GridLayout()
-    geh = f[1:4, 2] = GridLayout()
-    gb = geh[1, 1] = GridLayout()
-    gd = geh[2, 1] = GridLayout()
-    gf = geh[3, 1] = GridLayout()
-    gh = geh[4, 1] = GridLayout()
+    ga = f[1, 1]
+    gc = f[2, 1]
+    ge = f[3, 1]
+    gg = f[4, 1]
+    gb = f[1, 2]
+    gd = f[2, 2]
+    gf = f[3, 2]
+    gh = f[4, 2]
 
     include("../docs/example_data.jl")
     d_topo, pos = example_data("TopoPlots.jl")
@@ -20,6 +19,9 @@
     times = -0.099609375:0.001953125:1.0
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1], string.(1:length(positions)));
+    raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", 
+"PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
+"C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
 
     data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
     data_erp = reshape(data_erp, (1, size(data_erp)...))
@@ -41,10 +43,22 @@
     plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
         layout = (; use_colorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
-    plot_erpimage!(gf, times, d_singletrial)
-    plot_parallelcoordinates(gh, uf_5chan; 
+
+    
+   
+
+
+    dat, evts = UnfoldSim.predef_eeg(;onset=LogNormalOnset(μ=3.5, σ=0.4), noiselevel = 5)
+    dat_e, times = Unfold.epoch(dat,evts, [-0.1,1], 100)
+    evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
+    evts.Δlatency =  diff(vcat(evts.latency, 0)) *-1
+    dat_e = dat_e[1,:,:]
+    plot_erpimage!(gf, times, dat_e; sortvalues=evts.Δlatency)
+    plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names; )
+     plot_parallelcoordinates(gh, uf_5chan; 
         mapping=(; color=:coefname), 
         layout=(; legend_position=:right))
+
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
         Label(layout[1, 1, TopLeft()], label,
@@ -55,7 +69,6 @@
     end
     f
 end
-
 
 @testset "8 plots with a Figure" begin
     f = Figure(resolution=(1200, 1400))

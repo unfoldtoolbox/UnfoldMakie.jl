@@ -1,16 +1,6 @@
+include("../docs/example_data.jl")
 @testset "basic with results" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data = reshape(data, (1, size(data)...))
-    f = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (f, range(0, step = 1 / 100, length = size(data, 2)))),
-        evts,
-        data,
-        solver = se_solver,
-    )
+    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -20,18 +10,7 @@ end
 
 
 @testset "basic with res_effects without colorbar" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data = reshape(data, (1, size(data)...))
-    f = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (f, range(0, step = 1 / 100, length = size(data, 2)))),
-        evts,
-        data,
-        solver = se_solver,
-    )
+    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -47,18 +26,7 @@ end
 end
 
 @testset "basic with res_effects" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data = reshape(data, (1, size(data)...))
-    f = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (f, range(0, step = 1 / 100, length = size(data, 2)))),
-        evts,
-        data,
-        solver = se_solver,
-    )
+    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -102,17 +70,9 @@ end
 
 
 @testset "erp plot with error bands" begin
-    data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data_erp = reshape(data_erp, (1, size(data_erp)...))
-    f = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (f, range(0, step = 1 / 100, length = size(data_erp, 2)))),
-        evts,
-        data_erp,
-        solver = se_solver,
-    )
+
+    m = example_data("UnfoldLinearModel")
+
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -123,17 +83,8 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data_erp = reshape(data_erp, (1, size(data_erp)...))
-    form = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (form, range(0, step = 1 / 100, length = size(data_erp, 2)))),
-        evts,
-        data_erp,
-        solver = se_solver,
-    )
+    m = example_data("UnfoldLinearModel")
+
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -146,17 +97,9 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data_erp = reshape(data_erp, (1, size(data_erp)...))
-    form = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (form, range(0, step = 1 / 100, length = size(data_erp, 2)))),
-        evts,
-        data_erp,
-        solver = se_solver,
-    )
+
+    m = example_data("UnfoldLinearModel")
+
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
