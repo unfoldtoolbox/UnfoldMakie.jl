@@ -233,7 +233,7 @@ function resolveMappings(plotData, mappingData)
     function isColumn(col)
         string(col) ∈ names(plotData)
     end
-    # filter columns to only include the ones that are in plotData, or throw an error if none are
+    # filter columns to only include the ones that are in plot_data, or throw an error if none are
     function getAvailable(key, choices)
         # isColumn is an internally defined function mapping col ∈ names(plotData)
         available = choices[keys(choices)[isColumn.(collect(choices))]]
