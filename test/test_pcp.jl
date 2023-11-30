@@ -51,11 +51,11 @@ end
 @testset "Bending 2" begin
     # check that the points actually go through the provided points
     f = Figure()
-    plot_parallelcoordinates(f[1,1], 
-        subset(results_plot, :channel=>x->x.<10), 
-        bend=true
+    plot_parallelcoordinates(
+        f[1, 1],
+        subset(results_plot, :channel => x -> x .< 10),
+        bend = true,
     )
-    
     f
 end
 
@@ -115,7 +115,7 @@ end
         ax_ticklabels = :none,
         normalize = :minmax,
     ) #  disable all ticks
-    f 
+    f
 end
 
 @testset "transparency" begin
@@ -127,14 +127,14 @@ end
         uf_5chan;
         mapping = (; color = :coefname),
         layout = (; legend_position = :right),
-        visual=(; alpha=0.1)
+        visual = (; alpha = 0.1),
     )
     plot_parallelcoordinates(
         f[2, 1],
         uf_5chan,
         mapping = (; color = :coefname),
         layout = (; legend_position = :right),
-        visual=(; alpha=0.9)
+        visual = (; alpha = 0.9),
     )
     f
 end

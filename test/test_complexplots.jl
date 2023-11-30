@@ -44,12 +44,13 @@
         layout = (; use_colorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
 
-    
-   
 
 
-    dat, evts = UnfoldSim.predef_eeg(;onset=LogNormalOnset(μ=3.5, σ=0.4), noiselevel = 5)
-    dat_e, times = Unfold.epoch(dat,evts, [-0.1,1], 100)
+
+
+    dat, evts =
+        UnfoldSim.predef_eeg(; onset = LogNormalOnset(μ = 3.5, σ = 0.4), noiselevel = 5)
+    dat_e, times = Unfold.epoch(dat, evts, [-0.1, 1], 100)
     evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
     evts.Δlatency =  diff(vcat(evts.latency, 0)) *-1
     dat_e = dat_e[1,:,:]
@@ -102,8 +103,12 @@ end
     times = -0.099609375:0.001953125:1.0
     plot_erpimage!(f[3, 2], times, d_singletrial)
 
-    plot_parallelcoordinates(f[4, 2], uf_5chan; mapping=(; color=:coefname), 
-        layout=(; legend_position=:right))
+    plot_parallelcoordinates(
+        f[4, 2],
+        uf_5chan;
+        mapping = (; color = :coefname),
+        layout = (; legend_position = :right),
+    )
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], 
         [f[1, 1], f[1, 2], f[2, 1], f[2, 2], f[3, 1], f[3, 2], f[4, 1], f[4, 2]])

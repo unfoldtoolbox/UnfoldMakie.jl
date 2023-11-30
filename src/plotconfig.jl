@@ -59,7 +59,6 @@ Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the d
 function config_kwargs!(cfg::PlotConfig; kwargs...)
 
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
-    
     @assert(
         all(is_namedtuple),
         """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
@@ -227,9 +226,7 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
-        legend = (;
-            merge = true,
-        ),
+        legend = (; merge = true,),
         mapping = (; x = :channel),
     )
     return cfg
