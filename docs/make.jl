@@ -49,10 +49,9 @@ makedocs(;
         ],
         "How To" => [
             "Butterfly Colormap" => "how_to/position2color.md",
-            "Fix Parallel Coordinates Plot" => "how_to/fix_pcp.md",
             "Hide Axis Spines and Decorations" => "how_to/hide_deco.md",
             "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
-            "Show out of Bounds Label" => "how_to/show_oob_labels.md",
+            "Designmatrix: Show out of Bounds Label" => "how_to/show_oob_labels.md",
         ],
         "Reference" => [
             "Convert 3D positions / montages to 2D layouts" => "generated/reference/positions.md",

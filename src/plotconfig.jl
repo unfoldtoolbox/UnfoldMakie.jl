@@ -57,8 +57,8 @@ end
 Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
+
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
-    @debug is_namedtuple
     @assert(
         all(is_namedtuple),
         """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
@@ -71,6 +71,7 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
         The first is correct and creates a NamedTuple as required. The second is wrong and its call is ignored."""
     )
     list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
+
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ?
     @warn(
@@ -220,13 +221,13 @@ function PlotConfig(T::Val{:paracoord})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (;
-            xlabelFromMapping = :channel,
-            ylabelFromMapping = :y,
-            hidespines = (),
-            hidedecorations = (; label = false),
+        visual = (;
+            colormap = Makie.wong_colors(),
+            color = :black, # default linecolor
+            alpha = 0.3,
         ),
-        mapping = (; channel = :channel, category = :category, time = :time),
+        legend = (; merge = true,),
+        mapping = (; x = :channel),
     )
     return cfg
 end
@@ -235,7 +236,7 @@ function resolveMappings(plotData, mappingData)
     function isColumn(col)
         string(col) ∈ names(plotData)
     end
-    # filter columns to only include the ones that are in plotData, or throw an error if none are
+    # filter columns to only include the ones that are in plot_data, or throw an error if none are
     function getAvailable(key, choices)
         # isColumn is an internally defined function mapping col ∈ names(plotData)
         available = choices[keys(choices)[isColumn.(collect(choices))]]

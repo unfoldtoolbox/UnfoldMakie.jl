@@ -43,7 +43,7 @@ end
 
 
 @testset "erp plot in GridLayout" begin
-    f = Figure(resolution=(1200, 1400))
+    f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
     include("../docs/example_data.jl")
@@ -51,52 +51,59 @@ end
     results = coeftable(uf)
 
     pvals = DataFrame(
-        from=[0.1, 0.15],
-        to=[0.2, 0.5],
+        from = [0.1, 0.15],
+        to = [0.2, 0.5],
         # if coefname not specified, line should be black
-        coefname=["(Intercept)", "category: face"]
+        coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(ga, results;
-        categorical_color=false,
-        categorical_group=false,
-        pvalue=pvals,
-        stderror=true)
+    plot_erp!(
+        ga,
+        results;
+        categorical_color = false,
+        categorical_group = false,
+        pvalue = pvals,
+        stderror = true,
+    )
 
     f
 end
 
 
 @testset "erp plot with error bands" begin
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
-    plot_erp(results; :stderror=>true)
+    m = example_data("UnfoldLinearModel")
+
+    results = coeftable(m)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+
+    plot_erp(results; :stderror => true)
 end
 
 @testset "erp plot with error bands in GridLayout" begin
-    f = Figure(resolution=(1200, 1400))
+    f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
     m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
-    plot_erp!(ga, results; :stderror=>true)
+    results = coeftable(m)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+
+    plot_erp!(ga, results; :stderror => true)
 
     f
 end
 
 @testset "erp plot with borderless legend" begin
-    f = Figure(resolution=(1200, 1400))
+    f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
-    plot_erp!(ga, results; :stderror=>true, legend=(; framevisible = false))
+    m = example_data("UnfoldLinearModel")
+
+    results = coeftable(m)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+
+    plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
 
     f
 end
-

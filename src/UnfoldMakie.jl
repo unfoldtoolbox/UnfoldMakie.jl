@@ -1,5 +1,6 @@
 module UnfoldMakie
 
+import Makie.get_ticks
 using Makie
 #using CairoMakie
 using AlgebraOfGraphics
@@ -17,6 +18,8 @@ using ColorTypes
 
 using DocStringExtensions # for $SIGNATURES
 
+using Interpolations # for parallelplot
+
 using DataStructures
 using DataFrames
 using SparseArrays
@@ -27,6 +30,7 @@ using CoordinateTransformations # for 3D positions to 2D
 
 import Makie.hidedecorations!
 import Makie.hidespines!
+
 import AlgebraOfGraphics.hidedecorations!
 #import AlgebraOfGraphics.hidespines!
 
@@ -62,7 +66,7 @@ export plot_erpimage!
 export plot_topoplot
 export plot_topoplot!
 export plot_parallelcoordinates
-export plot_parallelcoordinates!
+
 export plot_butterfly
 export plot_butterfly!
 export plot_circulareegtopoplot
