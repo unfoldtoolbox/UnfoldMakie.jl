@@ -1,6 +1,7 @@
 """
-    plot_circulareegtopoplot(data::DataFrame; kwargs...)
     plot_circulareegtopoplot!(f, data::DataFrame; kwargs...)
+    plot_circulareegtopoplot(data::DataFrame; kwargs...)
+    
 
 Plot a circular EEG topoplot.
 ## Arguments:

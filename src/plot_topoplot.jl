@@ -1,6 +1,6 @@
 """
     plot_topoplot!(f::Union{GridPosition, GridLayout, Figure}, data, ; positions=nothing, labels=nothing,kwargs...)
-    plot_topoplot(data,; positions=nothing, labels=nothing, kwargs...)
+    plot_topoplot(data; positions=nothing, labels=nothing, kwargs...)
 
 Plot a topo plot.
 ## Arguments:

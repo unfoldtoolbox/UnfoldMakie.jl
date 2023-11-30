@@ -12,8 +12,9 @@ Plot an ERP image.
 - `drawlabels` (bool, `false`): draw channels labels over each waveform. 
 - `times`: (Vector, `1:size(data, 2)`): vector of size().
 
+
 ## Return Value:
-The input `f`
+The figure displaying ERP grid
 """
 
 # no figure?

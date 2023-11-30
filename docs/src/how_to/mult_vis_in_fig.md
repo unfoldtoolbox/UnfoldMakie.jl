@@ -17,9 +17,8 @@ uf_deconv = example_data("UnfoldLinearModelContinuousTime")
 uf = example_data("UnfoldLinearModel")
 results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
-times = -0.099609375:0.001953125:1.0
 data, positions = TopoPlots.example_data()
+dat_e, evts, times = example_data("sort_data")    
 nothing #hide
 ```
 This section discusses how users can incorporate multiple plots into a single figure.
@@ -81,7 +80,7 @@ plot_erp!(f[2, 4:5], res_effects; categorical_color=false, categorical_group=tru
 plot_parallelcoordinates!(f[3, 2:3], uf_5chan, [1, 2, 3, 4, 5]; mapping=(; color=:coefname), 
     layout=(; legend_position=:bottom))
 
-plot_erpimage!(f[1, 4:5], times, d_singletrial)
+plot_erpimage!(f[1, 4:5], times, dat_e; sortvalues=evts.Δlatency)
 plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
     positions=positions, predictor=:time, predictor_bounds=[-0.3, 0.5])
 

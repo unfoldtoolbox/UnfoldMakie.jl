@@ -96,6 +96,14 @@ function example_data(example = "TopoPlots.jl")
         end
         df.time = range(-0.3, 0.5, step = 1 / 500)[Int.(df.time)]
         return df, chanlocs
+    elseif example == "sort_data"
+        dat, evts =
+            UnfoldSim.predef_eeg(; onset = LogNormalOnset(μ = 3.5, σ = 0.4), noiselevel = 5)
+        dat_e, times = Unfold.epoch(dat, evts, [-0.1, 1], 100)
+        evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
+        evts.Δlatency = diff(vcat(evts.latency, 0)) *-1
+        dat_e = dat_e[1, :, :]
+        return dat_e, evts, times
     else
         error("unknown example data")
     end
