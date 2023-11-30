@@ -4,7 +4,7 @@
 .vscode/
 /test/Manifest.toml
 /docs/Manifest.toml
-
+/docs/.CondaPkg
 /Manifest.toml
 /docs/build/
 /docs/src/generated

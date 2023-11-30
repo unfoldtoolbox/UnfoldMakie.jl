@@ -10,42 +10,130 @@ using DataFrames
 using CairoMakie
 ```
 
-## Data
-
-We use the test data of `erpcore-N170.jld2`.
-
+## Data generation
 ```@example main
 include("../../example_data.jl")
-results_plot, positions = example_data();
+r1, positions = example_data();
+r2 = deepcopy(r1)
+r2.coefname .= "B" # create a second category
+r2.estimate .+= rand(length(r2.estimate))*0.1
+results_plot = vcat(r1, r2);
+nothing #hide
 ```
 
 ## Plot PCPs
 
 ```@example main
-plot_parallelcoordinates(results_plot, [5,3,2]; # this selects channel 5,3 & 2 
-    mapping = (color = :coefname, y = :estimate))
+  plot_parallelcoordinates(
+        subset(results_plot, :channel => x -> x .<= 5);
+        mapping = (; color = :coefname),
+    )
 ```
 
 
+## Normalization
+On the first image, there is no normalization and the extremes of all axes are the same and equal to the max and min values across all chanells. 
+On the second image, there is a `minmax normalization``, so each axis has its own extremes based on the min and max of the data.
 
-!!! important
-    the following is still outdated...
-    
-## Column Mappings for PCPs
+Typically, parallelplots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.
 
-Since PCPs use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
+```@example main
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        subset(results_plot, :channel => x -> x .< 10);
+        mapping = (; color = :coefname),
+    )
+    plot_parallelcoordinates(
+        f[2, 1],
+        subset(results_plot, :channel => x -> x .< 10);
+        mapping = (; color = :coefname),
+        normalize = :minmax,
+    )
+    f
 
-While there are multiple default values that are checked in that order if they exist in the `DataFrame`, a custom name might need to be choosen for:
 
-### y
-Default is `(:y, :estimate, :yhat)`.
+```
 
-### channel
-Default is `:channel`.
+## Labels
+Use `ax_labels` to specify labels for the axes.
 
-### color
-XXX Default is `:coef`.
+```@example main
+    plot_parallelcoordinates(
+        subset(results_plot, :channel => x -> x .< 5);
+        visual = (; color = :darkblue),
+        ax_labels = ["Fz", "Cz", "O1", "O2"],
+    )
 
-### time
-Default is `:time`.
+```
 
+## Tick labels
+Specify tick labels on axis. There are four different options for the tick labels.
+
+```@example main
+ f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        subset(results_plot, :channel => x -> x .< 5);
+        ax_labels = ["Fz", "Cz", "O1", "O2"],
+        ax_ticklabels = :all,
+        normalize = :minmax,
+    ) # all tick labels on all axis
+    plot_parallelcoordinates(
+        f[2, 1],
+        subset(results_plot, :channel => x -> x .< 5);
+        ax_ticklabels = :left,
+        normalize = :minmax,
+    ) # tick labels on extremities + tickets on the left
+    plot_parallelcoordinates(
+        f[3, 1],
+        subset(results_plot, :channel => x -> x .< 5);
+        ax_ticklabels = :outmost,
+        normalize = :minmax,
+    ) # show tick labels on extremities of axis
+
+    plot_parallelcoordinates(
+        f[4, 1],
+        subset(results_plot, :channel => x -> x .< 5);
+        ax_ticklabels = :none,
+        normalize = :minmax,
+    ) #  disable tick labels
+    f 
+```
+
+
+## Bending the parallel plot
+Bending the linescan be helpful to make them more visible.
+
+```@example main
+    f = Figure()
+    plot_parallelcoordinates(f[1,1], 
+        subset(results_plot, :channel=>x->x.<10))
+    plot_parallelcoordinates(f[2,1], 
+        subset(results_plot, :channel=>x->x.<10), bend=true)
+    f
+
+```
+
+## Transparancy 
+```@example main
+    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        uf_5chan;
+        mapping = (; color = :coefname),
+        layout = (; legend_position = :right),
+        visual=(; alpha=0.1)
+    )
+    plot_parallelcoordinates(
+        f[2, 1],
+        uf_5chan;
+        mapping = (; color = :coefname),
+        layout = (; legend_position = :right),
+        visual=(; alpha=0.9)
+    )
+    f
+
+```
