@@ -25,8 +25,7 @@ The input `f`
 """
 
 # no times + no figure?
-plot_erpimage(plot::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(Figure(), plot; kwargs...)
+plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; kwargs...)
 
 # no times?
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; kwargs...) =
