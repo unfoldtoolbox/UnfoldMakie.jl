@@ -21,6 +21,8 @@ Plot a PCP (parallel coordinates plot).
     - `:outmost` - show labels on min and max of all other axes. 
     - `:none` - remove all labels. 
 - `bend` (default `false`) - change straight lines between the axes to curved ("bent") lines using spline interpolation.
+    Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
+    suffers, and the resulting visualizations can be potentially missleading.
 
 ## Defining the axes
 
