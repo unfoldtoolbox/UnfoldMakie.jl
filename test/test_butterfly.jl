@@ -41,7 +41,7 @@ end
     plot_butterfly(
         data;
         positions = pos,
-        topopositions_to_color = pos -> UnfoldMakie.posToColorRGB(pos)
+        topopositions_to_color = pos -> UnfoldMakie.posToColorRGB(pos),
     )
 end
 
@@ -65,4 +65,3 @@ end
     hidedecorations!(ax, label = false)
     f
 end
-
