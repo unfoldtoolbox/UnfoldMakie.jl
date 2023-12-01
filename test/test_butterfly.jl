@@ -6,6 +6,11 @@ data, pos = example_data("TopoPlots.jl")
     plot_butterfly(data; positions = pos)
 end
 
+@testset "basic with GridLayout" begin
+    f = Figure()
+    plot_butterfly!(f[1, 1], data; positions = pos)
+end
+
 @testset "topomarkersize change" begin
     plot_butterfly(
         data;
@@ -39,3 +44,25 @@ end
         topopositions_to_color = pos -> UnfoldMakie.posToColorRGB(pos)
     )
 end
+
+
+@testset "add h adn vlines in a Figure" begin
+    f = Figure()
+    plot_butterfly!(f, data; positions = pos)
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    f
+end
+
+
+@testset "add h adn vlines in GridPosition" begin
+    f = Figure()
+    ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")
+    plot_butterfly!(f[1:2, 1:5], data; positions = pos)
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    hidespines!(ax)
+    hidedecorations!(ax, label = false)
+    f
+end
+
