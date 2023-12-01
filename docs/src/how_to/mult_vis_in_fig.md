@@ -87,3 +87,70 @@ plot_circulareegtopoplot!(f[3:4, 4:5], d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)
 f
 ```
 
+```@example main
+f = Figure(resolution=(1200, 1400))
+ga = f[1, 1]
+gc = f[2, 1]
+ge = f[3, 1]
+gg = f[4, 1]
+gb = f[1, 2]
+gd = f[2, 2]
+gf = f[3, 2]
+gh = f[4, 2]
+
+include("../docs/example_data.jl")
+d_topo, pos = example_data("TopoPlots.jl")
+uf = example_data("UnfoldLinearModel")
+results = coeftable(uf)
+uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched=true)
+times = -0.099609375:0.001953125:1.0
+data, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_matrix_to_dataframe(data[:,:,1], string.(1:length(positions)));
+raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", 
+"PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
+"C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
+
+m = example_data("UnfoldLinearModel")
+results = coeftable(m)
+res_effects = effects(Dict(:continuous => -5:0.5:5), m);
+
+plot_erp!(ga, results; :stderror=>true, legend=(; framevisible = false))
+plot_butterfly!(gb, d_topo; positions=pos, 
+    topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+plot_topoplot!(gc, data[:,340,1]; positions = positions)
+plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
+    layout = (; use_colorbar=true))
+plot_erpgrid!(ge, data[:, :, 1], positions)
+
+dat_e, evts, times = example_data("sort_data")
+plot_erpimage!(gf, times, dat_e; sortvalues=evts.Δlatency)
+plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names; )
+
+r1, positions = example_data();
+r2 = deepcopy(r1)
+r2.coefname .= "B" # create a second category
+r2.estimate .+= rand(length(r2.estimate))*0.1
+results_plot = vcat(r1, r2);
+plot_parallelcoordinates(
+    gh,
+    subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
+    mapping = (; color = :coefname),
+    legend=(; framevisible = false),
+    
+    normalize = :minmax, ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"]
+)
+
+
+for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
+    Label(layout[1, 1, TopLeft()], label,
+        fontsize=26,
+        font=:bold,
+        padding=(0, 5, 5, 0),
+        halign=:right)
+end
+f
+save("./complex_plot.png", f)
+```
