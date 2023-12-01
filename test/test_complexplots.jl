@@ -11,7 +11,6 @@
 
     include("../docs/example_data.jl")
     d_topo, pos = example_data("TopoPlots.jl")
-    uf_deconv = example_data("UnfoldLinearModelContinuousTime")
     uf = example_data("UnfoldLinearModel")
     results = coeftable(uf)
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
@@ -23,42 +22,37 @@
 "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
 "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
 
-    data_erp, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-    data_erp = reshape(data_erp, (1, size(data_erp)...))
-    form = @formula 0 ~ 1 + condition + continuous
-    se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true);
-    m = fit(
-        UnfoldModel,
-        Dict(Any => (form, range(0, step = 1 / 100, length = size(data_erp, 2)))),
-        evts,
-        data_erp,
-        solver = se_solver,
-    )
+    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
     plot_erp!(ga, results; :stderror=>true, legend=(; framevisible = false))
-    plot_butterfly!(gb, d_topo; positions=pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
+    plot_butterfly!(gb, d_topo; positions=pos, 
+        topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
+        hlines!(0, color = :gray, linewidth = 1)
+        vlines!(0, color = :gray, linewidth = 1)
     plot_topoplot!(gc, data[:,340,1]; positions = positions)
     plot_topoplotseries!(gd, df, 80; positions=positions, visual=(label_scatter=false,), 
         layout = (; use_colorbar=true))
     plot_erpgrid!(ge, data[:, :, 1], positions)
 
-
-
-
-
-    dat, evts =
-        UnfoldSim.predef_eeg(; onset = LogNormalOnset(μ = 3.5, σ = 0.4), noiselevel = 5)
-    dat_e, times = Unfold.epoch(dat, evts, [-0.1, 1], 100)
-    evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
-    evts.Δlatency =  diff(vcat(evts.latency, 0)) *-1
-    dat_e = dat_e[1,:,:]
+    dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues=evts.Δlatency)
     plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names; )
-     plot_parallelcoordinates(gh, uf_5chan; 
-        mapping=(; color=:coefname), 
-        layout=(; legend_position=:right))
+
+    r1, positions = example_data();
+    r2 = deepcopy(r1)
+    r2.coefname .= "B" # create a second category
+    r2.estimate .+= rand(length(r2.estimate))*0.1
+    results_plot = vcat(r1, r2);
+    plot_parallelcoordinates(
+        gh,
+        subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
+        mapping = (; color = :coefname),
+        legend=(; framevisible = false),
+        
+        normalize = :minmax, ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"]
+    )
 
 
     for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
