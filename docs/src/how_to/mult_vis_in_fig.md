@@ -98,7 +98,6 @@ gd = f[2, 2]
 gf = f[3, 2]
 gh = f[4, 2]
 
-include("../docs/example_data.jl")
 d_topo, pos = example_data("TopoPlots.jl")
 uf = example_data("UnfoldLinearModel")
 results = coeftable(uf)
