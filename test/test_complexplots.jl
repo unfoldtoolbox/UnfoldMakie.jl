@@ -38,10 +38,7 @@
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     plot_topoplot!(gc, data[:, 340, 1]; positions = positions)
-    plot_topoplotseries!(
-        gd,
-        df,
-        80;
+    plot_topoplotseries!(gd, df, 80;
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -79,7 +76,9 @@
         )
     end
     f
+    save("dev/UnfoldMakie/docs/complex_plot.png", f)
 end
+
 
 @testset "8 plots with a Figure" begin
     f = Figure(resolution = (1200, 1400))
@@ -102,12 +101,11 @@ end
     plot_erp!(
         f[1, 1],
         results,
-        extra = (;
-            categoricalColor = false,
-            categoricalGroup = false,
-            pvalue = pvals,
-            stderror = true,
-        ),
+        categorical_color = false,
+        categorical_group = false,
+        pvalue = pvals,
+        stderror = true,
+
     )
 
     plot_butterfly!(f[1, 2], d_topo; positions = positions)
