@@ -18,8 +18,7 @@
     times = -0.099609375:0.001953125:1.0
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-    raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", 
-        "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
+    raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
         "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
 
     m = example_data("UnfoldLinearModel")
@@ -76,7 +75,7 @@
         )
     end
     f
-    save("dev/UnfoldMakie/docs/complex_plot.png", f)
+    #save("dev/UnfoldMakie/docs/complex_plot.png", f)
 end
 
 
