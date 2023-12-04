@@ -24,7 +24,7 @@ Plot an ERP plot.
 - `topolegend` (bool, `false`): (see `plot_butterfly`).
 
 Internal-use only:
-- `butterfly` (bool, `true`): a butterfly plot instead of an ERP-plot. See  `plot_butterfly`
+- `butterfly` (bool, `true`): a butterfly plot instead of an ERP plot. See  `plot_butterfly`
 
 $(_docstring(:erp))
 
@@ -203,9 +203,11 @@ function plot_erp!(
             )
         end
         # no extra legend
-        mainAxis = Axis(f_grid; config.axis...)
+        mainAxis = Axis(f_grid; config.axis..., xlabel = config.axis.xlabel, 
+                    ylabel =  config.axis.ylabel, 
+                    yticklabelsize =  config.axis.yticklabelsize)
         hidedecorations!(mainAxis, label = false, ticks = false, ticklabels = false)
-
+        hidespines!(mainAxis, :t, :r) 
         if isnothing(colors)
             drawing = draw!(mainAxis, plotEquation)
         else
@@ -214,6 +216,11 @@ function plot_erp!(
     else
         # normal lineplot draw
         #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
+        mainAxis = Axis(f_grid; config.axis..., xlabel = config.axis.xlabel, 
+        ylabel =  config.axis.ylabel, 
+        yticklabelsize =  config.axis.yticklabelsize)
+        hidedecorations!(mainAxis, ticks = false)
+        hidespines!(mainAxis, :t, :r) 
 
         drawing = draw!(f_grid, plotEquation; axis = config.axis)
 

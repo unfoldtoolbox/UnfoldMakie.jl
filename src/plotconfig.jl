@@ -140,6 +140,7 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
+        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
         axis = (; aspect = DataAspect()),
     )
     return cfg
@@ -181,6 +182,7 @@ function PlotConfig(T::Val{:butterfly})
             positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
         ),
+        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
     )
     return cfg
 end
@@ -191,6 +193,7 @@ function PlotConfig(T::Val{:erp})
         mapping = (; color = (:color, :coefname, nothing)),
         layout = (; show_legend = true, hidespines = (:r, :t)),
         legend = (; framevisible = false),
+        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
     )
 
     return cfg
@@ -212,7 +215,7 @@ function PlotConfig(T::Val{:erpimage})
         cfg;
         layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
-        axis = (xlabel = "Time", ylabel = "Sorted trials"),
+        axis = (xlabel = "Time [s]", ylabel = "Sorted trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg
@@ -224,9 +227,10 @@ function PlotConfig(T::Val{:paracoord})
         visual = (;
             colormap = Makie.wong_colors(),
             color = :black, # default linecolor
-            alpha = 0.3,
+            alpha = 0.3, 
         ),
-        legend = (; merge = true,),
+        axis = (; ylabel = "Time"),
+        legend = (; merge = true),# fontsize = 14),
         mapping = (; x = :channel),
     )
     return cfg
