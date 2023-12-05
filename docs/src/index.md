@@ -12,4 +12,4 @@ Building on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie
 As can be seen from the types of visualizations possible, these configuration options try to enable the user to create plots that are helpful in the field of computational EEG.
 One such example is the ability to use a topo plot as a legend for a line plot by allowing multiple visualizations within a figure.
 
-![Coordinated Multiple Views](complex_plot.png)
+![Coordinated Multiple Views](./complex_plot.png)
