@@ -150,7 +150,7 @@ function PlotConfig(T::Val{:topoplotseries})
     config_kwargs!(
         cfg,
         layout = (use_colorbar = true,),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"), # is it a duplication??
         visual = (;
             label_text = false # true doesnt work again
         ),
