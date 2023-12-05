@@ -1,23 +1,22 @@
 """
-    function plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
-    function plot_erpgrid(data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
+    plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
+    plot_erpgrid(data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into.
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
 - `data::Matrix{<:Real}`: data for the plot visualization.
 - `pos::Vector{Point{2,Float}}`: electrode positions.
         
 ## Keyword Arguments
 - `drawlabels` (bool, `false`): draw channels labels over each waveform. 
-- `times`: (Vector, `1:size(data, 2)`): vector of size().
+- `times`: (Vector, `1:size(data, 2)`): vector of size()
 
+$(_docstring(:erpgrid))
 
 ## Return Value:
 The figure displaying ERP grid
 """
-
-# no figure?
 plot_erpgrid(data::Matrix{<:Real}, pos; kwargs...) =
     plot_erpgrid!(Figure(), data, pos; kwargs...)
 
@@ -29,6 +28,9 @@ function plot_erpgrid!(
     times = -1:size(data, 2)-2, #arbitrary strat just for fun
     kwargs...,
 )
+    config = PlotConfig(:erpgrid)
+    config_kwargs!(config; kwargs...)
+
     chanNum = size(data, 1)
     data = data[1:chanNum, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)

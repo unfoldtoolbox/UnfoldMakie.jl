@@ -140,20 +140,20 @@ end
 end
 
 @testset "styling" begin
-    r1, positions = example_data();
+    r1, positions = example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
-    r2.estimate .+= rand(length(r2.estimate))*0.1
-    results_plot = vcat(r1, r2);
+    r2.estimate .+= rand(length(r2.estimate)) * 0.1
+    results_plot = vcat(r1, r2)
 
     f = Figure()
     plot_parallelcoordinates(
         f[1, 1],
         subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
         mapping = (; color = :coefname),
-        legend=(; framevisible = false),
-        
-        normalize = :minmax, ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"]
+        legend = (; framevisible = false),
+        normalize = :minmax,
+        ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
     )
     f
 end

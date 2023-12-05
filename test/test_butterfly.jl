@@ -54,7 +54,6 @@ end
     f
 end
 
-
 @testset "add h adn vlines in GridPosition" begin
     f = Figure()
     ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")

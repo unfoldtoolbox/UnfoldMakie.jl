@@ -26,6 +26,8 @@
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
     plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
     plot_butterfly!(
         gb,
         d_topo;

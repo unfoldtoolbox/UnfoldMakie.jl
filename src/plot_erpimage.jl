@@ -1,6 +1,3 @@
-
-
-
 """
     plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{Float64}; kwargs...)
     plot_erpimage(data::Matrix{Float64}; kwargs...)

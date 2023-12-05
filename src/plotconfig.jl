@@ -198,6 +198,13 @@ function PlotConfig(T::Val{:erp})
 
     return cfg
 end
+function PlotConfig(T::Val{:erpgrid})
+    cfg = PlotConfig()
+
+    config_kwargs!(cfg; layout = (;), colorbar = (;), mapping = (;), axis = (;))
+    return cfg
+end
+
 function PlotConfig(T::Val{:channelimage})
     cfg = PlotConfig()
     config_kwargs!(
