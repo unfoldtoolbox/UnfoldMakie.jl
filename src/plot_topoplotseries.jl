@@ -6,16 +6,17 @@ Multiple miniature topoplots in regular distances
 
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into.
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
 - `data::DataFrame`: DataFrame with data, needs a `time` column.
 - `Δbin::Real`: A number for how large one time bin should be. Δbin is in units of the `data.time` column.
-- `combinefun` (default: `mean`) - specify how the samples within `Δbin` are averaged.
+- `combinefun` (default: `mean`) - specify how the samples within `Δbin` are summarised.
+    possible functons: `mean`, `median`, `std`. 
 - `rasterize_heatmaps` (default: `true`) - enforce rasterization of the plot heatmap when saving in svg format.
     This has the benefit that all lines/points are vectors, except the interpolated heatmap. 
     This is typically what you want, otherwise you get ~500x500 vectors per topoplot, which makes everything super slow.
 - `col_labels`, `row_labels` - shows column and row labels. 
-- labels (default: `nothing`) - ???.
-- positions (default: `nothing`) - ???.
+- `labels` (default: `nothing`) - channel labels.
+- `positions` (default: `nothing`) - channel positions.
 
 $(_docstring(:topoplotseries))
 

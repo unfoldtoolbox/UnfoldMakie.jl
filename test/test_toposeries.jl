@@ -1,21 +1,28 @@
 data, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+Δbin = 80
 
-@testset "basic" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-    Δbin = 80
-    UnfoldMakie.plot_topoplotseries(df, Δbin; positions = positions)
-
+@testset "topoplot basic" begin
+    plot_topoplotseries(df, Δbin; positions = positions)
 end
-@testset "basic without colorbar" begin
+
+@testset "topoplot with differend comb functions " begin
+    f = Figure()
+    plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
+    plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
+    plot_topoplotseries!(f[3, 1], df, Δbin; positions = positions, combinefun = std)
+    f
+end
+
+@testset "topoplot without colorbar" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
     Δbin = 80
-    UnfoldMakie.plot_topoplotseries(
+    plot_topoplotseries(
         df,
         Δbin;
         positions = positions,
         layout = (; use_colorbar = false),
     )
-
 end
 
 @testset "GridPosition with a title" begin
