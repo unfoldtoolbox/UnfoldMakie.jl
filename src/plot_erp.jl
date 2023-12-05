@@ -196,19 +196,18 @@ function plot_erp!(
                 valign = 0.95,
                 aspect = 1,
             )
-            topoplotLegend(
-                topoAxis,
-                topomarkersize,
-                topopositions_to_color,
-                allPositions,
-            )
+            topoplotLegend(topoAxis, topomarkersize, topopositions_to_color, allPositions)
         end
         # no extra legend
-        mainAxis = Axis(f_grid; config.axis..., xlabel = config.axis.xlabel, 
-                    ylabel =  config.axis.ylabel, 
-                    yticklabelsize =  config.axis.yticklabelsize)
+        mainAxis = Axis(
+            f_grid;
+            config.axis...,
+            xlabel = config.axis.xlabel,
+            ylabel = config.axis.ylabel,
+            yticklabelsize = config.axis.yticklabelsize,
+        )
         hidedecorations!(mainAxis, label = false, ticks = false, ticklabels = false)
-        hidespines!(mainAxis, :t, :r) 
+        hidespines!(mainAxis, :t, :r)
         if isnothing(colors)
             drawing = draw!(mainAxis, plotEquation)
         else
@@ -216,10 +215,20 @@ function plot_erp!(
         end
     else
         # normal lineplot draw
-        mainAxis = Axis(f_grid; config.axis..., xlabel = config.axis.xlabel, 
-        ylabel =  config.axis.ylabel, 
-        yticklabelsize =  config.axis.yticklabelsize)
-        hidedecorations!(mainAxis, grid = hidegrid, label = false, ticks = false, ticklabels = false)
+        mainAxis = Axis(
+            f_grid;
+            config.axis...,
+            xlabel = config.axis.xlabel,
+            ylabel = config.axis.ylabel,
+            yticklabelsize = config.axis.yticklabelsize,
+        )
+        hidedecorations!(
+            mainAxis,
+            grid = hidegrid,
+            label = false,
+            ticks = false,
+            ticklabels = false,
+        )
         hidespines!(mainAxis, :t, :r)
 
         drawing = draw!(mainAxis, plotEquation;)
@@ -241,7 +250,6 @@ function eegHeadMatrix(positions, center, radius)
         center[1] - oldCenter[1] * radF,
         center[2] - oldCenter[2] * radF, 0, 1,
     )
-end
 
 function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositions)
     allPositions = unique(allPositions)
@@ -308,7 +316,7 @@ function addPvalues(plot_data, pvalue, config)
             Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
             Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
         ) for (x, y, n) in zip(p.from, p.to, p.sigindex)
-    ]    
+    ]
     res = data(p) * mapping(:segments) * visual(Poly)
     return (res)
 end
