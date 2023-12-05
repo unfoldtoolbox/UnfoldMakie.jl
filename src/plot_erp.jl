@@ -21,6 +21,7 @@ Plot an ERP plot.
 - `pvalue` (Array, `[]`): show a pvalue.
     - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
 - `positions` (Array, `[]`): see plot_butterfly.
+- `hidegrid` (bool, `true`): hide or show grid lines.
 - `topolegend` (bool, `false`): (see `plot_butterfly`).
 
 Internal-use only:
@@ -89,6 +90,7 @@ function plot_erp!(
     topowidth = nothing,
     topoheigth = nothing,
     topopositions_to_color = nothing,
+    hidegrid = true,
     kwargs...,
 )
     config = PlotConfig(:erp)
@@ -185,7 +187,6 @@ function plot_erp!(
     # butterfly plot is drawn slightly different
     if butterfly
         # add topolegend
-
         if (topolegend)
             topoAxis = Axis(
                 f_grid,
@@ -215,14 +216,13 @@ function plot_erp!(
         end
     else
         # normal lineplot draw
-        #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
         mainAxis = Axis(f_grid; config.axis..., xlabel = config.axis.xlabel, 
         ylabel =  config.axis.ylabel, 
         yticklabelsize =  config.axis.yticklabelsize)
-        hidedecorations!(mainAxis, ticks = false)
-        hidespines!(mainAxis, :t, :r) 
+        hidedecorations!(mainAxis, grid = hidegrid, label = false, ticks = false, ticklabels = false)
+        hidespines!(mainAxis, :t, :r)
 
-        drawing = draw!(f_grid, plotEquation; axis = config.axis)
+        drawing = draw!(mainAxis, plotEquation;)
 
     end
     applyLayoutSettings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
