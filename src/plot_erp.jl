@@ -250,6 +250,7 @@ function eegHeadMatrix(positions, center, radius)
         center[1] - oldCenter[1] * radF,
         center[2] - oldCenter[2] * radF, 0, 1,
     )
+end
 
 function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositions)
     allPositions = unique(allPositions)
