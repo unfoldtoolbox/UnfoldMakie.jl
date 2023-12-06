@@ -11,22 +11,22 @@ Plot a PCP (parallel coordinates plot).
 
 ## key word argumets (kwargs)
 
-- `normalize` (default: `nothing`) - if `:minmax`, normalize each axis to their respective min-max range.
-- `ax_labels` (Array, default: `nothing`) - specify axis names. 
+- `normalize` (default: `nothing`): if `:minmax`, normalize each axis to their respective min-max range.
+- `ax_labels` (Array, default: `nothing`): specify axis names. 
     Should be a vector of labels with length equal to the number of unique `mapping.x` values.
     Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"].
-- `ax_ticklabels` (default `:outmost`) - specify tick labels on axis.
+- `ax_ticklabels` (default `:outmost`): specify tick labels on axis.
     - `:all` - show all labels on all axes.
     - `:left` - show all labels on the left axis, but only min and max on others. 
     - `:outmost` - show labels on min and max of all other axes. 
     - `:none` - remove all labels. 
-- `bend` (default `false`) - change straight lines between the axes to curved ("bent") lines using spline interpolation.
+- `bend` (default `false`): change straight lines between the axes to curved ("bent") lines using spline interpolation.
     Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
     suffers, and the resulting visualizations can be potentially missleading.
 
 ## Defining the axes
 
-- Default: `...(...; mapping=(; x=:channel, y=:estimate))` - one could overwrite what should be on the x and the y axes.
+- Default: `...(...; mapping=(; x=:channel, y=:estimate))`. One could overwrite what should be on the x and the y axes.
 - By setting `...(...; mapping=(; color=:colorcolumn))` one defines conditions splitted by color. 
     The default color is defined by `...(...; visual=(; color=:black))`.
 

@@ -10,7 +10,7 @@ Plot an ERP image.
 ## Keyword Arguments
 - `erpblur` (Number, `10`): number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
 Non-Positive values deactivate the blur.
-- `sortix` (default: `nothing`): .
+- `sortix` (default: `nothing`): ???.
 - `sortvalues` (bool, `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
     - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
 - `meanplot` (bool, `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
@@ -20,9 +20,7 @@ $(_docstring(:erpimage))
 ## Return Value:
 The input `f`
 """
-
-# no times + no figure?
-plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; kwargs...)
+plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; kwargs...) # no times + no figure?
 
 # no times?
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; kwargs...) =
@@ -46,7 +44,6 @@ function plot_erpimage!(
     config = PlotConfig(:erpimage)
     UnfoldMakie.config_kwargs!(config; kwargs...)
 
-
     !isnothing(sortix) ? @assert(sortix isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
     if isnothing(sortix)
@@ -54,7 +51,6 @@ function plot_erpimage!(
             sortix = 1:size(plot, 2)
         else
             sortix = sortperm(sortvalues)
-
         end
     end
 
