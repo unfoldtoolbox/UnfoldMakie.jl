@@ -9,6 +9,7 @@ using UnfoldMakie
 using DataFrames
 using CairoMakie
 using TopoPlots
+using Statistics
 ```
 ## Plot Topoplot Series
 
