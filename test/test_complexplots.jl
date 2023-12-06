@@ -18,8 +18,11 @@
     times = -0.099609375:0.001953125:1.0
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-    raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1", "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz", 
-        "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
+    raw_ch_names = [
+        "FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1",
+        "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz",
+        "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2",
+    ]
 
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
@@ -39,7 +42,10 @@
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     plot_topoplot!(gc, data[:, 340, 1]; positions = positions)
-    plot_topoplotseries!(gd, df, 80;
+    plot_topoplotseries!(
+        gd,
+        df,
+        80;
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -106,7 +112,6 @@ end
         categorical_group = false,
         pvalue = pvals,
         stderror = true,
-
     )
 
     plot_butterfly!(f[1, 2], d_topo; positions = positions)
