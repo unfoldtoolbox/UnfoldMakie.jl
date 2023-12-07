@@ -6,6 +6,10 @@ df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positio
     plot_topoplotseries(df, Δbin; positions = positions)
 end
 
+@testset "topoplot for one time point" begin
+    plot_topoplotseries(df, Δbin; positions = positions, combinefun = x->x[end÷2])
+end
+
 @testset "topoplot with differend comb functions " begin
     f = Figure()
     plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
@@ -78,6 +82,5 @@ end
         positions = positions,
         visual = (label_scatter = false,),
     )
-
     f
 end

@@ -23,13 +23,16 @@ function plot_topoplot!(
     data::Union{DataFrame,<:AbstractVector};
     positions = nothing,
     labels = nothing,
+    xlabel = nothing,
     kwargs...,
 )
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
-
+    
     axis = Axis(f[1, 1]; config.axis...)
-
+    if xlabel != nothing
+        axis.xlabel = xlabel
+    end
 
     if !(data isa Vector)
         config.mapping = resolveMappings(data, config.mapping)
@@ -37,7 +40,6 @@ function plot_topoplot!(
     end
 
     positions = getTopoPositions(; positions = positions, labels = labels)
-
     eeg_topoplot!(axis, data, labels; positions, config.visual...)
 
     clims = (min(data...), max(data...))
