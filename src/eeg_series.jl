@@ -26,12 +26,14 @@ function eeg_topoplot_series(data::DataFrame,
     )
 
 Plot a series of topoplots. The function automatically takes the `combinefun=mean` over the `:time` column of `data` in `Δbin` steps.
-- The data frame `data` needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-    
-- Δbin in `:time` units, specifying the time steps. All other keyword arguments are passed to the EEG_TopoPlot recipe. In most cases, the user should specify the electrode positions with `positions=pos`.
-- The `col` and `row` arguments specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row=nothing`. Useful
-to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in df.condition) rows of topoplot series.
-- The `figure` option allows you to include information for plotting the figure. Alternatively, you can pass a fig object `eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)`.
+- The data frame `data` needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. 
+    If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
+- Δbin in `:time` units, specifying the time steps. All other keyword arguments are passed to the EEG_TopoPlot recipe. 
+    In most cases, the user should specify the electrode positions with `positions=pos`.
+- The `col` and `row` arguments specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row=nothing`. 
+    Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in df.condition) rows of topoplot series.
+- The `figure` option allows you to include information for plotting the figure. 
+    Alternatively, you can pass a fig object `eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)`.
 - `row_labels` and `col_labels` indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
     
 # Examples
@@ -52,7 +54,7 @@ end
 # allow to specify Δbin as an keyword for nicer readability
 eeg_topoplot_series(data::DataFrame; Δbin, kwargs...) =
     eeg_topoplot_series(data, Δbin; kwargs...)
-AbstractMatrix
+# AbstractMatrix
 function eeg_topoplot_series!(fig, data::AbstractMatrix, Δbin; kwargs...)
     return eeg_topoplot_series!(fig, data, string.(1:size(data, 1)), Δbin; kwargs...)
 end

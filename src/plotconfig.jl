@@ -126,7 +126,7 @@ function PlotConfig(T::Val{:topoplot})
             ylabelFromMapping = nothing,
             use_colorbar = true,
             hidespines = (),
-            hidedecorations = (),
+            hidedecorations = (Dict(:label => false)),
         ),
         visual = (;
             contours = (color = :white, linewidth = 2),
