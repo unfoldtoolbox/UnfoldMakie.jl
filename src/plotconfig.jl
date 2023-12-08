@@ -141,7 +141,7 @@ function PlotConfig(T::Val{:topoplot})
             labels = (:labels, :label, :sensor, nothing), # String
         ),
         colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
-        axis = (; aspect = DataAspect()),
+        axis = (; xlabel = "", aspect = DataAspect()),
     )
     return cfg
 end
