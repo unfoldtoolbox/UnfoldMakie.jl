@@ -74,7 +74,7 @@
         normalize = :minmax,
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
     )
-
+    #rowgap!(f.layout, 3, 150)
 
     for (label, layout) in
         zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
@@ -83,7 +83,7 @@
             label,
             fontsize = 26,
             font = :bold,
-            padding = (0, 5, 5, 0),
+            padding = (0, 5, 22, 0),
             halign = :right,
         )
     end
