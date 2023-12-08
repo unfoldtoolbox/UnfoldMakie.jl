@@ -2,15 +2,25 @@ data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 Δbin = 80
 
-@testset "topoplot basic" begin
+@testset "toposeries basic" begin
     plot_topoplotseries(df, Δbin; positions = positions)
 end
 
-@testset "topoplot for one time point" begin
+@testset "toposeries with xlabel" begin
+    f = Figure()
+    ax = Axis(f[1, 1])
+    plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions)
+    text!(ax, 0, 0, text = "Time [ms] ", align = (:center, :center), offset = (0, -120))
+    hidespines!(ax) # delete unnecessary spines (lines)
+    hidedecorations!(ax, label = false)
+    f
+end
+
+@testset "toposeries for one time point" begin
     plot_topoplotseries(df, Δbin; positions = positions, combinefun = x -> x[end÷2])
 end
 
-@testset "topoplot with differend comb functions " begin
+@testset "toposeries with differend comb functions " begin
     f = Figure()
     plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
     plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
@@ -18,7 +28,7 @@ end
     f
 end
 
-@testset "topoplot without colorbar" begin
+@testset "toposeries without colorbar" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
     Δbin = 80
     plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))

@@ -47,14 +47,16 @@
         positions = positions,
         axis = (; xlabel = "[340 ms]"),
     )
-    plot_topoplotseries!(
-        gd,
-        df,
-        80;
+    plot_topoplotseries!(gd, df, 80;
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
     )
+    ax = gd[1, 1] = Axis(f)
+    text!(ax, 0, 0,  text = "Time [ms]", 
+        align = (:center, :center), offset = (-20, -80))
+    hidespines!(ax) # delete unnecessary spines (lines)
+    hidedecorations!(ax, label = false) 
     plot_erpgrid!(ge, data[:, :, 1], positions)
 
     dat_e, evts, times = example_data("sort_data")
@@ -83,7 +85,7 @@
             label,
             fontsize = 26,
             font = :bold,
-            padding = (0, 5, 22, 0),
+            padding = (20, 70, 22, 0),
             halign = :right,
         )
     end
