@@ -41,7 +41,12 @@
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
-    plot_topoplot!(gc, data[:, 340, 1]; positions = positions, xlabel = "[340 ms]")
+    plot_topoplot!(
+        gc,
+        data[:, 340, 1];
+        positions = positions,
+        axis = (; xlabel = "[340 ms]"),
+    )
     plot_topoplotseries!(
         gd,
         df,

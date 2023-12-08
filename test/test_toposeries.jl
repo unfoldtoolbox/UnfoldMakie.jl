@@ -7,7 +7,7 @@ df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positio
 end
 
 @testset "topoplot for one time point" begin
-    plot_topoplotseries(df, Δbin; positions = positions, combinefun = x->x[end÷2])
+    plot_topoplotseries(df, Δbin; positions = positions, combinefun = x -> x[end÷2])
 end
 
 @testset "topoplot with differend comb functions " begin
@@ -21,12 +21,7 @@ end
 @testset "topoplot without colorbar" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
     Δbin = 80
-    plot_topoplotseries(
-        df,
-        Δbin;
-        positions = positions,
-        layout = (; use_colorbar = false),
-    )
+    plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))
 end
 
 @testset "GridPosition with a title" begin
@@ -66,7 +61,7 @@ end
 end
 
 
-@testset "multi-row" begin 
+@testset "multi-row" begin
     f = Figure()
 
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
