@@ -41,7 +41,7 @@ function plot_circulareegtopoplot!(
 )
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config; kwargs...)
-    config.mapping = resolveMappings(data, config.mapping)
+    config.mapping = resolve_mappings(data, config.mapping)
 
 
     positions = getTopoPositions(; positions = positions, labels = labels)
