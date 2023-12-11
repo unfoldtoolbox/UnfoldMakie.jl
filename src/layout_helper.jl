@@ -1,4 +1,4 @@
-function applyLayoutSettings!(config::PlotConfig; fig=nothing, hm=nothing,
+function apply_layout_settings!(config::PlotConfig; fig=nothing, hm=nothing,
     drawing=nothing, ax=nothing, plotArea=(1, 1))
     if isnothing(ax)
         ax = current_axis()
