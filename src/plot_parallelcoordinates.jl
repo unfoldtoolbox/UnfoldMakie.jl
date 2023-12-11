@@ -56,7 +56,6 @@ function plot_parallelcoordinates(
 
     config.mapping = UnfoldMakie.resolve_mappings(data, config.mapping)
 
-
     # remove all unspecified columns
     d = select(data, config.mapping...)
 
@@ -68,7 +67,6 @@ function plot_parallelcoordinates(
         config.mapping.y,
         combine = copy,
     )
-
     # remove the non x/y columns, we want a matrix at the end
     rm_col =
         filter(x -> x != config.mapping.x && x != config.mapping.y, [config.mapping...])
@@ -89,7 +87,7 @@ function plot_parallelcoordinates(
         c = config.visual.color
         line_labels = nothing
         if config.layout.show_legend
-            @warn "Deactivating legend, as there was no color-choice"
+            @warn "Deactivating legend, as there was no color choice"
             UnfoldMakie.config_kwargs!(config; layout = (; show_legend = false))
         end
     end

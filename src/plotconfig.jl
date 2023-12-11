@@ -1,5 +1,6 @@
 
 using GeometryBasics
+using Makie: legend_position_to_aligns
 using ColorSchemes: roma
 using Makie
 using Colors
@@ -237,7 +238,7 @@ function PlotConfig(T::Val{:paracoord})
             alpha = 0.3, 
         ),
         axis = (; ylabel = "Time"),
-        legend = (; merge = true),# fontsize = 14),
+        legend = (; merge = true), # fontsize = 14),
         mapping = (; x = :channel),
     )
     return cfg

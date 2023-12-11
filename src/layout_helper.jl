@@ -18,7 +18,7 @@ function applyLayoutSettings!(config::PlotConfig; fig=nothing, hm=nothing,
                         Colorbar(legend_position, hm; config.colorbar...)
                     end
                 else
-                    Legend(legend_position, ax; config.legend...)
+                    Legend(legend_position, ax, "Conditions"; config.legend...)
                 end
             else
                 legend!(legend_position, drawing; config.legend...)
