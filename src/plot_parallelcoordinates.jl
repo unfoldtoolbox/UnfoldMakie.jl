@@ -104,7 +104,7 @@ function plot_parallelcoordinates(
         ax_ticklabels = ax_ticklabels,
         config.visual...,
     )
-    applyLayoutSettings!(config; fig = f, ax = ax)
+    apply_layout_settings!(config; fig = f, ax = ax)
 
     return isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :
            Makie.AxisPlot([ax, axlist], hlines[1])

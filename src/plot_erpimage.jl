@@ -66,7 +66,7 @@ function plot_erpimage!(
 
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
-    UnfoldMakie.applyLayoutSettings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
+    UnfoldMakie.apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
 
     if meanplot
         # UserInput
@@ -84,7 +84,7 @@ function plot_erpimage!(
         subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
 
         lines!(subAxis, mean(plot, dims = 2)[:, 1])
-        applyLayoutSettings!(subConfig; fig = f, ax = subAxis)
+        apply_layout_settings!(subConfig; fig = f, ax = subAxis)
     end
 
     return f

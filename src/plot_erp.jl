@@ -234,7 +234,7 @@ function plot_erp!(
         drawing = draw!(mainAxis, plotEquation;)
 
     end
-    applyLayoutSettings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
     return f
 
 end

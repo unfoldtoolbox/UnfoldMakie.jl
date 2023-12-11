@@ -47,7 +47,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
     else
         config_kwargs!(config, colorbar = (; limits = clims))
     end
-    applyLayoutSettings!(config; fig = f)
+    apply_layout_settings!(config; fig = f)
 
     return f
 end
