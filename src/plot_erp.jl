@@ -103,7 +103,7 @@ function plot_erp!(
     plot_data = deepcopy(plot_data) # XXX why?
 
     # resolve columns with data
-    config.mapping = resolveMappings(plot_data, config.mapping)
+    config.mapping = resolve_mappings(plot_data, config.mapping)
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)

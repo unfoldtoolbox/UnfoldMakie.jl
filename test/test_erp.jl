@@ -2,12 +2,19 @@ include("../docs/example_data.jl")
 @testset "ERP plot with Results data" begin
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-
-    # ## Plot the results
     plot_erp(results; :stderror => true)
 end
 
+@testset "ERP plot with Results data" begin
+    m = example_data("UnfoldLinearModel")
+    results = coeftable(m)
+    results = rename(results, :coefname => :Conditions)
+    results.Conditions = replace(results.Conditions, 
+        "condition: face" => "face", 
+        "(Intercept)" => "car")
+    results = filter(row -> row.Conditions != "continuous", results) 
+    plot_erp(results; :stderror => true, legend = (; framevisible = false))
+end
 
 @testset "ERP plot with res_effects without colorbar" begin
     m = example_data("UnfoldLinearModel")
@@ -68,31 +75,6 @@ end
     f
 end
 
-
-@testset "ERP plot with error bands" begin
-
-    m = example_data("UnfoldLinearModel")
-
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-
-    plot_erp(results; :stderror => true)
-end
-
-@testset "ERP plot with error bands in GridLayout" begin
-    f = Figure(resolution = (1200, 1400))
-    ga = f[1, 1] = GridLayout()
-
-    m = example_data("UnfoldLinearModel")
-
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-
-    plot_erp!(ga, results; :stderror => true)
-
-    f
-end
-
 @testset "ERP plot with borderless legend" begin
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
@@ -103,7 +85,8 @@ end
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
-    plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
+    plot_erp!(ga, results; :stderror => true, 
+    legend = (; framevisible = false))
 
     f
 end

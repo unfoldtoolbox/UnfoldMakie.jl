@@ -31,7 +31,7 @@ function plot_topoplot!(
     axis = Axis(f[1, 1]; config.axis...)
 
     if !(data isa Vector)
-        config.mapping = resolveMappings(data, config.mapping)
+        config.mapping = resolve_mappings(data, config.mapping)
         data = data[:, config.mapping.y]
     end
 
