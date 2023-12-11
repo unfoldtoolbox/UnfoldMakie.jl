@@ -8,12 +8,15 @@ end
 @testset "ERP plot with Results data" begin
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
-    results = rename(results, :coefname => :Conditions)
-    results.Conditions = replace(results.Conditions, 
-        "condition: face" => "face", 
-        "(Intercept)" => "car")
-    results = filter(row -> row.Conditions != "continuous", results) 
-    plot_erp(results; :stderror => true, legend = (; framevisible = false))
+    results.coefname =
+        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
+    results = filter(row -> row.coefname != "continuous", results)
+    plot_erp(
+        results;
+        :stderror => true,
+        legend = (; framevisible = false),
+        mapping = (; color = :coefname => "Conditions"),
+    )
 end
 
 @testset "ERP plot with res_effects without colorbar" begin
@@ -85,8 +88,7 @@ end
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
-    plot_erp!(ga, results; :stderror => true, 
-    legend = (; framevisible = false))
+    plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
 
     f
 end
