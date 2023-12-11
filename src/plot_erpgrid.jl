@@ -49,7 +49,7 @@ function plot_erpgrid!(
         y = p[2] #- 0.1
         # todo: 0.1 should go into plot config
         ax = Axis(
-            f[1, 1],
+            f[1:8, 1:8],
             width = Relative(0.2),
             height = Relative(0.2),
             halign = x,
@@ -84,6 +84,12 @@ function plot_erpgrid!(
     hidedecorations!.(axlist)
     hidespines!.(axlist)
 
+    ax2 = Axis(f[7:8, 1:2], xlabel = "Time [s]", ylabel = "Voltage [mV]")
+    hidespines!(ax2)
+    hidedecorations!(ax2, label = false)
+    xstart = [Point2f(0), Point2f(0)]
+    xdir = [Vec2f(0, 1), Vec2f(1, 0)]
+    arrows!(xstart, xdir, arrowsize = 10, lengthscale = 0.3)
+    
     f
-
 end
