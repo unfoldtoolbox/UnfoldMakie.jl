@@ -1,7 +1,8 @@
 include("../docs/example_data.jl")
 results_plot, positions = example_data()
 @testset "PCP with Figure, 64 channels, 1 condition" begin
-    plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
+    plot_parallelcoordinates(results_plot; 
+    mapping = (color = :coefname, y = :estimate))
 end
 
 
@@ -47,8 +48,6 @@ end
     f
 
 end
-
-
 
 @testset "PCP with GridPosition" begin
     f = Figure()

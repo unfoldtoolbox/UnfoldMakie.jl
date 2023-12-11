@@ -191,7 +191,7 @@ function PlotConfig(T::Val{:erp})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        mapping = (; color = (:color, :coefname, :Conditions, nothing)),
+        mapping = (; color = (:color, :coefname, nothing)),
         layout = (; show_legend = true, hidespines = (:r, :t)),
         legend = (; framevisible = false),
         axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),

@@ -26,13 +26,14 @@
 
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
-    results = rename(results, :coefname => :Conditions)
-    results.Conditions = replace(results.Conditions,
+
+    results.coefname = replace(results.coefname,
         "condition: face" => "face",
         "(Intercept)" => "car")
-    results = filter(row -> row.Conditions != "continuous", results)
+    results = filter(row -> row.coefname != "continuous", results)
 
-    plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
+    plot_erp!(ga, results; :stderror => true,
+        legend = (; framevisible = false), mapping = (; color = :coefname => "Conditions"))
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     plot_butterfly!(
