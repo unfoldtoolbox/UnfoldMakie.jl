@@ -190,7 +190,7 @@ function PlotConfig(T::Val{:erp})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        mapping = (; color = (:color, :coefname, nothing)),
+        mapping = (; color = (:color, :coefname, :Conditions, nothing)),
         layout = (; show_legend = true, hidespines = (:r, :t)),
         legend = (; framevisible = false),
         axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
@@ -243,14 +243,14 @@ function PlotConfig(T::Val{:paracoord})
     return cfg
 end
 
-function resolveMappings(plotData, mappingData)
-    function isColumn(col)
-        string(col) ∈ names(plotData)
+function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotConfig(T::Val{:erp})
+    function is_column(col)
+        string(col) ∈ names(plot_data)
     end
     # filter columns to only include the ones that are in plot_data, or throw an error if none are
-    function getAvailable(key, choices)
-        # isColumn is an internally defined function mapping col ∈ names(plotData)
-        available = choices[keys(choices)[isColumn.(collect(choices))]]
+    function get_available(key, choices)
+        # is_column is an internally defined function mapping col ∈ names(plot_data)
+        available = choices[keys(choices)[is_column.(collect(choices))]]
 
         if length(available) >= 1
             return available[1]
@@ -258,20 +258,21 @@ function resolveMappings(plotData, mappingData)
             return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                    nothing :
                    @error(
-                "default columns for $key = $choices not found, user must provide one by using plot_plotname(...;mapping=(; $key=:yourColumnName))"
+                "default columns for $key = $choices not found, 
+                user must provide one by using plot_plotname(...; mapping=(; $key=:your_column_name))"
             )
         end
     end
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
-    mappingDict = Dict()
-    for (k, v) in pairs(mappingData)
+    mapping_dict = Dict()
+    for (k, v) in pairs(mapping_data)
 
         #if 
         #    continue
         #end
-        mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v) : v
+        mapping_dict[k] = isa(v, Tuple) ? get_available(k, v) : v
     end
-    return (; mappingDict...)
+    return (; mapping_dict...)
 end
 
 

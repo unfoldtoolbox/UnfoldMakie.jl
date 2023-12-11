@@ -26,7 +26,11 @@
 
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+    results = rename(results, :coefname => :Conditions)
+    results.Conditions = replace(results.Conditions,
+        "condition: face" => "face",
+        "(Intercept)" => "car")
+    results = filter(row -> row.Conditions != "continuous", results)
 
     plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
     hlines!(0, color = :gray, linewidth = 1)
@@ -53,10 +57,10 @@
         layout = (; use_colorbar = true),
     )
     ax = gd[1, 1] = Axis(f)
-    text!(ax, 0, 0,  text = "Time [ms]", 
+    text!(ax, 0, 0, text = "Time [ms]",
         align = (:center, :center), offset = (-20, -80))
     hidespines!(ax) # delete unnecessary spines (lines)
-    hidedecorations!(ax, label = false) 
+    hidedecorations!(ax, label = false)
     plot_erpgrid!(ge, data[:, :, 1], positions)
 
     dat_e, evts, times = example_data("sort_data")

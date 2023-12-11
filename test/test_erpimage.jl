@@ -1,4 +1,3 @@
-#include("setup.jl")
 @testset "basic" begin
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
     plot_erpimage(data;)

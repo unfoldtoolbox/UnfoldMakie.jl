@@ -14,6 +14,7 @@ end
 @testset "erpgrid with GridPosition" begin
     f = Figure()
     plot_erpgrid!(f[1, 1], data, pos)
+    f
 end
 
 @testset "erpgrid plot in GridLayout" begin

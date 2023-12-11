@@ -46,7 +46,7 @@ function plot_topoplotseries!(
     data = deepcopy(data)
 
     # resolve columns with data
-    config.mapping = resolveMappings(data, config.mapping)
+    config.mapping = resolve_mappings(data, config.mapping)
     positions = getTopoPositions(; positions = positions, labels = labels)
 
     if "label" ∉ names(data)

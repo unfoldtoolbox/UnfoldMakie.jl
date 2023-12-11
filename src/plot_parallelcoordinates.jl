@@ -54,7 +54,7 @@ function plot_parallelcoordinates(
     config = PlotConfig(:paracoord)
     UnfoldMakie.config_kwargs!(config; kwargs...)
 
-    config.mapping = UnfoldMakie.resolveMappings(data, config.mapping)
+    config.mapping = UnfoldMakie.resolve_mappings(data, config.mapping)
 
 
     # remove all unspecified columns
