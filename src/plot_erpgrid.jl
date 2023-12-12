@@ -31,17 +31,15 @@ function plot_erpgrid!(
     config = PlotConfig(:erpgrid)
     config_kwargs!(config; kwargs...)
 
-    chanNum = size(data, 1)
-    data = data[1:chanNum, :]
+    chan_num = size(data, 1)
+    data = data[1:chan_num, :]
     pos = hcat([[p[1], p[2]] for p in pos]...)
 
-    pos = pos[:, 1:chanNum]
+    pos = pos[:, 1:chan_num]
     minmaxrange = (maximum(pos, dims = 2) - minimum(pos, dims = 2))
     pos = (pos .- mean(pos, dims = 2)) ./ minmaxrange .+ 0.5
 
     axlist = []
-    #ax = Axis(f[1, 1],backgroundcolor=:green)#
-
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
 
     for (ix, p) in enumerate(eachcol(pos))
@@ -84,12 +82,24 @@ function plot_erpgrid!(
     hidedecorations!.(axlist)
     hidespines!.(axlist)
 
-    ax2 = Axis(f[7:8, 1:2], xlabel = "Time [s]", ylabel = "Voltage [mV]")
+    ax2 = Axis(f[1:8, 1:8]) #, xlabel = config.axis.xlabel, ylabel = config.axis.ylabel)
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
+    xlims!(ax2, config.axis.xlim)
+    ylims!(ax2, config.axis.ylim)
     xstart = [Point2f(0), Point2f(0)]
-    xdir = [Vec2f(0, 1), Vec2f(1, 0)]
-    arrows!(xstart, xdir, arrowsize = 10, lengthscale = 0.3)
-    
+    xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
+    arrows!(xstart, xdir, arrowsize = 10)
+    text!(0.02, 0, text = config.axis.xlabel, align = (:left, :top), 
+    fontsize = 12
+    )
+    text!(-0.008, 0.01, text = config.axis.ylabel, align = (:left, :baseline),
+     rotation = π/2, 
+     fontsize = 12
+     )
+     # testing
+     #ax0 = Axis(f[1:8, 1:8], backgroundcolor=:green)#
+     #hidespines!(ax0)
+     #hidedecorations!(ax0)
     f
 end

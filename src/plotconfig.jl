@@ -202,7 +202,18 @@ end
 function PlotConfig(T::Val{:erpgrid})
     cfg = PlotConfig()
 
-    config_kwargs!(cfg; layout = (;), colorbar = (;), mapping = (;), axis = (;))
+    config_kwargs!(
+        cfg;
+        layout = (;),
+        colorbar = (;),
+        mapping = (;),
+        axis = (
+            xlabel = "Time [s]",
+            ylabel = "Voltage [µV]",
+            xlim = [-0.04, 1],
+            ylim = [-0.04, 1],
+        ),
+    )
     return cfg
 end
 
@@ -235,7 +246,7 @@ function PlotConfig(T::Val{:paracoord})
         visual = (;
             colormap = Makie.wong_colors(),
             color = :black, # default linecolor
-            alpha = 0.3, 
+            alpha = 0.3,
         ),
         axis = (; ylabel = "Time"),
         legend = (; merge = true), # fontsize = 14),

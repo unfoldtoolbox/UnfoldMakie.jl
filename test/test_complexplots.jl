@@ -52,22 +52,26 @@
         positions = positions,
         axis = (; xlabel = "[340 ms]"),
     )
+
     plot_topoplotseries!(gd, df, 80;
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
     )
+
     ax = gd[1, 1] = Axis(f)
     text!(ax, 0, 0, text = "Time [ms]",
         align = (:center, :center), offset = (-20, -80))
     hidespines!(ax) # delete unnecessary spines (lines)
     hidedecorations!(ax, label = false)
-    plot_erpgrid!(ge, data[:, :, 1], positions)
+
+    plot_erpgrid!(ge, data[:, :, 1], positions;
+        axis = (; ylabel = "µV", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
+    )
 
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
     plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names;)
-
     r1, positions = example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
@@ -81,7 +85,6 @@
         normalize = :minmax,
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
     )
-    #rowgap!(f.layout, 3, 150)
 
     for (label, layout) in
         zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc, gd, ge, gf, gg, gh])
@@ -90,12 +93,12 @@
             label,
             fontsize = 26,
             font = :bold,
-            padding = (20, 70, 22, 0),
+            padding = (20, 20, 22, 0), #(20, 70, 22, 0),
             halign = :right,
         )
     end
     f
-    #save("dev/UnfoldMakie/docs/complex_plot.png", f)
+   #save("dev/UnfoldMakie/docs/complex_plot.png", f)
 end
 
 
