@@ -90,16 +90,18 @@ function plot_erpgrid!(
     xstart = [Point2f(0), Point2f(0)]
     xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
     arrows!(xstart, xdir, arrowsize = 10)
-    text!(0.02, 0, text = config.axis.xlabel, align = (:left, :top), 
-    fontsize = 12
+    text!(0.02, 0, text = config.axis.xlabel, align = (:left, :top), fontsize = 12)
+    text!(
+        -0.008,
+        0.01,
+        text = config.axis.ylabel,
+        align = (:left, :baseline),
+        rotation = π / 2,
+        fontsize = 12,
     )
-    text!(-0.008, 0.01, text = config.axis.ylabel, align = (:left, :baseline),
-     rotation = π/2, 
-     fontsize = 12
-     )
-     # testing
-     #ax0 = Axis(f[1:8, 1:8], backgroundcolor=:green)#
-     #hidespines!(ax0)
-     #hidedecorations!(ax0)
+    # testing
+    #ax0 = Axis(f[1:8, 1:8], backgroundcolor=:green)#
+    #hidespines!(ax0)
+    #hidedecorations!(ax0)
     f
 end
