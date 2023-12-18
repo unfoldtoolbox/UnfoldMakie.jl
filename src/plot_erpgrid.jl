@@ -82,7 +82,7 @@ function plot_erpgrid!(
     hidedecorations!.(axlist)
     hidespines!.(axlist)
 
-    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05),)
+    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05))
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
     xlims!(ax2, config.axis.xlim)

@@ -114,7 +114,7 @@ m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
-plot_erp!(ga, results; :stderror=>true, legend=(; framevisible = false))
+plot_erp!(ga, results; :stderror=>true)
 plot_butterfly!(gb, d_topo; positions=pos, 
     topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4,)
     hlines!(0, color = :gray, linewidth = 1)
@@ -136,9 +136,7 @@ results_plot = vcat(r1, r2);
 plot_parallelcoordinates(
     gh,
     subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
-    mapping = (; color = :coefname),
-    legend=(; framevisible = false),
-    
+    mapping = (; color = :coefname),    
     normalize = :minmax, ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"]
 )
 

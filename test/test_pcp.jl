@@ -1,10 +1,8 @@
 include("../docs/example_data.jl")
 results_plot, positions = example_data()
 @testset "PCP with Figure, 64 channels, 1 condition" begin
-    plot_parallelcoordinates(results_plot; 
-    mapping = (color = :coefname, y = :estimate))
+    plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
 end
-
 
 @testset "PCP with Figure, 5 channels (filtered), 1 condition" begin
     results_plot2 = filter(row -> row.channel <= 5, results_plot) # select channels
@@ -17,7 +15,6 @@ end
         mapping = (; color = :coefname),
     )
 end
-
 
 @testset "change colormap" begin
     # https://docs.makie.org/stable/explanations/colors/index.html
@@ -214,7 +211,6 @@ end
         f[1, 1],
         subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
         mapping = (; color = :coefname),
-        legend = (; framevisible = false),
         normalize = :minmax,
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
     )

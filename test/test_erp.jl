@@ -14,7 +14,6 @@ end
     plot_erp(
         results;
         :stderror => true,
-        legend = (; framevisible = false),
         mapping = (; color = :coefname => "Conditions"),
     )
 end
@@ -82,13 +81,12 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-
     m = example_data("UnfoldLinearModel")
 
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
-    plot_erp!(ga, results; :stderror => true, legend = (; framevisible = false))
+    plot_erp!(ga, results; :stderror => true)
 
     f
 end
