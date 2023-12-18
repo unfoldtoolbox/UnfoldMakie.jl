@@ -1,3 +1,8 @@
+function dropnames(namedtuple::NamedTuple, names::Tuple{Vararg{Symbol}})
+    keepnames = Base.diff_names(Base._nt_names(namedtuple), names)
+    return NamedTuple{keepnames}(namedtuple)
+end
+
 function apply_layout_settings!(
     config::PlotConfig;
     fig = nothing,
@@ -29,8 +34,10 @@ function apply_layout_settings!(
                     else
                         Colorbar(legend_position, hm; config.colorbar...)
                     end
-                else
-                    Legend(legend_position, ax, "Conditions"; config.legend...) # for PCP
+                else # for PCP
+                    title_pcp = getproperty.(Ref(config.legend), :title) # pop title
+                    config.legend = dropnames(config.legend, (:title,)) # delete title
+                    Legend(legend_position, ax, title_pcp; config.legend...)
                 end
             else
                 legend!(legend_position, drawing; config.legend...)

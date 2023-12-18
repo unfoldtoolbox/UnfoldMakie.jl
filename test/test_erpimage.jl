@@ -17,12 +17,11 @@ end
     f = Figure()
     data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
     plot_erpimage!(f[1, 1], data; meanplot = true)
-    #save("erpimage.eps", f)
 end
 
 @testset "ERP image with sortvalues" begin
     include("../docs/example_data.jl")
-    dat_e, evts, times = example_data("sort_data")    
+    dat_e, evts, times = example_data("sort_data")
     #println(describe(evts.Δlatency))
     plot_erpimage(times, dat_e; sortvalues = evts.Δlatency)
 end
@@ -30,7 +29,6 @@ end
 
 @testset "ERP image with sortindex" begin
     include("../docs/example_data.jl")
-    dat_e, evts, times = example_data("sort_data")    
-    #println(describe(evts.Δlatency))
+    dat_e, evts, times = example_data("sort_data")
     plot_erpimage(times, dat_e; sortindex = evts.Δlatency)
 end

@@ -178,13 +178,14 @@ function PlotConfig(T::Val{:butterfly})
     config_kwargs!(
         cfg;
         layout = (;
-        show_legend = false,
-        hidespines = (:r, :t),
-        hidedecorations = (Dict(
-            :label => false,
-            :ticks => false,
-            :ticklabels => false,
-        ))),
+            show_legend = false,
+            hidespines = (:r, :t),
+            hidedecorations = (Dict(
+                :label => false,
+                :ticks => false,
+                :ticklabels => false,
+            )),
+        ),
         mapping = (;
             color = (:channel, :channels, :trial, :trials),
             positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
@@ -266,7 +267,7 @@ function PlotConfig(T::Val{:paracoord})
             alpha = 0.3,
         ),
         axis = (; ylabel = "Time"),
-        legend = (; merge = true), # fontsize = 14),
+        legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
     )
     return cfg
