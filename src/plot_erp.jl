@@ -21,7 +21,6 @@ Plot an ERP plot.
 - `pvalue` (Array, `[]`): show a pvalue.
     - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
 - `positions` (Array, `[]`): see plot_butterfly.
-- `hidegrid` (bool, `true`): hide or show grid lines.
 - `topolegend` (bool, `false`): (see `plot_butterfly`).
 
 Internal-use only:
@@ -90,7 +89,6 @@ function plot_erp!(
     topowidth = nothing,
     topoheigth = nothing,
     topopositions_to_color = nothing,
-    hidegrid = true,
     kwargs...,
 )
     config = PlotConfig(:erp)
@@ -206,15 +204,13 @@ function plot_erp!(
             ylabel = config.axis.ylabel,
             yticklabelsize = config.axis.yticklabelsize,
         )
-        hidedecorations!(mainAxis, label = false, ticks = false, ticklabels = false)
-        hidespines!(mainAxis, :t, :r)
         if isnothing(colors)
             drawing = draw!(mainAxis, plotEquation)
         else
             drawing = draw!(mainAxis, plotEquation; palettes = (color = colors,))
         end
     else
-        # normal lineplot draw
+        # draw a normal ERP lineplot 
         mainAxis = Axis(
             f_grid;
             config.axis...,
@@ -222,15 +218,6 @@ function plot_erp!(
             ylabel = config.axis.ylabel,
             yticklabelsize = config.axis.yticklabelsize,
         )
-        hidedecorations!(
-            mainAxis,
-            grid = hidegrid,
-            label = false,
-            ticks = false,
-            ticklabels = false,
-        )
-        hidespines!(mainAxis, :t, :r)
-
         drawing = draw!(mainAxis, plotEquation;)
 
     end

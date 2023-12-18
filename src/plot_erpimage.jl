@@ -8,12 +8,13 @@ Plot an ERP image.
 - `plot::Matrix{Float64}`: Data for the plot visualization
         
 ## Keyword Arguments
-- `erpblur` (Number, `10`): number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
-Non-Positive values deactivate the blur.
-- `sortix` (default: `nothing`): ???.
-- `sortvalues` (bool, `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
+- `erpblur` (`Number`; default: `10`): number indicating how much blur is applied to the image. 
+    Gaussian blur of the ImageFiltering module is used.
+    Non-Positive values deactivate the blur.
+- `sortindex` (`Vector{Int64}`; default: `nothing`): sorting over index values.
+- `sortvalues` (`Vector{Int64}`; default: `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
     - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
-- `meanplot` (bool, `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+- `meanplot` (`bool`; default: `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 $(_docstring(:erpimage))
 
@@ -36,7 +37,7 @@ function plot_erpimage!(
     times::AbstractVector,
     plot::Matrix{<:Real};
     sortvalues = nothing,
-    sortix = nothing,
+    sortindex = nothing,
     meanplot = false,
     erpblur = 10,
     kwargs...,
@@ -44,18 +45,18 @@ function plot_erpimage!(
     config = PlotConfig(:erpimage)
     UnfoldMakie.config_kwargs!(config; kwargs...)
 
-    !isnothing(sortix) ? @assert(sortix isa Vector{Int}) : ""
+    !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
-    if isnothing(sortix)
+    if isnothing(sortindex)
         if isnothing(sortvalues)
-            sortix = 1:size(plot, 2)
+            sortindex = 1:size(plot, 2)
         else
-            sortix = sortperm(sortvalues)
+            sortindex = sortperm(sortvalues)
         end
     end
 
     filtered_data = UnfoldMakie.imfilter(
-        plot[:, sortix],
+        plot[:, sortindex],
         UnfoldMakie.Kernel.gaussian((0, max(erpblur, 0))),
     )
 
