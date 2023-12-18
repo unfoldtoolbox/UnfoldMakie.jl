@@ -30,7 +30,7 @@ function apply_layout_settings!(
                         Colorbar(legend_position, hm; config.colorbar...)
                     end
                 else
-                    Legend(legend_position, ax, "Conditions"; config.legend...)
+                    Legend(legend_position, ax, "Conditions"; config.legend...) # for PCP
                 end
             else
                 legend!(legend_position, drawing; config.legend...)

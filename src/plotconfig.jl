@@ -151,7 +151,7 @@ function PlotConfig(T::Val{:topoplotseries})
     config_kwargs!(
         cfg,
         layout = (use_colorbar = true,),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"), # is it a duplication??
+        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
         visual = (;
             label_text = false # true doesnt work again
         ),
@@ -177,7 +177,14 @@ function PlotConfig(T::Val{:butterfly})
     cfg = PlotConfig(:erp)
     config_kwargs!(
         cfg;
-        layout = (; show_legend = false),
+        layout = (;
+        show_legend = false,
+        hidespines = (:r, :t),
+        hidedecorations = (Dict(
+            :label => false,
+            :ticks => false,
+            :ticklabels => false,
+        ))),
         mapping = (;
             color = (:channel, :channels, :trial, :trials),
             positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
@@ -192,7 +199,17 @@ function PlotConfig(T::Val{:erp})
     config_kwargs!(
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
-        layout = (; show_legend = true, hidespines = (:r, :t)),
+        layout = (;
+            show_legend = true,
+            hidespines = (:r, :t),
+            hidedecorations = (Dict(
+                :label => false,
+                :grid => true,
+                :label => false,
+                :ticks => false,
+                :ticklabels => false,
+            )),
+        ),
         legend = (; framevisible = false),
         axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
     )

@@ -47,7 +47,7 @@ function plot_erpgrid!(
         y = p[2] #- 0.1
         # todo: 0.1 should go into plot config
         ax = Axis(
-            f[1:8, 1:8],
+            f[1, 1],
             width = Relative(0.2),
             height = Relative(0.2),
             halign = x,
@@ -82,7 +82,7 @@ function plot_erpgrid!(
     hidedecorations!.(axlist)
     hidespines!.(axlist)
 
-    ax2 = Axis(f[1:8, 1:8]) #, xlabel = config.axis.xlabel, ylabel = config.axis.ylabel)
+    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05),)
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
     xlims!(ax2, config.axis.xlim)
@@ -100,7 +100,7 @@ function plot_erpgrid!(
         fontsize = 12,
     )
     # testing
-    #ax0 = Axis(f[1:8, 1:8], backgroundcolor=:green)#
+    #ax0 = Axis(f[1, 1], backgroundcolor=:green)#
     #hidespines!(ax0)
     #hidedecorations!(ax0)
     f
