@@ -149,5 +149,4 @@ for (label, layout) in zip(["A", "B", "C", "D", "E", "F", "G", "H"], [ga, gb, gc
         halign=:right)
 end
 f
-save("./complex_plot.png", f)
 ```
