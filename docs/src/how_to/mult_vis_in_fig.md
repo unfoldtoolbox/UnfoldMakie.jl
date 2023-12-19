@@ -18,7 +18,8 @@ uf = example_data("UnfoldLinearModel")
 results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 data, positions = TopoPlots.example_data()
-dat_e, evts, times = example_data("sort_data")    
+dat_e, evts, times = example_data("sort_data") 
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)   
 nothing #hide
 ```
 This section discusses how users can incorporate multiple plots into a single figure.
@@ -119,7 +120,6 @@ gd = f[2, 2]
 gf = f[3, 2]
 gh = f[4, 2]
 
-include("../docs/example_data.jl")
 d_topo, pos = example_data("TopoPlots.jl")
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
