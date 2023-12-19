@@ -9,8 +9,8 @@ Plot an ERP image.
 - `pos::Vector{Point{2,Float}}`: electrode positions.
         
 ## Keyword Arguments
-- `drawlabels` (bool, `false`): draw channels labels over each waveform. 
-- `times`: (Vector, `1:size(data, 2)`): vector of size()
+- `drawlabels` (`bool`, default=`false`): draw channels labels over each waveform. 
+- `times`: (`Vector`, default=`1:size(data, 2)`): vector of size()
 
 $(_docstring(:erpgrid))
 
