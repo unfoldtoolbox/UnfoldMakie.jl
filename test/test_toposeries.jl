@@ -1,21 +1,37 @@
 data, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+Δbin = 80
 
-@testset "basic" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-    Δbin = 80
-    UnfoldMakie.plot_topoplotseries(df, Δbin; positions = positions)
-
+@testset "toposeries basic" begin
+    plot_topoplotseries(df, Δbin; positions = positions)
 end
-@testset "basic without colorbar" begin
+
+@testset "toposeries with xlabel" begin
+    f = Figure()
+    ax = Axis(f[1, 1])
+    plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions)
+    text!(ax, 0, 0, text = "Time [ms] ", align = (:center, :center), offset = (0, -120))
+    hidespines!(ax) # delete unnecessary spines (lines)
+    hidedecorations!(ax, label = false)
+    f
+end
+
+@testset "toposeries for one time point" begin
+    plot_topoplotseries(df, Δbin; positions = positions, combinefun = x -> x[end÷2])
+end
+
+@testset "toposeries with differend comb functions " begin
+    f = Figure()
+    plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
+    plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
+    plot_topoplotseries!(f[3, 1], df, Δbin; positions = positions, combinefun = std)
+    f
+end
+
+@testset "toposeries without colorbar" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
     Δbin = 80
-    UnfoldMakie.plot_topoplotseries(
-        df,
-        Δbin;
-        positions = positions,
-        layout = (; use_colorbar = false),
-    )
-
+    plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))
 end
 
 @testset "GridPosition with a title" begin
@@ -55,7 +71,7 @@ end
 end
 
 
-@testset "multi-row" begin 
+@testset "multi-row" begin
     f = Figure()
 
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
@@ -71,6 +87,5 @@ end
         positions = positions,
         visual = (label_scatter = false,),
     )
-
     f
 end

@@ -38,7 +38,7 @@ On the second image, there is a `minmax normalization``, so each axis has its ow
 Typically, parallelplots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.
 
 ```@example main
-    f = Figure()
+   f = Figure()
     plot_parallelcoordinates(
         f[1, 1],
         subset(results_plot, :channel => x -> x .< 10);
@@ -50,9 +50,40 @@ Typically, parallelplots are normalized per axis. Whether this makes sense for e
         mapping = (; color = :coefname),
         normalize = :minmax,
     )
+    for (label, layout) in zip(["no normalisation", "minmax normalisation"], [f[1, 1], f[2, 1]])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize = 26,
+            font = :bold,
+            padding = (0, -250, 25, 0),
+            halign = :left)
+    end
     f
+```
+## Color schemes
+Use only categorical with high contrast between adjacent colors. 
+More: https://docs.makie.org/stable/explanations/colors/index.html
 
+```@example main
 
+    f = Figure()
+    plot_parallelcoordinates(f[1, 1],
+        subset(results_plot, :channel => x -> x .<= 5);
+        mapping = (; color = :coefname),
+        visual=(; colormap=:tab10)
+    )
+    plot_parallelcoordinates(f[2, 1],
+        subset(results_plot, :channel => x -> x .<= 5);
+        mapping = (; color = :coefname),
+        visual=(; colormap=:Accent_3)
+    )
+    for (label, layout) in zip(["tab10", "Accent_3"], [f[1, 1], f[2, 1]])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize = 26,
+            font = :bold,
+            padding = (0, -50, 25, 0),
+            halign = :left)
+    end
+    f
 ```
 
 ## Labels
@@ -71,34 +102,45 @@ Use `ax_labels` to specify labels for the axes.
 Specify tick labels on axis. There are four different options for the tick labels.
 
 ```@example main
- f = Figure()
+   f = Figure(resolution = (400, 800))
     plot_parallelcoordinates(
         f[1, 1],
-        subset(results_plot, :channel => x -> x .< 5);
+        subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
         ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :all,
         normalize = :minmax,
-    ) # all tick labels on all axis
+    ) # show all ticks on all axes
     plot_parallelcoordinates(
         f[2, 1],
-        subset(results_plot, :channel => x -> x .< 5);
+        subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
+        ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :left,
         normalize = :minmax,
-    ) # tick labels on extremities + tickets on the left
+    ) # show all ticks on the left axis, but only extremities on others 
     plot_parallelcoordinates(
         f[3, 1],
-        subset(results_plot, :channel => x -> x .< 5);
+        subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
+        ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :outmost,
         normalize = :minmax,
-    ) # show tick labels on extremities of axis
+    ) # show ticks on extremities of all axes
 
     plot_parallelcoordinates(
         f[4, 1],
-        subset(results_plot, :channel => x -> x .< 5);
+        subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
+        ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :none,
         normalize = :minmax,
-    ) #  disable tick labels
-    f 
+    ) #  disable all ticks
+    for (label, layout) in zip(["all", "left", "outmost", "none"], 
+        [f[1, 1], f[2, 1], f[3, 1], f[4, 1]])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize = 26,
+            font = :bold,
+            padding = (0, -80, 25, 0),
+            halign = :left)
+    end
+    f
 ```
 
 
@@ -117,7 +159,7 @@ Bending the linescan be helpful to make them more visible.
 
 ## Transparancy 
 ```@example main
-    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+ uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 
     f = Figure()
     plot_parallelcoordinates(
@@ -125,15 +167,22 @@ Bending the linescan be helpful to make them more visible.
         uf_5chan;
         mapping = (; color = :coefname),
         layout = (; legend_position = :right),
-        visual=(; alpha=0.1)
+        visual = (; alpha = 0.1),
     )
     plot_parallelcoordinates(
         f[2, 1],
-        uf_5chan;
+        uf_5chan,
         mapping = (; color = :coefname),
         layout = (; legend_position = :right),
-        visual=(; alpha=0.9)
+        visual = (; alpha = 0.9),
     )
+    for (label, layout) in zip(["alpha = 0.1", "alpha = 0.9",], 
+        [f[1, 1], f[2, 1]])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize = 26,
+            font = :bold,
+            padding = (0, -80, 25, 0),
+            halign = :left)
+    end
     f
-
 ```

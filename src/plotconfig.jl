@@ -1,5 +1,6 @@
 
 using GeometryBasics
+using Makie: legend_position_to_aligns
 using ColorSchemes: roma
 using Makie
 using Colors
@@ -126,7 +127,7 @@ function PlotConfig(T::Val{:topoplot})
             ylabelFromMapping = nothing,
             use_colorbar = true,
             hidespines = (),
-            hidedecorations = (),
+            hidedecorations = (Dict(:label => false)),
         ),
         visual = (;
             contours = (color = :white, linewidth = 2),
@@ -140,7 +141,8 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
-        axis = (; aspect = DataAspect()),
+        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        axis = (; xlabel = "", aspect = DataAspect()),
     )
     return cfg
 end
@@ -175,12 +177,21 @@ function PlotConfig(T::Val{:butterfly})
     cfg = PlotConfig(:erp)
     config_kwargs!(
         cfg;
-        layout = (; show_legend = false),
+        layout = (;
+            show_legend = false,
+            hidespines = (:r, :t),
+            hidedecorations = (Dict(
+                :label => false,
+                :ticks => false,
+                :ticklabels => false,
+            )),
+        ),
         mapping = (;
             color = (:channel, :channels, :trial, :trials),
             positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
         ),
+        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
     )
     return cfg
 end
@@ -189,12 +200,41 @@ function PlotConfig(T::Val{:erp})
     config_kwargs!(
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
-        layout = (; show_legend = true, hidespines = (:r, :t)),
+        layout = (;
+            show_legend = true,
+            hidespines = (:r, :t),
+            hidedecorations = (Dict(
+                :label => false,
+                :grid => true,
+                :label => false,
+                :ticks => false,
+                :ticklabels => false,
+            )),
+        ),
         legend = (; framevisible = false),
+        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
     )
 
     return cfg
 end
+function PlotConfig(T::Val{:erpgrid})
+    cfg = PlotConfig()
+
+    config_kwargs!(
+        cfg;
+        layout = (;),
+        colorbar = (;),
+        mapping = (;),
+        axis = (
+            xlabel = "Time [s]",
+            ylabel = "Voltage [µV]",
+            xlim = [-0.04, 1],
+            ylim = [-0.04, 1],
+        ),
+    )
+    return cfg
+end
+
 function PlotConfig(T::Val{:channelimage})
     cfg = PlotConfig()
     config_kwargs!(
@@ -212,7 +252,7 @@ function PlotConfig(T::Val{:erpimage})
         cfg;
         layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
-        axis = (xlabel = "Time", ylabel = "Sorted trials"),
+        axis = (xlabel = "Time [s]", ylabel = "Sorted trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg
@@ -226,20 +266,21 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
-        legend = (; merge = true,),
+        axis = (; ylabel = "Time"),
+        legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
     )
     return cfg
 end
 
-function resolveMappings(plotData, mappingData)
-    function isColumn(col)
-        string(col) ∈ names(plotData)
+function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotConfig(T::Val{:erp})
+    function is_column(col)
+        string(col) ∈ names(plot_data)
     end
     # filter columns to only include the ones that are in plot_data, or throw an error if none are
-    function getAvailable(key, choices)
-        # isColumn is an internally defined function mapping col ∈ names(plotData)
-        available = choices[keys(choices)[isColumn.(collect(choices))]]
+    function get_available(key, choices)
+        # is_column is an internally defined function mapping col ∈ names(plot_data)
+        available = choices[keys(choices)[is_column.(collect(choices))]]
 
         if length(available) >= 1
             return available[1]
@@ -247,20 +288,21 @@ function resolveMappings(plotData, mappingData)
             return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                    nothing :
                    @error(
-                "default columns for $key = $choices not found, user must provide one by using plot_plotname(...;mapping=(; $key=:yourColumnName))"
+                "default columns for $key = $choices not found, 
+                user must provide one by using plot_plotname(...; mapping=(; $key=:your_column_name))"
             )
         end
     end
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
-    mappingDict = Dict()
-    for (k, v) in pairs(mappingData)
+    mapping_dict = Dict()
+    for (k, v) in pairs(mapping_data)
 
         #if 
         #    continue
         #end
-        mappingDict[k] = isa(v, Tuple) ? getAvailable(k, v) : v
+        mapping_dict[k] = isa(v, Tuple) ? get_available(k, v) : v
     end
-    return (; mappingDict...)
+    return (; mapping_dict...)
 end
 
 
