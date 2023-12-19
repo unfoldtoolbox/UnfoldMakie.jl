@@ -35,7 +35,7 @@ plot_designmatrix(designmatrix(uf))
 To make the design matrix easier to read, you may want to sort it.
 
 ```@example main
-plot_designmatrix(designmatrix(uf); sortData=true)
+plot_designmatrix(designmatrix(uf); sort_data=true)
 ```
 
 - `standardize_data` (bool,`true`): indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
