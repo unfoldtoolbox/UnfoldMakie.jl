@@ -15,7 +15,7 @@
 | <a href="https://github.com/unfoldtoolbox/Unfold.jl/tree/main"><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/10183650/277623787-757575d0-aeb9-4d94-a5f8-832f13dcd2dd.png"></a> | <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl"><img  src="https://github-production-user-asset-6210df.s3.amazonaws.com/10183650/277623793-37af35a0-c99c-4374-827b-40fc37de7c2b.png"></a>|<a href="https://github.com/unfoldtoolbox/UnfoldSim.jl"><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/10183650/277623795-328a4ccd-8860-4b13-9fb6-64d3df9e2091.png"></a>|<a href="https://github.com/unfoldtoolbox/UnfoldBIDS.jl"><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/10183650/277622460-2956ca20-9c48-4066-9e50-c5d25c50f0d1.png"></a>|<a href="https://github.com/unfoldtoolbox/UnfoldDecode.jl"><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/10183650/277622487-802002c0-a1f2-4236-9123-562684d39dcf.png"></a>|<a href="https://github.com/unfoldtoolbox/UnfoldStats.jl"><img  src="https://github-production-user-asset-6210df.s3.amazonaws.com/10183650/277623799-4c8f2b5a-ea84-4ee3-82f9-01ef05b4f4c6.png"></a>|
 
 A toolbox for  visualizations of EEG/ERP data and Unfold.jl models.
-Building on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/), it grants users high performance, and highly customizable plots.
+Based on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/), it grants users high performance, and highly customizable plots.
 
 We currently support: 
 <img  src="https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/af2801e5-cd64-4932-b84d-9abc1d8470ee" width="300" align="right">
@@ -35,7 +35,7 @@ ERP images
 Channel images
 - ![icon_parallel_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/dab097c3-bcd6-4405-a44b-71cbe3e5fac9)
 Parallel coordinates
-- Designmatrices
+- Design matrices
 - Circular topoplots
 
 
@@ -47,9 +47,9 @@ Parallel coordinates
 <summary>Click to expand</summary>
 
 The recommended way to install julia is [juliaup](https://github.com/JuliaLang/juliaup).
-It allows you to, e.g., easily update Julia at a later point, but also test out alpha/beta versions etc.
+It allows you to, e.g., easily update Julia at a later point, but also to test out alpha/beta versions etc.
 
-TL:DR; If you dont want to read the explicit instructions, just copy the following command
+TLDR: If you don't want to read the explicit instructions, just copy the following command
 
 #### Windows
 
@@ -72,24 +72,24 @@ Pkg.add("UnfoldMakie")
 ```julia
 using UnfoldMakie
 using CairoMakie # backend
-using Unfold,UnfoldSim # Fit / Simulation
+using Unfold, UnfoldSim # Fit / Simulation
 
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-data = reshape(data,1,size(data)...) # fake a single channel
-	
+data = reshape(data, 1, size(data)...) # fake a single channel
+
 times = range(0, step = 1 / 100, length = size(data, 2))
-m = fit(UnfoldModel,@formula(0~1+condition),evts,data,times)
+m = fit(UnfoldModel, @formula(0 ~ 1 + condition), evts, data, times)
 
 plot_erp(coeftable(m))
 ```
 
 ## Contributions
 
-Contributions are very welcome. These could be typos, bugreports, feature-requests, speed-optimization, new solvers, better code, better documentation.
+Contributions are very welcome. These can be typos, bug reports, feature requests, speed improvements, new solvers, better code, better documentation.
 
 ### How-to Contribute
 
-You are very welcome to raise issues and start pull requests!
+You are very welcome to submit issues and start pull requests!
 
 ### Adding Documentation
 
@@ -99,7 +99,7 @@ You are very welcome to raise issues and start pull requests!
 
 ## Citation
 
-If you make use of theses visualizations, please cite:
+If you use these visualizations, please cite:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6531996.svg)](https://doi.org/10.5281/zenodo.6531996)
 
@@ -131,6 +131,7 @@ If you make use of theses visualizations, please cite:
 
 ## Acknowledgements
 
-Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – project ID 251654672 – TRR 161 (project D05)
+Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Project-ID 251654672 – TRR 161” / “Gefördert durch die Deutsche Forschungsgemeinschaft (DFG) – Projektnummer 251654672 – TRR 161.
 
 Funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany´s Excellence Strategy – EXC 2075 – 390740016
+
