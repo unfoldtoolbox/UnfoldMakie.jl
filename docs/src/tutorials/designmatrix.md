@@ -30,11 +30,11 @@ plot_designmatrix(designmatrix(uf))
 
 # kwargs `plot_designmatrix(...; ...)`.
 
-
 - `sort_data` (bool, `true`): indicates whether the data is sorted; using sortslices() of Base Julia. 
 
 To make the design matrix easier to read, you may want to sort it.
-```
+
+```@example main
 plot_designmatrix(designmatrix(uf); sortData=true)
 ```
 
