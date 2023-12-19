@@ -26,8 +26,9 @@ plot_erpimage(data)
 
 Since ERP images use a `Matrix` as an input, the library does not need any informations about the mapping.
 
-- `erpblur` (Number, `10`): number indicating how much blur is applied to the image; using Gaussian blur of the ImageFiltering module.
-Non-Positive values deactivate the blur.
+- `erpblur` (Number, `10`): number indicating how much blur is applied to the image; 
+    Gaussian blur of the ImageFiltering module is used.
+    Non-Positive values deactivate the blur.
 - `sortvalues` (bool, `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
     - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
 - `meanplot` (bool, `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.

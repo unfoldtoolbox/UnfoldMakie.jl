@@ -24,7 +24,7 @@ Plot an ERP plot.
 - `topolegend` (bool, `false`): (see `plot_butterfly`).
 
 Internal-use only:
-- `butterfly` (bool, `true`): a butterfly plot instead of an ERP-plot. See  `plot_butterfly`
+- `butterfly` (bool, `true`): a butterfly plot instead of an ERP plot. See  `plot_butterfly`
 
 $(_docstring(:erp))
 
@@ -101,7 +101,7 @@ function plot_erp!(
     plot_data = deepcopy(plot_data) # XXX why?
 
     # resolve columns with data
-    config.mapping = resolveMappings(plot_data, config.mapping)
+    config.mapping = resolve_mappings(plot_data, config.mapping)
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -185,7 +185,6 @@ function plot_erp!(
     # butterfly plot is drawn slightly different
     if butterfly
         # add topolegend
-
         if (topolegend)
             topoAxis = Axis(
                 f_grid,
@@ -195,30 +194,34 @@ function plot_erp!(
                 valign = 0.95,
                 aspect = 1,
             )
-            topoplotLegend(
-                topoAxis,
-                topomarkersize,
-                topopositions_to_color,
-                allPositions,
-            )
+            topoplotLegend(topoAxis, topomarkersize, topopositions_to_color, allPositions)
         end
         # no extra legend
-        mainAxis = Axis(f_grid; config.axis...)
-        hidedecorations!(mainAxis, label = false, ticks = false, ticklabels = false)
-
+        mainAxis = Axis(
+            f_grid;
+            config.axis...,
+            xlabel = config.axis.xlabel,
+            ylabel = config.axis.ylabel,
+            yticklabelsize = config.axis.yticklabelsize,
+        )
         if isnothing(colors)
             drawing = draw!(mainAxis, plotEquation)
         else
             drawing = draw!(mainAxis, plotEquation; palettes = (color = colors,))
         end
     else
-        # normal lineplot draw
-        #drawing = draw!(Axis(f[1,1]; config.axisData...),plotEquation)
-
-        drawing = draw!(f_grid, plotEquation; axis = config.axis)
+        # draw a normal ERP lineplot 
+        mainAxis = Axis(
+            f_grid;
+            config.axis...,
+            xlabel = config.axis.xlabel,
+            ylabel = config.axis.ylabel,
+            yticklabelsize = config.axis.yticklabelsize,
+        )
+        drawing = draw!(mainAxis, plotEquation;)
 
     end
-    applyLayoutSettings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
     return f
 
 end
@@ -301,7 +304,7 @@ function addPvalues(plot_data, pvalue, config)
             Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
             Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
         ) for (x, y, n) in zip(p.from, p.to, p.sigindex)
-    ]    
+    ]
     res = data(p) * mapping(:segments) * visual(Poly)
     return (res)
 end

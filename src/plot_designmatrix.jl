@@ -100,7 +100,7 @@ function plot_designmatrix!(
         ax.yreversed = true
     end
 
-    applyLayoutSettings!(config; fig = f, hm = hm)
+    apply_layout_settings!(config; fig = f, hm = hm)
 
     return f
 end

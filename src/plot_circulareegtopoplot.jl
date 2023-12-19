@@ -41,7 +41,7 @@ function plot_circulareegtopoplot!(
 )
     config = PlotConfig(:circeegtopo)
     config_kwargs!(config; kwargs...)
-    config.mapping = resolveMappings(data, config.mapping)
+    config.mapping = resolve_mappings(data, config.mapping)
 
 
     positions = getTopoPositions(; positions = positions, labels = labels)
@@ -98,7 +98,7 @@ function plot_circulareegtopoplot!(
         label = config.colorbar.label,
         height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
     )
-    applyLayoutSettings!(config; ax = ax)
+    apply_layout_settings!(config; ax = ax)
 
     # set the scene's background color according to config
     #set_theme!(Theme(backgroundcolor = config.axisData.backgroundcolor))
