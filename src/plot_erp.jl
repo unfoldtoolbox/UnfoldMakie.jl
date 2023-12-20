@@ -15,16 +15,16 @@ Plot an ERP plot.
 
 ## kwargs (...; ...):
 
-- `categorical_color` (bool, `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
-- `categorical_group` (bool, `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
-- `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue` (Array, `[]`): show a pvalue.
+- `categorical_color` (`bool`, default=`true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
+- `categorical_group` (`bool`, default=`true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
+- `stderror` (`bool`, default=`false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+- `pvalue` (`Array`, default=`[]`): show a pvalue.
     - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
-- `positions` (Array, `[]`): see plot_butterfly.
-- `topolegend` (bool, `false`): (see `plot_butterfly`).
+- `positions` (`Array`, default=`[]`): see plot_butterfly.
+- `topolegend` (`bool`, default=`false`): (see `plot_butterfly`).
 
 Internal-use only:
-- `butterfly` (bool, `true`): a butterfly plot instead of an ERP plot. See  `plot_butterfly`
+- `butterfly` (`bool`, default=`true`): a butterfly plot instead of an ERP plot. See  `plot_butterfly`
 
 $(_docstring(:erp))
 
@@ -37,15 +37,15 @@ plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwa
 
 """
 Plot a butterfly plot
-    plot_butterfly(plot_data::DataFrame; positions=nothing) =
+    plot_butterfly(plot_data::DataFrame; positions=nothing)
 
 ## kwargs (...; ...):
-- `positions` (Array, `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
+- `positions` (`Array`, `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
-- `topolegend` (bool, `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
-- `topomarkersize` (Real, `10`): change the size of the markers, topoplot-inlay electrodes.
-- `topowidth` (Real, `0.25`): change the size of the inlay topoplot width.
-- `topoheigth` (Real, `0.25`): change the size of the inlay topoplot height.
+- `topolegend` (`bool`, default=`true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
+- `topomarkersize` (`Real`, default=`10`): change the size of the markers, topoplot-inlay electrodes.
+- `topowidth` (`Real`, default=`0.25`): change the size of the inlay topoplot width.
+- `topoheigth` (`Real`, default=`0.25`): change the size of the inlay topoplot height.
 - `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´): change the colors of the channel lines.
 
 
