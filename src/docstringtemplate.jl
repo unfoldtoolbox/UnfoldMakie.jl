@@ -32,12 +32,13 @@ function _docstring(cfg_symb::Symbol)
             addlink = "- *"*link[fn[k]]*"*"
         catch
         end
-        out = out * "**$(fn[k]) =** $(string(namedtpl)) $addlink \n\n"
+        
+        out = out * "**$(fn[k]) =** $(string(`namedtpl`)) $addlink \n\n" 
     end
         
     return """## Shared plot configuration options
         The shared plot options can be used as follows:
-        `type = (; key=value, ...))` - for example `plot_x(..., layout = (show_legend=true, legend_position=:right))`. 
+        `type = (; key=value, ...))` - for example `plot_x(...; layout = (show_legend=true, legend_position=:right))`. 
         Multiple defaults will be cycled until match.
 
         $(out)
