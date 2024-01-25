@@ -24,15 +24,45 @@ first(df, 3)
 
 ## Plot Butterfly Plots
 
-The following code will plot the default butterfly plot
+The default butterfly plot:
 ```@example main
 plot_butterfly(df)
 ```
 
-or if you provide the channel positions:
+The butterfly plot with corresponding topoplot. You need to provide the channel positions.
 
 ```@example main
 plot_butterfly(df; positions=pos)
+```
+
+You want to change size of topomarkers and size of topoplot:
+```@example main
+plot_butterfly(
+    data;
+    positions = pos,
+    topomarkersize = 10,
+    topoheigth = 0.4,
+    topowidth = 0.4,
+)
+```
+
+You want to add vline and hline:
+```@example main
+f = Figure()
+plot_butterfly!(f, data; positions = pos)
+hlines!(0, color = :gray, linewidth = 1)
+vlines!(0, color = :gray, linewidth = 1)
+f
+```
+You want to remove all decorations:
+```@example main
+plot_butterfly(
+    data;
+    positions = pos,
+    layout = (;
+        hidedecorations = (:label => true, :ticks => true, :ticklabels => true)
+    ),
+)
 ```
 
 ## Column Mappings for Butterfly Plots
