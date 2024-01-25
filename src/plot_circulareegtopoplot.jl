@@ -113,7 +113,7 @@ function calculateGlobalMaxValues(data, predictor)
     )
 
 
-    globalMaxVal = maximum(x.localMaxVal)
+    globalMaxVal = round(maximum(x.localMaxVal), digits = 2)
     return (-globalMaxVal, globalMaxVal)
 end
 
