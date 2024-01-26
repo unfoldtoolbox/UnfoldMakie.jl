@@ -36,4 +36,3 @@ plot_circulareegtopoplot(
     predictor = :time,
     predictor_bounds = [80, 320],
 )
-

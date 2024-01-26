@@ -33,7 +33,7 @@ results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
 # ## Plot the results
-plot_erp(results; :stderror => true,)
+plot_erp(results; :stderror => true)
 
 
 
@@ -79,11 +79,11 @@ plot_erp(
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 pvals = DataFrame(
-    from=[0.1,0.3],
-	to=[0.5,0.7],
-	coefname=["(Intercept)", "condition: face"] # if coefname not specified, line should be black
+    from = [0.1, 0.3],
+    to = [0.5, 0.7],
+    coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
-plot_erp(results; :pvalue=>pvals)
+plot_erp(results; :pvalue => pvals)
 
 # ### stderror (boolean)
 # Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 

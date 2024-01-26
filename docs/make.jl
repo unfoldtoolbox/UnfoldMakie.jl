@@ -45,7 +45,7 @@ makedocs(;
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
             "Topo Plot" => "tutorials/topoplot.md",
             "Topo Plot Series" => "tutorials/topoplotseries.md",
-            "Circular TopoPlot" => "generated/tutorials/circTopo.md",
+            "Circular TopoPlot" => "generated/tutorials/circ_topo.md",
         ],
         "How To" => [
             "Butterfly Colormap" => "how_to/position2color.md",
