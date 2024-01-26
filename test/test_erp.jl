@@ -118,3 +118,16 @@ end
 
     f
 end
+
+@testset "ERP plot with p-values" begin
+    m = example_data("UnfoldLinearModel")
+    results = coeftable(m)
+    pvals = DataFrame(
+        from=[0.1,0.3],
+        to=[0.5,0.7],
+        coefname=["(Intercept)", "condition: face"] # if coefname not specified, line should be black
+    )
+    plot_erp(results; :pvalue=>pvals)
+end
+
+

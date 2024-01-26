@@ -31,7 +31,9 @@ end
     # notice: this function uses the 0.01 and the 0.99 quantile
     pred = repeat(1:3, inner = 5)
     val = [1:5...; 6:10...; 11:15...]
-    @test UnfoldMakie.calculateGlobalMaxValues(val, pred) == (-14.96, 14.96)
+    a, b = UnfoldMakie.calculateGlobalMaxValues(val, pred)
+    @test isapprox(a, -14.96)
+    @test isapprox(b, 14.96)
 
 end
 
