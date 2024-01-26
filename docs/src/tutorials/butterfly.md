@@ -38,7 +38,7 @@ plot_butterfly(df; positions=pos)
 You want to change size of topomarkers and size of topoplot:
 ```@example main
 plot_butterfly(
-    data;
+    df;
     positions = pos,
     topomarkersize = 10,
     topoheigth = 0.4,
@@ -49,15 +49,16 @@ plot_butterfly(
 You want to add vline and hline:
 ```@example main
 f = Figure()
-plot_butterfly!(f, data; positions = pos)
+plot_butterfly!(f, df; positions = pos)
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
 f
 ```
+
 You want to remove all decorations:
 ```@example main
 plot_butterfly(
-    data;
+    df;
     positions = pos,
     layout = (;
         hidedecorations = (:label => true, :ticks => true, :ticklabels => true)
