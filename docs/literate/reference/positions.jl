@@ -4,9 +4,8 @@ using TopoPlots
 using PyMNE
 
 
-# # get MNE-positions
-# Generate a fake MNE structure
-# [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
+## get MNE-positions
+# Generate a fake MNE structure. [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
 
 biosemi_montage = PyMNE.channels.make_standard_montage("biosemi64")
 n_channels = length(biosemi_montage.ch_names)
@@ -18,7 +17,7 @@ fake_evoked.set_montage(biosemi_montage)
 
 pos = to_positions(fake_evoked)
 
-# # project from 3D electrode locations to 2D
+## project from 3D electrode locations to 2D
 pos3d = hcat(values(pyconvert(Dict,biosemi_montage.get_positions()["ch_pos"]))...)
 
 pos2 = to_positions(pos3d)
@@ -27,4 +26,4 @@ f = Figure(resolution=(600,300))
 scatter(f[1,1],pos3d[1:2,:])
 scatter(f[1,2],pos2)
 f
-# as one can see, the "naive" transform of just dropping the third dimension doesnt really work (left). We rather have to project the chanels to a sphere and unfold it (right)
+# As you can see, the "naive" transformation of simply dropping the third dimension does not really work (left). Instead, we have to project the channels onto a sphere and unfold it (right).
