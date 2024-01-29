@@ -27,14 +27,14 @@ function _docstring(cfg_symb::Symbol)
         :visual => "use `kwargs...` of [`$(visuallink[cfg_symb])`](@ref)",
     )
     for k = 1:length(fn)
-        namedtpl = Base.getfield(cfg, fn[k])
+        namedtpl = string(Base.getfield(cfg, fn[k]))
         addlink = ""
         try
             addlink = "- *" * link[fn[k]] * "*"
         catch
         end
-
-        out = out * "**$(fn[k]) =** $(string(`namedtpl`)) $addlink \n\n"
+        namedtpl = replace(namedtpl, "_" => "\\_")
+        out = out * "**$(fn[k]) =** $(namedtpl) $addlink \n\n"
     end
 
     return """## Shared plot configuration options
