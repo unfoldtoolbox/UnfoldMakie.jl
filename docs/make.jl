@@ -61,4 +61,8 @@ makedocs(;
     ],
 )
 
-deploydocs(; repo = "github.com/unfoldtoolbox/UnfoldMakie.jl", devbranch = "main")
+deploydocs(; 
+    repo = "github.com/unfoldtoolbox/UnfoldMakie.jl", 
+    devbranch = "main",
+    push_preview = true
+)
