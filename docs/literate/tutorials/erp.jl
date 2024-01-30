@@ -3,7 +3,8 @@
 # Here we discuss ERP plot visualization. 
 # Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-# ## Include used Modules
+# ## Package loading
+
 # The following modules are necessary for following this tutorial:
 
 using Unfold
