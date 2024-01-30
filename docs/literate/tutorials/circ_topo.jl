@@ -1,6 +1,8 @@
 # # Circular Topoplot Arrangement
 
 
+# # Package loading
+
 using UnfoldMakie
 using CairoMakie
 using TopoPlots # for example data
@@ -8,9 +10,8 @@ using Random
 using DataFrames
 
 
-
 # # Generate data
-# Generate a Dataframe. We need to specify the TopoPlot Positions either via position, or via labels (according to TopoPlots.jl)
+# Generate a Dataframe. We need to specify the Topoplot positions either via position, or via labels (according to TopoPlots.jl)
 data, pos = TopoPlots.example_data();
 dat = data[:, 240, 1]
 df = DataFrame(
@@ -30,8 +31,7 @@ plot_circulareegtopoplot(
 )
 
 
-# In case the bounding variable is not between 0 and 360, as here we use actually time, we have to specify it. e.g.
-
+# If the bounding variable is not between 0 and 360, since we are using time, we must specify it. 
 plot_circulareegtopoplot(
     df;
     positions = pos,
@@ -39,4 +39,3 @@ plot_circulareegtopoplot(
     predictor = :time,
     predictor_bounds = [80, 320],
 )
-

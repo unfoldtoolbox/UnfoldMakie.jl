@@ -3,7 +3,8 @@
 # Here we discuss ERP plot visualization. 
 # Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-# ## Include used Modules
+# ## Package loading
+
 # The following modules are necessary for following this tutorial:
 
 using Unfold
@@ -13,6 +14,7 @@ using CairoMakie
 using DataFramesMeta
 using UnfoldSim
 using UnfoldMakie
+include("../../../example_data.jl")
 
 # ## Setup
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
@@ -32,7 +34,7 @@ results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
 # ## Plot the results
-plot_erp(results; :stderror => true,)
+plot_erp(results; :stderror => true)
 
 
 
@@ -72,19 +74,18 @@ plot_erp(
 
 # ## pvalue (array)
 #
-# !!! important
-#       this is currently broken!
-#
 # Is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values. 
 # Default is `[]` (an empty array).
 # Below is an example in which `pvalue` are given:
-# pvals = DataFrame(
-#		from=[0.1,0.3],
-#		to=[0.5,0.7],
-#		coefname=["(Intercept)", "condition: face"] # if coefname not specified, line should be black
-#	)
-#
-# plot_erp(results; :pvalue=>pvals)
+m = example_data("UnfoldLinearModel")
+results = coeftable(m)
+pvals = DataFrame(
+    from = [0.1, 0.3],
+    to = [0.5, 0.7],
+    coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
+)
+plot_erp(results; :pvalue => pvals)
+
 # ### stderror (boolean)
 # Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 # Default is `false`.

@@ -11,11 +11,6 @@
 
     include("../docs/example_data.jl")
     d_topo, pos = example_data("TopoPlots.jl")
-    uf = example_data("UnfoldLinearModel")
-    results = coeftable(uf)
-    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
-    d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
-    times = -0.099609375:0.001953125:1.0
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
     raw_ch_names = [

@@ -32,3 +32,23 @@ end
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage(times, dat_e; sortindex = evts.Δlatency)
 end
+
+@testset "ERP image with and withour sorting" begin
+    f = Figure()
+    include("../docs/example_data.jl")
+    dat_e, evts, times = example_data("sort_data")
+    plot_erpimage!(f[1, 1], times, dat_e;)
+    plot_erpimage!(f[2, 1], times, dat_e; sortvalues = evts.Δlatency)
+    for (label, layout) in zip(["bad", "good"], [f[1, 1], f[2, 1]])
+        Label(
+            layout[1, 1:2, TopRight()],
+            label,
+            fontsize = 26,
+            font = :bold,
+            padding = (40, 0, 10, 0),
+            halign = :right,
+        )
+    end
+    f
+    #save("erpimage.png", f)
+end

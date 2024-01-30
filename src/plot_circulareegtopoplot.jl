@@ -111,8 +111,6 @@ function calculateGlobalMaxValues(data, predictor)
         groupby(DataFrame(:e => data, :p => predictor), :p),
         :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :localMaxVal,
     )
-
-
     globalMaxVal = maximum(x.localMaxVal)
     return (-globalMaxVal, globalMaxVal)
 end

@@ -1,8 +1,7 @@
 # [Parallel Coordinates Plot](@id pcp_vis)
 Here we discuss parallel coordinates plot (PCP) visualization. 
 
-## Include used Modules
-The following modules are necessary for following this tutorial:
+## Package loading
 ```@example main
 using Unfold
 using UnfoldMakie

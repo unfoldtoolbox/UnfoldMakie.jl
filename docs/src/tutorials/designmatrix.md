@@ -3,8 +3,7 @@
 Here we discuss design matrix visualization. 
 Make sure you have looked into the [installation instructions](@ref install_instruct) section. 
 
-## Include used Modules
-The following modules are necessary for following this tutorial:
+## Package loading
 ```@example main
 using Unfold
 using UnfoldMakie

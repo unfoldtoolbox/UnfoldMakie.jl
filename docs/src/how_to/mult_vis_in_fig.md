@@ -33,7 +33,6 @@ We will start by creating a figure with Makie.Figure.
 Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
 
 ```@example main
-
 f = Figure()
 plot_erp!(f[1, 1], coeftable(uf_deconv))
 plot_erp!(f[1, 2], effects(Dict(:condition => ["car", "face"]), uf_deconv), 
