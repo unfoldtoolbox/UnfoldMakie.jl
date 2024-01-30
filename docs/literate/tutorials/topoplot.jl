@@ -49,8 +49,6 @@ While there are several default values that will be checked in order if they exi
 Note that only one of `positions` or `labels` needs to be set to draw a topoplot. If both are set, positions takes precedence, labels can be used to label electrodes in TopoPlots.jl.
 =#
 
-### (...,mapping=(;))
-
 # The default columns of mapping could be seen usign this code:
 
 cfgDefault = UnfoldMakie.PlotConfig()

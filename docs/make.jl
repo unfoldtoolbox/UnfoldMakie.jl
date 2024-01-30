@@ -37,7 +37,7 @@ makedocs(;
     pages = [
         "UnfoldMakie Documentation" => "index.md",
         "Visualizations-Types" => [
-            "Installations" => "generated/tutorials/installations.md",
+            "Installations" => "generated/tutorials/installation.md",
             "ERP plot" => "generated/tutorials/erp.md",
             "Butterfly Plot" => "generated/tutorials/butterfly.md",
             "Designmatrix" => "generated/tutorials/designmatrix.md",

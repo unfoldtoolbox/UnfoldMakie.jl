@@ -18,7 +18,6 @@ include("../../../example_data.jl")
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 plot_erpimage(data)
 
-
 # # Additional features
 
 # Since ERP images use a `Matrix` as an input, the library does not need any informations about the mapping.
@@ -43,7 +42,7 @@ plot_erpimage(
 
 #=
 - `sortvalues` (bool, `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
-    - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
+- `sortperm()` computes a permutation of the array's indices that puts the array into sorted order. 
 =#
 
 dat_e, evts, times = example_data("sort_data")

@@ -28,7 +28,7 @@ plot_topoplotseries(df, Δbin; positions = positions)
 
 # # Additional features
 
-# ## Disabling colorbar:
+# ## Disabling colorbar
 
 plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))
 
