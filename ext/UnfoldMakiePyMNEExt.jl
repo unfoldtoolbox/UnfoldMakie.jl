@@ -4,7 +4,7 @@ using GeometryBasics
 using PyMNE
 using UnfoldMakie
 """
-to_positions(raw::PyMNE.Py;kwargs...)
+`to_positions(raw::PyMNE.Py; kwargs...)`
 
 calls MNE-pythons make_eeg_layout (with optional kwargs)
 Returns an array of Points
