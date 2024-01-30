@@ -38,7 +38,7 @@ makedocs(;
         "UnfoldMakie Documentation" => "index.md",
         "Visualizations-Types" => [
             "ERP plot" => "generated/tutorials/erp.md",
-            "Butterfly Plot" => "tutorials/butterfly.md",
+            "Butterfly Plot" => "generated/tutorials/butterfly.md",
             "Designmatrix" => "tutorials/designmatrix.md",
             "ERP Image" => "tutorials/erpimage.md",
             "Parallel Coordinates Plot" => "tutorials/parallelcoordinates.md",
