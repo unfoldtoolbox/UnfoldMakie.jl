@@ -30,7 +30,9 @@ plot_parallelcoordinates(
 # # Additional features
 
 # ## Normalization
-#= On the first image, there is no normalization and the extremes of all axes are the same and equal to the max and min values across all chanells. 
+
+#=
+On the first image, there is no normalization and the extremes of all axes are the same and equal to the max and min values across all chanells. 
 On the second image, there is a `minmax normalization``, so each axis has its own extremes based on the min and max of the data.
 
 Typically, parallelplots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.
@@ -61,6 +63,7 @@ end
 f
 
 # ## Color schemes
+
 # Use only categorical with high contrast between adjacent colors. 
 # More: https://docs.makie.org/stable/explanations/colors/index.html
 
@@ -92,8 +95,8 @@ f
 
 
 # ## Labels
-#Use `ax_labels` to specify labels for the axes.
 
+# Use `ax_labels` to specify labels for the axes.
 
 plot_parallelcoordinates(
     subset(results_plot, :channel => x -> x .< 5);
@@ -102,7 +105,8 @@ plot_parallelcoordinates(
 )
 
 # ## Tick labels
-#Specify tick labels on axis. There are four different options for the tick labels.
+
+# Specify tick labels on axis. There are four different options for the tick labels.
 
 
 f = Figure(resolution = (400, 800))
@@ -149,8 +153,8 @@ end
 f
 
 # ## Bending the parallel plot
-# Bending the linescan be helpful to make them more visible.
 
+# Bending the linescan be helpful to make them more visible.
 
 f = Figure()
 plot_parallelcoordinates(f[1, 1], subset(results_plot, :channel => x -> x .< 10))
