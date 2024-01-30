@@ -1,8 +1,7 @@
 # [Topoplot Series Visualization](@id tpseries_vis)
 
 
-## Include used Modules
-The following modules are necessary for following this tutorial:
+## Package loading
 ```@example main
 using Unfold
 using UnfoldMakie

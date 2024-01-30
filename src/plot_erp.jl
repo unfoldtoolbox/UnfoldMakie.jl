@@ -5,7 +5,7 @@ using LinearAlgebra
     plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
     plot_erp(plot_data::DataFrame; kwargs...)
         
-Plot an ERP plot.
+Plot an ERP plot.   
 
 ## Arguments:
 
@@ -47,7 +47,6 @@ Plot a butterfly plot
 - `topowidth` (`Real`, default=`0.25`): change the size of the inlay topoplot width.
 - `topoheigth` (`Real`, default=`0.25`): change the size of the inlay topoplot height.
 - `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´): change the colors of the channel lines.
-
 
 
 $(_docstring(:butterfly))

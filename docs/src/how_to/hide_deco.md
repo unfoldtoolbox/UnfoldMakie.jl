@@ -6,15 +6,7 @@ While it's possible to hide these axis decorations by setting the axis settings 
 
 Makie does provide methods like `hidespines!` and `hidedecorations!`, but the user may not have easy access to the axis their plot is drawn in.
 
-Instead, these functions can be called by setting variables with `layout = (;)`:
-
-```
-... layout = (
-    ...
-    hidespines = (),
-    hidedecorations = ()
-)
-```
+Instead, these functions can be called by setting variables with `layout = (; hidespines = (), hidedecorations = ())`:
 
 Since these values reflect the input to the function, we can use an empty tuple to remove all decorations and spines, respectively
 

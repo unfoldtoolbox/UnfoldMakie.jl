@@ -5,17 +5,45 @@ include("../docs/example_data.jl")
     plot_erp(results; :stderror => true)
 end
 
-@testset "ERP plot with Results data" begin
+@testset "ERP plot with and withour error ribbons" begin
+    f = Figure()
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
-    plot_erp(
+    plot_erp!(
+        f[1, 1],
+        results;
+        :stderror => false,
+        mapping = (; color = :coefname => "Conditions"),
+    )
+
+    plot_erp!(
+        f[2, 1],
         results;
         :stderror => true,
         mapping = (; color = :coefname => "Conditions"),
     )
+
+    ax = Axis(f[2, 1], width = Relative(1), height = Relative(1))
+    xlims!(ax, [-0.04, 1])
+    ylims!(ax, [-0.04, 1])
+    hidespines!(ax)
+    hidedecorations!(ax)
+    text!(0.98, 0.2, text = "* Confidence\nintervals", align = (:right, :top))
+    for (label, layout) in zip(["bad", "good"], [f[1, 1], f[2, 1]])
+        Label(
+            layout[1, 1:2, TopRight()],
+            label,
+            fontsize = 26,
+            font = :bold,
+            padding = (0, 0, 0, 0),
+            halign = :right,
+        )
+    end
+    f
+    #save("erp.png", f)
 end
 
 @testset "ERP plot with res_effects without colorbar" begin
@@ -89,4 +117,15 @@ end
     plot_erp!(ga, results; :stderror => true)
 
     f
+end
+
+@testset "ERP plot with p-values" begin
+    m = example_data("UnfoldLinearModel")
+    results = coeftable(m)
+    pvals = DataFrame(
+        from = [0.1, 0.3],
+        to = [0.5, 0.7],
+        coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
+    )
+    plot_erp(results; :pvalue => pvals)
 end

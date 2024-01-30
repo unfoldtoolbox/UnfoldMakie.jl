@@ -62,11 +62,18 @@ end
 end
 
 @testset "butterfly withiout decorations " begin
-    plot_butterfly(
+    f = Figure()
+    plot_butterfly!(
+        f[1, 1],
         data;
         positions = pos,
+        topomarkersize = 10,
+        topoheigth = 0.4,
+        topowidth = 0.4,
         layout = (;
             hidedecorations = (:label => true, :ticks => true, :ticklabels => true)
         ),
     )
+    f
+    #save("dev/UnfoldMakie/butterfly.svg", f)
 end
