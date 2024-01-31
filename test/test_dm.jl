@@ -16,3 +16,7 @@ end
     plot_designmatrix!(ga, designmatrix(uf); sort_data = true)
     f
 end
+
+@testset "ticks specified" begin
+    plot_designmatrix(designmatrix(uf); xticks = 10, sort_data = false)
+end
