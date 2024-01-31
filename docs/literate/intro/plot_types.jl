@@ -28,3 +28,5 @@ Hard to show meaningfully more than 3 dimensions.
 
 # Each plot type can represent several dimensions. Here we represented 8 plot types.
 # <img src="../../src/assets/dimensions.jpg" width="128"/>
+
+# If you want to know more about how we come up with these plot types, please read the paper [The Arte of Brainwaves](https://www.biorxiv.org/content/10.1101/2023.12.20.572507v2.full)
