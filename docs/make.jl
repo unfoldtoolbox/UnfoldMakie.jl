@@ -16,7 +16,7 @@ using Glob
 
 GENERATED = joinpath(@__DIR__, "src", "generated")
 SOURCE = joinpath(@__DIR__, "literate")
-for subfolder ∈ ["explanations", "HowTo", "tutorials", "reference"]
+for subfolder ∈ ["explanations", "how_to", "tutorials", "reference"]
     local SOURCE_FILES = Glob.glob(subfolder * "/*.jl", SOURCE)
     foreach(fn -> Literate.markdown(fn, GENERATED * "/" * subfolder), SOURCE_FILES)
 end
@@ -48,10 +48,9 @@ makedocs(;
             "Circular TopoPlot" => "generated/tutorials/circ_topo.md",
         ],
         "How To" => [
-            "Change Butterfly Colormap" => "how_to/position2color.md",
-            "Hide Axis Spines and Decorations" => "how_to/hide_deco.md",
-            "Include multiple Visualizations in one Figure" => "how_to/mult_vis_in_fig.md",
-            "Designmatrix: Show out of Bounds Label" => "how_to/show_oob_labels.md",
+            "Change Butterfly Colormap" => "generated/how_to/position2color.md",
+            "Hide Axis Spines and Decorations" => "generated/how_to/hide_deco.md",
+            "Include multiple Visualizations in one Figure" => "generated/how_to/mult_vis_in_fig.md",
         ],
         "Reference" => [
             "Convert 3D positions / montages to 2D layouts" => "generated/reference/positions.md",
