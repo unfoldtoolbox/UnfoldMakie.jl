@@ -16,7 +16,7 @@ using Glob
 
 GENERATED = joinpath(@__DIR__, "src", "generated")
 SOURCE = joinpath(@__DIR__, "literate")
-for subfolder ∈ ["explanations", "how_to", "tutorials", "reference"]
+for subfolder ∈ ["how_to", "intro", "tutorials", "reference"]
     local SOURCE_FILES = Glob.glob(subfolder * "/*.jl", SOURCE)
     foreach(fn -> Literate.markdown(fn, GENERATED * "/" * subfolder), SOURCE_FILES)
 end
@@ -36,8 +36,11 @@ makedocs(;
     ),
     pages = [
         "UnfoldMakie Documentation" => "index.md",
-        "Visualizations-Types" => [
-            "Installations" => "generated/tutorials/installation.md",
+        "Intro" => [
+            "Installations" => "generated/intro/installation.md",
+            "Plot Types" => "generated/intro/plot_types.md",
+        ],
+        "Visualization Types" => [
             "ERP plot" => "generated/tutorials/erp.md",
             "Butterfly Plot" => "generated/tutorials/butterfly.md",
             "Designmatrix" => "generated/tutorials/designmatrix.md",
