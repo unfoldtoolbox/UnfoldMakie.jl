@@ -14,7 +14,7 @@ Possible dimensions:
 - Trials/subjects
 =#
 
-# <img src="../../../build/assets/slicing.jpg" width="128"/>
+# <img src="build/assets/slicing.jpg" width="128"/>
 
 #=
 Each way of ERP presentation is a choice of dimensions.
