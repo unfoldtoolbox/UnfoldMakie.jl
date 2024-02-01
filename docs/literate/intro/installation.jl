@@ -39,11 +39,13 @@
 
 # In case you want to use this generated project in a notebook (e.g. [Pluto](https://www.juliapackages.com/p/pluto) or [Jupyter](https://ipython.org/notebook.html)), you can activate this in the notebook in the following manner:
 
-#=
-begin
-    using Pkg
-    Pkg.activate("FOLDER_PATH")
-    Pkg.resolve()
-end 
-=#
+
+# ```julia
+# begin
+#    using Pkg
+#    Pkg.activate("FOLDER_PATH")
+#    Pkg.resolve()
+# end
+# ```
+
 # Use slash `/` for the folder path. 
