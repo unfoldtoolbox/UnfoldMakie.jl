@@ -1,6 +1,6 @@
 # [Change Butterfly Channel Position Color](@id ht_p2c)
 
-# In this section we discuss how users are able change the position to colorscale of the legendtopo in the butterfly plot.
+# This section discusses how users can change the color scheme of the butterfly plot. It will affect the colors of the lines and markers on the inserted topoplot.
 
 using UnfoldMakie
 using CairoMakie
@@ -13,11 +13,16 @@ include("../../../example_data.jl")
 results, positions = example_data("TopoPlots.jl")
 plot_butterfly(results; positions = positions)
 
+#= 
+We can change the color scale by specifying a function that maps from an `(x,y)` tuple to a color. UnfoldMakie currently provides three different color scales: 
+- `pos2colorRGB` (same as MNE-Python), 
+- pos2colorHSV` (HSV color space), 
+- pos2colorRomaO`. 
 
-# We can switch the colorscale of the position-map, by giving a function that maps from a `(x,y)` tuple to a color. UnfoldMakie currently provides three different ones `pos2colorRGB` (same as MNE-Python), `pos2colorHSV` (HSV colorspace), `pos2colorRomaO`. Whereas `RGB` & `HSV` have the benefits of being 2D colormaps, `Roma0` has the benefit of being perceptualy uniform.
+While `RGB` & `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
+=#
 
-
-# ## Similar to MNE
+# ## MNE-like color scheme
 
 plot_butterfly(
     results;
@@ -36,7 +41,7 @@ plot_butterfly(
 
 
 # ## Uniform Color
-# To highlight the flexibility, we can also make all lines `gray`, or any other arbitrary color, or function of electrode-`position`.
+# We can also make all lines "gray", or any other arbitrary color, or function of electrode "position".
 
 
 plot_butterfly(
