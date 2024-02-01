@@ -4,7 +4,7 @@ using TopoPlots
 using PyMNE
 
 
-# # Get MNE-positions
+# # Get positions from MNE
 
 # Generate a fake MNE structure. [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
 
@@ -18,7 +18,7 @@ fake_evoked.set_montage(biosemi_montage)
 
 pos = to_positions(fake_evoked)
 
-# # Project from 3D electrode locations to 2D
+# # Projecting from 3D electrode locations to 2D
 pos3d = hcat(values(pyconvert(Dict, biosemi_montage.get_positions()["ch_pos"]))...)
 
 pos2 = to_positions(pos3d)
