@@ -1,13 +1,13 @@
 # UnfoldMakie Documentation
 
+```@raw html
+<img src="assets/complex_plot.png" width="300" align="right"/>
+```
 
 This is the documentation of the UnfoldMakie module for the Julia programming language. 
 
 ## About
 
-```@raw html
-<img src="assets/complex_plot.png" width="300" align="right"/>
-```
 
 UnfoldMakie.jl aims to allow users to create different types of visualizations. 
 These include line plots, butterfly plots, design matrices, parallel coordinate plots, ERP images, and topo plots.
