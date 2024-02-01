@@ -6,11 +6,19 @@ This is the documentation of the UnfoldMakie module for the Julia programming la
 ## About
 
 ```@raw html
-<img src="../../../src/assets/complex_plot.png" width="300" align="right"/>
+<img src="../../../build/assets/complex_plot.png" width="300" align="right"/>
 ```
 
 ```@raw html
-<img src="src/assets/complex_plot.png" width="300" align="right"/>
+<img src="../../build/assets/complex_plot.png" width="300" align="right"/>
+```
+
+```@raw html
+<img src="../build/assets/complex_plot.png" width="300" align="right"/>
+```
+
+```@raw html
+<img src="build/assets/complex_plot.png" width="300" align="right"/>
 ```
 
 UnfoldMakie.jl aims to allow users to create different types of visualizations. 
