@@ -1,5 +1,15 @@
 # [Hide Axis Spines and Decorations](@id ht_hide_deco)
 
+# # Package input
+
+using TopoPlots
+using UnfoldMakie
+using CairoMakie
+using DataFrames
+
+include("../../../example_data.jl")
+data, pos = example_data("TopoPlots.jl")
+
 #=
 This section discusses how users can efficiently hide axis spines and decorations in their plots.
 
@@ -14,12 +24,6 @@ Since these values reflect the input to the function, we can use an empty tuple 
 And using `hidespines = (:r, :t)` will remove the top and right borders.
 =#
 
-using TopoPlots
-using UnfoldMakie
-using CairoMakie
-
-include("../docs/example_data.jl")
-data, pos = example_data("TopoPlots.jl")
 
 f = Figure()
 plot_butterfly!(
