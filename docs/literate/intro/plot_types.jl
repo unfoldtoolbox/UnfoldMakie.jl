@@ -15,7 +15,7 @@ Possible dimensions:
 =#
 
 # ```@raw html
-# <img src="../../../assets/slicing.jpg" width="300"/>
+# <img src="../../../assets/slicing.jpg" align="middle"/>
 # ```
 
 #=
@@ -29,7 +29,7 @@ Hard to show meaningfully more than 3 dimensions.
 
 
 # ```@raw html
-# <img src="../../../assets/dimensions.jpg" width="300"/> 
+# <img src="../../../assets/dimensions.jpg" align="middle"/> 
 # ```
 
 
