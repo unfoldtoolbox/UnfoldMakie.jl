@@ -52,4 +52,4 @@ plot_erpimage(times, dat_e; sortvalues = evts.Δlatency)
 
 # ```@docs
 # plot_erpimage
-# `
+# ```
