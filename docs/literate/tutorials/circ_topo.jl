@@ -42,4 +42,6 @@ plot_circulareegtopoplot(
 
 # # Configurations of Circular EEG Plot
 
-UnfoldMakie.plot_circulareegtopoplot
+# ```@docs
+# plot_circulareegtopoplot
+# ```

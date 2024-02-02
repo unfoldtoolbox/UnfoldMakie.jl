@@ -199,4 +199,6 @@ f
 
 # # Configurations of Parallel coordinates plot
 
-UnfoldMakie.plot_parallelcoordinates
+# ```@docs
+# plot_parallelcoordinates
+# `

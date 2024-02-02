@@ -64,5 +64,3 @@ plot_butterfly(
 # ```@docs
 # plot_butterfly
 # ```
-
-

@@ -50,4 +50,6 @@ plot_erpimage(times, dat_e; sortvalues = evts.Δlatency)
 
 # # Configurations for ERP image
 
-UnfoldMakie.plot_erpimage
+# ```@docs
+# plot_erpimage
+# `

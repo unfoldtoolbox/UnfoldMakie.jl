@@ -21,12 +21,12 @@ uf = example_data("UnfoldLinearModel")
 
 plot_designmatrix(designmatrix(uf))
 
-
 # To make the design matrix easier to read, you may want to sort it using `sort_data`.
-
 
 plot_designmatrix(designmatrix(uf); sort_data = true)
 
 # # Configurations for Design matrix plot
 
-UnfoldMakie.plot_designmatrix
+# ```@docs
+# plot_designmatrix
+# ```
