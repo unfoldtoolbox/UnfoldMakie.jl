@@ -61,4 +61,5 @@ plot_butterfly(
 
 # # Configurations of Butterfly Plot
 
-UnfoldMakie.plot_butterfly
+[:plot_butterfly]
+
