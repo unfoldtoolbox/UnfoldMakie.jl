@@ -16,14 +16,11 @@ using DataFrames
 
 # ## Providing the Data
 
-
 data, positions = TopoPlots.example_data()
 
 # We select one datapoint, and the first enry of dimension 3 (the mean estimate, the others are p-value and std)
 
 plot_topoplot(data[:, 340, 1]; positions = positions)
-
-
 
 df = DataFrame(:estimate => data[:, 340, 1])
 plot_topoplot(df; positions = positions)
@@ -72,4 +69,6 @@ plot_topoplot(
 
 # # Configurations of Topoplot
 
-UnfoldMakie.plot_topoplot
+# ```@docs
+# plot_topoplot
+# `

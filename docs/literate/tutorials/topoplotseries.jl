@@ -44,4 +44,6 @@ f
 
 # # Configurations of Topoplot series
 
-UnfoldMakie.plot_topoplotseries
+# ```@docs
+# plot_topoplotseries
+# `

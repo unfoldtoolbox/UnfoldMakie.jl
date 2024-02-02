@@ -101,4 +101,6 @@ plot_erp(select(results, Not(:stderror)); stderror = true)
 
 # # Configurations of ERP plot
 
-UnfoldMakie.plot_erp
+# ```@docs
+# plot_erp
+# ```
