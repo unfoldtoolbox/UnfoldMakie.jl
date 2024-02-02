@@ -61,5 +61,8 @@ plot_butterfly(
 
 # # Configurations of Butterfly Plot
 
-[:plot_butterfly]
+# ```@docs
+# plot_butterfly
+# ```
+
 
