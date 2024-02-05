@@ -3,13 +3,11 @@
 """
 ax = RelativeAxis(figlike, p::NTuple{4, Float64}; kwargs...)
 
-Returns an axis which's position is relative to a GridLayout Element (via BBox) and not 
-relative to the Scene (default Axis(..., bbox=BBox()) behavior)
+Returns an axis whose position is relative to a `GridLayout' element (via `BBox') and not relative to the scene (default behavior is Axis(..., bbox=BBox()).
 
-p::NTuple{4,Float64}: Give the relative position to the GridPosition, left:right; bottom:up, 
-typical numbers betwen 0 and 1. E.g. (0.25, 0.75, 0.25, 0.75) would center an Axis inside that GridPosition
+`p::NTuple{4,Float64}`: Specify the position relative to the GridPosition, left:right; bottom:top, typical numbers between 0 and 1, e.g. (0.25, 0.75, 0.25, 0.75) would center an `Axis` inside this `GridPosition`.
 
-kwargs... are pasted into Axis
+The `kwargs...` are inserted into the axis.
 
 f = Figure()
 ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1,2]
@@ -73,10 +71,10 @@ get_figure(f::Axis) = f.parent
 
 
 """
-`rel_to_abs_bbox(org, rel)`
+    rel_to_abs_bbox(org, rel)
 
-Takes a rectangle `org` and applies the relative transformation tuple `rel`
-Returns a Makie.BBox
+Takes a rectangle `org` and applies the relative transformation tuple `rel`.
+Returns a `Makie.BBox`.
 
 """
 function rel_to_abs_bbox(org, rel)
