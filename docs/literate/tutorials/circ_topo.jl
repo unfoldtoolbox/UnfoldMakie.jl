@@ -39,3 +39,9 @@ plot_circulareegtopoplot(
     predictor = :time,
     predictor_bounds = [80, 320],
 )
+
+# # Configurations of Circular EEG Plot
+
+# ```@docs
+# plot_circulareegtopoplot
+# ```

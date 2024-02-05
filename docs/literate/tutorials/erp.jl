@@ -86,7 +86,7 @@ pvals = DataFrame(
 )
 plot_erp(results; :pvalue => pvals)
 
-# ### stderror (boolean)
+# ## stderror (boolean)
 # Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
 # Default is `false`.
 #
@@ -97,3 +97,10 @@ plot_erp(select(results, Not(:stderror)); stderror = true)
 
 # !!! note
 #        as in the above code,`:stderror` has precedence over `:se_low`/`:se_high`
+
+
+# # Configurations of ERP plot
+
+# ```@docs
+# plot_erp
+# ```
