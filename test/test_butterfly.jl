@@ -75,5 +75,4 @@ end
         ),
     )
     f
-    #save("dev/UnfoldMakie/butterfly.svg", f)
 end

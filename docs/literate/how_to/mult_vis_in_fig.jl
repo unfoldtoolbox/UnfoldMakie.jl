@@ -1,6 +1,11 @@
 # [Include multiple Visualizations in one Figure](@id ht_mvf)
 
-```@example main
+#=
+This section discusses how users can incorporate multiple plots into a single figure.
+=#
+
+# # Library load
+
 using UnfoldMakie
 using CairoMakie
 using DataFramesMeta
@@ -9,52 +14,54 @@ using Unfold
 using MakieThemes
 set_theme!(theme_ggthemr(:fresh)) # nicer defaults - should maybe be default?
 
-```
-```@example main
-include("../../example_data.jl")
+# # Data input
+include("../../../example_data.jl")
 d_topo, positions = example_data("TopoPlots.jl")
 uf_deconv = example_data("UnfoldLinearModelContinuousTime")
 uf = example_data("UnfoldLinearModel")
 results = coeftable(uf)
 uf_5chan = example_data("UnfoldLinearModelMultiChannel")
 data, positions = TopoPlots.example_data()
-dat_e, evts, times = example_data("sort_data") 
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)   
+dat_e, evts, times = example_data("sort_data")
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 nothing #hide
-```
-This section discusses how users can incorporate multiple plots into a single figure.
 
-By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create multiple coordinated views.
 
-We will start by creating a figure with Makie.Figure. 
+#= 
+By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
+
+We will start by creating a figure with `Makie.Figure`. 
 
 `f = Figure()`
 
-Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
+Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`. 
+=#
 
-```@example main
 f = Figure()
 plot_erp!(f[1, 1], coeftable(uf_deconv))
-plot_erp!(f[1, 2], effects(Dict(:condition => ["car", "face"]), uf_deconv), 
-    mapping=(; color=:condition))
-plot_butterfly!(f[2, 1:2], d_topo; positions=positions)
+plot_erp!(
+    f[1, 2],
+    effects(Dict(:condition => ["car", "face"]), uf_deconv),
+    mapping = (; color = :condition),
+)
+plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
 
 f
-```
 
+# # Very complex plot
+#=
 Using the data from the tutorials, we can create a large image with any type of plot.
 
 With so many plots at once, it's tempting to set a fixed resolution in your image to order the plots evenly (code below).
+=#
 
-```@example main
 f = Figure(resolution = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
 
 pvals = DataFrame(
     from = [0.1, 0.15],
-    to = [0.2, 0.5],
-    # if coefname not specified, line should be black
+    to = [0.2, 0.5], # if coefname not specified, line should be black
     coefname = ["(Intercept)", "category: face"],
 )
 plot_erp!(
@@ -104,11 +111,9 @@ plot_circulareegtopoplot!(
     predictor = :time,
     predictor_bounds = [-0.3, 0.5],
 )
-
 f
-```
 
-```@example main
+# # In two columns
 f = Figure(resolution = (1200, 1400))
 ga = f[1, 1]
 gc = f[2, 1]
@@ -131,13 +136,11 @@ raw_ch_names = [
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 
-results.coefname = replace(results.coefname,
-    "condition: face" => "face",
-    "(Intercept)" => "car")
+results.coefname =
+    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
 results = filter(row -> row.coefname != "continuous", results)
 
-plot_erp!(ga, results; :stderror => true,
-    mapping = (; color = :coefname => "Conditions"))
+plot_erp!(ga, results; :stderror => true, mapping = (; color = :coefname => "Conditions"))
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
 plot_butterfly!(
@@ -150,26 +153,26 @@ plot_butterfly!(
 )
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
-plot_topoplot!(
-    gc,
-    data[:, 340, 1];
-    positions = positions,
-    axis = (; xlabel = "[340 ms]"),
-)
+plot_topoplot!(gc, data[:, 340, 1]; positions = positions, axis = (; xlabel = "[340 ms]"))
 
-plot_topoplotseries!(gd, df, 80;
+plot_topoplotseries!(
+    gd,
+    df,
+    80;
     positions = positions,
     visual = (label_scatter = false,),
     layout = (; use_colorbar = true),
 )
 
 ax = gd[1, 1] = Axis(f)
-text!(ax, 0, 0, text = "Time [ms]",
-    align = (:center, :center), offset = (-20, -80))
+text!(ax, 0, 0, text = "Time [ms]", align = (:center, :center), offset = (-20, -80))
 hidespines!(ax) # delete unnecessary spines (lines)
 hidedecorations!(ax, label = false)
 
-plot_erpgrid!(ge, data[:, :, 1], positions;
+plot_erpgrid!(
+    ge,
+    data[:, :, 1],
+    positions;
     axis = (; ylabel = "µV", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
 )
 
@@ -196,9 +199,8 @@ for (label, layout) in
         label,
         fontsize = 26,
         font = :bold,
-        padding = (20, 20, 22, 0), #(20, 70, 22, 0),
+        padding = (20, 20, 22, 0),
         halign = :right,
     )
 end
 f
-```
