@@ -176,8 +176,8 @@ function eeg_topoplot_series!(
 end
 
 """
-    `df_timebin(df, Δbin; col_y=:erp, fun=mean, grouping=[])`
-Split or combine dataframe according to equally spaced time bins
+    df_timebin(df, Δbin; col_y=:erp, fun=mean, grouping=[])
+Split or combine `dataframe` according to equally spaced time bins
 - `df` AbstractTable with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
 - `Δbin` bin size in `:time` units;
 - `col_y` default :erp, the column to combine over (with `fun`);
