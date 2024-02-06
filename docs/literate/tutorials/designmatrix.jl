@@ -10,12 +10,12 @@ using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-## Data
+# # Data
 
 include("../../../example_data.jl")
 uf = example_data("UnfoldLinearModel")
 
-## Plot Designmatrices
+# # Plot Designmatrices
 
 # The following code will result in the default configuration. 
 

@@ -3,7 +3,7 @@
 # Here we discuss topo plot visualization. 
 # Make sure you have looked into the [installation instructions](@ref install_instruct).
 
-## Package loading
+# # Package loading
 
 using Unfold
 using UnfoldMakie
@@ -12,14 +12,13 @@ using CairoMakie
 using TopoPlots
 using DataFrames
 
-# # Plot Topo Plots
+# # Plot Topoplots
 
-# ## Providing the Data
+# ## Data loading
 
 data, positions = TopoPlots.example_data()
 
-# We select one datapoint, and the first enry of dimension 3 (the mean estimate, the others are p-value and std)
-
+# Here we select a time point (340 msec) and the first entry of dimension 3 (the mean estimate, the others are p-value and std).
 plot_topoplot(data[:, 340, 1]; positions = positions)
 
 df = DataFrame(:estimate => data[:, 340, 1])
@@ -29,10 +28,10 @@ plot_topoplot(df; positions = positions)
 # ## Setting Sensor Positions
 
 #=
-Since the topo plot needs the positions of the sensors they have to be put into the drawing function. But there are multiple options (In order of prioritization):
+The `plot_topoplot()` needs the sensor positions to be specified. There are several ways to do this:
 
-- Giving the positions directly: `plot_topoplot(...; positions=[...])`
-- Giving the labels of the sensors: `plot_topoplot(...; labels=[...])`
+- Specify positions directly: `plot_topoplot(...; positions=[...])`
+- Specify the sensor labels: `plot_topoplot(...; labels=[...])`
 
 To get the positions from the labels we use a [database](https://raw.githubusercontent.com/sappelhoff/eeg_positions/main/data/Nz-T10-Iz-T9/standard_1005_2D.tsv).
 =#

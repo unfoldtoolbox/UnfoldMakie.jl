@@ -1,6 +1,5 @@
 # # Circular Topoplot Arrangement
 
-
 # # Package loading
 
 using UnfoldMakie
@@ -11,7 +10,7 @@ using DataFrames
 
 
 # # Generate data
-# Generate a Dataframe. We need to specify the Topoplot positions either via position, or via labels (according to TopoPlots.jl)
+# Generate a `Dataframe`. We need to specify the Topoplot positions either via `position`, or via `labels`.
 data, pos = TopoPlots.example_data();
 dat = data[:, 240, 1]
 df = DataFrame(
@@ -22,7 +21,7 @@ df = DataFrame(
 df = flatten(df, :estimate);
 
 # # Our first plot!
-# note how the plots are at the angles of circular_variable`
+# Note how the plots are at the angles of `circular_variable`.
 plot_circulareegtopoplot(
     df;
     positions = pos,

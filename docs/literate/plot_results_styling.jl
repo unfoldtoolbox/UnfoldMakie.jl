@@ -1,5 +1,4 @@
 # # Styling of plot_results
-# Let's start with some data
 
 using Unfold
 using UnfoldMakie
@@ -21,11 +20,11 @@ nothing;
 
 # # Styling your plot
 # ## Mapping's
-# everything you can put in a mapping(...) AoG group can be modified, for instance:
+# Anything you can put in a `mapping(...)` can be modified as `AlgebraOfGraphics` object , for example:
 plot_results(results, mapping = (; linestyle = :coefname))
 
 # ## Adding P-values
-# You can provide a dataframe with columns (must): `:from`,`:to`,future versions might allow a `:pvalue` column
+# You must provide a dataframe with columns: `:from`,`:to`,future versions might allow a `:pvalue` column
 pvals = DataFrame(
     :from => [0.1, 0.0, -0.1],
     :to => [0.5, 0.3, 0.6],
@@ -36,4 +35,4 @@ pvals = DataFrame(
 plot_results(results, pvalue = pvals)
 
 # !!! note
-#   If you do not give the coefname, all lines will be the same color as the first color-grouping (typically coefname), and they might overlap!
+#   If you do not specify the `coefname`, all lines will have the same color as the first color grouping (typically coefname), and they may overlap!

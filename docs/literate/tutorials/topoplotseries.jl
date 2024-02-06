@@ -1,6 +1,5 @@
 # [Topoplot Series Visualization](@id tpseries_vis)
 
-
 # # Package loading
 
 using Unfold

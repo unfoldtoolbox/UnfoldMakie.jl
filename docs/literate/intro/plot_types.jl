@@ -33,6 +33,5 @@ Hard to show meaningfully more than 3 dimensions.
 # ```
 
 
-
-
-# If you want to know more about how we come up with these plot types, please read the paper [The Art of Brainwaves](https://www.biorxiv.org/content/10.1101/2023.12.20.572507v2.full)
+# !!! note
+#        If you want to know more about how we come up with these plot types, please read the paper [The Art of Brainwaves](https://www.biorxiv.org/content/10.1101/2023.12.20.572507v2.full)
