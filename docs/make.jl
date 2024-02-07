@@ -54,7 +54,7 @@ makedocs(;
         ],
         "How To" => [
             "Change colormap of Butterfly plot" => "generated/how_to/position2color.md",
-            "Hide Axis, Spines and Decorations" => "generated/how_to/hide_deco.md",
+            "Hide Decorations and Axis Spines" => "generated/how_to/hide_deco.md",
             "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
         ],
         "Reference" => [

@@ -1,6 +1,5 @@
-# [Change Butterfly Channel Position Color](@id ht_p2c)
-
-# This section discusses how users can change the color scheme of the butterfly plot. It will affect the colors of the lines and markers on the inserted topoplot.
+# You want to change the colors of the lines and markers on the inserted topoplot.
+# To do that you need to change the color scheme (aka color map) of the butterfly plot. 
 
 using UnfoldMakie
 using CairoMakie
@@ -20,6 +19,7 @@ We can change the color scale by specifying a function that maps from an `(x,y)`
 - pos2colorRomaO`. 
 
 While `RGB` & `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
+Also you can specify a uniform color.
 =#
 
 # ## MNE-like color scheme
@@ -41,8 +41,8 @@ plot_butterfly(
 
 
 # ## Uniform Color
-# We can also make all lines "gray", or any other arbitrary color, or function of electrode "position".
-
+# You can make all lines "gray", or any other arbitrary color.
+# Also you can make it a function of electrode position.
 
 plot_butterfly(
     results;

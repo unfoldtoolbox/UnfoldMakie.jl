@@ -50,9 +50,9 @@ f
 
 # # Very complex plot
 #=
-Using the data from the tutorials, we can create a large image with any type of plot.
+We can create a large figure with any type of plot using predefined data.
 
-With so many plots at once, it's tempting to set a fixed resolution in your image to order the plots evenly (code below).
+With so many plots at once, it's better to set a fixed resolution in your image to order the plots evenly.
 =#
 
 f = Figure(resolution = (2000, 2000))

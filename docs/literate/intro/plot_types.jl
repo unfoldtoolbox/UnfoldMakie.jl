@@ -1,5 +1,3 @@
-# [Plot Types](@id plot_types)
-
 # # The Dilemma of Multidimensionality
 
 #=
