@@ -1,4 +1,3 @@
-# [Parallel Coordinates Plot](@id pcp_vis)
 # Here we discuss parallel coordinates plot (PCP) visualization. 
 
 # # Package loading

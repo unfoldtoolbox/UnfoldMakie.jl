@@ -1,4 +1,4 @@
-# # Circular Topoplot Arrangement
+# # Circular Topoplot Visualization
 
 # # Package loading
 
@@ -9,7 +9,7 @@ using Random
 using DataFrames
 
 
-# # Generate data
+# # Data generation
 # Generate a `Dataframe`. We need to specify the Topoplot positions either via `position`, or via `labels`.
 data, pos = TopoPlots.example_data();
 dat = data[:, 240, 1]
@@ -20,8 +20,8 @@ df = DataFrame(
 )
 df = flatten(df, :estimate);
 
-# # Our first plot!
-# Note how the plots are at the angles of `circular_variable`.
+# # Plot generations
+# Note how the plots are located at the angles of the `circular_variable'.
 plot_circulareegtopoplot(
     df;
     positions = pos,

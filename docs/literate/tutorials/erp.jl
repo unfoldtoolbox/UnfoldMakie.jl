@@ -1,7 +1,4 @@
-# ## [Line Plot Visualization](@id lp_vis)
-
 # Here we discuss ERP plot visualization. 
-# Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 # ## Package loading
 

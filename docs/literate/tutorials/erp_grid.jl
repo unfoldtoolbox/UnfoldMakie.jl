@@ -1,5 +1,4 @@
 # Here we discuss ERP grid visualization. 
-# Make sure you have looked into the [installation instructions](@ref install_instruct).
 
 # # Package loading
 
