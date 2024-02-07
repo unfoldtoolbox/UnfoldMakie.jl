@@ -9,7 +9,7 @@ using ColorTypes
 
 """
     PlotConfig(<plotname>)
-    holds various different fields, that can modify various different plotting aspects.
+    Contains several different fields that can modify various aspects of the plot.
 
 """
 mutable struct PlotConfig
@@ -55,7 +55,8 @@ function PlotConfig()# defaults
 end
 
 """
-Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
+    function config_kwargs!(cfg::PlotConfig; kwargs...)
+Takes named tuple of Key => NamedTuple  as kwarg and merges the fields with the defaults.
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
 
@@ -296,10 +297,6 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
     mapping_dict = Dict()
     for (k, v) in pairs(mapping_data)
-
-        #if 
-        #    continue
-        #end
         mapping_dict[k] = isa(v, Tuple) ? get_available(k, v) : v
     end
     return (; mapping_dict...)
@@ -307,6 +304,7 @@ end
 
 
 """
-Val{:bu}() to => :bu
+    function valType_to_symbol(T:type)
+Val{:bu}() to => :bu.
 """
 valType_to_symbol(T) = Symbol(split(string(T), [':', '}'])[2])
