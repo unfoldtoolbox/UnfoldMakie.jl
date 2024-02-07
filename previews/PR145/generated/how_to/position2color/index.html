@@ -4,9 +4,7 @@ using CairoMakie
 using DataFramesMeta
 using Colors</code></pre><p>By default the plot looks like this:</p><pre><code class="language-julia hljs">include(&quot;../../../example_data.jl&quot;)
 results, positions = example_data(&quot;TopoPlots.jl&quot;)
-plot_butterfly(results; positions = positions)
-
-#=
+plot_butterfly(results; positions = positions)</code></pre><img src="58d11120.png" alt="Example block output"/><h2 id="MNE-like-color-scheme"><a class="docs-heading-anchor" href="#MNE-like-color-scheme">MNE-like color scheme</a><a id="MNE-like-color-scheme-1"></a><a class="docs-heading-anchor-permalink" href="#MNE-like-color-scheme" title="Permalink"></a></h2><pre><code class="language-julia hljs">#=
 We can change the color scale by specifying a function that maps from an `(x,y)` tuple to a color. UnfoldMakie currently provides three different color scales:
 - `pos2colorRGB` (same as MNE-Python),
 - pos2colorHSV` (HSV color space),
@@ -14,7 +12,9 @@ We can change the color scale by specifying a function that maps from an `(x,y)`
 
 While `RGB` &amp; `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
 Also you can specify a uniform color.
-=#</code></pre><img src="58d11120.png" alt="Example block output"/><h2 id="MNE-like-color-scheme"><a class="docs-heading-anchor" href="#MNE-like-color-scheme">MNE-like color scheme</a><a id="MNE-like-color-scheme-1"></a><a class="docs-heading-anchor-permalink" href="#MNE-like-color-scheme" title="Permalink"></a></h2><pre><code class="language-julia hljs">plot_butterfly(
+=#
+
+plot_butterfly(
     results;
     positions = positions,
     topopositions_to_color = pos -&gt; UnfoldMakie.posToColorRGB(pos),
@@ -26,4 +26,4 @@ Also you can specify a uniform color.
     results;
     positions = positions,
     topopositions_to_color = x -&gt; Colors.RGB(0.5),
-)</code></pre><img src="9304e03b.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/circ_topo/">« Circular topoplot</a><a class="docs-footer-nextpage" href="../hide_deco/">Hide Decorations and Axis Spines »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Wednesday 7 February 2024 14:41">Wednesday 7 February 2024</span>. Using Julia version 1.10.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+)</code></pre><img src="9304e03b.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/circ_topo/">« Circular topoplot</a><a class="docs-footer-nextpage" href="../hide_deco/">Hide Decorations and Axis Spines »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Wednesday 7 February 2024 15:03">Wednesday 7 February 2024</span>. Using Julia version 1.10.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
