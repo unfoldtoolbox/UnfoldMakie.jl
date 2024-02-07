@@ -296,10 +296,3 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
     end
     return (; mapping_dict...)
 end
-
-
-"""
-    function val_Type_to_symbol(T:Type)
-Val{:bu}() to => :bu.
-"""
-val_Type_to_symbol(T) = Symbol(split(string(T), [':', '}'])[2])
