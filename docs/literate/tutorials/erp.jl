@@ -1,4 +1,6 @@
+# ## [Line Plot Visualization](@id lp_vis)
 # Here we discuss ERP plot visualization. 
+
 
 # ## Package loading
 

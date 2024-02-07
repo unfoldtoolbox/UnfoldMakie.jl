@@ -1,3 +1,4 @@
+# # [Butterfly Plot Visualization](@id bfp_vis)
 # Here we discuss Butterfly plot visualization.
 # Since the configurations for ERP plots can be applied to butterfly plots as well. [Here](@ref lp_vis) you can find the configurations for ERP plots.
 
