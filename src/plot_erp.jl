@@ -51,7 +51,7 @@ Plot a Butterfly plot.
 
 
 $(_docstring(:butterfly))
-see also [`plot_erp`](@Ref)
+see also [`plot_erp`](@id erp_vis)
 """
 plot_butterfly(plot_data::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plot_data; kwargs...)

@@ -27,6 +27,8 @@ d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 nothing #hide
 
 
+# Basic combined figure
+ 
 #= 
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
 

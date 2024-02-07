@@ -12,6 +12,8 @@ include("../../../example_data.jl")
 results, positions = example_data("TopoPlots.jl")
 plot_butterfly(results; positions = positions)
 
+# ## MNE-like color scheme
+
 #= 
 We can change the color scale by specifying a function that maps from an `(x,y)` tuple to a color. UnfoldMakie currently provides three different color scales: 
 - `pos2colorRGB` (same as MNE-Python), 
@@ -21,8 +23,6 @@ We can change the color scale by specifying a function that maps from an `(x,y)`
 While `RGB` & `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
 Also you can specify a uniform color.
 =#
-
-# ## MNE-like color scheme
 
 plot_butterfly(
     results;
