@@ -55,15 +55,15 @@ function PlotConfig()# defaults
 end
 
 """
-    function config_kwargs!(cfg::PlotConfig; kwargs...)
-Takes named tuple of Key => NamedTuple  as kwarg and merges the fields with the defaults.
+    config_kwargs!(cfg::PlotConfig; kwargs...)
+Takes named tuple of `Key => NamedTuple`  as kwargs and merges the fields with the defaults.
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
 
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
     @assert(
         all(is_namedtuple),
-        """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
+        """ Keyword argument specification (kwargs...). Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
         Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
 
         plot_example(...; layout = (; use_colorbar=true))
@@ -77,16 +77,13 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ?
     @warn(
-        "Extra is deprecated in 0.4 and extra-keyword args have to be used directly as key-word arguments"
+        "Extra is deprecated in 0.4 and extra keyword arguments have to be used directly as key word arguments"
     ) : ""
     applyTo = keyList[in.(keyList, Ref(list))]
     for k ∈ applyTo
         setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
     end
 end
-
-
-
 
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 
@@ -114,8 +111,6 @@ function PlotConfig(T::Val{:topoarray})
     config_kwargs!(cfg; layout = (;), colorbar = (;), mapping = (;), axis = (;))
     return cfg
 end
-
-
 
 function PlotConfig(T::Val{:topoplot})
     cfg = PlotConfig()
@@ -304,7 +299,7 @@ end
 
 
 """
-    function valType_to_symbol(T:type)
+    function val_Type_to_symbol(T:Type)
 Val{:bu}() to => :bu.
 """
-valType_to_symbol(T) = Symbol(split(string(T), [':', '}'])[2])
+val_Type_to_symbol(T) = Symbol(split(string(T), [':', '}'])[2])

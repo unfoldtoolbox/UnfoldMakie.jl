@@ -1,7 +1,8 @@
 # Note: This is copied from https://github.com/MakieOrg/TopoPlots.jl/pull/3 because they apparently cannot do a review in ~9month...
 
 """
-    function eeg_matrix_to_dataframe(data::DataFrame, label)
+    eeg_matrix_to_dataframe(data::DataFrame, label)
+
 Helper function converting a matrix (channel x times) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label`.
 """
 function eeg_matrix_to_dataframe(data, label)
@@ -12,18 +13,20 @@ function eeg_matrix_to_dataframe(data, label)
 end
 
 """
-    function eeg_topoplot_series(data::DataFrame,
-    Δbin;
-    y = :estimate,
-    label = :label,
-    col = :time,
-    row = nothing,
-    figure = NamedTuple(),
-    combinefun = mean,
-    row_labels = false,
-    col_labels = false,
-    topoplot_attributes...
+    eeg_topoplot_series(data::DataFrame,
+        Δbin;
+        y = :estimate,
+        label = :label,
+        col = :time,
+        row = nothing,
+        figure = NamedTuple(),
+        combinefun = mean,
+        row_labels = false,
+        col_labels = false,
+        topoplot_attributes...
     )
+    eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
+
 
 Plot a series of topoplots. 
 The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
@@ -68,11 +71,6 @@ function eeg_topoplot_series!(fig, data::AbstractMatrix, labels, Δbin; kwargs..
     return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels), Δbin; kwargs...)
 end
 
-"""
-eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
-In place plotting of topoplot series
-see eeg_topoplot_series(data, Δbin) for help
-"""
 function eeg_topoplot_series!(
     fig,
     data::DataFrame,

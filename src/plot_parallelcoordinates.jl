@@ -329,7 +329,8 @@ end
 
 
 """
-Used to inject extrema ticks and round them if necessary
+    PCPTicks
+Used to inject extrema ticks and round them if necessary.
 """
 struct PCPTicks end
 
