@@ -7,5 +7,4 @@ UnfoldMakie.rel_to_abs_bbox
 UnfoldMakie.to_positions
 UnfoldMakie.df_timebin
 UnfoldMakie.cart3d_to_spherical
-UnfoldMakie.val_Type_to_symbol
 ```
