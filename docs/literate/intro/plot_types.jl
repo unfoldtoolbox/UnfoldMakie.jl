@@ -1,5 +1,7 @@
 # # The Dilemma of Multidimensionality
 
+# !!! note
+#        Please read the paper [The Art of Brainwaves](https://www.biorxiv.org/content/10.1101/2023.12.20.572507v2.full), if you want to know more about how we come up with these plot types.
 #=
 EEG – multidimensional data and could be presented differently.
 
@@ -29,7 +31,3 @@ Hard to show meaningfully more than 3 dimensions.
 # ```@raw html
 # <img src="../../../assets/dimensions.jpg" align="middle"/> 
 # ```
-
-
-# !!! note
-#        If you want to know more about how we come up with these plot types, please read the paper [The Art of Brainwaves](https://www.biorxiv.org/content/10.1101/2023.12.20.572507v2.full)

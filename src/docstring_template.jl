@@ -1,5 +1,4 @@
 function _docstring(cfg_symb::Symbol)
-    #pad = maximum(length(string(f)) for f in fieldnames(T))
     cfg = PlotConfig(cfg_symb)
     fn = fieldnames(PlotConfig)
     out = ""
@@ -12,17 +11,17 @@ function _docstring(cfg_symb::Symbol)
         :designmat => `Makie.heatmap`,
         :erpimage => `Makie.heatmap`,
         :channelimage => `Makie.heatmap`,
-        :circeegtopo => `Topoplot.eeg_topoplot`,
-        :topoplot => `Topoplot.eeg_topoplot`,
-        :topoplotseries => `Topoplot.eeg_topoplot`,
+        :circeegtopo => `Topoplot.eeg\_topoplot`,
+        :topoplot => `Topoplot.eeg\_topoplot`,
+        :topoplotseries => `Topoplot.eeg\_topoplot`,
     )
     cbarstring =
         (cfg_symb == :erp || cfg_symb == :butterfly) ?
-        "[`AlgebraOfGraphics.colobar!`](@ref)" : "[`Makie.Colorbar`](@ref)"
+        "[`AlgebraOfGraphics.colobar!`](@ref)" : "[`Makie.Colorbar`](https://docs.makie.org/stable/reference/blocks/colorbar/)"
     link = Dict(
-        :figure => "use `kwargs...` of [`Makie.Figure`](@ref)",
-        :axis => "use `kwargs...` of  [`Makie.Axis`](@ref)",
-        :legend => "use `kwargs...` of  [`Makie.Legend`](@ref)",
+        :figure => "use `kwargs...` of [`Makie.Figure`](https://docs.makie.org/stable/explanations/figure/)",
+        :axis => "use `kwargs...` of  [`Makie.Axis`](https://docs.makie.org/stable/reference/blocks/axis/)",
+        :legend => "use `kwargs...` of  [`Makie.Legend`](https://docs.makie.org/stable/reference/blocks/legend/)",
         :colorbar => "use `kwargs...` of  $cbarstring",
         :visual => "use `kwargs...` of [`$(visuallink[cfg_symb])`](@ref)",
     )
