@@ -35,7 +35,7 @@ import AlgebraOfGraphics.hidedecorations!
 #import AlgebraOfGraphics.hidespines!
 
 include("plotconfig.jl")
-include("docstringtemplate.jl")
+include("docstring_template.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")
