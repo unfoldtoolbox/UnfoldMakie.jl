@@ -15,15 +15,34 @@ function _docstring(cfg_symb::Symbol)
         :topoplot => `Topoplot.eeg\_topoplot`,
         :topoplotseries => `Topoplot.eeg\_topoplot`,
     )
+    visuallink2 = Dict(
+        [
+            :erp,
+            :butterfly,
+            :paracoord,
+            :erpgrid,
+        ] => `https://docs.makie.org/stable/reference/plots/lines/`,
+        [
+            :designmat,
+            :erpimage,
+            :channelimage,
+        ] => `https://docs.makie.org/stable/reference/plots/heatmap/`,
+        [
+            :circeegtopo,
+            :topoplot,
+            :topoplotseries,
+        ] => `https://makieorg.github.io/TopoPlots.jl/stable/eeg/`,
+    )
     cbarstring =
         (cfg_symb == :erp || cfg_symb == :butterfly) ?
-        "[`AlgebraOfGraphics.colobar!`](@ref)" : "[`Makie.Colorbar`](https://docs.makie.org/stable/reference/blocks/colorbar/)"
+        "[`AlgebraOfGraphics.colobar!`](@ref)" :
+        "[`Makie.Colorbar`](https://docs.makie.org/stable/reference/blocks/colorbar/)"
     link = Dict(
         :figure => "use `kwargs...` of [`Makie.Figure`](https://docs.makie.org/stable/explanations/figure/)",
         :axis => "use `kwargs...` of  [`Makie.Axis`](https://docs.makie.org/stable/reference/blocks/axis/)",
         :legend => "use `kwargs...` of  [`Makie.Legend`](https://docs.makie.org/stable/reference/blocks/legend/)",
         :colorbar => "use `kwargs...` of  $cbarstring",
-        :visual => "use `kwargs...` of [`$(visuallink[cfg_symb])`](@ref)",
+        :visual => "use `kwargs...` of [`$(visuallink[cfg_symb])`]($(visuallink2[cfg_symb]))",
     )
     for k = 1:length(fn)
         namedtpl = string(Base.getfield(cfg, fn[k]))

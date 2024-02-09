@@ -36,7 +36,7 @@ $(_docstring(:erp))
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
 
 """
-    plot_butterfly(plot_data::DataFrame; positions=nothing)
+    plot_butterfly(plot_data::DataFrame; positions = nothing)
 
 Plot a Butterfly plot.
 
