@@ -3,12 +3,12 @@
 """
     RelativeAxis(fig, p::NTuple{4, Float64}; kwargs...)
 
-Returns an `Axis` whose position is relative to a `GridLayout' element (via `BBox`) and not relative to the `Scene`.
+Returns an `Axis` whose position is relative to a `GridLayout` element (via `BBox`) and not relative to the `Scene`.
 Default behavior is `Axis(..., bbox=BBox())`.
 
-- `p::NTuple{4,Float64}`: Specify the position relative to the GridPosition
+- `p::NTuple{4,Float64}`: specify the position relative to the GridPosition
     left:right; bottom:top, typical numbers between 0 and 1, e.g. (0.25, 0.75, 0.25, 0.75) would center an `Axis` inside this `GridPosition`.
-- `kwargs...` are inserted into the axis.
+- `kwargs...` - inserted into the axis.
 
     f = Figure()
     ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1,2]

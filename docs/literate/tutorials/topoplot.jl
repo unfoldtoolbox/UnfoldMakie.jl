@@ -1,3 +1,4 @@
+# ## [Topoplot Visualization](@id topo_vis)
 # # Package loading
 
 using Unfold
@@ -48,11 +49,11 @@ cfgDefault.mapping.y
 # # Labelling
 #=
 `label_text` draws labels next to their positions.
-Example: `plot_topoplot(...; visual=(; label_text=true))`
+Example: `plot_topoplot(...; visual=(; label_text = true))`
 
 `label_scatter (boolean)` draws the markers at the given positions.
 
-Example: `plot_topoplot(...; visual=(; label_scatter=true))`
+Example: `plot_topoplot(...; visual=(; label_scatter = true))`
 =#
 
 plot_topoplot(

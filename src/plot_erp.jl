@@ -41,7 +41,7 @@ plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwa
 Plot a Butterfly plot.
 
 ## kwargs (...; ...):
-- `positions` (`Array`, `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
+- `positions` (`Array`, default = `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
 - `topolegend` (`bool`, default = `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
 - `topomarkersize` (`Real`, default = `10`): change the size of the markers, topoplot-inlay electrodes.

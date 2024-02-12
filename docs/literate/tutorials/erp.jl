@@ -1,4 +1,4 @@
-# ## [Line Plot Visualization](@id erp_vis)
+# ## [ERP Plot Visualization](@id erp_vis)
 # Here we discuss ERP plot visualization. 
 
 

@@ -20,18 +20,18 @@ Plot a PCP (parallel coordinates plot).
     - `:left` - show all labels on the left axis, but only min and max on others. 
     - `:outmost` - show labels on min and max of all other axes. 
     - `:none` - remove all labels. 
-- `bend` (default `false`): change straight lines between the axes to curved ("bent") lines using spline interpolation.
+- `bend` (default: `false`): change straight lines between the axes to curved ("bent") lines using spline interpolation.
     Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
     suffers, and the resulting visualizations can be potentially missleading.
 
 ## Defining the axes
 
-- Default: `...(...; mapping=(; x=:channel, y=:estimate))`. One could overwrite what should be on the x and the y axes.
-- By setting `...(...; mapping=(; color=:colorcolumn))` one defines conditions splitted by color. 
-    The default color is defined by `...(...; visual=(; color=:black))`.
+- Default: `...(...; mapping=(; x = :channel, y = :estimate))`. One could overwrite what should be on the x and the y axes.
+- By setting `...(...; mapping=(; color = :colorcolumn))` one defines conditions splitted by color. 
+    The default color is defined by `...(...; visual = (; color=:black))`.
 
 ## Change transparency
-use `...(...; visual=(; alpha=0.5))` to change transparency.
+    use `...(...; visual = (; alpha = 0.5))` to change transparency.
 
 
 $(_docstring(:paracoord))
@@ -87,7 +87,7 @@ function plot_parallelcoordinates(
         c = config.visual.color
         line_labels = nothing
         if config.layout.show_legend
-            @warn "Deactivating legend, as there was no color choice"
+            @warn "Disable legend because there was no color choice"
             UnfoldMakie.config_kwargs!(config; layout = (; show_legend = false))
         end
     end
@@ -123,7 +123,7 @@ function parallelcoordinates(
     alpha = 0.3,
     bend = false,
 )
-    @assert size(data, 2) > 1 "currently more than one line has to be plotted for parallelplot to work"
+    @assert size(data, 2) > 1 "currently more than one line has to be plotted for parallel plot to work"
     if isa(color, AbstractVector)
         @assert size(data, 2) == length(color)
     end

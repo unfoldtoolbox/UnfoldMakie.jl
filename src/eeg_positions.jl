@@ -414,8 +414,8 @@ end
 
 
 """
-	to_positions(x, y, z; sphere=[0,0,0.])
-	to_positions(pos::AbstractMatrix; sphere=[0,0,0.])
+	to_positions(x, y, z; sphere = [0,0,0.])
+	to_positions(pos::AbstractMatrix; sphere = [0,0,0.])
 Projects 3D electrode positions to a 2D layout.
 
 Assumes `size(pos) = (3, nChannels)` when input is `AbstractMatrix`.

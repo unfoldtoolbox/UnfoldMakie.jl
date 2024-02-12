@@ -179,7 +179,7 @@ end
 Split or combine `DataFrame` according to equally spaced time bins.
 - `df` (`AbstractTable`): with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
 - `Δbin`: bin size in `:time` units;
-- `col_y` (default `:erp`), the column to combine over (with `fun`);
+- `col_y` (default = `:erp`), the column to combine over (with `fun`);
 - `fun` (default = `mean`): function to combine;
 - `grouping` (default = `[]`): vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
 """

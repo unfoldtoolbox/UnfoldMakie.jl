@@ -55,7 +55,7 @@ plot_butterfly(
 
 # # Column Mappings for Butterfly Plot
 
-# Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time))`. Just specify a `NamedTuple` (note the `;` right after the opening parentheses).
+# Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time))`. Just specify a `NamedTuple`. Note the `;` right after the opening parentheses.
 
 # # Configurations of Butterfly Plot
 
