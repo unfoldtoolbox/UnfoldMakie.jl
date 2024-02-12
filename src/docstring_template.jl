@@ -11,21 +11,21 @@ function _docstring(cfg_symb::Symbol)
         :designmat => `Makie.heatmap`,
         :erpimage => `Makie.heatmap`,
         :channelimage => `Makie.heatmap`,
-        :circeegtopo => `Topoplot.eeg\_topoplot`,
-        :topoplot => `Topoplot.eeg\_topoplot`,
-        :topoplotseries => `Topoplot.eeg\_topoplot`,
+        :circeegtopo => `Topoplot.eeg_topoplot`,
+        :topoplot => `Topoplot.eeg_topoplot`,
+        :topoplotseries => `Topoplot.eeg_topoplot`,
     )
     visuallink2 = Dict(
-        :erp => `https://docs.makie.org/stable/reference/plots/lines/`,
-        :butterfly => `https://docs.makie.org/stable/reference/plots/lines/`,
-        :paracoord => `https://docs.makie.org/stable/reference/plots/lines/`,
-        :erpgrid => `https://docs.makie.org/stable/reference/plots/lines/`,
-        :designmat => `https://docs.makie.org/stable/reference/plots/heatmap/`,
-        :erpimage => `https://docs.makie.org/stable/reference/plots/heatmap/`,
-        :channelimage => `https://docs.makie.org/stable/reference/plots/heatmap/`,
-        :circeegtopo => `https://makieorg.github.io/TopoPlots.jl/stable/eeg/`,
-        :topoplot => `https://makieorg.github.io/TopoPlots.jl/stable/eeg/`,
-        :topoplotseries => `https://makieorg.github.io/TopoPlots.jl/stable/eeg/`,
+        :erp => "https://docs.makie.org/stable/reference/plots/lines/",
+        :butterfly => "https://docs.makie.org/stable/reference/plots/lines/",
+        :paracoord => "https://docs.makie.org/stable/reference/plots/lines/",
+        :erpgrid => "https://docs.makie.org/stable/reference/plots/lines/",
+        :designmat => "https://docs.makie.org/stable/reference/plots/heatmap/",
+        :erpimage => "https://docs.makie.org/stable/reference/plots/heatmap/",
+        :channelimage => "https://docs.makie.org/stable/reference/plots/heatmap/",
+        :circeegtopo => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
+        :topoplot => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
+        :topoplotseries => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
     )
     cbarstring =
         (cfg_symb == :erp || cfg_symb == :butterfly) ?
@@ -36,7 +36,7 @@ function _docstring(cfg_symb::Symbol)
         :axis => "use `kwargs...` of  [`Makie.Axis`](https://docs.makie.org/stable/reference/blocks/axis/)",
         :legend => "use `kwargs...` of  [`Makie.Legend`](https://docs.makie.org/stable/reference/blocks/legend/)",
         :colorbar => "use `kwargs...` of  $cbarstring",
-        :visual => "use `kwargs...` of [`$(visuallink[cfg_symb])`]($(visuallink2[cfg_symb]))",
+        :visual => "use `kwargs...` of [$(visuallink[cfg_symb])]($(visuallink2[cfg_symb]))",
     )
     for k = 1:length(fn)
         namedtpl = string(Base.getfield(cfg, fn[k]))
