@@ -1,8 +1,9 @@
 # Note: This is copied from https://github.com/MakieOrg/TopoPlots.jl/pull/3 because they apparently cannot do a review in ~9month...
 
 """
-Helper function converting a matrix (channel x times) to a tidy dataframe
-    with columns :estimate, :time and :label
+    eeg_matrix_to_dataframe(data::DataFrame, label)
+
+Helper function converting a matrix (channel x times) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label`.
 """
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
@@ -12,37 +13,40 @@ function eeg_matrix_to_dataframe(data, label)
 end
 
 """
-function eeg_topoplot_series(data::DataFrame,
-    Δbin;
-    y=:estimate,
-    label=:label,
-    col=:time,
-    row=nothing,
-    figure = NamedTuple(),
-    combinefun=mean,
-    row_labels = false,
-    col_labels = false,
-    topoplot_attributes...
+    eeg_topoplot_series(data::DataFrame,
+        Δbin;
+        y = :estimate,
+        label = :label,
+        col = :time,
+        row = nothing,
+        figure = NamedTuple(),
+        combinefun = mean,
+        row_labels = false,
+        col_labels = false,
+        topoplot_attributes...
     )
+    eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
 
-Plot a series of topoplots. The function automatically takes the `combinefun=mean` over the `:time` column of `data` in `Δbin` steps.
-- The data frame `data` needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. 
+
+Plot a series of topoplots. 
+The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
+- `data` (`DataFrame`) needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. 
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- Δbin in `:time` units, specifying the time steps. All other keyword arguments are passed to the EEG_TopoPlot recipe. 
-    In most cases, the user should specify the electrode positions with `positions=pos`.
-- The `col` and `row` arguments specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row=nothing`. 
-    Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in df.condition) rows of topoplot series.
+- `Δbin` in `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. 
+    In most cases, the user should specify the electrode positions with `positions = pos`.
+- The `col` and `row` arguments specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. 
+    Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
 - The `figure` option allows you to include information for plotting the figure. 
     Alternatively, you can pass a fig object `eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)`.
 - `row_labels` and `col_labels` indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
     
-# Examples
-Desc
+# Example
+
 ```julia-repl
-julia > df = DataFrame(:erp => repeat(1:63, 100), :time => repeat(1:20, 5 * 63), :label => repeat(1:63, 100)) # fake data
-julia > pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))] .* 0.5 .+ 0.5 # fake electrode positions
-julia > pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
-julia > eeg_topoplot_series(df, 5; positions=pos)
+df = DataFrame(:erp => repeat(1:63, 100), :time => repeat(1:20, 5 * 63), :label => repeat(1:63, 100)) # simulated data
+pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))] .* 0.5 .+ 0.5 # simulated electrode positions
+pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
+eeg_topoplot_series(df, 5; positions = pos)
 ```
 """
 function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
@@ -67,11 +71,6 @@ function eeg_topoplot_series!(fig, data::AbstractMatrix, labels, Δbin; kwargs..
     return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels), Δbin; kwargs...)
 end
 
-"""
-eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
-In place plotting of topoplot series
-see eeg_topoplot_series(data, Δbin) for help
-"""
 function eeg_topoplot_series!(
     fig,
     data::DataFrame,
@@ -177,12 +176,12 @@ end
 
 """
     df_timebin(df, Δbin; col_y=:erp, fun=mean, grouping=[])
-Split or combine `dataframe` according to equally spaced time bins
-- `df` AbstractTable with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `Δbin` bin size in `:time` units;
-- `col_y` default :erp, the column to combine over (with `fun`);
-- `fun` function to combine, default is `mean`;
-- `grouping` (vector of symbols/strings) default empty vector, columns to group the data by before aggregating. Values of `nothing` are ignored.
+Split or combine `DataFrame` according to equally spaced time bins.
+- `df` (`AbstractTable`): with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
+- `Δbin`: bin size in `:time` units;
+- `col_y` (default = `:erp`), the column to combine over (with `fun`);
+- `fun` (default = `mean`): function to combine;
+- `grouping` (default = `[]`): vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
 """
 function df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
     tmin = minimum(df.time)

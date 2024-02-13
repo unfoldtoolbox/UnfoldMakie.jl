@@ -1,7 +1,4 @@
-# [Designmatrix Visualization](@id dm_vis)
-
 # Here we discuss design matrix visualization. 
-# Make sure you have looked into the [installation instructions](@ref install_instruct) section. 
 
 # # Package loading
 
@@ -10,12 +7,12 @@ using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-## Data
+# # Data
 
 include("../../../example_data.jl")
 uf = example_data("UnfoldLinearModel")
 
-## Plot Designmatrices
+# # Plot Designmatrices
 
 # The following code will result in the default configuration. 
 

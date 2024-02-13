@@ -1,7 +1,6 @@
-# ## [Line Plot Visualization](@id lp_vis)
-
+# ## [ERP Plot Visualization](@id erp_vis)
 # Here we discuss ERP plot visualization. 
-# Make sure you have looked into the [installation instructions](@ref install_instruct).
+
 
 # ## Package loading
 
@@ -37,18 +36,9 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 plot_erp(results; :stderror => true)
 
 
-
-# ## Column Mappings for Line Plots
-# `plot_erp` use a `DataFrame` as an input, the library needs to know the names of the columns used for plotting.
-
-# There are multiple default values, that are checked in that order if they exist in the `DataFrame`, a custom name can be chosen using
-# `plot_erp(...; mapping=(; :y=:my_estimate)`
-
-# :x Default is `(:x, :time)`.
-# :y Default is `(:y, :estimate, :yhat)`.
-# :color Default is `(:color, :coefname)`.
-
 # # Configuration for Line Plots
+
+# Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 
 # ## key values
 # `plot_erp(...; <name>=<value>,...)`.
@@ -58,7 +48,6 @@ plot_erp(results; :stderror => true)
 # - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
 # - `pvalue` (Array, `[]`): show a pvalue (see below). 
 
-# Using some general configurations we can pretty up the default visualization. Here we use the following configuration:
 
 plot_erp(
     res_effects;
@@ -69,14 +58,13 @@ plot_erp(
     categorical_group = true,
 )
 
+# ## P-value lines
 
-# In the following we will use this "pretty" line plot as a basis for looking into configuration options.
+# (`array`, deafult = `[]`)
 
-# ## pvalue (array)
-#
-# Is an array of p-values. If array not empty, plot shows colored lines under the plot representing the p-values. 
-# Default is `[]` (an empty array).
-# Below is an example in which `pvalue` are given:
+# Here we manually specify p-valueslines. If array is not empty, plot shows colored lines under the plot representing the p-values. 
+# Below is an example in which p-values are given:
+
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 pvals = DataFrame(
@@ -86,17 +74,22 @@ pvals = DataFrame(
 )
 plot_erp(results; :pvalue => pvals)
 
-# ## stderror (boolean)
-# Indicating whether the plot should show a colored band showing lower and higher estimates based on the stderror. 
-# Default is `false`.
-#
-# previously we showed `:stderror`- but low/high is possible as well`
+# ## Error ribbon 
+
+# (`boolean`, deafult = `false`)
+# Display a colored band on the graph to indicate lower and higher estimates based on the standard error.
+
+# There are two ways to implement it.
+# First is using `:stderror = true' after `;`.
+
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
 plot_erp(select(results, Not(:stderror)); stderror = true)
 
+# Second way is to specify manually lower and higher borders of the error badns.
+
 # !!! note
-#        as in the above code,`:stderror` has precedence over `:se_low`/`:se_high`
+#        `:stderror` has precedence over `:se_low`/`:se_high`.
 
 
 # # Configurations of ERP plot

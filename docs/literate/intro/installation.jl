@@ -1,5 +1,3 @@
-# [Installation](@id install_instruct)
-
 # # Getting Julia
 
 # You can install Julia by following the instructions from the [official website](https://julialang.org/). 

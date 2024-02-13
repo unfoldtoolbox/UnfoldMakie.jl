@@ -6,7 +6,7 @@ using PyMNE
 
 # # Get positions from MNE
 
-# Generate a fake MNE structure. [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
+# Generate an MNE structure. [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
 
 biosemi_montage = PyMNE.channels.make_standard_montage("biosemi64")
 n_channels = length(biosemi_montage.ch_names)
