@@ -1,12 +1,10 @@
 ```@docs
 UnfoldMakie.RelativeAxis
 UnfoldMakie.eeg_topoplot_series
-UnfoldMakie.eeg_topoplot_series!
 UnfoldMakie.config_kwargs!
 UnfoldMakie.eeg_matrix_to_dataframe
 UnfoldMakie.rel_to_abs_bbox
 UnfoldMakie.to_positions
 UnfoldMakie.df_timebin
 UnfoldMakie.cart3d_to_spherical
-UnfoldMakie.valType_to_symbol
 ```

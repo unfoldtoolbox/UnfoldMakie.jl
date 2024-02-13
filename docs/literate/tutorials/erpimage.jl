@@ -1,8 +1,3 @@
-# [ERP Image Visualization](@id erpi_vis)
-
-# Here we discuss ERP image visualization. 
-# Make sure you have looked into the [installation instructions](@ref install_instruct).
-
 # # Package loading
 
 using Unfold

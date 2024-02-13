@@ -15,16 +15,16 @@ Plot an ERP plot.
 
 ## kwargs (...; ...):
 
-- `categorical_color` (`bool`, default=`true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
-- `categorical_group` (`bool`, default=`true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
-- `stderror` (`bool`, default=`false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue` (`Array`, default=`[]`): show a pvalue.
-    - example: `DataFrame(from=[0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
-- `positions` (`Array`, default=`[]`): see plot_butterfly.
-- `topolegend` (`bool`, default=`false`): (see `plot_butterfly`).
+- `categorical_color` (`bool`, default = `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
+- `categorical_group` (`bool`, default = `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
+- `stderror` (`bool`, default = `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+- `pvalue` (`Array`, default = `[]`): show a pvalue.
+    - example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
+- `positions` (`Array`, default = `[]`): see plot_butterfly.
+- `topolegend` (`bool`, default = `false`): (see `plot_butterfly`).
 
 Internal-use only:
-- `butterfly` (`bool`, default=`true`): a butterfly plot instead of an ERP plot. See  `plot_butterfly`
+- `butterfly` (`bool`, default = `true`): a butterfly plot instead of an ERP plot. See `plot_butterfly`
 
 $(_docstring(:erp))
 
@@ -36,21 +36,22 @@ $(_docstring(:erp))
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
 
 """
-Plot a butterfly plot
-    plot_butterfly(plot_data::DataFrame; positions=nothing)
+    plot_butterfly(plot_data::DataFrame; positions = nothing)
+
+Plot a Butterfly plot.
 
 ## kwargs (...; ...):
-- `positions` (`Array`, `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
+- `positions` (`Array`, default = `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
-- `topolegend` (`bool`, default=`true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
-- `topomarkersize` (`Real`, default=`10`): change the size of the markers, topoplot-inlay electrodes.
-- `topowidth` (`Real`, default=`0.25`): change the size of the inlay topoplot width.
-- `topoheigth` (`Real`, default=`0.25`): change the size of the inlay topoplot height.
-- `topopositions_to_color` (function, ´x -> posToColorRomaO(x)´): change the colors of the channel lines.
+- `topolegend` (`bool`, default = `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
+- `topomarkersize` (`Real`, default = `10`): change the size of the markers, topoplot-inlay electrodes.
+- `topowidth` (`Real`, default = `0.25`): change the size of the inlay topoplot width.
+- `topoheigth` (`Real`, default = `0.25`): change the size of the inlay topoplot height.
+- `topopositions_to_color` (function, `x -> posToColorRomaO(x)`): change the colors of the channel lines.
 
 
 $(_docstring(:butterfly))
-see also [`plot_erp`](@Ref)
+see also [`plot_erp`](@id erp_vis)
 """
 plot_butterfly(plot_data::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plot_data; kwargs...)
@@ -70,8 +71,6 @@ plot_butterfly!(
     topopositions_to_color = x -> posToColorRomaO(x),
     kwargs...,
 )
-
-
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -133,7 +132,6 @@ function plot_erp!(
             allPositions = getTopoPositions(; positions = positions, labels = labels)
             colors = getTopoColor(allPositions, topopositions_to_color)
         end
-
 
     end
     # Categorical mapping
@@ -224,7 +222,6 @@ function plot_erp!(
     return f
 
 end
-
 
 function eegHeadMatrix(positions, center, radius)
     oldCenter = mean(positions)

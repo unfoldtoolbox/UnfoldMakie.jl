@@ -1,8 +1,6 @@
 # # [Butterfly Plot Visualization](@id bfp_vis)
-
-# Here we discuss butterfly plot visualization. Make sure you have looked into the [installation instructions](@ref install_instruct).
-
-# Since the configurations for ERP plots can be applied to butterfly plots as well. [Here](@ref lp_vis) you can find the configurations for ERP plots.
+# Here we discuss Butterfly plot visualization.
+# Since the configurations for ERP plots can be applied to butterfly plots as well. [Here](@ref erp_vis) you can find the configurations for ERP plots.
 
 # # Package loading
 
@@ -57,7 +55,7 @@ plot_butterfly(
 
 # # Column Mappings for Butterfly Plot
 
-# Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time))`. Just specify a `NamedTuple` (note the `;` right after the opening parentheses).
+# Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time))`. Just specify a `NamedTuple`. Note the `;` right after the opening parentheses.
 
 # # Configurations of Butterfly Plot
 

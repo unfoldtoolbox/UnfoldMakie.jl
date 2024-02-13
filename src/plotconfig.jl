@@ -9,7 +9,7 @@ using ColorTypes
 
 """
     PlotConfig(<plotname>)
-    holds various different fields, that can modify various different plotting aspects.
+    Contains several different fields that can modify various aspects of the plot.
 
 """
 mutable struct PlotConfig
@@ -55,14 +55,15 @@ function PlotConfig()# defaults
 end
 
 """
-Takes a kwargs named tuple of Key => NamedTuple and merges the fields with the defaults
+    config_kwargs!(cfg::PlotConfig; kwargs...)
+Takes named tuple of `Key => NamedTuple`  as kwargs and merges the fields with the defaults.
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
 
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
     @assert(
         all(is_namedtuple),
-        """ Keyword argument specification (kwargs...) Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
+        """ Keyword argument specification (kwargs...). Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
         Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
 
         plot_example(...; layout = (; use_colorbar=true))
@@ -76,16 +77,13 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ?
     @warn(
-        "Extra is deprecated in 0.4 and extra-keyword args have to be used directly as key-word arguments"
+        "Extra is deprecated in 0.4 and extra keyword arguments have to be used directly as key word arguments"
     ) : ""
     applyTo = keyList[in.(keyList, Ref(list))]
     for k ∈ applyTo
         setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
     end
 end
-
-
-
 
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 
@@ -113,8 +111,6 @@ function PlotConfig(T::Val{:topoarray})
     config_kwargs!(cfg; layout = (;), colorbar = (;), mapping = (;), axis = (;))
     return cfg
 end
-
-
 
 function PlotConfig(T::Val{:topoplot})
     cfg = PlotConfig()
@@ -296,17 +292,7 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
     # have to use Dict here because NamedTuples break when trying to map them with keys/indices
     mapping_dict = Dict()
     for (k, v) in pairs(mapping_data)
-
-        #if 
-        #    continue
-        #end
         mapping_dict[k] = isa(v, Tuple) ? get_available(k, v) : v
     end
     return (; mapping_dict...)
 end
-
-
-"""
-Val{:bu}() to => :bu
-"""
-valType_to_symbol(T) = Symbol(split(string(T), [':', '}'])[2])
