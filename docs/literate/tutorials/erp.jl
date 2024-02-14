@@ -78,6 +78,36 @@ plot_erp(results; :pvalue => pvals)
 
 # (`boolean`, deafult = `false`)
 # Display a colored band on the graph to indicate lower and higher estimates based on the standard error.
+# For the generalizability of your results, it is always better to include error bands.
+
+f = Figure()
+results.coefname =
+    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
+results = filter(row -> row.coefname != "continuous", results)
+plot_erp!(
+    f[1, 1],
+    results;
+    axis = (title = "Bad example", titlegap = 12),
+    :stderror => false,
+    mapping = (; color = :coefname => "Conditions"),
+)
+
+plot_erp!(
+    f[2, 1],
+    results;
+    axis = (title = "Good example", titlegap = 12),
+    :stderror => true,
+    mapping = (; color = :coefname => "Conditions"),
+)
+
+ax = Axis(f[2, 1], width = Relative(1), height = Relative(1))
+xlims!(ax, [-0.04, 1])
+ylims!(ax, [-0.04, 1])
+hidespines!(ax)
+hidedecorations!(ax)
+text!(0.98, 0.2, text = "* Confidence\nintervals", align = (:right, :top))
+f
+
 
 # There are two ways to implement it.
 # First is using `:stderror = true' after `;`.
@@ -86,7 +116,7 @@ results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
 plot_erp(select(results, Not(:stderror)); stderror = true)
 
-# Second way is to specify manually lower and higher borders of the error badns.
+# Second way is to specify manually lower and higher borders of the error bands.
 
 # !!! note
 #        `:stderror` has precedence over `:se_low`/`:se_high`.
