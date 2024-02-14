@@ -13,8 +13,7 @@ Channel image
 
 $(_docstring(:channelimage))
 
-## Return Value:
-A figure displaying channel image
+**Return Value:** `Figure` displaying the channel image.
 
 """
 plot_channelimage(data::Matrix{<:Real}, position::Vector{Point{2,Float32}}, ch_names::Vector{String}; kwargs...) = 

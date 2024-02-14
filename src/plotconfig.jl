@@ -63,21 +63,21 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
     @assert(
         all(is_namedtuple),
-        """ Keyword argument specification (kwargs...). Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
+        """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
         Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
 
         plot_example(...; layout = (; use_colorbar=true))
 
         plot_example(...; layout = (use_colorbar=true))
          
-        The first is correct and creates a NamedTuple as required. The second is wrong and its call is ignored."""
+        The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
     )
     list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
 
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ?
     @warn(
-        "Extra is deprecated in 0.4 and extra keyword arguments have to be used directly as key word arguments"
+        "Extra is deprecated in 0.4, and extra keyword arguments must be used directly as keyword arguments."
     ) : ""
     applyTo = keyList[in.(keyList, Ref(list))]
     for k ∈ applyTo
@@ -151,7 +151,7 @@ function PlotConfig(T::Val{:topoplotseries})
         visual = (;
             label_text = false # true doesnt work again
         ),
-        mapping = (col = (:time,), row = (nothing,)),
+        mapping = (col = (:time), row = (nothing)),
     )
     return cfg
 end
@@ -284,7 +284,7 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
             return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                    nothing :
                    @error(
-                "default columns for $key = $choices not found, 
+                "Default columns for $key = $choices not found, 
                 user must provide one by using plot_plotname(...; mapping=(; $key=:your_column_name))"
             )
         end

@@ -6,13 +6,13 @@
 Plot a circular EEG topoplot.
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into
-- `data::DataFrame`: DataFrame with keys for data (looks for `:y, :yhat, :estimate`), and :position (looks for `:pos, :position, :positions`), 
-- `predictor` (optional; default: `predictor`): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`
-- `predictor_bounds` (default: `[0,360]`): the bounds of the predictor. This is relevant for the axis labels.
-- `positions` (default: `nothing`): positions for the [`plot_topoplot`](@ref topo_vis)
-- `center_label` (default: ""): the text in the center of the cricle
-- `labels` (default: `nothing`): labels for the [`plot_topoplot`](@ref topo_vis)
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
+- `data::DataFrame`: DataFrame with keys for data (looks for `:y, :yhat, :estimate`), and :position (looks for `:pos, :position, :positions`).
+- `predictor` (default: `predictor`): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`.
+- `predictor_bounds` (default: `[0, 360]`): the bounds of the predictor. This is relevant for the axis labels.
+- `positions` (default: `nothing`): positions for the [`plot_topoplot`](@ref topo_vis).
+- `center_label` (default: ""): the text in the center of the cricle.
+- `labels` (default: `nothing`): labels for the [`plot_topoplot`](@ref topo_vis).
 
 - `kwargs...`: additional styling behavior, see below.
 
@@ -21,8 +21,7 @@ $(_docstring(:circeegtopo))
 
 
 
-## Return Value:
-A figure containing the circular topoplot at given layout position
+**Return Value:** `Figure` displaying the Circular topoplot.
 
 """
 plot_circulareegtopoplot(data::DataFrame; kwargs...) =

@@ -20,8 +20,7 @@ Multiple miniature topoplots in regular distances.
 
 $(_docstring(:topoplotseries))
 
-## Return Value:
-The input `f`
+**Return Value:** `Figure` displaying the Topoplot series.
 
 """
 plot_topoplotseries(data::DataFrame, Δbin::Real; kwargs...) =

@@ -10,12 +10,11 @@ Plot an ERP image.
         
 ## Keyword Arguments
 - `drawlabels` (`bool`, default=`false`): draw channels labels over each waveform. 
-- `times`: (`Vector`, default=`1:size(data, 2)`): vector of size()
+- `times`: (`Vector`, default=`1:size(data, 2)`): vector of size().
 
 $(_docstring(:erpgrid))
 
-## Return Value:
-The figure displaying ERP grid
+**Return Value:** `Figure` displaying ERP grid.
 """
 plot_erpgrid(data::Matrix{<:Real}, pos; kwargs...) =
     plot_erpgrid!(Figure(), data, pos; kwargs...)

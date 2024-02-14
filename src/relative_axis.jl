@@ -13,7 +13,7 @@ Default behavior is `Axis(..., bbox=BBox())`.
     f = Figure()
     ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1,2]
 
-Return Value: `Axis`.
+**Return Value:** `Axis`.
 """
 struct RelativeAxis
     layoutobservables::GridLayoutBase.LayoutObservables{GridLayout}
@@ -75,7 +75,7 @@ get_figure(f::Axis) = f.parent
     rel_to_abs_bbox(org, rel)
 
 Takes a rectangle `org` and applies the relative transformation tuple `rel`.
-Return Value: `Makie.BBox`.
+**Return Value:** `Makie.BBox`.
 
 """
 function rel_to_abs_bbox(org, rel)

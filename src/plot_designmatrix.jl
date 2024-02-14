@@ -20,8 +20,7 @@ Plot a designmatrix.
 
 $(_docstring(:designmat))
 
-## Return Value:
-A figure displaying the designmatrix. 
+**Return Value:** `Figure` displaying the Design matrix. 
 """
 plot_designmatrix(data::Unfold.DesignMatrix; kwargs...) =
     plot_designmatrix!(Figure(), data; kwargs...)

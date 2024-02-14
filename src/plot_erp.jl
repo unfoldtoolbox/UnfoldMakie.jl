@@ -28,9 +28,7 @@ Internal-use only:
 
 $(_docstring(:erp))
 
-## Return Value:
-
-- f - Figure() or the inputed `f`
+**Return Value:** `Figure` displaying the ERP plot.
 
 """
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
@@ -49,6 +47,7 @@ Plot a Butterfly plot.
 - `topoheigth` (`Real`, default = `0.25`): change the size of the inlay topoplot height.
 - `topopositions_to_color` (function, `x -> posToColorRomaO(x)`): change the colors of the channel lines.
 
+**Return Value:** `Figure` displaying Butterfly plot.
 
 $(_docstring(:butterfly))
 see also [`plot_erp`](@id erp_vis)
@@ -100,6 +99,8 @@ function plot_erp!(
 
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+    #println(values(config.mapping))
+
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -218,7 +219,8 @@ function plot_erp!(
         drawing = draw!(mainAxis, plotEquation;)
 
     end
-    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
+
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing) #, drawing = drawing)
     return f
 
 end

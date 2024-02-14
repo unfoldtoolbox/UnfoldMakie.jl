@@ -31,13 +31,12 @@ Plot a PCP (parallel coordinates plot).
     The default color is defined by `...(...; visual = (; color=:black))`.
 
 ## Change transparency
-    use `...(...; visual = (; alpha = 0.5))` to change transparency.
+use `...(...; visual = (; alpha = 0.5))` to change transparency.
 
 
 $(_docstring(:paracoord))
 
-## Return Value:
-The input `f`
+**Return Value:** `Figure` displaying the Parallel ccordinate plot.
 """
 plot_parallelcoordinates(data::DataFrame; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)

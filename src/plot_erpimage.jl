@@ -13,13 +13,12 @@ Plot an ERP image.
     Non-Positive values deactivate the blur.
 - `sortindex` (`Vector{Int64}`; default: `nothing`): sorting over index values.
 - `sortvalues` (`Vector{Int64}`; default: `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
-    - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
+    - `sortperm()` computes a permutation of the array's indices that puts the array in sorted order. 
 - `meanplot` (`bool`; default: `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 $(_docstring(:erpimage))
 
-## Return Value:
-The input `f`
+**Return Value:** `Figure` displaying the ERP image. 
 """
 plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; kwargs...) # no times + no figure?
 

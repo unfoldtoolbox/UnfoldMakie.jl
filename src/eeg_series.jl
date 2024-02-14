@@ -1,9 +1,11 @@
 # Note: This is copied from https://github.com/MakieOrg/TopoPlots.jl/pull/3 because they apparently cannot do a review in ~9month...
 
 """
-    eeg_matrix_to_dataframe(data::DataFrame, label)
+    eeg_matrix_to_dataframe(data::Matrix, label)
 
 Helper function converting a matrix (channel x times) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label`.
+
+**Return Value:** `DataFrame`.
 """
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
@@ -47,6 +49,8 @@ df = DataFrame(:erp => repeat(1:63, 100), :time => repeat(1:20, 5 * 63), :label 
 pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))] .* 0.5 .+ 0.5 # simulated electrode positions
 pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
 eeg_topoplot_series(df, 5; positions = pos)
+
+**Return Value:** `Tuple{Figure, Vector{Any}}`.
 ```
 """
 function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
@@ -111,7 +115,6 @@ function eeg_topoplot_series!(
     # aggregate the data over time bins
     data_mean =
         df_timebin(data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
-
     # using same colormap + contour levels for all plots
     (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
     # make them symmetrical
@@ -175,13 +178,17 @@ function eeg_topoplot_series!(
 end
 
 """
-    df_timebin(df, Δbin; col_y=:erp, fun=mean, grouping=[])
+    df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
 Split or combine `DataFrame` according to equally spaced time bins.
-- `df` (`AbstractTable`): with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `Δbin`: bin size in `:time` units;
-- `col_y` (default = `:erp`), the column to combine over (with `fun`);
-- `fun` (default = `mean`): function to combine;
-- `grouping` (default = `[]`): vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
+
+Arguments:
+    - `df` (`AbstractTable`): with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
+    - `Δbin`: bin size in `:time` units;
+    - `col_y` (default = `:erp`), the column to combine over (with `fun`);
+    - `fun` (default = `mean`): function to combine;
+    - `grouping` (default = `[]`): vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
+
+**Return Value:** `DataFrame`.
 """
 function df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
     tmin = minimum(df.time)

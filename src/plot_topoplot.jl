@@ -9,12 +9,9 @@ Plot a topo plot.
 - `positions::Vector{Point{2, Float32}} = nothing`: positions used if `data` is not a DataFrame. If this is the case and `positions = nothing` then positions are generated from `labels`.
 - `labels::Vector{String} = nothing`: labels used if `data` is not a DataFrame.
 
-
 $(_docstring(:topoplot))
 
-
-## Return Value:
-A figure displaying the topo plot.
+**Return Value:** `Figure` displaying the Topoplot.
 """
 plot_topoplot(data::Union{DataFrame,Vector{Float32}}; kwargs...) =
     plot_topoplot!(Figure(), data; kwargs...)
