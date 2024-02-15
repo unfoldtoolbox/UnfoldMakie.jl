@@ -89,7 +89,7 @@ end
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 
 
-function PlotConfig(T::Val{:circeegtopo})
+function PlotConfig(T::Val{:circtopos})
     cfg = PlotConfig(:topoplot)
 
     config_kwargs!(
@@ -249,7 +249,7 @@ function PlotConfig(T::Val{:erpimage})
         cfg;
         layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
-        axis = (xlabel = "Time [s]", ylabel = "Sorted trials"),
+        axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg

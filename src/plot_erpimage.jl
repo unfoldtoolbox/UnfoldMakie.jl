@@ -26,10 +26,10 @@ plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; 
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(f, 1:size(plot, 1), plot; kwargs...)
 
-
 # no figure?
 plot_erpimage(times::AbstractVector, plot::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(Figure(), times, plot; kwargs...)
+
 
 function plot_erpimage!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -42,7 +42,9 @@ function plot_erpimage!(
     kwargs...,
 )
     config = PlotConfig(:erpimage)
-    UnfoldMakie.config_kwargs!(config; kwargs...)
+    config_kwargs!(config; kwargs...)
+
+
 
     !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
@@ -51,6 +53,7 @@ function plot_erpimage!(
             sortindex = 1:size(plot, 2)
         else
             sortindex = sortperm(sortvalues)
+            ax.ylabel = "Trials sorted" #by $(mymacro(sortvalues))
         end
     end
 
