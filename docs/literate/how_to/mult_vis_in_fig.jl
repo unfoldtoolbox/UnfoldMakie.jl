@@ -57,6 +57,11 @@ We can create a large figure with any type of plot using predefined data.
 With so many plots at once, it's better to set a fixed resolution in your image to order the plots evenly.
 =#
 
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
+
 f = Figure(resolution = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
@@ -114,8 +119,16 @@ plot_circular_topoplots!(
     predictor_bounds = [-0.3, 0.5],
 )
 f
+# ```@raw html
+# </details >
+# ```
 
 # # In two columns
+
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 f = Figure(resolution = (1200, 1400))
 ga = f[1, 1]
 gc = f[2, 1]
@@ -206,3 +219,6 @@ for (label, layout) in
     )
 end
 f
+# ```@raw html
+# </details >
+# ```

@@ -1,4 +1,4 @@
-# # Circular Topoplot Visualization
+# # Visualization of Circular Topoplots
 
 # # Package loading
 
