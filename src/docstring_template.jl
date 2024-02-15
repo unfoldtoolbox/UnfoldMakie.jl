@@ -11,7 +11,7 @@ function _docstring(cfg_symb::Symbol)
         :designmat => `Makie.heatmap`,
         :erpimage => `Makie.heatmap`,
         :channelimage => `Makie.heatmap`,
-        :circeegtopo => `Topoplot.eeg_topoplot`,
+        :circtopos => `Topoplot.eeg_topoplot`,
         :topoplot => `Topoplot.eeg_topoplot`,
         :topoplotseries => `Topoplot.eeg_topoplot`,
     )
@@ -23,7 +23,7 @@ function _docstring(cfg_symb::Symbol)
         :designmat => "https://docs.makie.org/stable/reference/plots/heatmap/",
         :erpimage => "https://docs.makie.org/stable/reference/plots/heatmap/",
         :channelimage => "https://docs.makie.org/stable/reference/plots/heatmap/",
-        :circeegtopo => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
+        :circtopos => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplot => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplotseries => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
     )

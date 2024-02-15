@@ -17,7 +17,7 @@ Plot a circular EEG topoplot.
 - `kwargs...`: additional styling behavior, see below.
 
 
-$(_docstring(:circeegtopo))
+$(_docstring(:circtopos))
 
 
 
@@ -38,7 +38,7 @@ function plot_circular_topoplots!(
     center_label = "",
     kwargs...,
 )
-    config = PlotConfig(:circeegtopo)
+    config = PlotConfig(:circtopos)
     config_kwargs!(config; kwargs...)
     config.mapping = resolve_mappings(data, config.mapping)
 

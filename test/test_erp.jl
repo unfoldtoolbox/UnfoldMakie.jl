@@ -8,6 +8,7 @@ end
 
 @testset "ERP plot with and withour error ribbons" begin
     f = Figure()
+    results = coeftable(m)
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)

@@ -16,8 +16,12 @@ $(_docstring(:channelimage))
 **Return Value:** `Figure` displaying the channel image.
 
 """
-plot_channelimage(data::Matrix{<:Real}, position::Vector{Point{2,Float32}}, ch_names::Vector{String}; kwargs...) = 
-    plot_channelimage!(Figure(), data, position, ch_names; kwargs...)
+plot_channelimage(
+    data::Matrix{<:Real},
+    position::Vector{Point{2,Float32}},
+    ch_names::Vector{String};
+    kwargs...,
+) = plot_channelimage!(Figure(), data, position, ch_names; kwargs...)
 
 function plot_channelimage!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -53,6 +57,11 @@ function plot_channelimage!(
     ax.ytickformat = xc -> c
     ax.yticklabelsize = config.axis.yticklabelsize
 
-    Makie.Colorbar(gin[1, 2], hm, label = config.colorbar.label, labelrotation = config.colorbar.labelrotation)
+    Makie.Colorbar(
+        gin[1, 2],
+        hm,
+        label = config.colorbar.label,
+        labelrotation = config.colorbar.labelrotation,
+    )
     return f
 end
