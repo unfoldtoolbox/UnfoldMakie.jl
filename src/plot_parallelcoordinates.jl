@@ -31,8 +31,8 @@ Plot a PCP (parallel coordinates plot).
     The default color is defined by `...(...; visual = (; color=:black))`.
 
 ## Change transparency
-use `...(...; visual = (; alpha = 0.5))` to change transparency.
 
+use `...(...; visual = (; alpha = 0.5))` to change transparency.
 
 $(_docstring(:paracoord))
 

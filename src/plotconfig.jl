@@ -64,6 +64,7 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     @assert(
         all(is_namedtuple),
         """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
+ 
         Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
 
         plot_example(...; layout = (; use_colorbar=true))

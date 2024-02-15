@@ -78,6 +78,7 @@ plot_erp(results; :pvalue => pvals)
 
 # (`boolean`, deafult = `false`)
 # Display a colored band on the graph to indicate lower and higher estimates based on the standard error.
+
 # For the generalizability of your results, it is always better to include error bands.
 
 f = Figure()
@@ -107,7 +108,6 @@ hidespines!(ax)
 hidedecorations!(ax)
 text!(0.98, 0.2, text = "* Confidence\nintervals", align = (:right, :top))
 f
-
 
 # There are two ways to implement it.
 # First is using `:stderror = true' after `;`.

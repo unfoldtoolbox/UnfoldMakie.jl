@@ -29,7 +29,6 @@ end
     )
     eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
 
-
 Plot a series of topoplots. 
 The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
 - `data` (`DataFrame`) needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. 
@@ -51,6 +50,7 @@ pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
 eeg_topoplot_series(df, 5; positions = pos)
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
+
 ```
 """
 function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
