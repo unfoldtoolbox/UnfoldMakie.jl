@@ -40,8 +40,9 @@ plot_erpimage(
 - `sortperm()` computes a permutation of the array's indices that puts the array into sorted order. 
 =#
 
-dat_e, evts, times = example_data("sort_data")
-plot_erpimage(times, dat_e; sortvalues = evts.Δlatency)
+dat_e, evts, times = example_data("sort_data") 
+dat_norm = dat_e[:, :] .- mean(dat_e, dims=2) # normalisation
+plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency)
 
 # # Configurations for ERP image
 

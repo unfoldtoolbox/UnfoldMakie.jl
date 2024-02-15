@@ -26,9 +26,7 @@ dat_e, evts, times = example_data("sort_data")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 nothing #hide
 
-
 # Basic combined figure
-
 #= 
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
 
@@ -61,7 +59,6 @@ With so many plots at once, it's better to set a fixed resolution in your image 
 # <details>
 # <summary>Click to expand</summary>
 # ```
-
 f = Figure(resolution = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
@@ -118,10 +115,10 @@ plot_circular_topoplots!(
     predictor = :time,
     predictor_bounds = [-0.3, 0.5],
 )
-f
 # ```@raw html
 # </details >
 # ```
+f
 
 # # In two columns
 
@@ -218,7 +215,7 @@ for (label, layout) in
         halign = :right,
     )
 end
-f
 # ```@raw html
 # </details >
 # ```
+f
