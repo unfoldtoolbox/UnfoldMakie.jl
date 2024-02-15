@@ -223,7 +223,7 @@ end
     )
 
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
-    plot_circulareegtopoplot!(
+    plot_circular_topoplots!(
         f[3:4, 4:5],
         d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
         positions = positions,

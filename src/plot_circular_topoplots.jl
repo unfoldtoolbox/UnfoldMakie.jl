@@ -1,6 +1,6 @@
 """
-    plot_circulareegtopoplot!(f, data::DataFrame; kwargs...)
-    plot_circulareegtopoplot(data::DataFrame; kwargs...)
+    plot_circular_topoplots!(f, data::DataFrame; kwargs...)
+    plot_circular_topoplots(data::DataFrame; kwargs...)
     
 
 Plot a circular EEG topoplot.
@@ -24,11 +24,11 @@ $(_docstring(:circeegtopo))
 **Return Value:** `Figure` displaying the Circular topoplot.
 
 """
-plot_circulareegtopoplot(data::DataFrame; kwargs...) =
-    plot_circulareegtopoplot!(Figure(), data; kwargs...)
-plot_circulareegtopoplot!(f, data::DataFrame; kwargs...) =
-    plot_circulareegtopoplot!(f, data; kwargs...)
-function plot_circulareegtopoplot!(
+plot_circular_topoplots(data::DataFrame; kwargs...) =
+    plot_circular_topoplots!(Figure(), data; kwargs...)
+plot_circular_topoplots!(f, data::DataFrame; kwargs...) =
+    plot_circular_topoplots!(f, data; kwargs...)
+function plot_circular_topoplots!(
     f::Union{GridPosition,GridLayout,Figure},
     data::DataFrame;
     predictor = :predictor,
@@ -245,4 +245,4 @@ end
 # uncomment everything below this to try out the code
 #data,pos = TopoPlots.example_data();
 #df= (DataFrame(    :effect=>Float64.([dat;dat;dat;dat;dat;dat]),    :predictor=>repeat([0,50,80,120,180,210],inner=length(dat)),    :positions=>repeat(pos,6)))
-#plot_circulareegtopoplot!(df)
+#plot_circular_topoplots!(df)
