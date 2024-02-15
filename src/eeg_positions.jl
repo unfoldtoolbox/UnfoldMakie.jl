@@ -404,7 +404,7 @@ end
     cart3d_to_spherical(x, y, z)
 Convert x, y, z electrode positions on a scalp to spherical coordinate representation. 
 
-** Return Value:** `Matrix`.
+**Return Value:** `Matrix`.
 """
 function cart3d_to_spherical(x, y, z)
     sph = SphericalFromCartesian().(SVector.(x, y, z))

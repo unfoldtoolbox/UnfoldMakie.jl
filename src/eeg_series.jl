@@ -48,10 +48,9 @@ df = DataFrame(:erp => repeat(1:63, 100), :time => repeat(1:20, 5 * 63), :label 
 pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))] .* 0.5 .+ 0.5 # simulated electrode positions
 pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
 eeg_topoplot_series(df, 5; positions = pos)
+```
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
-
-```
 """
 function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
     return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)

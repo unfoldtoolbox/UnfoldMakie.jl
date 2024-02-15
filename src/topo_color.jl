@@ -1,4 +1,4 @@
-function getTopoPositions(; labels=nothing, positions=nothing)
+function getTopoPositions(; labels = nothing, positions = nothing)
     # positions have priority over labels
     if isnothing(positions) && !isnothing(labels)
         positions = getLabelPos.(labels)
