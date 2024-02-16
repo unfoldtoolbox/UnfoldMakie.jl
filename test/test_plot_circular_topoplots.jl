@@ -7,7 +7,7 @@
             predictor = [70, 80, 400],
         )
 
-        @test_throws ErrorException plot_circulareegtopoplot(
+        @test_throws ErrorException plot_circular_topoplots(
             testdf;
             positions = [Point(1.0, 2.0), Point(1.0, 2.0), Point(1.0, 2.0)],
         )
@@ -19,7 +19,7 @@
             predictor = [70, 80, 90],
         )
 
-        @test_throws ErrorException plot_circulareegtopoplot(
+        @test_throws ErrorException plot_circular_topoplots(
             testdf;
             predictor_bounds = [0, 100, 360],
             positions = [Point(1.0, 2.0), Point(1.0, 2.0), Point(1.0, 2.0)],
@@ -64,7 +64,7 @@ end
     )
     df = flatten(df, :estimate)
     ga = f[1, 1] = GridLayout()
-    plot_circulareegtopoplot!(
+    plot_circular_topoplots!(
         ga,
         df;
         positions = pos,
@@ -78,7 +78,7 @@ end
 @testset "circularplot plot in GridLayout" begin
     d_topo, positions = example_data("TopoPlots.jl")
     f = Figure(resolution = (2000, 2000))
-    plot_circulareegtopoplot!(
+    plot_circular_topoplots!(
         f[3:4, 4:5],
         d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
         positions = positions,

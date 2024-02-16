@@ -22,7 +22,6 @@ end
 @testset "ERP image with sortvalues" begin
     include("../docs/example_data.jl")
     dat_e, evts, times = example_data("sort_data")
-    #println(describe(evts.Δlatency))
     plot_erpimage(times, dat_e; sortvalues = evts.Δlatency)
 end
 
@@ -31,6 +30,13 @@ end
     include("../docs/example_data.jl")
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage(times, dat_e; sortindex = evts.Δlatency)
+end
+
+@testset "ERP image normalised" begin
+    include("../docs/example_data.jl")
+    dat_e, evts, times = example_data("sort_data")
+    dat_norm = dat_e[:, :] .- mean(dat_e, dims=2) 
+    plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency)
 end
 
 @testset "ERP image with and withour sorting" begin
