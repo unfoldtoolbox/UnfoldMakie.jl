@@ -7,7 +7,7 @@ Plot a PCP (parallel coordinates plot).
 ## Arguments:
 
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition in which the plot should be drawn.
-- `data::DataFrame`: data for the plot visualization.
+- `data` (`Union{DataFrame, Vector{Float32}}`) - data for the plot visualization.
 
 ## key word argumets (kwargs)
 

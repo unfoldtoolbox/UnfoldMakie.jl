@@ -11,7 +11,7 @@ Plot an ERP plot.
 
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
 - `plot_data::DataFrame`: Data for the line plot visualization.
-- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`.
+- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping = (; color = :coefname, col = :conditionA))`.
 
 ## kwargs (...; ...):
 
@@ -20,8 +20,8 @@ Plot an ERP plot.
 - `stderror` (`bool`, default = `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `pvalue` (`Array`, default = `[]`): show a pvalue.
     - example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
-- `positions` (`Array`, default = `[]`): see plot_butterfly.
-- `topolegend` (`bool`, default = `false`): (see `plot_butterfly`).
+- `positions` (`Array`, default = `[]`): see `plot_butterfly`.
+- `topolegend` (`bool`, default = `false`): see `plot_butterfly`.
 
 Internal-use only:
 - `butterfly` (`bool`, default = `true`): a butterfly plot instead of an ERP plot. See `plot_butterfly`

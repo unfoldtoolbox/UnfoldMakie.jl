@@ -5,7 +5,7 @@
 Plot an ERP image.
 ## Arguments:
 - `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plot::Matrix{Float64}`: Data for the plot visualization
+- `data` (`Union{DataFrame, Vector{Float32}}`) - Data for the plot visualization
         
 ## Keyword Arguments
 - `erpblur` (`Number`; default: `10`): number indicating how much blur is applied to the image. 

@@ -6,17 +6,18 @@ Multiple miniature topoplots in regular distances.
 
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
-- `data::DataFrame`: DataFrame with data, needs a `time` column.
-- `Δbin::Real`: A number for how large one time bin should be. Δbin is in units of the `data.time` column.
+- `f` (`Union{GridPosition, GridLayout, Figure}`) - Figure, GridLayout or GridPosition that the plot should be drawn into.
+- `data` (`Union{DataFrame, Vector{Float32}}`) - DataFrame with data, needs a `time` column.
+- `Δbin` (`Real`) - A number for how large one time bin should be. Δbin is in units of the `data.time` column.
+
 - `combinefun` (default: `mean`) - specify how the samples within `Δbin` are summarised.
-    possible functons: `mean`, `median`, `std`. 
-- `rasterize_heatmaps` (default: `true`) - enforce rasterization of the plot heatmap when saving in svg format.
-    This has the benefit that all lines/points are vectors, except the interpolated heatmap. 
+    Possible functons: `mean`, `median`, `std`. 
+- `rasterize_heatmaps` (`Bool`, default: `true`) - enforce rasterization of the plot heatmap when saving in `svg` format.
+    This has the benefit that all lines/points are vectors, except for the interpolated heatmap. 
     This is typically what you want, otherwise you get ~500x500 vectors per topoplot, which makes everything super slow.
-- `col_labels`, `row_labels` - shows column and row labels. 
-- `labels` (default: `nothing`) - channel labels.
-- `positions` (default: `nothing`) - channel positions.
+- `col_labels`, `row_labels` (`Bool`, default: `true`) - shows column and row labels. 
+- `labels` (`Vector{String}`, default: `nothing`) - channel labels.
+- `positions` (`Vector{Point{2, Float32}}`, default: `nothing`) - channel positions.
 
 $(_docstring(:topoplotseries))
 
