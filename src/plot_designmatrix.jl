@@ -11,9 +11,9 @@ Plot a designmatrix.
     Data for the plot visualization.
 
 ## kwargs
-- `standardize_data::bool = true`)
+- `standardize_data::Bool = true`)
     Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
-- `sort_data::bool = true`
+- `sort_data::Bool = true`
     Indicates whether the data is sorted. It uses `sortslices()` of Base Julia. 
 - `xticks::Num = nothing`
     Returns the number of labels on the x axis.

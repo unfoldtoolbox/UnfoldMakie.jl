@@ -11,7 +11,7 @@ Plot a circular EEG topoplot.
     DataFrame with data keys (columns `:y, :yhat, :estimate`), and :position (columns `:pos, :position, :positions`).
 
 ## kwargs:
-- `predictor::predictor = :predictor`
+- `predictor::Vector{Any} = :predictor`
     The circular predictor value, defines position of topoplot across the circle.
     Mapped around `predictor_bounds`.
 - `predictor_bounds::Vector{Int64} = [0, 360]`

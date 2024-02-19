@@ -413,7 +413,6 @@ function cart3d_to_spherical(x, y, z)
     return sph
 end
 
-
 """
 	to_positions(x, y, z; sphere = [0, 0, 0.])
 	to_positions(pos::AbstractMatrix; sphere = [0, 0, 0.])
