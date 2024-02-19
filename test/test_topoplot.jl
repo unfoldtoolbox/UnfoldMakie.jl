@@ -17,3 +17,8 @@ end
     plot_topoplot!(f[1, 1], data[:, 150, 1]; positions = positions)
     f
 end
+
+@testset "topoplot with labels" begin
+    labels = ["s$i" for i = 1:size(data[:, 150, 1], 1)]
+    plot_topoplot(data[:, 150, 1]; positions = positions, labels = labels)
+end

@@ -4,12 +4,13 @@
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
+- `f::Union{GridPosition, GridLayout, Figure}`
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Matrix{<:Real}`: data for the plot visualization.
 - `pos::Vector{Point{2,Float}}`: electrode positions.
         
 ## Keyword Arguments
-- `drawlabels` (`bool`, default=`false`): draw channels labels over each waveform. 
+- `drawlabels::bool`, default=`false`): draw channels labels over each waveform. 
 - `times`: (`Vector`, default=`1:size(data, 2)`): vector of size().
 
 $(_docstring(:erpgrid))

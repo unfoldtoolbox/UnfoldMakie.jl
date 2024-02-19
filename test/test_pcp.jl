@@ -43,7 +43,6 @@ end
         )
     end
     f
-
 end
 
 @testset "PCP with GridPosition" begin

@@ -57,20 +57,24 @@ end
     f = Figure(resolution = (1200, 1400))
     data, pos = TopoPlots.example_data()
     dat = data[:, 240, 1]
+
     df = DataFrame(
         :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
         :circularVariable => [0, 50, 80, 120, 180, 210],
         :time => 100:40:300,
     )
+    labels = ["s$i" for i = 1:size(dat, 1)]
     df = flatten(df, :estimate)
+
     ga = f[1, 1] = GridLayout()
     plot_circular_topoplots!(
         ga,
         df;
         positions = pos,
-        axis = (; label = "Time?!"),
+        axis = (; label = "Time?!"), # no effect
         predictor = :time,
         predictor_bounds = [80, 320],
+        labels = labels, # no effect
     )
     f
 end

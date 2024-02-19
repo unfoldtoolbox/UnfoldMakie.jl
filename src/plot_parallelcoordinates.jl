@@ -6,29 +6,37 @@ Plot a PCP (parallel coordinates plot).
 
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition in which the plot should be drawn.
-- `data` (`Union{DataFrame, Vector{Float32}}`) - data for the plot visualization.
+- `f::Union{GridPosition, GridLayout, Figure}`
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data`(`Union{DataFrame, Vector{Float32}}`)
+    Data for the plot visualization.
 
-## key word argumets (kwargs)
+## Keyword argumets (kwargs)
 
-- `normalize` (default: `nothing`): if `:minmax`, normalize each axis to their respective min-max range.
-- `ax_labels` (Array, default: `nothing`): specify axis names. 
+- `normalize::Symbol = nothing`
+    If `:minmax`, normalize each axis to their respective min-max range.
+- `ax_labels::Vector{String} = nothing`
+    Specify axis names. 
     Should be a vector of labels with length equal to the number of unique `mapping.x` values.
     Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"].
-- `ax_ticklabels` (default `:outmost`): specify tick labels on axis.
-    - `:all` - show all labels on all axes.
-    - `:left` - show all labels on the left axis, but only min and max on others. 
-    - `:outmost` - show labels on min and max of all other axes. 
-    - `:none` - remove all labels. 
-- `bend` (default: `false`): change straight lines between the axes to curved ("bent") lines using spline interpolation.
+- `ax_ticklabels::Symbol = :outmost`
+    Specify tick labels on axis.
+        - `:all` - show all labels on all axes.
+        - `:left` - show all labels on the left axis, but only min and max on others. 
+        - `:outmost` - show labels on min and max of all other axes. 
+        - `:none` - remove all labels. 
+- `bend::Bool = false`
+    Change straight lines between the axes to curved ("bent") lines using spline interpolation.
     Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
     suffers, and the resulting visualizations can be potentially missleading.
 
 ## Defining the axes
 
-- Default: `...(...; mapping=(; x = :channel, y = :estimate))`. One could overwrite what should be on the x and the y axes.
-- By setting `...(...; mapping=(; color = :colorcolumn))` one defines conditions splitted by color. 
-    The default color is defined by `...(...; visual = (; color=:black))`.
+- Default: `...(...; mapping = (; x = :channel, y = :estimate))`. 
+    Overwrite what should be on the x and the y axes.
+- By setting `...(...; mapping = (; color = :colorcolumn))` 
+    Defines conditions splitted by color. 
+    The default color is defined by `...(...; visual = (; color = :black))`.
 
 ## Change transparency
 
@@ -55,6 +63,7 @@ function plot_parallelcoordinates(
 
     config.mapping = UnfoldMakie.resolve_mappings(data, config.mapping)
 
+    println(typeof(normalize))
     # remove all unspecified columns
     d = select(data, config.mapping...)
 

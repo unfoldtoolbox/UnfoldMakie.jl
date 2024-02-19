@@ -1,21 +1,27 @@
 """
     plot_circular_topoplots!(f, data::DataFrame; kwargs...)
     plot_circular_topoplots(data::DataFrame; kwargs...)
-    
 
 Plot a circular EEG topoplot.
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
-- `data::DataFrame`: DataFrame with keys for data (looks for `:y, :yhat, :estimate`), and :position (looks for `:pos, :position, :positions`).
-- `predictor` (default: `predictor`): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`.
-- `predictor_bounds` (default: `[0, 360]`): the bounds of the predictor. This is relevant for the axis labels.
-- `positions` (default: `nothing`): positions for the [`plot_topoplot`](@ref topo_vis).
-- `center_label` (default: ""): the text in the center of the cricle.
-- `labels` (default: `nothing`): labels for the [`plot_topoplot`](@ref topo_vis).
+- `f::Union{GridPosition, GridLayout, Figure}`
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::DataFrame`
+    DataFrame with data keys (columns `:y, :yhat, :estimate`), and :position (columns `:pos, :position, :positions`).
 
-- `kwargs...`: additional styling behavior, see below.
-
+## kwargs:
+- `predictor::predictor = :predictor`
+    The circular predictor value, defines position of topoplot across the circle.
+    Mapped around `predictor_bounds`.
+- `predictor_bounds::Vector{Int64} = [0, 360]`
+    The bounds of the predictor. Relevant for the axis labels.
+- `positions::Vector{Point{2, Float32}} = nothing`
+    Positions of the [`plot_topoplot`](@ref topo_vis).
+- `center_label::String = ""`
+    The text in the center of the cricle.
+- `labels::Vector{String} = nothing`
+    Labels for the [`plot_topoplot`](@ref topo_vis).
 
 $(_docstring(:circtopos))
 
@@ -42,7 +48,6 @@ function plot_circular_topoplots!(
     config_kwargs!(config; kwargs...)
     config.mapping = resolve_mappings(data, config.mapping)
 
-
     positions = getTopoPositions(; positions = positions, labels = labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
     predictorValues = data[:, predictor]
@@ -51,9 +56,7 @@ function plot_circular_topoplots!(
         error("predictor_bounds needs exactly two values")
     end
     if (predictor_bounds[1] >= predictor_bounds[2])
-        error(
-            "predictor_bounds[1] needs to be smaller than predictor_bounds[2]",
-        )
+        error("predictor_bounds[1] needs to be smaller than predictor_bounds[2]")
     end
     if (
         (length(predictorValues[predictorValues.<predictor_bounds[1]]) != 0) ||

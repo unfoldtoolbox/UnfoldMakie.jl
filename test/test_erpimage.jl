@@ -35,7 +35,7 @@ end
 @testset "ERP image normalised" begin
     include("../docs/example_data.jl")
     dat_e, evts, times = example_data("sort_data")
-    dat_norm = dat_e[:, :] .- mean(dat_e, dims=2) 
+    dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2)
     plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency)
 end
 

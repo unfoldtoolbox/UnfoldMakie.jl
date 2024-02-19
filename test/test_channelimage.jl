@@ -7,7 +7,6 @@ raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7",
 
 @testset "channel image basic" begin
     plot_channelimage(data, pos, raw_ch_names; )
-
 end
 
 @testset "channel image with Figure" begin
