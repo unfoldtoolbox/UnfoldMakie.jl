@@ -31,19 +31,19 @@ end
 
 Plot a series of topoplots. 
 The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
-- `data::DataFrame`
-    Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. 
+- `data::DataFrame`\\
+    Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- `Δbin` 
-    In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. 
+- `Δbin` \\
+    In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. \\
     In most cases, the user should specify the electrode positions with `positions = pos`.
-- `col`, `row` 
-    Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. 
+- `col`, `row` \\
+    Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. \\
     Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
-- `figure` 
-    Allows to include information for plotting the figure. 
+- `figure` \\
+    Allows to include information for plotting the figure. \\
     Alternatively, you can pass a fig object `eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)`.
-- `row_labels`, `col_labels` 
+- `row_labels`, `col_labels` \\
     Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
     
 # Example
@@ -186,15 +186,15 @@ end
 Split or combine `DataFrame` according to equally spaced time bins.
 
 Arguments:
-- `df::AbstractTable`
+- `df::AbstractTable`\\
     With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `Δbin`
+- `Δbin`\\
     Bin size in `:time` units;
-- `col_y = :erp` 
+- `col_y = :erp` \\
     The column to combine over (with `fun`);
-- `fun = mean()
+- `fun = mean()\\
     Function to combine.
-- `grouping = []`
+- `grouping = []`\\
     Vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
 
 **Return Value:** `DataFrame`.

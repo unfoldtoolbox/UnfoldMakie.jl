@@ -27,15 +27,15 @@ d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 nothing #hide
 
 # # Basic combined figure
-#= 
+
+#=
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
-
-We will start by creating a figure with `Makie.Figure`. 
-
-`f = Figure()`
-
-Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`. 
 =#
+# We will start by creating a figure with `Makie.Figure`.
+
+# `f = Figure()`
+
+# Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
 
 f = Figure()
 plot_erp!(f[1, 1], coeftable(uf_deconv))
