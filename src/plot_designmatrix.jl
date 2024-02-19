@@ -4,18 +4,18 @@
         
 
 Plot a designmatrix. 
-## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`
+## Arguments
+- `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Unfold.DesignMatrix`
+- `data::Unfold.DesignMatrix`\\
     Data for the plot visualization.
 
-## kwargs
-- `standardize_data::Bool = true`)
+## Keyword argumets (kwargs)
+- `standardize_data::Bool = true`)\\
     Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
-- `sort_data::Bool = true`
+- `sort_data::Bool = true`\\
     Indicates whether the data is sorted. It uses `sortslices()` of Base Julia. 
-- `xticks::Num = nothing`
+- `xticks::Num = nothing`\\
     Returns the number of labels on the x axis.
     - `xticks` = 0: no labels are placed.
     - `xticks` = 1: first possible label is placed.

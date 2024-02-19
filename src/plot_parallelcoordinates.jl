@@ -8,43 +8,41 @@ Plot a PCP (parallel coordinates plot).
 
 - `f::Union{GridPosition, GridLayout, Figure}`
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data`(`Union{DataFrame, Vector{Float32}}`)
+- `data::Union{DataFrame, Vector{Float32}}`\\
     Data for the plot visualization.
 
 ## Keyword argumets (kwargs)
-
-- `normalize::Symbol = nothing`
+- `normalize::Symbol = nothing`\\
     If `:minmax`, normalize each axis to their respective min-max range.
-- `ax_labels::Vector{String} = nothing`
-    Specify axis names. 
-    Should be a vector of labels with length equal to the number of unique `mapping.x` values.
+- `ax_labels::Vector{String} = nothing`\\
+    Specify axis names. \\
+    Should be a vector of labels with length equal to the number of unique `mapping.x` values.\\
     Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"].
-- `ax_ticklabels::Symbol = :outmost`
+- `ax_ticklabels::Symbol = :outmost`\\
     Specify tick labels on axis.
-        - `:all` - show all labels on all axes.
-        - `:left` - show all labels on the left axis, but only min and max on others. 
-        - `:outmost` - show labels on min and max of all other axes. 
-        - `:none` - remove all labels. 
+    - `:all` - show all labels on all axes.
+    - `:left` - show all labels on the left axis, but only min and max on others. 
+    - `:outmost` - show labels on min and max of all other axes. 
+    - `:none` - remove all labels. 
 - `bend::Bool = false`
-    Change straight lines between the axes to curved ("bent") lines using spline interpolation.
+    Change straight lines between the axes to curved ("bent") lines using spline interpolation.\\
     Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
     suffers, and the resulting visualizations can be potentially missleading.
 
 ## Defining the axes
 
-- Default: `...(...; mapping = (; x = :channel, y = :estimate))`. 
+- Default: `...(...; mapping = (; x = :channel, y = :estimate))`. \\
     Overwrite what should be on the x and the y axes.
-- By setting `...(...; mapping = (; color = :colorcolumn))` 
-    Defines conditions splitted by color. 
-    The default color is defined by `...(...; visual = (; color = :black))`.
+- `...(...; mapping = (; color = :colorcolumn))` \\
+    Split conditions by color. The default color is `:black`.
 
 ## Change transparency
 
-use `...(...; visual = (; alpha = 0.5))` to change transparency.
+- use `...(...; visual = (; alpha = 0.5))` to change transparency.
 
 $(_docstring(:paracoord))
 
-**Return Value:** `Figure` displaying the Parallel ccordinate plot.
+**Return Value:** `Figure` displaying the Parallel coordinates plot.
 """
 plot_parallelcoordinates(data::DataFrame; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)

@@ -3,14 +3,14 @@
     plot_topoplot(data; positions = nothing, labels = nothing, kwargs...)
 
 Plot a topoplot.
-## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}
+## Arguments
+- `f::Union{GridPosition, GridLayout, Figure}\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}` 
+- `data::Union{DataFrame, Vector{Float32}}` \\
     Data for the plot visualization.
-- `positions::Vector{Point{2, Float32}} = nothing`
+- `positions::Vector{Point{2, Float32}} = nothing`\\
     Positions used if `data` is not a `DataFrame`. Positions are generated from `labels` if `positions = nothing`.
-- `labels::Vector{String} = nothing`
+- `labels::Vector{String} = nothing`\\
     Labels used if `data` is not a DataFrame.
 
 $(_docstring(:topoplot))

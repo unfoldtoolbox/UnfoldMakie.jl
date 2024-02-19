@@ -3,24 +3,24 @@
     plot_circular_topoplots(data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
-## Arguments:
+## Arguments
 
 - `f::Union{GridPosition, GridLayout, Figure}`
-    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.\\
 - `data::DataFrame`
     DataFrame with data keys (columns `:y, :yhat, :estimate`), and :position (columns `:pos, :position, :positions`).
 
-## kwargs:
-- `predictor::Vector{Any} = :predictor`
+## Keyword argumets (kwargs)
+- `predictor::Vector{Any} = :predictor`\\
     The circular predictor value, defines position of topoplot across the circle.
     Mapped around `predictor_bounds`.
-- `predictor_bounds::Vector{Int64} = [0, 360]`
+- `predictor_bounds::Vector{Int64} = [0, 360]`\\
     The bounds of the predictor. Relevant for the axis labels.
-- `positions::Vector{Point{2, Float32}} = nothing`
+- `positions::Vector{Point{2, Float32}} = nothing`\\
     Positions of the [`plot_topoplot`](@ref topo_vis).
-- `center_label::String = ""`
+- `center_label::String = ""`\\
     The text in the center of the cricle.
-- `labels::Vector{String} = nothing`
+- `labels::Vector{String} = nothing`\\
     Labels for the [`plot_topoplot`](@ref topo_vis).
 
 $(_docstring(:circtopos))

@@ -4,16 +4,16 @@
         
 Channel image
 
-## Arguments:
+## Arguments
 
-- `f::Union{GridPosition, GridLayout, Figure}`
-    - `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::DataFrame`
-    - DataFrame with data.
-- `position::Vector{Point{2,Float32}}`
-    - A vector with EEG layout coordinates.
-- `ch_names::Vector{String}`
-    - Vector with channel names.
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::DataFrame`\\
+    DataFrame with data.
+- `position::Vector{Point{2,Float32}}`\\
+    A vector with EEG layout coordinates.
+- `ch_names::Vector{String}`\\
+    Vector with channel names.
 
 $(_docstring(:channelimage))
 

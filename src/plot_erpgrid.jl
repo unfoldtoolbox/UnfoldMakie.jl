@@ -3,15 +3,19 @@
     plot_erpgrid(data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
 
 Plot an ERP image.
-## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`
+## Arguments
+- `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Matrix{<:Real}`: data for the plot visualization.
-- `pos::Vector{Point{2,Float}}`: electrode positions.
+- `data::Matrix{<:Real}`\\
+    Data for the plot visualization.
+- `pos::Vector{Point{2,Float}}` \\
+    Electrode positions.
         
-## Keyword Arguments
-- `drawlabels::bool`, default=`false`): draw channels labels over each waveform. 
-- `times`: (`Vector`, default=`1:size(data, 2)`): vector of size().
+## Keyword argumets (kwargs)
+- `drawlabels::Bool = false`\\
+    Draw channels labels over each waveform. 
+- `times::Vector = 1:size(data, 2)`\\
+    Vector of `size()`.
 
 $(_docstring(:erpgrid))
 

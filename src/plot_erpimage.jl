@@ -4,22 +4,22 @@
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`
+- `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}`
+- `data::Union{DataFrame, Vector{Float32}}`\\
     Data for the plot visualization.
         
-## Keyword Arguments
-- `erpblur::Number  = 10`
-    Number indicating how much blur is applied to the image. 
-    Gaussian blur of the `ImageFiltering` module is used.
+## Keyword argumets (kwargs) 
+- `erpblur::Number  = 10`\\
+    Number indicating how much blur is applied to the image. \\
+    Gaussian blur of the `ImageFiltering` module is used.\\
     Non-Positive values deactivate the blur.
 - `sortvalues::Vector{Int64} = false`
-    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia. 
+    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia.\\ 
     `sortperm()` computes a permutation of the array's indices that puts the array in sorted order. 
-- `sortindex::Vector{Int64} = nothing`
+- `sortindex::Vector{Int64} = nothing`\\
     Sorting over index values.
-- `meanplot::bool = false`
+- `meanplot::bool = false`\\
     Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
 
 $(_docstring(:erpimage))

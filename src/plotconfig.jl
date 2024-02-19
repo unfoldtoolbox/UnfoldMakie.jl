@@ -67,9 +67,9 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
 
         Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
 
-        plot_example(...; layout = (; use_colorbar=true))
+        plot_example(...; layout = (; use_colorbar = true))
 
-        plot_example(...; layout = (use_colorbar=true))
+        plot_example(...; layout = (use_colorbar = true))
          
         The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
     )
@@ -134,7 +134,7 @@ function PlotConfig(T::Val{:topoplot})
             colormap = Reverse(:RdBu),
         ),
         mapping = (;
-            x = (nothing,),
+            x = (nothing),
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
@@ -147,12 +147,12 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        layout = (use_colorbar = true,),
+        layout = (; use_colorbar = true),
         colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
         visual = (;
             label_text = false # true doesnt work again
         ),
-        mapping = (col = (:time), row = (nothing)),
+        mapping = (; col = (:time,), row = (nothing,)),
     )
     return cfg
 end
