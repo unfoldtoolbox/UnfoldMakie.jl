@@ -32,7 +32,14 @@ end
 
 @testset "toposeries with differend comb functions " begin
     f = Figure()
-    plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
+    plot_topoplotseries!(
+        f[1, 1],
+        df,
+        Δbin;
+        positions = positions,
+        combinefun = mean,
+        axis = (; title = "combinefun = mean"),
+    )
     plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
     plot_topoplotseries!(f[3, 1], df, Δbin; positions = positions, combinefun = std)
     f

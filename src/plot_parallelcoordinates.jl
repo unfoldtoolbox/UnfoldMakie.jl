@@ -110,6 +110,12 @@ function plot_parallelcoordinates(
         ax_ticklabels = ax_ticklabels,
         config.visual...,
     )
+    Label(
+        f[1, 1, Top()],
+        text = config.axis.title,
+        padding = (20, 20, 22, 0),
+        fontsize = 22,
+    )
     apply_layout_settings!(config; fig = f, ax = ax)
 
     return isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :

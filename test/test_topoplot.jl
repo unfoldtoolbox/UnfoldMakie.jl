@@ -1,7 +1,7 @@
 data, positions = TopoPlots.example_data()
 
 @testset "topoplot basic" begin
-    plot_topoplot(data[:, 50, 1]; positions = positions)
+    plot_topoplot(data[:, 50, 1]; positions = positions, axis = (; title = "topoplot"))
 end
 
 @testset "topoplot without legend" begin

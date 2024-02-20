@@ -128,6 +128,7 @@ function eeg_topoplot_series!(
     topoplot_attributes = merge(
         (
             colorrange = (q_min, q_max),
+            interp_resolution = (128, 128),
             contours = (levels = range(q_min, q_max; length = 7),),
         ),
         topoplot_attributes,

@@ -4,7 +4,7 @@
 
 Plot a topoplot.
 ## Arguments
-- `f::Union{GridPosition, GridLayout, Figure}\\
+- `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, Vector{Float32}}` \\
     Data for the plot visualization.

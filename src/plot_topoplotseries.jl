@@ -14,9 +14,9 @@ Multiple miniature topoplots in regular distances.
     `Δbin` is in units of the `data.time` column.
 
 ## Keyword argumets (kwargs)
-- `combinefun::mean()`\\
+- `combinefun::Function = mean`\\
     Specify how the samples within `Δbin` are summarised.\\
-    Possible functons: `mean`, `median`, `std`. 
+    Example functions: `mean`, `median`, `std`. 
 - `rasterize_heatmaps::Bool = true`\\
     Force rasterization of the plot heatmap when saving in `svg` format.\\
     Except for the interpolated heatmap, all lines/points are vectors.\\
@@ -77,6 +77,8 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
+
+    Label(f[1, 1, Top()], text = config.axis.title)
     if config.layout.use_colorbar
         if typeof(ftopo) == Figure
             d = ftopo.content[1].scene.plots[1]

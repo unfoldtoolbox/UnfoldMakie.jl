@@ -147,6 +147,7 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
+        axis = (; title = ""),
         layout = (; use_colorbar = true),
         colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
         visual = (;
@@ -263,7 +264,7 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
-        axis = (; ylabel = "Time"),
+        axis = (; ylabel = "Time", title = ""),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
     )
