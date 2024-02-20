@@ -114,7 +114,8 @@ function plot_parallelcoordinates(
         f[1, 1, Top()],
         text = config.axis.title,
         padding = (20, 20, 22, 0),
-        fontsize = 22,
+        fontsize = 20,
+        font = :bold,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
 

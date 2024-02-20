@@ -77,8 +77,7 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
-
-    Label(f[1, 1, Top()], text = config.axis.title)
+    Label(f[1, 1, Top()], text = config.axis.title, fontsize = 20, font = :bold)
     if config.layout.use_colorbar
         if typeof(ftopo) == Figure
             d = ftopo.content[1].scene.plots[1]

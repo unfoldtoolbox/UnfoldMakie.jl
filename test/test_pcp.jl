@@ -25,23 +25,15 @@ end
         subset(results_plot, :channel => x -> x .<= 5);
         mapping = (; color = :coefname),
         visual = (; colormap = :tab10),
+        axis = (; title = "colormap = tab10"),
     )
     plot_parallelcoordinates(
         f[2, 1],
         subset(results_plot, :channel => x -> x .<= 5);
         mapping = (; color = :coefname),
         visual = (; colormap = :Accent_3),
+        axis = (; title = "colormap = Accent_3"),
     )
-    for (label, layout) in zip(["tab10", "Accent_3"], [f[1, 1], f[2, 1]])
-        Label(
-            layout[1, 1, TopLeft()],
-            label,
-            fontsize = 26,
-            font = :bold,
-            padding = (0, -50, 25, 0),
-            halign = :left,
-        )
-    end
     f
 end
 
@@ -93,24 +85,15 @@ end
         f[1, 1],
         subset(results_plot, :channel => x -> x .< 10);
         mapping = (; color = :coefname),
+        axis = (; title = "normalize = nothing"),
     )
     plot_parallelcoordinates(
         f[2, 1],
         subset(results_plot, :channel => x -> x .< 10);
         mapping = (; color = :coefname),
         normalize = :minmax,
+        axis = (; title = "normalize = :minmax"),
     )
-    for (label, layout) in
-        zip(["no normalisation", "minmax normalisation"], [f[1, 1], f[2, 1]])
-        Label(
-            layout[1, 1, TopLeft()],
-            label,
-            fontsize = 26,
-            font = :bold,
-            padding = (0, -250, 25, 0),
-            halign = :left,
-        )
-    end
     f
 end
 
@@ -130,6 +113,7 @@ end
         ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :all,
         normalize = :minmax,
+        axis = (; title = "ax_ticklabels = :all"),
     ) # show all ticks on all axes
     plot_parallelcoordinates(
         f[2, 1],
@@ -137,6 +121,7 @@ end
         ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :left,
         normalize = :minmax,
+        axis = (; title = "ax_ticklabels = :left"),
     ) # show all ticks on the left axis, but only extremities on others 
     plot_parallelcoordinates(
         f[3, 1],
@@ -144,6 +129,7 @@ end
         ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :outmost,
         normalize = :minmax,
+        axis = (; title = "ax_ticklabels = :outmost"),
     ) # show ticks on extremities of all axes
 
     plot_parallelcoordinates(
@@ -152,18 +138,8 @@ end
         ax_labels = ["Fz", "Cz", "O1", "O2"],
         ax_ticklabels = :none,
         normalize = :minmax,
+        axis = (; title = "ax_ticklabels = :none"),
     ) #  disable all ticks
-    for (label, layout) in
-        zip(["all", "left", "outmost", "none"], [f[1, 1], f[2, 1], f[3, 1], f[4, 1]])
-        Label(
-            layout[1, 1, TopLeft()],
-            label,
-            fontsize = 26,
-            font = :bold,
-            padding = (0, -80, 25, 0),
-            halign = :left,
-        )
-    end
     f
 end
 
@@ -177,6 +153,7 @@ end
         mapping = (; color = :coefname),
         layout = (; legend_position = :right),
         visual = (; alpha = 0.1),
+        axis = (; title = "alpha = 0.1"),
     )
     plot_parallelcoordinates(
         f[2, 1],
@@ -184,17 +161,8 @@ end
         mapping = (; color = :coefname),
         layout = (; legend_position = :right),
         visual = (; alpha = 0.9),
+        axis = (; title = "alpha = 0.9"),
     )
-    for (label, layout) in zip(["alpha = 0.1", "alpha = 0.9"], [f[1, 1], f[2, 1]])
-        Label(
-            layout[1, 1, TopLeft()],
-            label,
-            fontsize = 26,
-            font = :bold,
-            padding = (0, -80, 25, 0),
-            halign = :left,
-        )
-    end
     f
 end
 
@@ -215,8 +183,6 @@ end
     )
     f
 end
-
-
 
 begin
     f = Figure()

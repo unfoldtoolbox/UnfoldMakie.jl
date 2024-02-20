@@ -15,7 +15,6 @@ end
     plot_topoplotseries(df, Δbin; positions = positions, labels = raw_ch_names)
 end
 
-
 @testset "toposeries with xlabel" begin
     f = Figure()
     ax = Axis(f[1, 1])

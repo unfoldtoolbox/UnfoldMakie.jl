@@ -58,7 +58,6 @@ f
 # Use only categorical with high contrast between adjacent colors. 
 # More: https://docs.makie.org/stable/explanations/colors/index.html
 
-
 f = Figure()
 plot_parallelcoordinates(
     f[1, 1],
@@ -75,7 +74,6 @@ plot_parallelcoordinates(
     axis = (; title = "colormap = Accent_3"),
 )
 f
-
 
 # ## Labels
 
@@ -133,11 +131,16 @@ f
 # Bending the linescan be helpful to make them more visible.
 
 f = Figure()
-plot_parallelcoordinates(f[1, 1], subset(results_plot, :channel => x -> x .< 10))
+plot_parallelcoordinates(
+    f[1, 1],
+    subset(results_plot, :channel => x -> x .< 10),
+    axis = (; title = "bend = false"),
+)
 plot_parallelcoordinates(
     f[2, 1],
     subset(results_plot, :channel => x -> x .< 10),
     bend = true,
+    axis = (; title = "bend = true"),
 )
 f
 

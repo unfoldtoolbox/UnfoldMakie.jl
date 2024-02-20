@@ -59,7 +59,6 @@ plot_topoplotseries!(
 )
 f
 
-
 # # Configurations of Topoplot series
 
 # ```@docs
