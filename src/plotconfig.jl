@@ -147,7 +147,7 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        axis = (; title = ""),
+        axis = (; title = "", fontsize = 20, font = :bold),
         layout = (; use_colorbar = true),
         colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
         visual = (;

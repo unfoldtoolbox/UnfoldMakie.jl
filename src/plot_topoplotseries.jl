@@ -20,7 +20,7 @@ Multiple miniature topoplots in regular distances.
 - `rasterize_heatmaps::Bool = true`\\
     Force rasterization of the plot heatmap when saving in `svg` format.\\
     Except for the interpolated heatmap, all lines/points are vectors.\\
-    This is typically what you want, otherwise you get ~500x500 vectors per topoplot, which makes everything super slow.
+    This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything super slow.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels. 
 - `labels::Vector{String} = nothing`\\
@@ -77,7 +77,7 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
-    Label(f[1, 1, Top()], text = config.axis.title, fontsize = 20, font = :bold)
+    Label(f[1, 1, Top()], text = config.axis.title, fontsize = config.axis.fontsize, font = config.axis.font)
     if config.layout.use_colorbar
         if typeof(ftopo) == Figure
             d = ftopo.content[1].scene.plots[1]
