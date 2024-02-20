@@ -1,4 +1,4 @@
-# If you want to efficiently hide decorations and axis spines in in a plot you have several options to do it.
+# You have several options for efficiently hiding decorations and axis spines in a plot.
 # # Package input
 
 using TopoPlots
@@ -10,7 +10,7 @@ include("../../../example_data.jl")
 data, pos = example_data("TopoPlots.jl")
 
 #=
-First, you can specify the axis settings with `axis=(; ...)`. 
+First, you can specify the axis settings with `axis = (; ...)`. 
 Makie.Axis` provides multiple variables for different aspects of the plot. This means that removing all decorations is only possible by setting many variables each time.
 
 Second, `Makie` does provide methods like `hidespines!` and `hidedecorations!`. Unforunately, user may lose access to a plot after it is drawn in.
@@ -29,6 +29,7 @@ plot_butterfly!(
     topomarkersize = 10,
     topoheigth = 0.4,
     topowidth = 0.4,
+    axis = (; title = "With decorations")
 )
 plot_butterfly!(
     f[2, 1],
@@ -37,18 +38,9 @@ plot_butterfly!(
     topomarkersize = 10,
     topoheigth = 0.4,
     topowidth = 0.4,
+    axis = (; title = "Without decorations"),
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),
 )
-for (label, layout) in zip(["with decorations", "without"], [f[1, 1], f[2, 1]])
-    Label(
-        layout[1, 1, TopLeft()],
-        label,
-        fontsize = 26,
-        font = :bold,
-        padding = (0, -250, 25, 0),
-        halign = :left,
-    )
-end
 f
 
 #=
