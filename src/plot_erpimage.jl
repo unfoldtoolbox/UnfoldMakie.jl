@@ -35,8 +35,7 @@ plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; k
 # no figure?
 plot_erpimage(times::AbstractVector, plot::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(Figure(), times, plot; kwargs...)
-
-
+     
 function plot_erpimage!(
     f::Union{GridPosition,GridLayout,Figure},
     times::AbstractVector,
@@ -57,7 +56,9 @@ function plot_erpimage!(
             sortindex = 1:size(plot, 2)
         else
             sortindex = sortperm(sortvalues)
-            ax.ylabel = "Trials sorted" #by $(mymacro(sortvalues))
+            if ax.ylabel[] == "Trials"
+                ax.ylabel = "Trials sorted" #by $(mymacro(sortvalues))
+            end
         end
     end
 
@@ -97,3 +98,4 @@ function plot_erpimage!(
     return f
 
 end
+
