@@ -42,7 +42,13 @@ end
     f = Figure()
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(f[1, 1], times, dat_e; axis = (; title = "Bad"))
-    plot_erpimage!(f[2, 1], times, dat_e; sortvalues = evts.Δlatency, axis = (; title = "Good"))
+    plot_erpimage!(
+        f[2, 1],
+        times,
+        dat_e;
+        sortvalues = evts.Δlatency,
+        axis = (; title = "Good"),
+    )
     f
     #save("erpimage.png", f)
 end
@@ -51,9 +57,15 @@ end
     f = Figure()
     dat_e, evts, times = example_data("sort_data")
     dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2)
-    plot_erpimage!(f[1, 1], times, dat_e; axis = (; ylabel = " "))
-    plot_erpimage!(f[2, 1], times, dat_e; sortvalues = evts.Δlatency, axis = (; ylabel = " "))
+    plot_erpimage!(f[1, 1], times, dat_e; axis = (; ylabel = "test"))
+    plot_erpimage!(
+        f[2, 1],
+        times,
+        dat_e;
+        sortvalues = evts.Δlatency,
+        axis = (; ylabel = "test"),
+    )
     plot_erpimage!(f[1, 2], times, dat_e;)
-    plot_erpimage!(f[2, 2], times, dat_e; sortvalues = evts.Δlatency,)
+    plot_erpimage!(f[2, 2], times, dat_e; sortvalues = evts.Δlatency)
     f
 end
