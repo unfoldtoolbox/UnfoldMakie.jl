@@ -11,7 +11,7 @@ Plot a designmatrix.
     Data for the plot visualization.
 
 ## Keyword argumets (kwargs)
-- `standardize_data::Bool = true`)\\
+- `standardize_data::Bool = true`\\
     Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
 - `sort_data::Bool = true`\\
     Indicates whether the data is sorted. It uses `sortslices()` of Base Julia. 

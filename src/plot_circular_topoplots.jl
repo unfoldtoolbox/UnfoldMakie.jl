@@ -5,9 +5,9 @@
 Plot a circular EEG topoplot.
 ## Arguments
 
-- `f::Union{GridPosition, GridLayout, Figure}`
+- `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.\\
-- `data::DataFrame`
+- `data::DataFrame`\\
     DataFrame with data keys (columns `:y, :yhat, :estimate`), and :position (columns `:pos, :position, :positions`).
 
 ## Keyword argumets (kwargs)
