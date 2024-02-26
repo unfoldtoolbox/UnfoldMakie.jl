@@ -2,7 +2,6 @@ using UnfoldMakie
 include("setup.jl")
 #include("../src/UnfoldMakie.jl")
 
-
 @testset "Test Config" begin
     include("test_config.jl")
 end

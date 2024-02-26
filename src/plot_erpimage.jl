@@ -10,7 +10,7 @@ Plot an ERP image.
     Data for the plot visualization.
         
 ## Keyword argumets (kwargs) 
-- `erpblur::Number  = 10`\\
+- `erpblur::Number = 10`\\
     Number indicating how much blur is applied to the image. \\
     Gaussian blur of the `ImageFiltering` module is used.\\
     Non-Positive values deactivate the blur.
@@ -21,6 +21,8 @@ Plot an ERP image.
     Sorting over index values.
 - `meanplot::bool = false`\\
     Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+- `axis.ylabel::String = "Trials"`\\
+    If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified specified manually.
 
 $(_docstring(:erpimage))
 
