@@ -63,30 +63,30 @@ plot_butterfly!(
 ) = plot_erp!(
     f,
     plot_data;
-    butterfly=true,
-    topolegend=true,
-    topomarkersize=10,
-    topowidth=0.25,
-    topoheigth=0.25,
-    topopositions_to_color=x -> posToColorRomaO(x),
+    butterfly = true,
+    topolegend = true,
+    topomarkersize = 10,
+    topowidth = 0.25,
+    topoheigth = 0.25,
+    topopositions_to_color = x -> posToColorRomaO(x),
     kwargs...,
 )
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
     plot_data::DataFrame;
-    positions=nothing,
-    labels=nothing,
-    categorical_color=true,
-    categorical_group=true,
-    stderror=false, # XXX if it exists, should be plotted
-    pvalue=[],
-    butterfly=false,
-    topolegend=nothing,
-    topomarkersize=nothing,
-    topowidth=nothing,
-    topoheigth=nothing,
-    topopositions_to_color=nothing,
+    positions = nothing,
+    labels = nothing,
+    categorical_color = true,
+    categorical_group = true,
+    stderror = false, # XXX if it exists, should be plotted
+    pvalue = [],
+    butterfly = false,
+    topolegend = nothing,
+    topomarkersize = nothing,
+    topowidth = nothing,
+    topoheigth = nothing,
+    topopositions_to_color = nothing,
     kwargs...,
 )
     config = PlotConfig(:erp)
@@ -129,7 +129,7 @@ function plot_erp!(
             colors = nothing
             #config.mapping = merge(config.mapping,(;color=config.))
         else
-            allPositions = getTopoPositions(; positions=positions, labels=labels)
+            allPositions = getTopoPositions(; positions = positions, labels = labels)
             colors = getTopoColor(allPositions, topopositions_to_color)
         end
 
@@ -138,13 +138,13 @@ function plot_erp!(
     # convert color column into string, so no wrong grouping happens
     if categorical_color && (:color ∈ keys(config.mapping))
         config.mapping =
-            merge(config.mapping, (; color=config.mapping.color => nonnumeric))
+            merge(config.mapping, (; color = config.mapping.color => nonnumeric))
     end
 
     # converts group column into string
     if categorical_group && (:group ∈ keys(config.mapping))
         config.mapping =
-            merge(config.mapping, (; group=config.mapping.group => nonnumeric))
+            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
     #@show colors
     mapp = mapping()
@@ -166,7 +166,7 @@ function plot_erp!(
     # add band of sdterrors
     if stderror
         m_se = mapping(config.mapping.x, :se_low, :se_high)
-        basic = basic + visual(Band, alpha=0.5) * m_se
+        basic = basic + visual(Band, alpha = 0.5) * m_se
     end
 
     basic = basic * data(plot_data)
@@ -185,28 +185,33 @@ function plot_erp!(
         if (topolegend)
             topoAxis = Axis(
                 f_grid,
-                width=Relative(topowidth),
-                height=Relative(topoheigth),
-                halign=0.05,
-                valign=0.95,
-                aspect=1,
+                width = Relative(topowidth),
+                height = Relative(topoheigth),
+                halign = 0.05,
+                valign = 0.95,
+                aspect = 1,
             )
             topoplotLegend(topoAxis, topomarkersize, topopositions_to_color, allPositions)
         end
         # no extra legend
         if isnothing(colors)
-            drawing = draw!(f_grid, plotEquation; axis=config.axis)
+            drawing = draw!(f_grid, plotEquation; axis = config.axis)
         else
-            drawing = draw!(f_grid, plotEquation; axis=config.axis, palettes=(color=colors,))
+            drawing = draw!(
+                f_grid,
+                plotEquation;
+                axis = config.axis,
+                palettes = (color = colors,),
+            )
         end
     else
         # draw a normal ERP lineplot 
 
-        drawing = draw!(f_grid, plotEquation; axis=config.axis)
+        drawing = draw!(f_grid, plotEquation; axis = config.axis)
 
 
     end
-    apply_layout_settings!(config; fig=f, ax=drawing, drawing=drawing)#, drawing = drawing)
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
     return f
 
 end
@@ -216,10 +221,22 @@ function eegHeadMatrix(positions, center, radius)
     oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
     radF = radius / oldRadius
     return Makie.Mat4f(
-        radF, 0, 0, 0, 0,
-        radF, 0, 0, 0, 0, 1, 0,
+        radF,
+        0,
+        0,
+        0,
+        0,
+        radF,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
         center[1] - oldCenter[1] * radF,
-        center[2] - oldCenter[2] * radF, 0, 1,
+        center[2] - oldCenter[2] * radF,
+        0,
+        1,
     )
 end
 
@@ -233,18 +250,18 @@ function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositio
         vcat(RGB(1, 1, 1.0), [topopositions_to_color(pos) for pos in allPositions]...),
     )
 
-    xlims!(low=-0.2, high=1.2)
-    ylims!(low=-0.2, high=1.2)
+    xlims!(low = -0.2, high = 1.2)
+    ylims!(low = -0.2, high = 1.2)
     topoplot = eeg_topoplot!(
         axis,
         1:length(allPositions), # go from 1:npos
         string.(1:length(allPositions));
-        positions=allPositions,
-        interpolation=NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
-        colorrange=(0, length(allPositions)), # add the 0 for the white-first color
-        colormap=specialColors,
-        head=(color=:black, linewidth=1, model=topoMatrix),
-        label_scatter=(markersize=topomarkersize, strokewidth=0.5),
+        positions = allPositions,
+        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
+        colorrange = (0, length(allPositions)), # add the 0 for the white-first color
+        colormap = specialColors,
+        head = (color = :black, linewidth = 1, model = topoMatrix),
+        label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
     )
 
     hidedecorations!(current_axis())
