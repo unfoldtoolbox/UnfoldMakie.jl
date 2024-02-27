@@ -50,7 +50,7 @@ makedocs(;
             "Channel image" => "generated/tutorials/channel_image.md",
             "Parallel plot" => "generated/tutorials/parallelcoordinates.md",
             "Design matrix" => "generated/tutorials/designmatrix.md",
-            "Circular topoplot" => "generated/tutorials/circ_topo.md",
+            "Circular topoplots" => "generated/tutorials/circ_topo.md",
         ],
         "How To" => [
             "Change colormap of Butterfly plot" => "generated/how_to/position2color.md",

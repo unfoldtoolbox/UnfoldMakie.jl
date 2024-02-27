@@ -2,7 +2,6 @@ using UnfoldMakie
 include("setup.jl")
 #include("../src/UnfoldMakie.jl")
 
-
 @testset "Test Config" begin
     include("test_config.jl")
 end
@@ -36,7 +35,7 @@ end
 end
 
 @testset "Circular EEG topoplot" begin
-    include("test_plot_circulareegtopoplot.jl")
+    include("test_plot_circular_topoplots.jl")
 end
 
 @testset "Complex plots" begin
