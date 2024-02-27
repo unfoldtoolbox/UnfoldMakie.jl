@@ -1,13 +1,13 @@
 include("../docs/example_data.jl")
+m = example_data("UnfoldLinearModel")
+results = coeftable(m)
+
 @testset "ERP plot with Results data" begin
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
     plot_erp(results; :stderror => true)
 end
 
 @testset "ERP plot with and withour error ribbons" begin
     f = Figure()
-    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
@@ -15,6 +15,7 @@ end
     plot_erp!(
         f[1, 1],
         results;
+        axis = (title = "Bad example", titlegap = 12),
         :stderror => false,
         mapping = (; color = :coefname => "Conditions"),
     )
@@ -22,6 +23,7 @@ end
     plot_erp!(
         f[2, 1],
         results;
+        axis = (title = "Good example", titlegap = 12),
         :stderror => true,
         mapping = (; color = :coefname => "Conditions"),
     )
@@ -32,23 +34,11 @@ end
     hidespines!(ax)
     hidedecorations!(ax)
     text!(0.98, 0.2, text = "* Confidence\nintervals", align = (:right, :top))
-    for (label, layout) in zip(["bad", "good"], [f[1, 1], f[2, 1]])
-        Label(
-            layout[1, 1:2, TopRight()],
-            label,
-            fontsize = 26,
-            font = :bold,
-            padding = (0, 0, 0, 0),
-            halign = :right,
-        )
-    end
     f
     #save("erp.png", f)
 end
 
-@testset "ERP plot with res_effects without colorbar" begin
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
+@testset "ERP plot with res_effects" begin
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
     # ## Plot the results
@@ -62,9 +52,7 @@ end
     )
 end
 
-@testset "ERP plot with res_effects" begin
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
+@testset "ERP plot with res_effects with colorbar" begin
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
     # ## Plot the results
@@ -82,10 +70,6 @@ end
 @testset "ERP plot in GridLayout" begin
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
-
-    include("../docs/example_data.jl")
-    uf = example_data("UnfoldLinearModel")
-    results = coeftable(uf)
 
     pvals = DataFrame(
         from = [0.1, 0.15],
@@ -109,19 +93,13 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    m = example_data("UnfoldLinearModel")
-
-    results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-
     plot_erp!(ga, results; :stderror => true)
 
     f
 end
 
 @testset "ERP plot with p-values" begin
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
     pvals = DataFrame(
         from = [0.1, 0.3],
         to = [0.5, 0.7],
@@ -129,3 +107,36 @@ end
     )
     plot_erp(results; :pvalue => pvals)
 end
+
+#= @testset "ERP plot with legend and colorbar" begin
+    results = coeftable(m)
+    coefnames = unique(results.coefname)
+
+    f = Figure(size = (1000, 400))
+    ga = f[1, 1] = GridLayout()
+
+    f2 = plot_erp!(
+        ga,
+        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        legend = (; valign = :top, halign = :right, tellwidth = false),
+        categorical_color = false,
+        axis = (
+            title = "Marginal effects",
+            titlegap = 12,
+            xlabel = "Time [s]",
+            ylabel = "Amplitude [μV]",
+            xlabelsize = 16,
+            ylabelsize = 16,
+            xgridvisible = false,
+            ygridvisible = false,
+        ),
+        layout = (; showlegend = false),
+    )
+    f
+
+    # Workaround to separate legend and colorbar (will be fixed in a future UnfoldMakie version)
+    legend = f2.content[2].content
+    f2[:, 1] = legend
+    f
+end =#

@@ -26,18 +26,16 @@ dat_e, evts, times = example_data("sort_data")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 nothing #hide
 
+# # Basic combined figure
 
-# Basic combined figure
- 
-#= 
+#=
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
-
-We will start by creating a figure with `Makie.Figure`. 
-
-`f = Figure()`
-
-Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`. 
 =#
+# We will start by creating a figure with `Makie.Figure`.
+
+# `f = Figure()`
+
+# Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
 
 f = Figure()
 plot_erp!(f[1, 1], coeftable(uf_deconv))
@@ -57,6 +55,10 @@ We can create a large figure with any type of plot using predefined data.
 With so many plots at once, it's better to set a fixed resolution in your image to order the plots evenly.
 =#
 
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 f = Figure(resolution = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
@@ -106,16 +108,24 @@ plot_parallelcoordinates(
 )
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
-plot_circulareegtopoplot!(
+plot_circular_topoplots!(
     f[3:4, 4:5],
     d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
     positions = positions,
     predictor = :time,
     predictor_bounds = [-0.3, 0.5],
 )
+# ```@raw html
+# </details >
+# ```
 f
 
 # # In two columns
+
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 f = Figure(resolution = (1200, 1400))
 ga = f[1, 1]
 gc = f[2, 1]
@@ -205,4 +215,7 @@ for (label, layout) in
         halign = :right,
     )
 end
+# ```@raw html
+# </details >
+# ```
 f

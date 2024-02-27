@@ -7,30 +7,36 @@ using LinearAlgebra
         
 Plot an ERP plot.   
 
-## Arguments:
+## Arguments
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
-- `plot_data::DataFrame`: Data for the line plot visualization.
-- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`.
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Union{DataFrame, Vector{Float32}}`\\
+    Data for the Line plot visualization.
+- `kwargs...`\\
+    Additional styling behavior. \\
+    Often used as: `plot_erp(df; mapping = (; color = :coefname, col = :conditionA))`.
 
-## kwargs (...; ...):
+## Keyword argumets (kwargs)
 
-- `categorical_color` (`bool`, default = `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
-- `categorical_group` (`bool`, default = `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
-- `stderror` (`bool`, default = `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue` (`Array`, default = `[]`): show a pvalue.
-    - example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
-- `positions` (`Array`, default = `[]`): see plot_butterfly.
-- `topolegend` (`bool`, default = `false`): (see `plot_butterfly`).
+- `categorical_color::Bool = true`\\
+    Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
+- `categorical_group::Bool = true`\\
+    Treat `:group` as categorical variable by default in case of numeric `:group` column. 
+- `stderror::Bool = false`\\
+    Add an error ribbon, with lower and upper limits based on the `:stderror` column.
+- `pvalue::Array = []`\\
+    Show a pvalue.\\
+    Example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])`.\\
+    If `coefname` is not specified, the significance lines will be black.
 
-Internal-use only:
-- `butterfly` (`bool`, default = `true`): a butterfly plot instead of an ERP plot. See `plot_butterfly`
+Internal use only:
+- `butterfly::Bool = true`\\
+    A butterfly plot instead of an ERP plot. See `plot_butterfly`
 
 $(_docstring(:erp))
 
-## Return Value:
-
-- f - Figure() or the inputed `f`
+**Return Value:** `Figure` displaying the ERP plot.
 
 """
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
@@ -40,15 +46,22 @@ plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwa
 
 Plot a Butterfly plot.
 
-## kwargs (...; ...):
-- `positions` (`Array`, default = `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
+## Keyword argumets (kwargs)
+- `positions::Array = []` \\
+    Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
-- `topolegend` (`bool`, default = `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
-- `topomarkersize` (`Real`, default = `10`): change the size of the markers, topoplot-inlay electrodes.
-- `topowidth` (`Real`, default = `0.25`): change the size of the inlay topoplot width.
-- `topoheigth` (`Real`, default = `0.25`): change the size of the inlay topoplot height.
-- `topopositions_to_color` (function, `x -> posToColorRomaO(x)`): change the colors of the channel lines.
+- `topolegend::Bool = true`\\
+    Show an inlay topoplot with corresponding electrodes. Requires `positions`.
+- `topomarkersize::Real = 10` \\
+    Change the size of the electrode markers in topoplot.
+- `topowidth::Real = 0.25` \\
+    Change the width of inlay topoplot.
+- `topoheigth::Real = 0.25` \\
+    Change the height of inlay topoplot.
+- `topopositions_to_color::x -> posToColorRomaO(x)`\\
+    Change the line colors.
 
+**Return Value:** `Figure` displaying Butterfly plot.
 
 $(_docstring(:butterfly))
 see also [`plot_erp`](@id erp_vis)
@@ -100,6 +113,8 @@ function plot_erp!(
 
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+    #println(values(config.mapping))
+
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -218,7 +233,8 @@ function plot_erp!(
         drawing = draw!(mainAxis, plotEquation;)
 
     end
-    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)#, drawing = drawing)
+
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing) #, drawing = drawing)
     return f
 
 end

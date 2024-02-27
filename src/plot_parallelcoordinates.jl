@@ -6,38 +6,41 @@ Plot a PCP (parallel coordinates plot).
 
 ## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition in which the plot should be drawn.
-- `data::DataFrame`: data for the plot visualization.
+- `f::Union{GridPosition, GridLayout, Figure}`
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Union{DataFrame, Vector{Float32}}`\\
+    Data for the plot visualization.
 
-## key word argumets (kwargs)
-
-- `normalize` (default: `nothing`): if `:minmax`, normalize each axis to their respective min-max range.
-- `ax_labels` (Array, default: `nothing`): specify axis names. 
-    Should be a vector of labels with length equal to the number of unique `mapping.x` values.
-    Example: `ax_labels` = ["Fz", "Cz", "O1", "O2"].
-- `ax_ticklabels` (default `:outmost`): specify tick labels on axis.
+## Keyword argumets (kwargs)
+- `normalize::Symbol = nothing`\\
+    If `:minmax`, normalize each axis to their respective min-max range.
+- `ax_labels::Vector{String} = nothing`\\
+    Specify axis labels. \\
+    Should be a vector of labels with length equal to the number of unique `mapping.x` values.\\
+    Example: `ax_labels = ["Fz", "Cz", "O1", "O2"]`.
+- `ax_ticklabels::Symbol = :outmost`\\
+    Specify tick labels on axis.
     - `:all` - show all labels on all axes.
     - `:left` - show all labels on the left axis, but only min and max on others. 
     - `:outmost` - show labels on min and max of all other axes. 
     - `:none` - remove all labels. 
-- `bend` (default: `false`): change straight lines between the axes to curved ("bent") lines using spline interpolation.
+- `bend::Bool = false`\\
+    Change straight lines between the axes to curved ("bent") lines using spline interpolation.\\
     Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
     suffers, and the resulting visualizations can be potentially missleading.
+- `visual.alpha = 0.5`\\
+    Change of line transparency.
 
 ## Defining the axes
 
-- Default: `...(...; mapping=(; x = :channel, y = :estimate))`. One could overwrite what should be on the x and the y axes.
-- By setting `...(...; mapping=(; color = :colorcolumn))` one defines conditions splitted by color. 
-    The default color is defined by `...(...; visual = (; color=:black))`.
-
-## Change transparency
-    use `...(...; visual = (; alpha = 0.5))` to change transparency.
-
+- `mapping.x = :channel, mapping.y = :estimate`. \\
+    Overwrite what should be on the x and the y axes.
+- `mapping.color = :colorcolumn` \\
+    Split conditions by color. The default color is `:black`.
 
 $(_docstring(:paracoord))
 
-## Return Value:
-The input `f`
+**Return Value:** `Figure` displaying the Parallel coordinates plot.
 """
 plot_parallelcoordinates(data::DataFrame; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)
@@ -56,6 +59,7 @@ function plot_parallelcoordinates(
 
     config.mapping = UnfoldMakie.resolve_mappings(data, config.mapping)
 
+    println(typeof(normalize))
     # remove all unspecified columns
     d = select(data, config.mapping...)
 
@@ -103,6 +107,13 @@ function plot_parallelcoordinates(
         ax_labels = ax_labels,
         ax_ticklabels = ax_ticklabels,
         config.visual...,
+    )
+    Label(
+        f[1, 1, Top()],
+        text = config.axis.title,
+        padding = (20, 20, 22, 0),
+        fontsize = 20,
+        font = :bold,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
 
