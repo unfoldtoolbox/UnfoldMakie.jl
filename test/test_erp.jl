@@ -1,9 +1,15 @@
 include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
-results = coeftable(m)
 
 @testset "ERP plot with Results data" begin
+    results = coeftable(m)
     plot_erp(results; :stderror => true)
+end
+
+@testset "ERP plot, faceting by two columns" begin
+    results = coeftable(m)
+    results.group = push!(repeat(["A", "B"], inner = 67), "A")
+    plot_erp(results; mapping = (; col = :group))
 end
 
 @testset "ERP plot with and withour error ribbons" begin
@@ -19,7 +25,6 @@ end
         :stderror => false,
         mapping = (; color = :coefname => "Conditions"),
     )
-
     plot_erp!(
         f[2, 1],
         results;
@@ -38,10 +43,10 @@ end
     #save("erp.png", f)
 end
 
-@testset "ERP plot with res_effects" begin
+@testset "ERP plot with res_effects without colorbar" begin
+    results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
-    # ## Plot the results
     plot_erp(
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
@@ -52,7 +57,9 @@ end
     )
 end
 
-@testset "ERP plot with res_effects with colorbar" begin
+
+@testset "ERP plot with res_effects" begin
+    results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
     # ## Plot the results
@@ -71,6 +78,7 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
+    results = coeftable(m)
     pvals = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],
@@ -85,7 +93,6 @@ end
         pvalue = pvals,
         stderror = true,
     )
-
     f
 end
 
@@ -93,6 +100,9 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
+
+    m = example_data("UnfoldLinearModel")
+    results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
     plot_erp!(ga, results; :stderror => true)
 
@@ -100,6 +110,8 @@ end
 end
 
 @testset "ERP plot with p-values" begin
+
+    results = coeftable(m)
     pvals = DataFrame(
         from = [0.1, 0.3],
         to = [0.5, 0.7],

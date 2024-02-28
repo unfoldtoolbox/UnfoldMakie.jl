@@ -28,12 +28,11 @@ Plot a PCP (parallel coordinates plot).
     Change straight lines between the axes to curved ("bent") lines using spline interpolation.\\
     Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation
     suffers, and the resulting visualizations can be potentially missleading.
-- `visual.alpha = 0.5`\\
+- `visual.alpha::Number = 0.5`\\
     Change of line transparency.
 
 ## Defining the axes
-
-- `mapping.x = :channel, mapping.y = :estimate`. \\
+- `mapping.x = :channel, mapping.y = :estimate`.\\
     Overwrite what should be on the x and the y axes.
 - `mapping.color = :colorcolumn` \\
     Split conditions by color. The default color is `:black`.
