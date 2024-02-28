@@ -8,8 +8,8 @@ end
 
 @testset "ERP plot, faceting by two columns" begin
     results = coeftable(m)
-    results.group = push!(repeat(["A", "B"], inner=67), "A")
-    plot_erp(results; mapping = (; col = :group)) 
+    results.group = push!(repeat(["A", "B"], inner = 67), "A")
+    plot_erp(results; mapping = (; col = :group))
 end
 
 @testset "ERP plot with and withour error ribbons" begin
