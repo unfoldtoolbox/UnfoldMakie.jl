@@ -1,13 +1,19 @@
 include("../docs/example_data.jl")
+m = example_data("UnfoldLinearModel")
+
 @testset "ERP plot with Results data" begin
-    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     plot_erp(results; :stderror => true)
 end
 
+@testset "ERP plot, faceting by two columns" begin
+    results = coeftable(m)
+    results.group = push!(repeat(["A", "B"], inner=67), "A")
+    plot_erp(results; mapping = (; col = :group)) 
+end
+
 @testset "ERP plot with and withour error ribbons" begin
     f = Figure()
-    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
@@ -18,7 +24,6 @@ end
         :stderror => false,
         mapping = (; color = :coefname => "Conditions"),
     )
-
     plot_erp!(
         f[2, 1],
         results;
@@ -47,11 +52,9 @@ end
 end
 
 @testset "ERP plot with res_effects without colorbar" begin
-    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
-    # ## Plot the results
     plot_erp(
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
@@ -63,7 +66,6 @@ end
 end
 
 @testset "ERP plot with res_effects" begin
-    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -83,9 +85,7 @@ end
     f = Figure(resolution = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    include("../docs/example_data.jl")
-    uf = example_data("UnfoldLinearModel")
-    results = coeftable(uf)
+    results = coeftable(m)
 
     pvals = DataFrame(
         from = [0.1, 0.15],
@@ -101,7 +101,6 @@ end
         pvalue = pvals,
         stderror = true,
     )
-
     f
 end
 
@@ -110,7 +109,6 @@ end
     ga = f[1, 1] = GridLayout()
 
     m = example_data("UnfoldLinearModel")
-
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -120,7 +118,6 @@ end
 end
 
 @testset "ERP plot with p-values" begin
-    m = example_data("UnfoldLinearModel")
     results = coeftable(m)
     pvals = DataFrame(
         from = [0.1, 0.3],
