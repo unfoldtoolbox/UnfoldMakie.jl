@@ -2,19 +2,20 @@
     plot_topoplot!(f::Union{GridPosition, GridLayout, Figure}, data, ; positions = nothing, labels = nothing, kwargs...)
     plot_topoplot(data; positions = nothing, labels = nothing, kwargs...)
 
-Plot a topo plot.
-## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
-- `data::Union{DataFrame, Vector{Float32}}`: data for the plot visualization.
-- `positions::Vector{Point{2, Float32}} = nothing`: positions used if `data` is not a DataFrame. If this is the case and `positions = nothing` then positions are generated from `labels`.
-- `labels::Vector{String} = nothing`: labels used if `data` is not a DataFrame.
-
+Plot a topoplot.
+## Arguments
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Union{DataFrame, Vector{Float32}}` \\
+    Data for the plot visualization.
+- `positions::Vector{Point{2, Float32}} = nothing`\\
+    Positions used if `data` is not a `DataFrame`. Positions are generated from `labels` if `positions = nothing`.
+- `labels::Vector{String} = nothing`\\
+    Labels used if `data` is not a DataFrame.
 
 $(_docstring(:topoplot))
 
-
-## Return Value:
-A figure displaying the topo plot.
+**Return Value:** `Figure` displaying the Topoplot.
 """
 plot_topoplot(data::Union{DataFrame,Vector{Float32}}; kwargs...) =
     plot_topoplot!(Figure(), data; kwargs...)

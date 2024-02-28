@@ -11,7 +11,7 @@ function _docstring(cfg_symb::Symbol)
         :designmat => `Makie.heatmap`,
         :erpimage => `Makie.heatmap`,
         :channelimage => `Makie.heatmap`,
-        :circeegtopo => `Topoplot.eeg_topoplot`,
+        :circtopos => `Topoplot.eeg_topoplot`,
         :topoplot => `Topoplot.eeg_topoplot`,
         :topoplotseries => `Topoplot.eeg_topoplot`,
     )
@@ -23,7 +23,7 @@ function _docstring(cfg_symb::Symbol)
         :designmat => "https://docs.makie.org/stable/reference/plots/heatmap/",
         :erpimage => "https://docs.makie.org/stable/reference/plots/heatmap/",
         :channelimage => "https://docs.makie.org/stable/reference/plots/heatmap/",
-        :circeegtopo => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
+        :circtopos => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplot => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplotseries => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
     )
@@ -50,14 +50,16 @@ function _docstring(cfg_symb::Symbol)
     end
 
     return """## Shared plot configuration options
-        The shared plot options can be used as follows:
-        `type = (; key = value, ...))` - for example `plot_x(...; layout = (; show_legend = true, legend_position = :right))`. 
+        The shared plot options can be used as follows: `type = (; key = value, ...))`.\\
+        For example, `plot_x(...; layout = (; show_legend = true, legend_position = :right))`.\\
         Multiple defaults will be cycled until match.
+
+        Placing `;` is important!
 
         $(out)
         """
 end
-
+#= 
 """ 
     $(TYPEDSIGNATURES)
 $(_docstring(:erp))
@@ -65,4 +67,4 @@ $(_docstring(:erp))
 """
 function plot_new()
     return "b"
-end
+end =#

@@ -1,7 +1,7 @@
 data, positions = TopoPlots.example_data()
 
 @testset "topoplot basic" begin
-    plot_topoplot(data[:, 50, 1]; positions = positions)
+    plot_topoplot(data[:, 50, 1]; positions = positions, axis = (; title = "topoplot"))
 end
 
 @testset "topoplot without legend" begin
@@ -16,4 +16,9 @@ end
     f = Figure()
     plot_topoplot!(f[1, 1], data[:, 150, 1]; positions = positions)
     f
+end
+
+@testset "topoplot with labels" begin
+    labels = ["s$i" for i = 1:size(data[:, 150, 1], 1)]
+    plot_topoplot(data[:, 150, 1]; positions = positions, labels = labels)
 end

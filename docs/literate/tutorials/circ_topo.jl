@@ -1,4 +1,4 @@
-# # Circular Topoplot Visualization
+# # Visualization of Circular Topoplots
 
 # # Package loading
 
@@ -22,7 +22,7 @@ df = flatten(df, :estimate);
 
 # # Plot generations
 # Note how the plots are located at the angles of the `circular_variable'.
-plot_circulareegtopoplot(
+plot_circular_topoplots(
     df;
     positions = pos,
     axis = (; label = "Incoming saccade"),
@@ -31,7 +31,7 @@ plot_circulareegtopoplot(
 
 
 # If the bounding variable is not between 0 and 360, since we are using time, we must specify it. 
-plot_circulareegtopoplot(
+plot_circular_topoplots(
     df;
     positions = pos,
     axis = (; label = "Time?!"),
@@ -42,5 +42,5 @@ plot_circulareegtopoplot(
 # # Configurations of Circular EEG Plot
 
 # ```@docs
-# plot_circulareegtopoplot
+# plot_circular_topoplots
 # ```

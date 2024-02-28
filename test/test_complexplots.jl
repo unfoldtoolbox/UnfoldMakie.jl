@@ -13,22 +13,20 @@
     d_topo, pos = example_data("TopoPlots.jl")
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-    raw_ch_names = [
-        "FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1",
-        "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz",
-        "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2",
-    ]
 
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
 
-    results.coefname = replace(results.coefname,
-        "condition: face" => "face",
-        "(Intercept)" => "car")
+    results.coefname =
+        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
 
-    plot_erp!(ga, results; :stderror => true,
-        mapping = (; color = :coefname => "Conditions"))
+    plot_erp!(
+        ga,
+        results;
+        :stderror => true,
+        mapping = (; color = :coefname => "Conditions"),
+    )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     plot_butterfly!(
@@ -48,19 +46,24 @@
         axis = (; xlabel = "[340 ms]"),
     )
 
-    plot_topoplotseries!(gd, df, 80;
+    plot_topoplotseries!(
+        gd,
+        df,
+        80;
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
     )
 
     ax = gd[1, 1] = Axis(f)
-    text!(ax, 0, 0, text = "Time [ms]",
-        align = (:center, :center), offset = (-20, -80))
+    text!(ax, 0, 0, text = "Time [ms]", align = (:center, :center), offset = (-20, -80))
     hidespines!(ax) # delete unnecessary spines (lines)
     hidedecorations!(ax, label = false)
 
-    plot_erpgrid!(ge, data[:, :, 1], positions;
+    plot_erpgrid!(
+        ge,
+        data[:, :, 1],
+        positions;
         axis = (; ylabel = "µV", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
     )
 
@@ -223,7 +226,7 @@ end
     )
 
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
-    plot_circulareegtopoplot!(
+    plot_circular_topoplots!(
         f[3:4, 4:5],
         d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
         positions = positions,

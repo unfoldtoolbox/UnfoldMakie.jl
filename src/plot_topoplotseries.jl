@@ -3,26 +3,34 @@
     plot_topoplotseries!(data::DataFrame, Δbin::Real; kwargs...)
         
 Multiple miniature topoplots in regular distances. 
+## Arguments  
 
-## Arguments:
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Union{DataFrame, Vector{Float32}}`\\
+    DataFrame with data. Requires a `time` column.
+- `Δbin::Real`\\
+    A number for how large one time bin should be.\\
+    `Δbin` is in units of the `data.time` column.
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
-- `data::DataFrame`: DataFrame with data, needs a `time` column.
-- `Δbin::Real`: A number for how large one time bin should be. Δbin is in units of the `data.time` column.
-- `combinefun` (default: `mean`) - specify how the samples within `Δbin` are summarised.
-    possible functons: `mean`, `median`, `std`. 
-- `rasterize_heatmaps` (default: `true`) - enforce rasterization of the plot heatmap when saving in svg format.
-    This has the benefit that all lines/points are vectors, except the interpolated heatmap. 
-    This is typically what you want, otherwise you get ~500x500 vectors per topoplot, which makes everything super slow.
-- `col_labels`, `row_labels` - shows column and row labels. 
-- `labels` (default: `nothing`) - channel labels.
-- `positions` (default: `nothing`) - channel positions.
+## Keyword argumets (kwargs)
+- `combinefun::Function = mean`\\
+    Specify how the samples within `Δbin` are summarised.\\
+    Example functions: `mean`, `median`, `std`. 
+- `rasterize_heatmaps::Bool = true`\\
+    Force rasterization of the plot heatmap when saving in `svg` format.\\
+    Except for the interpolated heatmap, all lines/points are vectors.\\
+    This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything super slow.
+- `col_labels::Bool`, `row_labels::Bool = true`\\
+    Shows column and row labels. 
+- `labels::Vector{String} = nothing`\\
+    Shows channel labels.
+- `positions::Vector{Point{2, Float32}} = nothing`\\
+    Shows channel positions.
 
 $(_docstring(:topoplotseries))
 
-## Return Value:
-The input `f`
-
+**Return Value:** `Figure` displaying the Topoplot series.
 """
 plot_topoplotseries(data::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), data, Δbin; kwargs...)
@@ -69,6 +77,12 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
+    Label(
+        f[1, 1, Top()],
+        text = config.axis.title,
+        fontsize = config.axis.fontsize,
+        font = config.axis.font,
+    )
     if config.layout.use_colorbar
         if typeof(ftopo) == Figure
             d = ftopo.content[1].scene.plots[1]
@@ -77,7 +91,7 @@ function plot_topoplotseries!(
                 colormap = d.colormap,
                 colorrange = d.colorrange,
                 flipaxis = config.colorbar.flipaxis,
-                labelrotation  = config.colorbar.labelrotation ,
+                labelrotation = config.colorbar.labelrotation,
                 label = config.colorbar.label,
             )
         else
@@ -88,7 +102,7 @@ function plot_topoplotseries!(
                 colormap = d.colormap,
                 colorrange = d.colorrange,
                 flipaxis = config.colorbar.flipaxis,
-                labelrotation  = config.colorbar.labelrotation ,
+                labelrotation = config.colorbar.labelrotation,
                 label = config.colorbar.label,
             )
         end

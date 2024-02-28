@@ -4,29 +4,35 @@
 
 Plot an ERP image.
 ## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition that the plot should be drawn into
-- `plot::Matrix{Float64}`: Data for the plot visualization
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Union{DataFrame, Vector{Float32}}`\\
+    Data for the plot visualization.
         
-## Keyword Arguments
-- `erpblur` (`Number`; default: `10`): number indicating how much blur is applied to the image. 
-    Gaussian blur of the ImageFiltering module is used.
+## Keyword argumets (kwargs) 
+- `erpblur::Number = 10`\\
+    Number indicating how much blur is applied to the image. \\
+    Gaussian blur of the `ImageFiltering` module is used.\\
     Non-Positive values deactivate the blur.
-- `sortindex` (`Vector{Int64}`; default: `nothing`): sorting over index values.
-- `sortvalues` (`Vector{Int64}`; default: `false`): parameter over which plot will be sorted. Using sortperm() of Base Julia. 
-    - sortperm() computes a permutation of the array's indices that puts the array into sorted order. 
-- `meanplot` (`bool`; default: `false`): Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+- `sortvalues::Vector{Int64} = false`\\
+    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia.\\ 
+    `sortperm()` computes a permutation of the array's indices that puts the array in sorted order. 
+- `sortindex::Vector{Int64} = nothing`\\
+    Sorting over index values.
+- `meanplot::bool = false`\\
+    Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+- `axis.ylabel::String = "Trials"`\\
+    If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
 
 $(_docstring(:erpimage))
 
-## Return Value:
-The input `f`
+**Return Value:** `Figure` displaying the ERP image. 
 """
 plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; kwargs...) # no times + no figure?
 
 # no times?
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(f, 1:size(plot, 1), plot; kwargs...)
-
 
 # no figure?
 plot_erpimage(times::AbstractVector, plot::Matrix{<:Real}; kwargs...) =
@@ -42,8 +48,12 @@ function plot_erpimage!(
     erpblur = 10,
     kwargs...,
 )
+
     config = PlotConfig(:erpimage)
-    UnfoldMakie.config_kwargs!(config; kwargs...)
+    if isnothing(sortindex) && !isnothing(sortvalues)
+        config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
+    end
+    config_kwargs!(config; kwargs...)
 
     !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
