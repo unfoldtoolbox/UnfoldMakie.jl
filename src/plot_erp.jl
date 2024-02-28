@@ -209,28 +209,21 @@ function plot_erp!(
             topoplotLegend(topoAxis, topomarkersize, topopositions_to_color, allPositions)
         end
         # no extra legend
-        mainAxis = Axis(
-            f_grid;
-            config.axis...,
-            xlabel = config.axis.xlabel,
-            ylabel = config.axis.ylabel,
-            yticklabelsize = config.axis.yticklabelsize,
-        )
         if isnothing(colors)
-            drawing = draw!(mainAxis, plotEquation)
+            drawing = draw!(f_grid, plotEquation; axis = config.axis)
         else
-            drawing = draw!(mainAxis, plotEquation; palettes = (color = colors,))
+            drawing = draw!(
+                f_grid,
+                plotEquation;
+                axis = config.axis,
+                palettes = (color = colors,),
+            )
         end
     else
         # draw a normal ERP lineplot 
-        mainAxis = Axis(
-            f_grid;
-            config.axis...,
-            xlabel = config.axis.xlabel,
-            ylabel = config.axis.ylabel,
-            yticklabelsize = config.axis.yticklabelsize,
-        )
-        drawing = draw!(mainAxis, plotEquation;)
+
+        drawing = draw!(f_grid, plotEquation; axis = config.axis)
+
 
     end
 
