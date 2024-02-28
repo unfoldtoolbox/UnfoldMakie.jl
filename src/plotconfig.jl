@@ -9,8 +9,8 @@ using ColorTypes
 
 """
     PlotConfig(<plotname>)
-    Contains several different fields that can modify various aspects of the plot.
 
+Contains several different fields that can modify various aspects of the plot.
 """
 mutable struct PlotConfig
     figure::NamedTuple
@@ -63,21 +63,22 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
     @assert(
         all(is_namedtuple),
-        """ Keyword argument specification (kwargs...). Specified config groups must be NamedTuples', but $(keys(kwargs)[.!is_namedtuple]) was not.
+        """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
+
         Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
 
-        plot_example(...; layout = (; use_colorbar=true))
+        plot_example(...; layout = (; use_colorbar = true))
 
-        plot_example(...; layout = (use_colorbar=true))
+        plot_example(...; layout = (use_colorbar = true))
          
-        The first is correct and creates a NamedTuple as required. The second is wrong and its call is ignored."""
+        The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
     )
     list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
 
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ?
     @warn(
-        "Extra is deprecated in 0.4 and extra keyword arguments have to be used directly as key word arguments"
+        "Extra is deprecated in 0.4, and extra keyword arguments must be used directly as keyword arguments."
     ) : ""
     applyTo = keyList[in.(keyList, Ref(list))]
     for k ∈ applyTo
@@ -88,7 +89,7 @@ end
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 
 
-function PlotConfig(T::Val{:circeegtopo})
+function PlotConfig(T::Val{:circtopos})
     cfg = PlotConfig(:topoplot)
 
     config_kwargs!(
@@ -133,7 +134,7 @@ function PlotConfig(T::Val{:topoplot})
             colormap = Reverse(:RdBu),
         ),
         mapping = (;
-            x = (nothing,),
+            x = (nothing),
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
@@ -146,12 +147,13 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        layout = (use_colorbar = true,),
+        axis = (; title = "", fontsize = 20, font = :bold),
+        layout = (; use_colorbar = true),
         colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
         visual = (;
             label_text = false # true doesnt work again
         ),
-        mapping = (col = (:time,), row = (nothing,)),
+        mapping = (; col = (:time,), row = (nothing,)),
     )
     return cfg
 end
@@ -248,7 +250,7 @@ function PlotConfig(T::Val{:erpimage})
         cfg;
         layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
-        axis = (xlabel = "Time [s]", ylabel = "Sorted trials"),
+        axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg
@@ -262,7 +264,7 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
-        axis = (; ylabel = "Time"),
+        axis = (; ylabel = "Time", title = ""),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
     )
@@ -284,7 +286,7 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
             return (nothing ∈ collect(choices)) ? # is it allowed to return nothing?
                    nothing :
                    @error(
-                "default columns for $key = $choices not found, 
+                "Default columns for $key = $choices not found, 
                 user must provide one by using plot_plotname(...; mapping=(; $key=:your_column_name))"
             )
         end

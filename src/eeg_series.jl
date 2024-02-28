@@ -1,9 +1,11 @@
 # Note: This is copied from https://github.com/MakieOrg/TopoPlots.jl/pull/3 because they apparently cannot do a review in ~9month...
 
 """
-    eeg_matrix_to_dataframe(data::DataFrame, label)
+    eeg_matrix_to_dataframe(data::Matrix, label)
 
 Helper function converting a matrix (channel x times) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label`.
+
+**Return Value:** `DataFrame`.
 """
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
@@ -27,18 +29,22 @@ end
     )
     eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
 
-
 Plot a series of topoplots. 
 The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
-- `data` (`DataFrame`) needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. 
+- `data::DataFrame`\\
+    Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- `Δbin` in `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. 
+- `Δbin = :time` \\
+    In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. \\
     In most cases, the user should specify the electrode positions with `positions = pos`.
-- The `col` and `row` arguments specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. 
+- `col`, `row = :time` \\
+    Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. \\
     Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
-- The `figure` option allows you to include information for plotting the figure. 
+- `figure = NamedTuple()` \\
+    Allows to include information for plotting the figure. \\
     Alternatively, you can pass a fig object `eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)`.
-- `row_labels` and `col_labels` indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
+- `row_labels`, `col_labels = false` \\
+    Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
     
 # Example
 
@@ -48,6 +54,8 @@ pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(r
 pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
 eeg_topoplot_series(df, 5; positions = pos)
 ```
+
+**Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
 function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
     return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)
@@ -111,7 +119,6 @@ function eeg_topoplot_series!(
     # aggregate the data over time bins
     data_mean =
         df_timebin(data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
-
     # using same colormap + contour levels for all plots
     (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
     # make them symmetrical
@@ -121,6 +128,7 @@ function eeg_topoplot_series!(
     topoplot_attributes = merge(
         (
             colorrange = (q_min, q_max),
+            interp_resolution = (128, 128),
             contours = (levels = range(q_min, q_max; length = 7),),
         ),
         topoplot_attributes,
@@ -175,13 +183,22 @@ function eeg_topoplot_series!(
 end
 
 """
-    df_timebin(df, Δbin; col_y=:erp, fun=mean, grouping=[])
+    df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
 Split or combine `DataFrame` according to equally spaced time bins.
-- `df` (`AbstractTable`): with columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `Δbin`: bin size in `:time` units;
-- `col_y` (default = `:erp`), the column to combine over (with `fun`);
-- `fun` (default = `mean`): function to combine;
-- `grouping` (default = `[]`): vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
+
+Arguments:
+- `df::AbstractTable`\\
+    With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
+- `Δbin`\\
+    Bin size in `:time` units;
+- `col_y = :erp` \\
+    The column to combine over (with `fun`);
+- `fun = mean()`\\
+    Function to combine.
+- `grouping = []`\\
+    Vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
+
+**Return Value:** `DataFrame`.
 """
 function df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
     tmin = minimum(df.time)
