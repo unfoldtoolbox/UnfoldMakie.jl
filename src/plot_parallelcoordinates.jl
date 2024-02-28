@@ -32,7 +32,6 @@ Plot a PCP (parallel coordinates plot).
     Change of line transparency.
 
 ## Defining the axes
-
 - `mapping.x = :channel, mapping.y = :estimate`.\\
     Overwrite what should be on the x and the y axes.
 - `mapping.color = :colorcolumn` \\
