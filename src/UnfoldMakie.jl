@@ -45,7 +45,7 @@ include("plot_designmatrix.jl")
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")
-include("plot_circulareegtopoplot.jl")
+include("plot_circular_topoplots.jl")
 include("plot_erpgrid.jl")
 include("plot_channelimage.jl")
 
@@ -69,8 +69,8 @@ export plot_parallelcoordinates
 
 export plot_butterfly
 export plot_butterfly!
-export plot_circulareegtopoplot
-export plot_circulareegtopoplot!
+export plot_circular_topoplots
+export plot_circular_topoplots!
 
 export plot_topoplotseries
 export plot_topoplotseries!
