@@ -6,6 +6,10 @@ df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positio
     plot_topoplotseries(df, Δbin; positions = positions)
 end
 
+@testset "toposeries basic with channel names" begin
+    plot_topoplotseries(df, Δbin; positions = positions, labels = raw_ch_names)
+end
+
 @testset "toposeries with xlabel" begin
     f = Figure()
     ax = Axis(f[1, 1])
@@ -22,7 +26,14 @@ end
 
 @testset "toposeries with differend comb functions " begin
     f = Figure()
-    plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
+    plot_topoplotseries!(
+        f[1, 1],
+        df,
+        Δbin;
+        positions = positions,
+        combinefun = mean,
+        axis = (; title = "combinefun = mean"),
+    )
     plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
     plot_topoplotseries!(f[3, 1], df, Δbin; positions = positions, combinefun = std)
     f

@@ -33,11 +33,31 @@ plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar =
 # In this example `combinefun` is specified by `mean`, `median` and `std`. 
 
 f = Figure()
-plot_topoplotseries!(f[1, 1], df, Δbin; positions = positions, combinefun = mean)
-plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
-plot_topoplotseries!(f[3, 1], df, Δbin; positions = positions, combinefun = std)
+plot_topoplotseries!(
+    f[1, 1],
+    df,
+    Δbin;
+    positions = positions,
+    combinefun = mean,
+    axis = (; title = "combinefun = mean"),
+)
+plot_topoplotseries!(
+    f[2, 1],
+    df,
+    Δbin;
+    positions = positions,
+    combinefun = median,
+    axis = (; title = "combinefun = median"),
+)
+plot_topoplotseries!(
+    f[3, 1],
+    df,
+    Δbin;
+    positions = positions,
+    combinefun = std,
+    axis = (; title = "combinefun = std"),
+)
 f
-
 
 # # Configurations of Topoplot series
 

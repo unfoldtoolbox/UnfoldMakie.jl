@@ -1,35 +1,40 @@
 """
-    plot_circulareegtopoplot!(f, data::DataFrame; kwargs...)
-    plot_circulareegtopoplot(data::DataFrame; kwargs...)
-    
+    plot_circular_topoplots!(f, data::DataFrame; kwargs...)
+    plot_circular_topoplots(data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
-## Arguments:
+## Arguments
 
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into
-- `data::DataFrame`: DataFrame with keys for data (looks for `:y, :yhat, :estimate`), and :position (looks for `:pos, :position, :positions`), 
-- `predictor` (optional; default: `predictor`): the circular predictor value, defines position of topoplot, is mapped around `predictor_bounds`
-- `predictor_bounds` (default: `[0,360]`): the bounds of the predictor. This is relevant for the axis labels.
-- `positions` (default: `nothing`): positions for the [`plot_topoplot`](@ref topo_vis)
-- `center_label` (default: ""): the text in the center of the cricle
-- `labels` (default: `nothing`): labels for the [`plot_topoplot`](@ref topo_vis)
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.\\
+- `data::DataFrame`\\
+    DataFrame with data keys (columns `:y, :yhat, :estimate`), and :position (columns `:pos, :position, :positions`).
 
-- `kwargs...`: additional styling behavior, see below.
+## Keyword argumets (kwargs)
+- `predictor::Vector{Any} = :predictor`\\
+    The circular predictor value, defines position of topoplot across the circle.
+    Mapped around `predictor_bounds`.
+- `predictor_bounds::Vector{Int64} = [0, 360]`\\
+    The bounds of the predictor. Relevant for the axis labels.
+- `positions::Vector{Point{2, Float32}} = nothing`\\
+    Positions of the [`plot_topoplot`](@ref topo_vis).
+- `center_label::String = ""`\\
+    The text in the center of the cricle.
+- `labels::Vector{String} = nothing`\\
+    Labels for the [`plot_topoplot`](@ref topo_vis).
+
+$(_docstring(:circtopos))
 
 
-$(_docstring(:circeegtopo))
 
-
-
-## Return Value:
-A figure containing the circular topoplot at given layout position
+**Return Value:** `Figure` displaying the Circular topoplot.
 
 """
-plot_circulareegtopoplot(data::DataFrame; kwargs...) =
-    plot_circulareegtopoplot!(Figure(), data; kwargs...)
-plot_circulareegtopoplot!(f, data::DataFrame; kwargs...) =
-    plot_circulareegtopoplot!(f, data; kwargs...)
-function plot_circulareegtopoplot!(
+plot_circular_topoplots(data::DataFrame; kwargs...) =
+    plot_circular_topoplots!(Figure(), data; kwargs...)
+plot_circular_topoplots!(f, data::DataFrame; kwargs...) =
+    plot_circular_topoplots!(f, data; kwargs...)
+function plot_circular_topoplots!(
     f::Union{GridPosition,GridLayout,Figure},
     data::DataFrame;
     predictor = :predictor,
@@ -39,10 +44,9 @@ function plot_circulareegtopoplot!(
     center_label = "",
     kwargs...,
 )
-    config = PlotConfig(:circeegtopo)
+    config = PlotConfig(:circtopos)
     config_kwargs!(config; kwargs...)
     config.mapping = resolve_mappings(data, config.mapping)
-
 
     positions = getTopoPositions(; positions = positions, labels = labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
@@ -52,9 +56,7 @@ function plot_circulareegtopoplot!(
         error("predictor_bounds needs exactly two values")
     end
     if (predictor_bounds[1] >= predictor_bounds[2])
-        error(
-            "predictor_bounds[1] needs to be smaller than predictor_bounds[2]",
-        )
+        error("predictor_bounds[1] needs to be smaller than predictor_bounds[2]")
     end
     if (
         (length(predictorValues[predictorValues.<predictor_bounds[1]]) != 0) ||
@@ -246,4 +248,4 @@ end
 # uncomment everything below this to try out the code
 #data,pos = TopoPlots.example_data();
 #df= (DataFrame(    :effect=>Float64.([dat;dat;dat;dat;dat;dat]),    :predictor=>repeat([0,50,80,120,180,210],inner=length(dat)),    :positions=>repeat(pos,6)))
-#plot_circulareegtopoplot!(df)
+#plot_circular_topoplots!(df)

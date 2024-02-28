@@ -4,14 +4,19 @@
         
 
 Plot a designmatrix. 
-## Arguments:
-- `f::Union{GridPosition, GridLayout, Figure}`: Figure or GridPosition (e.g. f[2, 3]) in which the plot will be placed into. A new axis is created.
-- `data::Unfold.DesignMatrix`: data for the plot visualization.
+## Arguments
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Unfold.DesignMatrix`\\
+    Data for the plot visualization.
 
-## kwargs
-- `standardize_data` (`bool`, default: `true`): indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
-- `sort_data` (`bool`, default: `true`): indicates whether the data is sorted; using sortslices() of Base Julia. 
-- `xticks` (`Num`,default: `nothing`): returns the number of labels on the x-axis. Behavior is set in the configuration:
+## Keyword argumets (kwargs)
+- `standardize_data::Bool = true`\\
+    Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
+- `sort_data::Bool = true`\\
+    Indicates whether the data is sorted. It uses `sortslices()` of Base Julia. 
+- `xticks::Num = nothing`\\
+    Returns the number of labels on the x axis.
     - `xticks` = 0: no labels are placed.
     - `xticks` = 1: first possible label is placed.
     - `xticks` = 2: first and last possible labels are placed.
@@ -20,8 +25,7 @@ Plot a designmatrix.
 
 $(_docstring(:designmat))
 
-## Return Value:
-A figure displaying the designmatrix. 
+**Return Value:** `Figure` displaying the Design matrix. 
 """
 plot_designmatrix(data::Unfold.DesignMatrix; kwargs...) =
     plot_designmatrix!(Figure(), data; kwargs...)
