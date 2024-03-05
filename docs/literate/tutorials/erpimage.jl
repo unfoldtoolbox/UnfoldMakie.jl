@@ -47,6 +47,21 @@ dat_e, evts, times = example_data("sort_data")
 dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2) # normalisation
 plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency)
 
+# To see the effect of sorting and normalization, also check this figure.
+
+f = Figure()
+plot_erpimage!(f[1, 1], times, dat_e; axis = (; ylabel = "test"))
+plot_erpimage!(
+    f[2, 1],
+    times,
+    dat_e;
+    sortvalues = evts.Δlatency,
+    axis = (; ylabel = "test"),
+)
+plot_erpimage!(f[1, 2], times, dat_norm;)
+plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency)
+f
+
 # # Configurations for ERP image
 
 # ```@docs
