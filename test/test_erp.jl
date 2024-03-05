@@ -1,3 +1,4 @@
+using AlgebraOfGraphics: group
 include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
 
@@ -43,7 +44,7 @@ end
     #save("erp.png", f)
 end
 
-@testset "ERP plot with res_effects without colorbar" begin
+@testset "Effect plot without colorbar" begin
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
@@ -58,11 +59,10 @@ end
 end
 
 
-@testset "ERP plot with res_effects" begin
+@testset "Effect plot" begin
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 
-    # ## Plot the results
     plot_erp(
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
@@ -72,7 +72,6 @@ end
         categorical_group = true,
     )
 end
-
 
 @testset "ERP plot in GridLayout" begin
     f = Figure(resolution = (1200, 1400))
