@@ -1,5 +1,6 @@
 include("../docs/example_data.jl")
 uf = example_data("UnfoldLinearModel")
+td = example_data("UnfoldTimeExpanded")
 
 @testset "basic" begin
     plot_designmatrix(designmatrix(uf))
@@ -19,3 +20,8 @@ end
 @testset "ticks specified" begin
     plot_designmatrix(designmatrix(uf); xticks = 10, sort_data = false)
 end
+
+@testset "hierarchical labels (bugged)" begin
+    plot_designmatrix(designmatrix(td))
+end
+# axis labels should be also added
