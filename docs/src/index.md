@@ -4,15 +4,10 @@
 <img src="assets/complex_plot.png" width="300" align="right"/>
 ```
 
-This is the documentation of the UnfoldMakie module for the Julia programming language. 
+This is the documentation of the UnfoldMakie.jl module (aka library) for the Julia programming language. 
 
-## About
+## Benefits of UnfoldMakie.jl
 
-
-UnfoldMakie.jl aims to allow users to create different types of visualizations. 
-These include line plots, butterfly plots, design matrices, parallel coordinate plots, ERP images, and topo plots.
-Building on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/) Modules, it also allows users to customize the plots through an input configuration.
-
-As can be seen from the types of visualizations possible, these configuration options allow the user to create plots that are helpful in the field of computational EEG.
-One such example is the ability to use a topoplot as a legend for a line plot by allowing multiple visualizations within a figure.
+- 10 plot functions for displaying ERPs. Each one emphasizes certain dimensions while collapsing others.
+- Highly customizable. It is based on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Make](https://makie.juliaplots.org/stable/) modules, so you can use configurations from those modules to add new features to your plots.
 
