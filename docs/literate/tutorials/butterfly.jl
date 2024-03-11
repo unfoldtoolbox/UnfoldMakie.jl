@@ -52,6 +52,9 @@ plot_butterfly(
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),
 )
 
+# # Changing the Corlor of Channels
+
+# Please check [this page](@id pos2color).
 
 # # Column Mappings for Butterfly Plot
 
