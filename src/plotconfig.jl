@@ -160,13 +160,17 @@ end
 function PlotConfig(T::Val{:designmat})
     cfg = PlotConfig()
     config_kwargs!(
-        cfg; 
+        cfg;
         layout = (;
             use_colorbar = true,
             xlabelFromMapping = nothing,
             ylabelFromMapping = nothing,
         ),
-        axis = (; xlabel = "Conditions", ylabel = "Trials", xticklabelrotation = round(pi / 8, digits = 2)),
+        axis = (;
+            xlabel = "Conditions",
+            ylabel = "Trials",
+            xticklabelrotation = round(pi / 8, digits = 2),
+        ),
         colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
     )
     return cfg
