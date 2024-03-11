@@ -10,7 +10,6 @@ using AlgebraOfGraphics
 using Unfold
 using DataFrames
 using DataFramesMeta
-
 using Literate
 using Glob
 
@@ -26,7 +25,7 @@ DocMeta.setdocmeta!(UnfoldMakie, :DocTestSetup, :(using UnfoldMakie); recursive 
 makedocs(;
     modules = [UnfoldMakie],
     authors = "Vladimir Mikheev, Sören Döring, Niklas Gärtner, Daniel Baumgartner, Benedikt Ehinger",
-    repo = "https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/{commit}{path}#{line}",
+    repo = Documenter.Remotes.GitHub("unfoldtoolbox", "UnfoldMakie.jl"),
     sitename = "UnfoldMakie.jl",
     warnonly = :cross_references,
     format = Documenter.HTML(;
@@ -60,7 +59,7 @@ makedocs(;
         "Reference" => [
             "Convert electrode positions from 3D to 2D" => "generated/reference/positions.md",
         ],
-        "API" => "api.md",
+        "API / DocStrings" => "api.md",
         "Utilities" => "helper.md",
     ],
 )
@@ -68,5 +67,6 @@ makedocs(;
 deploydocs(;
     repo = "github.com/unfoldtoolbox/UnfoldMakie.jl",
     devbranch = "main",
+    versions = "v#.#",
     push_preview = true,
 )
