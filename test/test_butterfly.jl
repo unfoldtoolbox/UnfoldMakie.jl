@@ -1,19 +1,19 @@
 
 include("../docs/example_data.jl")
-data, pos = example_data("TopoPlots.jl")
+df, pos = example_data("TopoPlots.jl")
 
 @testset "butterfly basic" begin
-    plot_butterfly(data; positions = pos)
+    plot_butterfly(df; positions = pos)
 end
 
 @testset "butterfly basic with GridLayout" begin
     f = Figure()
-    plot_butterfly!(f[1, 1], data; positions = pos)
+    plot_butterfly!(f[1, 1], df; positions = pos)
 end
 
 @testset "butterfly with change of topomarkersize" begin
     plot_butterfly(
-        data;
+        df;
         positions = pos,
         topomarkersize = 10,
         topoheigth = 0.4,
@@ -22,12 +22,12 @@ end
 end
 
 @testset "changing color from ROMA to gray" begin
-    plot_butterfly(data; positions = pos, topopositions_to_color = x -> Colors.RGB(0.5))
+    plot_butterfly(df; positions = pos, topopositions_to_color = x -> Colors.RGB(0.5))
 end
 
 @testset "changing color from ROMA to HSV" begin
     plot_butterfly(
-        data;
+        df;
         positions = pos,
         topopositions_to_color = UnfoldMakie.posToColorHSV,
     )
@@ -35,7 +35,7 @@ end
 
 @testset "changing color from ROMA to RGB" begin
     plot_butterfly(
-        data;
+        df;
         positions = pos,
         topopositions_to_color = pos -> UnfoldMakie.posToColorRGB(pos),
     )
@@ -44,7 +44,7 @@ end
 
 @testset "add h adn vlines in a Figure" begin
     f = Figure()
-    plot_butterfly!(f, data; positions = pos)
+    plot_butterfly!(f, df; positions = pos)
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     f
@@ -53,7 +53,7 @@ end
 @testset "add h- and vlines in GridPosition" begin
     f = Figure()
     ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")
-    plot_butterfly!(f[1:2, 1:5], data; positions = pos)
+    plot_butterfly!(f[1:2, 1:5], df; positions = pos)
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     hidespines!(ax)
@@ -65,7 +65,7 @@ end
     f = Figure()
     plot_butterfly!(
         f[1, 1],
-        data;
+        df;
         positions = pos,
         topomarkersize = 10,
         topoheigth = 0.4,

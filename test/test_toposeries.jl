@@ -1,5 +1,5 @@
-data, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+dat, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 Δbin = 80
 
 @testset "toposeries basic" begin
@@ -40,7 +40,7 @@ end
 end
 
 @testset "toposeries without colorbar" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     Δbin = 80
     plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))
 end
@@ -49,7 +49,7 @@ end
     f = Figure()
     ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")
 
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 
     Δbin = 80
     a = plot_topoplotseries!(
@@ -69,7 +69,7 @@ end
 
 @testset "14 topoplots and GridPosition" begin # horrific
     f = Figure()
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     Δbin = 30
     a = plot_topoplotseries!(
         f[1, 1:5],
@@ -82,10 +82,10 @@ end
 end
 
 
-@testset "multi-row" begin
+@testset "multiple rows" begin
     f = Figure()
 
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
     Δbin = 80
 
