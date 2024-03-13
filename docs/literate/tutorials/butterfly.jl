@@ -83,6 +83,8 @@ plot_butterfly!(
 f
 
 # Or by faceting
+df.highlight2 = replace(df.highlight2, true => "channels 10, 12", false => "all channels")
+
 plot_butterfly(
     df;
     positions = pos,

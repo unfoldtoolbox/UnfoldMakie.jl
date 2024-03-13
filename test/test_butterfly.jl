@@ -130,6 +130,7 @@ end
 
 @testset "butterfly with faceting of highlighted channels" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
+    df.highlight = replace(df.highlight, true => "channels 10, 12", false => "all channels")
     plot_butterfly(
         df;
         positions = pos,

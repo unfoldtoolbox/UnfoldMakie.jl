@@ -193,6 +193,7 @@ function PlotConfig(T::Val{:butterfly})
             color = (:channel, :channels, :trial, :trials),
             positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
+            group = (:channel,),
         ),
         axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
         visual = (; color = nothing, colormap = nothing),
@@ -203,7 +204,7 @@ function PlotConfig(T::Val{:erp})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        mapping = (; color = (:color, :coefname, nothing), group = :channel),
+        mapping = (; color = (:color, :coefname, nothing)),
         layout = (;
             show_legend = true,
             hidespines = (:r, :t),
