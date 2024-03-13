@@ -10,6 +10,7 @@ using UnfoldMakie
 using Unfold
 using CairoMakie
 using DataFrames
+using Colors
 
 # Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
@@ -56,13 +57,14 @@ plot_butterfly(
 
 # Please check [this page](@id pos2color).
 
-# # Higlighting channels
-# Imaging you want to emphesize specific channel or channels. 
-# First, specify channels:
+# Highlight channels
+# You want to highlight a specific channel or channels. 
+# Specify channels first:
 
 df.highlight1 = in.(df.channel, Ref([12])) # for single channel
 df.highlight2 = in.(df.channel, Ref([10, 12])) # for multiple channels
-# Secdond, you can higlight it or them by color
+
+# Second, you can highlight it or them by color.
 
 gray = Colors.RGB(128 / 255, 128 / 255, 128 / 255)
 f = Figure(resolution = (1000, 400))
@@ -82,7 +84,8 @@ plot_butterfly!(
 )
 f
 
-# Or by faceting
+# Or by faceting:
+
 df.highlight2 = replace(df.highlight2, true => "channels 10, 12", false => "all channels")
 
 plot_butterfly(
