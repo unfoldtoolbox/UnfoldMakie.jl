@@ -91,7 +91,7 @@ df.highlight2 = replace(df.highlight2, true => "channels 10, 12", false => "all 
 plot_butterfly(
     df;
     positions = pos,
-    mapping = (; color = :highlight2, col = :highlight),
+    mapping = (; color = :highlight2, col = :highlight2),
     visual = (; color = 1:2, colormap = [gray, :red]),
 )
 
