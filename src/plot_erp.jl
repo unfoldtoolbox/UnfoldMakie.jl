@@ -169,7 +169,7 @@ function plot_erp!(
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
     if stderror
-        m_se = mapping(config.mapping.x, :se_low, :se_high)
+        m_se = AlgebraOfGraphics.mapping(config.mapping.x, :se_low, :se_high)
         basic = basic + visual(Band, alpha = 0.5) * m_se
     end
 
@@ -216,7 +216,7 @@ function plot_erp!(
             )
         end
     else
-        # draw a normal ERP lineplot        
+        # draw a normal ERP lineplot      
         drawing = draw!(f_grid, plotEquation; axis = config.axis)
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
