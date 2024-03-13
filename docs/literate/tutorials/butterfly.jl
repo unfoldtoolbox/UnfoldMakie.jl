@@ -52,9 +52,43 @@ plot_butterfly(
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),
 )
 
-# # Changing the Corlor of Channels
+# # Changing the colors of channels
 
 # Please check [this page](@id pos2color).
+
+# # Higlighting channels
+# Imaging you want to emphesize specific channel or channels. 
+# First, specify channels:
+
+df.highlight1 = in.(df.channel, Ref([12])) # for single channel
+df.highlight2 = in.(df.channel, Ref([10, 12])) # for multiple channels
+# Secdond, you can higlight it or them by color
+
+gray = Colors.RGB(128 / 255, 128 / 255, 128 / 255)
+f = Figure(resolution = (1000, 400))
+plot_butterfly!(
+    f[1, 1],
+    df;
+    positions = pos,
+    mapping = (; color = :highlight1),
+    visual = (; color = 1:2, colormap = [gray, :red]),
+)
+plot_butterfly!(
+    f[1, 2],
+    df;
+    positions = pos,
+    mapping = (; color = :highlight2),
+    visual = (; color = 1:2, colormap = [gray, :red]),
+)
+f
+
+# Or by faceting
+plot_butterfly(
+    df;
+    positions = pos,
+    mapping = (; color = :highlight2, col = :highlight),
+    visual = (; color = 1:2, colormap = [gray, :red]),
+)
 
 # # Column Mappings for Butterfly Plot
 

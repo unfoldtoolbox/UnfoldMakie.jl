@@ -195,6 +195,7 @@ function PlotConfig(T::Val{:butterfly})
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
         ),
         axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
+        visual = (; color = nothing, colormap = nothing),
     )
     return cfg
 end
@@ -202,7 +203,7 @@ function PlotConfig(T::Val{:erp})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        mapping = (; color = (:color, :coefname, nothing)),
+        mapping = (; color = (:color, :coefname, nothing), group = :channel),
         layout = (;
             show_legend = true,
             hidespines = (:r, :t),

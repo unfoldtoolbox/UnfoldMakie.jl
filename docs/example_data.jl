@@ -67,8 +67,8 @@ function example_data(example = "TopoPlots.jl")
     elseif example == "UnfoldTimeExpanded"
         df, evts = UnfoldSim.predef_eeg()
         f = @formula 0 ~ 1 + condition + continuous
-        #basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
-        basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10, name = "")
+        basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
+        #basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10)
         bfDict = Dict(Any => (f, basisfunction))
         return fit(UnfoldModel, bfDict, evts, df)
     elseif example == "TopoPlots.jl"
