@@ -25,7 +25,7 @@ end
 end
 
 @testset "toposeries with differend comb functions " begin
-    f = Figure()
+    f = Figure(size = (400, 500))
     plot_topoplotseries!(
         f[1, 1],
         df,
@@ -34,14 +34,26 @@ end
         combinefun = mean,
         axis = (; title = "combinefun = mean"),
     )
-    plot_topoplotseries!(f[2, 1], df, Δbin; positions = positions, combinefun = median)
-    plot_topoplotseries!(f[3, 1], df, Δbin; positions = positions, combinefun = std)
+    plot_topoplotseries!(
+        f[2, 1],
+        df,
+        Δbin;
+        positions = positions,
+        combinefun = median,
+        axis = (; title = "combinefun = median"),
+    )
+    plot_topoplotseries!(
+        f[3, 1],
+        df,
+        Δbin;
+        positions = positions,
+        combinefun = std,
+        axis = (; title = "combinefun = std"),
+    )
     f
 end
 
 @testset "toposeries without colorbar" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-    Δbin = 80
     plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))
 end
 
@@ -63,7 +75,6 @@ end
     hidedecorations!(ax, label = false)
 
     f
-
 end
 
 
@@ -99,4 +110,8 @@ end
         visual = (label_scatter = false,),
     )
     f
+end
+
+@testset "toposeries with xlabel" begin
+    plot_topoplotseries(df, Δbin; positions = positions, axis = (; xlabel = "test"))
 end
