@@ -32,7 +32,7 @@ plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar =
 # ## Aggregating functions
 # In this example `combinefun` is specified by `mean`, `median` and `std`. 
 
-f = Figure()
+f = Figure(size = (400, 500))
 plot_topoplotseries!(
     f[1, 1],
     df,

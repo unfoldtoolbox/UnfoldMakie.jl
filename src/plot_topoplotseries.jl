@@ -13,7 +13,7 @@ Multiple miniature topoplots in regular distances.
     A number for how large one time bin should be.\\
     `Δbin` is in units of the `data.time` column.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `combinefun::Function = mean`\\
     Specify how the samples within `Δbin` are summarised.\\
     Example functions: `mean`, `median`, `std`. 
@@ -26,7 +26,7 @@ Multiple miniature topoplots in regular distances.
 - `labels::Vector{String} = nothing`\\
     Shows channel labels.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
-    Shows channel positions.
+    Shows channel positions. Requires the list of all unique electrode x and y positions.
 
 $(_docstring(:topoplotseries))
 
@@ -55,6 +55,7 @@ function plot_topoplotseries!(
 
     # resolve columns with data
     config.mapping = resolve_mappings(data, config.mapping)
+
     positions = getTopoPositions(; positions = positions, labels = labels)
 
     if "label" ∉ names(data)
@@ -77,36 +78,29 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
-    Label(
-        f[1, 1, Top()],
-        text = config.axis.title,
-        fontsize = config.axis.fontsize,
-        font = config.axis.font,
-    )
     if config.layout.use_colorbar
-        if typeof(ftopo) == Figure
-            d = ftopo.content[1].scene.plots[1]
-            Colorbar(
-                f[1, end+1],
-                colormap = d.colormap,
-                colorrange = d.colorrange,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
-        else
-            # println(fieldnames(typeof((axlist[1]))))
-            d = axlist[1].scene.plots[1].attributes
-            Colorbar(
-                f[:, :][1, length(axlist)+1],
-                colormap = d.colormap,
-                colorrange = d.colorrange,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
-        end
+        d = axlist[1].scene.plots[1].attributes
+        config_kwargs!(
+            config,
+            layout = (; use_colorbar = false, show_legend = false),
+            colorbar = (; colormap = d.colormap, colorrange = d.colorrange),
+        )
+    else
+        d = ftopo.content[1].scene.plots[1]
+        config_kwargs!(
+            config,
+            colorbar = (; colormap = d.colormap, colorrange = d.colorrange),
+        )
     end
+    ax = Axis(
+        f[1, 1],
+        xlabel = config.axis.xlabel,
+        ylabel = config.axis.ylabel,
+        title = config.axis.title,
+        titlesize = config.axis.titlesize,
+        titlefont = config.axis.titlefont,
+    )
+    apply_layout_settings!(config; fig = f, ax = ax)
     return f
 
 end
