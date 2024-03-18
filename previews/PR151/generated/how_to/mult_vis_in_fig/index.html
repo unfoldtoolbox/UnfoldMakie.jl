@@ -25,7 +25,7 @@ plot_erp!(
 plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
 
 f</code></pre><img src="a3dfda89.png" alt="Example block output"/><h1 id="Very-complex-plot"><a class="docs-heading-anchor" href="#Very-complex-plot">Very complex plot</a><a id="Very-complex-plot-1"></a><a class="docs-heading-anchor-permalink" href="#Very-complex-plot" title="Permalink"></a></h1><p>We can create a large figure with any type of plot using predefined data.</p><p>With so many plots at once, it&#39;s better to set a fixed resolution in your image to order the plots evenly.</p><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">f = Figure(resolution = (2000, 2000))
+<summary>Click to expand</summary><pre><code class="language-julia hljs">f = Figure(size = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
 
@@ -80,8 +80,8 @@ plot_circular_topoplots!(
     positions = positions,
     predictor = :time,
     predictor_bounds = [-0.3, 0.5],
-)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridPosition(GridLayout[4, 5] (9 children), GridLayoutBase.Span(3:4, 4:5), GridLayoutBase.Inner())</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="7f49e375.png" alt="Example block output"/><h1 id="In-two-columns"><a class="docs-heading-anchor" href="#In-two-columns">In two columns</a><a id="In-two-columns-1"></a><a class="docs-heading-anchor-permalink" href="#In-two-columns" title="Permalink"></a></h1><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">f = Figure(resolution = (1200, 1400))
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridPosition(GridLayout[4, 5] (9 children), GridLayoutBase.Span(3:4, 4:5), GridLayoutBase.Inner())</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="3ac0a92c.png" alt="Example block output"/><h1 id="In-two-columns"><a class="docs-heading-anchor" href="#In-two-columns">In two columns</a><a id="In-two-columns-1"></a><a class="docs-heading-anchor-permalink" href="#In-two-columns" title="Permalink"></a></h1><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">f = Figure(size = (1200, 1400))
 ga = f[1, 1]
 gc = f[2, 1]
 ge = f[3, 1]
@@ -169,9 +169,7 @@ for (label, layout) in
         padding = (20, 20, 22, 0),
         halign = :right,
     )
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Warning: Found `resolution` in the theme when creating a `Scene`. The `resolution` keyword for `Scene`s and `Figure`s has been deprecated. Use `Figure(; size = ...` or `Scene(; size = ...)` instead, which better reflects that this is a unitless size and not a pixel resolution. The key could also come from `set_theme!` calls or related theming functions.
-└ @ Makie ~/.julia/packages/Makie/VRavR/src/scenes.jl:220
-┌ Warning: Autocorrelation was NOT taken into account. Therefore SE are UNRELIABLE. Use at your own discretion
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Warning: Autocorrelation was NOT taken into account. Therefore SE are UNRELIABLE. Use at your own discretion
 └ @ Unfold ~/.julia/packages/Unfold/Gj8sl/src/solver.jl:81
 (1, 1, 2000)Symbol
 ┌ Warning: `.px_area` got renamed to `.viewport`, and means the area the scene maps to in device independent units, not pixels. Note, `size(scene) == widths(scene.viewport[])`
@@ -187,4 +185,4 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
 ┌ Warning: `.px_area` got renamed to `.viewport`, and means the area the scene maps to in device independent units, not pixels. Note, `size(scene) == widths(scene.viewport[])`
 └ @ Makie ~/.julia/packages/Makie/VRavR/src/deprecated.jl:9
 ┌ Warning: `.px_area` got renamed to `.viewport`, and means the area the scene maps to in device independent units, not pixels. Note, `size(scene) == widths(scene.viewport[])`
-└ @ Makie ~/.julia/packages/Makie/VRavR/src/deprecated.jl:9</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="6a95eb54.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Decorations and Axis Spines</a><a class="docs-footer-nextpage" href="../../reference/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.3.0 on <span class="colophon-date" title="Wednesday 13 March 2024 16:56">Wednesday 13 March 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+└ @ Makie ~/.julia/packages/Makie/VRavR/src/deprecated.jl:9</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="425213ef.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Decorations and Axis Spines</a><a class="docs-footer-nextpage" href="../../reference/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.3.0 on <span class="colophon-date" title="Monday 18 March 2024 13:04">Monday 18 March 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
