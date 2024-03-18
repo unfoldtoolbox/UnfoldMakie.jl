@@ -96,7 +96,7 @@ end
 end
 
 @testset "ERP plot with borderless legend" begin
-    f = Figure(resolution = (1200, 1400))
+    f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
 

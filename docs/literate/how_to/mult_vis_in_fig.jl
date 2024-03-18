@@ -59,7 +59,7 @@ With so many plots at once, it's better to set a fixed resolution in your image 
 # <details>
 # <summary>Click to expand</summary>
 # ```
-f = Figure(resolution = (2000, 2000))
+f = Figure(size = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
 
@@ -126,7 +126,7 @@ f
 # <details>
 # <summary>Click to expand</summary>
 # ```
-f = Figure(resolution = (1200, 1400))
+f = Figure(size = (1200, 1400))
 ga = f[1, 1]
 gc = f[2, 1]
 ge = f[3, 1]

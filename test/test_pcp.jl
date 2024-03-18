@@ -106,7 +106,7 @@ end
 end
 
 @testset "Axis tick labels" begin
-    f = Figure(resolution = (400, 800))
+    f = Figure(size = (400, 800))
     plot_parallelcoordinates(
         f[1, 1],
         subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
