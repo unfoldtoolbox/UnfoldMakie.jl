@@ -74,15 +74,21 @@ function plot_topoplotseries!(
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
         combinefun = combinefun,
-        positions = positions,
+        config.axis.xlim_topo,
+        config.axis.ylim_topo,
         config.visual...,
+        positions,
     )
-
     if (config.colorbar.colorrange !== nothing)
         config_kwargs!(config)
     else
-        data_mean =
-            df_timebin(data, Δbin; col_y = config.mapping.y, fun = combinefun, grouping = [:label, config.mapping.col, config.mapping.row])
+        data_mean = df_timebin(
+            data,
+            Δbin;
+            col_y = config.mapping.y,
+            fun = combinefun,
+            grouping = [:label, config.mapping.col, config.mapping.row],
+        )
         colorrange = Statistics.quantile(data_mean[:, config.mapping.y], [0.001, 0.999])
         config_kwargs!(config, colorbar = (; colorrange = colorrange))
     end

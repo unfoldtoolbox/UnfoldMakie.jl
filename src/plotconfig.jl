@@ -153,16 +153,21 @@ function PlotConfig(T::Val{:topoplotseries})
             titlefont = :bold,
             xlabel = "Time windows [s]",
             ylabel = "",
+            xlim_topo = (-0.25, 1.25),
+            ylim_topo = (-0.25, 1.25),
         ),
         layout = (; use_colorbar = true),
-        colorbar = (; 
-            flipaxis = true, 
-            labelrotation = -π / 2, label = "Voltage [µV]",
-            colorrange = nothing
-            ),
+        colorbar = (;
+            flipaxis = true,
+            labelrotation = -π / 2,
+            label = "Voltage [µV]",
+            colorrange = nothing,
+        ),
         visual = (;
             label_text = false, # true doesnt work again
             colormap = Reverse(:RdBu),
+            enlarge = 1,
+            label_scatter = false,
         ),
         mapping = (; col = (:time,), row = (nothing,)),
     )
@@ -172,9 +177,7 @@ function PlotConfig(T::Val{:designmat})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (;
-            use_colorbar = true,
-        ),
+        layout = (; use_colorbar = true,),
         axis = (;
             xlabel = "Conditions",
             ylabel = "Trials",
