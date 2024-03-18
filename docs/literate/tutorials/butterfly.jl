@@ -63,11 +63,12 @@ plot_butterfly(
 
 df.highlight1 = in.(df.channel, Ref([12])) # for single channel
 df.highlight2 = in.(df.channel, Ref([10, 12])) # for multiple channels
+nothing #hide 
 
 # Second, you can highlight it or them by color.
 
 gray = Colors.RGB(128 / 255, 128 / 255, 128 / 255)
-f = Figure(resolution = (1000, 400))
+f = Figure(size = (1000, 400))
 plot_butterfly!(
     f[1, 1],
     df;
