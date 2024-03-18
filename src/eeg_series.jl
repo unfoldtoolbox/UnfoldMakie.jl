@@ -16,21 +16,27 @@ end
 
 """
     eeg_topoplot_series(data::DataFrame,
+        fig,
+        data::DataFrame,
         Δbin;
-        y = :estimate,
+        y = :erp,
         label = :label,
         col = :time,
         row = nothing,
-        figure = NamedTuple(),
-        combinefun = mean,
-        row_labels = false,
         col_labels = false,
-        topoplot_attributes...
+        row_labels = false,
+        rasterize_heatmaps = true,
+        combinefun = mean,
+        xlim_topo,
+        ylim_topo,
+        topoplot_attributes...,
     )
     eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
 
 Plot a series of topoplots. 
 The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
+- `fig` \\
+    Figure object. \\
 - `data::DataFrame`\\
     Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
@@ -40,9 +46,7 @@ The function automatically takes the `combinefun = mean` over the `:time` column
 - `col`, `row = :time` \\
     Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. \\
     Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
-- `figure = NamedTuple()` \\
-    Allows to include information for plotting the figure. \\
-    Alternatively, you can pass a fig object `eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)`.
+
 - `row_labels`, `col_labels = false` \\
     Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
     
@@ -87,10 +91,12 @@ function eeg_topoplot_series!(
     label = :label,
     col = :time,
     row = nothing,
-    combinefun = mean,
     col_labels = false,
     row_labels = false,
-    rasterize_heatmap = true,
+    rasterize_heatmaps = true,
+    combinefun = mean,
+    xlim_topo,
+    ylim_topo,
     topoplot_attributes...,
 )
 
@@ -113,7 +119,7 @@ function eeg_topoplot_series!(
         rightspinevisible = false,
         topspinevisible = false,
         bottomspinevisible = false,
-        limits = ((-0.25, 1.25), (-0.25, 1.25)),
+        limits = (xlim_topo, ylim_topo),
     )
 
     # aggregate the data over time bins
@@ -160,7 +166,7 @@ function eeg_topoplot_series!(
             # plot it
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
 
-            if rasterize_heatmap
+            if rasterize_heatmaps
                 ax2.plots[1].plots[1].rasterize = true
             end
             if r == length(select_row) && col_labels

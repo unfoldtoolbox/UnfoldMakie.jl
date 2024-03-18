@@ -93,7 +93,7 @@ end
 end
 
 
-@testset "multiple rows" begin
+@testset "row faceting" begin
     f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
@@ -107,7 +107,25 @@ end
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
-        )
+    )
+    f
+end
+
+@testset "row faceting" begin
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)
+
+    plot_topoplotseries!(
+        f[1:2, 1:2],
+        df,
+        Δbin;
+        col_labels = true,
+        mapping = (; row = :condition),
+        positions = positions,
+        visual = (label_scatter = false,),
+        layout = (; use_colorbar = true),
+    )
     f
 end
 
@@ -115,5 +133,13 @@ end
     plot_topoplotseries(df, Δbin; positions = positions, axis = (; xlabel = "test"))
 end
 @testset "toposeries with adjustable colorrange" begin
-    plot_topoplotseries(df, Δbin; positions = positions, colorbar = (; colorrange=(-1, 1)))
+    plot_topoplotseries(
+        df,
+        Δbin;
+        positions = positions,
+        colorbar = (; colorrange = (-1, 1)),
+    )
+end
+@testset "toposeries with xlabel" begin
+    plot_topoplotseries(df, Δbin; positions = positions, axis = (; ylim_topo = (0, 0.7)))
 end
