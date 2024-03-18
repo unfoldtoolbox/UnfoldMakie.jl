@@ -155,9 +155,14 @@ function PlotConfig(T::Val{:topoplotseries})
             ylabel = "",
         ),
         layout = (; use_colorbar = true),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        colorbar = (; 
+            flipaxis = true, 
+            labelrotation = -π / 2, label = "Voltage [µV]",
+            colorrange = nothing
+            ),
         visual = (;
-            label_text = false # true doesnt work again
+            label_text = false, # true doesnt work again
+            colormap = Reverse(:RdBu),
         ),
         mapping = (; col = (:time,), row = (nothing,)),
     )
@@ -169,8 +174,6 @@ function PlotConfig(T::Val{:designmat})
         cfg;
         layout = (;
             use_colorbar = true,
-            xlabelFromMapping = nothing,
-            ylabelFromMapping = nothing,
         ),
         axis = (;
             xlabel = "Conditions",

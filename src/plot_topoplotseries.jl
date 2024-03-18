@@ -24,9 +24,9 @@ Multiple miniature topoplots in regular distances.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels. 
 - `labels::Vector{String} = nothing`\\
-    Shows channel labels.
+    Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
-    Shows channel positions. Requires the list of all unique electrode x and y positions.
+    Specify channel positions. Requires the list of x and y positions for all unique electrode.
 
 $(_docstring(:topoplotseries))
 
@@ -78,20 +78,19 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
-    if config.layout.use_colorbar
-        d = axlist[1].scene.plots[1].attributes
-        config_kwargs!(
-            config,
-            layout = (; use_colorbar = false, show_legend = false),
-            colorbar = (; colormap = d.colormap, colorrange = d.colorrange),
-        )
+    if (config.colorbar.colorrange !== nothing)
+        config_kwargs!(config)
     else
-        d = ftopo.content[1].scene.plots[1]
-        config_kwargs!(
-            config,
-            colorbar = (; colormap = d.colormap, colorrange = d.colorrange),
-        )
+        data_mean =
+            df_timebin(data, Δbin; col_y = config.mapping.y, fun = combinefun, grouping = [:label, config.mapping.col, config.mapping.row])
+        colorrange = Statistics.quantile(data_mean[:, config.mapping.y], [0.001, 0.999])
+        config_kwargs!(config, colorbar = (; colorrange = colorrange))
     end
+
+    if !config.layout.use_colorbar
+        config_kwargs!(config, layout = (; use_colorbar = false, show_legend = false))
+    end
+
     ax = Axis(
         f[1, 1],
         xlabel = config.axis.xlabel,
