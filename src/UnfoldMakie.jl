@@ -56,7 +56,6 @@ include("relative_axis.jl")
 
 export PlotConfig
 
-
 export plot_designmatrix
 export plot_designmatrix!
 export plot_erp
