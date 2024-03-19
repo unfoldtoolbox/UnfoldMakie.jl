@@ -55,7 +55,6 @@ function plot_topoplotseries!(
 
     # resolve columns with data
     config.mapping = resolve_mappings(data, config.mapping)
-
     positions = getTopoPositions(; positions = positions, labels = labels)
 
     if "label" ∉ names(data)
@@ -74,8 +73,8 @@ function plot_topoplotseries!(
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
         combinefun = combinefun,
-        config.axis.xlim_topo,
-        config.axis.ylim_topo,
+        xlim_topo = config.axis.xlim_topo,
+        ylim_topo = config.axis.ylim_topo,
         config.visual...,
         positions,
     )
@@ -104,6 +103,8 @@ function plot_topoplotseries!(
         title = config.axis.title,
         titlesize = config.axis.titlesize,
         titlefont = config.axis.titlefont,
+        ylabelpadding = config.axis.ylabelpadding,
+        xlabelpadding = config.axis.xlabelpadding,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
