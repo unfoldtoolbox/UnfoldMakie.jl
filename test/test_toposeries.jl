@@ -153,7 +153,7 @@ end
     ) # simulated data
     a = (sin.(range(-2 * pi, 2 * pi, 63)))
     b = [(1:63) ./ 63 .* a (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))]
-    pos =  b .* 0.5 .+ 0.5 # simulated electrode positions
+    pos = b .* 0.5 .+ 0.5 # simulated electrode positions
     pos = [Point2.(pos[k, 1], pos[k, 2]) for k = 1:size(pos, 1)]
     UnfoldMakie.eeg_topoplot_series(df, 5; positions = pos)
 end

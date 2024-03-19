@@ -120,16 +120,11 @@ function eeg_topoplot_series!(
         bottomspinevisible = false,
         limits = (xlim_topo, ylim_topo),
     )
-
     # aggregate the data over time bins
+    # using same colormap + contour levels for all plots
     data_mean =
         df_timebin(data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
-    # using same colormap + contour levels for all plots
-    (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
-    # make them symmetrical
-    q_min = q_max = max(abs(q_min), abs(q_max))
-    q_min = -q_min
-
+    (q_min, q_max) = extract_colorrange(data_mean, y)
     topoplot_attributes = merge(
         (
             colorrange = (q_min, q_max),

@@ -88,7 +88,7 @@ function plot_topoplotseries!(
             fun = combinefun,
             grouping = [:label, config.mapping.col, config.mapping.row],
         )
-        colorrange = Statistics.quantile(data_mean[:, config.mapping.y], [0.001, 0.999])
+        colorrange = extract_colorrange(data_mean, config.mapping.y)
         config_kwargs!(config, colorbar = (; colorrange = colorrange))
     end
 
