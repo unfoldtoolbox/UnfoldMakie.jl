@@ -70,14 +70,14 @@ Here you can specify:
 - Adjust the limits of the topoplot boxes with `xlim_topo` and `ylim_topo`. By default both are `(-0.25, 1.25)`.
 - Adjust the size of the Figure using `Figure(size = (x, y))`.
 =#
-df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-df.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)
+df1 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+df1.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)
 
 f = Figure(size = (600, 500))
 
 plot_topoplotseries!(
     f[1:2, 1:2],
-    df,
+    df1,
     Δbin;
     col_labels = true,
     mapping = (; row = :condition),
