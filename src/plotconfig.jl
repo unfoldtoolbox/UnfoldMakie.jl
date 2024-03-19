@@ -149,12 +149,14 @@ function PlotConfig(T::Val{:topoplotseries})
         cfg,
         axis = (;
             title = "",
-            titlesize = 20,
+            titlesize = 16,
             titlefont = :bold,
             xlabel = "Time windows [s]",
             ylabel = "",
             xlim_topo = (-0.25, 1.25),
             ylim_topo = (-0.25, 1.25),
+            ylabelpadding = 25,
+            xlabelpadding = 25,
         ),
         layout = (; use_colorbar = true),
         colorbar = (;

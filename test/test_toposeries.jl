@@ -93,7 +93,7 @@ end
 end
 
 
-@testset "row faceting" begin
+@testset "row faceting, 2 conditions" begin
     f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
@@ -111,17 +111,18 @@ end
     f
 end
 
-@testset "row faceting" begin
-    f = Figure()
+@testset "row faceting, 5 conditions" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)
 
+    f = Figure(size = (600, 500))
     plot_topoplotseries!(
         f[1:2, 1:2],
         df,
         Δbin;
         col_labels = true,
         mapping = (; row = :condition),
+        axis = (; ylabel = "Conditions"),
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -142,4 +143,17 @@ end
 end
 @testset "toposeries with xlabel" begin
     plot_topoplotseries(df, Δbin; positions = positions, axis = (; ylim_topo = (0, 0.7)))
+end
+
+@testset "basic eeg_topoplot_series" begin
+    df = DataFrame(
+        :erp => repeat(1:63, 100),
+        :time => repeat(1:20, 5 * 63),
+        :label => repeat(1:63, 100),
+    ) # simulated data
+    a = (sin.(range(-2 * pi, 2 * pi, 63)))
+    b = [(1:63) ./ 63 .* a (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))]
+    pos =  b .* 0.5 .+ 0.5 # simulated electrode positions
+    pos = [Point2.(pos[k, 1], pos[k, 2]) for k = 1:size(pos, 1)]
+    UnfoldMakie.eeg_topoplot_series(df, 5; positions = pos)
 end

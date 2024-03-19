@@ -68,7 +68,8 @@ Here you can specify:
 - Hide electrode markers with `visual.label_scatter`.
 - Change the color map with `visual.colormap`. The default is `Reverse(:RdBu)`.
 - Adjust the limits of the topoplot boxes with `xlim_topo` and `ylim_topo`. By default both are `(-0.25, 1.25)`.
-- Adjust the size of the Figure using `Figure(size = (x, y))`.
+- Adjust the size of the figure with `Figure(size = (x, y))`.
+- Adjust the padding between topoplot labels and axis labels using `xlabelpadding` and `ylabelpadding`.
 =#
 df1 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 df1.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)

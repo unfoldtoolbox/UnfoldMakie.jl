@@ -46,7 +46,6 @@ The function automatically takes the `combinefun = mean` over the `:time` column
 - `col`, `row = :time` \\
     Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. \\
     Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
-
 - `row_labels`, `col_labels = false` \\
     Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
     
@@ -95,8 +94,8 @@ function eeg_topoplot_series!(
     row_labels = false,
     rasterize_heatmaps = true,
     combinefun = mean,
-    xlim_topo,
-    ylim_topo,
+    xlim_topo = (-0.25, 1.25),
+    ylim_topo = (-0.25, 1.25),
     topoplot_attributes...,
 )
 
