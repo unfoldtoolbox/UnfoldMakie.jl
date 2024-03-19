@@ -8,6 +8,6 @@ This is the documentation of the UnfoldMakie.jl module (aka library) for the Jul
 
 ## Benefits of UnfoldMakie.jl
 
-- 10 plot functions for displaying ERPs. Each one emphasizes certain dimensions while collapsing others.
-- Highly customizable. It is based on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Make](https://makie.juliaplots.org/stable/) modules, so you can use configurations from those modules to add new features to your plots.
+- **10 plot functions for displaying ERPs.** Each plot emphasizes certain dimensions while collapsing others.
+- **Highly adaptable.** The module is based on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/) modules, so you can use configurations from these modules to add new features to your figures.
 
