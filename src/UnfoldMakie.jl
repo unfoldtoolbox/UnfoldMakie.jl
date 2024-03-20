@@ -34,6 +34,13 @@ import Makie.hidespines!
 import AlgebraOfGraphics.hidedecorations!
 #import AlgebraOfGraphics.hidespines!
 
+# Unfold Backward Compatability. AbstractDesignMatrix was introduced only in v0.7
+if isdefined(Unfold, :AbstractDesignMatrix)
+    AbstractDesignMatrix = Unfold.AbstractDesignMatrix
+else
+    AbstractDesignMatrix = Unfold.DesignMatrix
+end
+
 include("plotconfig.jl")
 include("docstring_template.jl")
 
