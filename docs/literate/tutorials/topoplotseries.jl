@@ -59,10 +59,11 @@ plot_topoplotseries!(
 )
 f
 
-# ##Faceting
+# ## Faceting
+
 #=
 If you need to plot many topoplots, you should display them in multiple rows. 
-#
+
 Here you can specify:
 - Grouping condition using `mapping.row`.
 - Label the y-axis with `axis.ylabel`.
