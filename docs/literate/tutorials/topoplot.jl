@@ -21,9 +21,9 @@ data, positions = TopoPlots.example_data()
 
 #= 
 The size of `data` is 64×400×3. This means
-- 64 channels
-- 400 milliseconds
-- Averaging function. Instead of displaying the EEG data for all subjects, here we aggregate the data using (1) mean, (2) p-value and (3) standard deviation.
+- 64 channels;
+- 400 timepoints in range from -0.3 to 0.5 mseconds;
+- Estimates of 3 averaging functions. Instead of displaying the EEG data for all subjects, here we aggregate the data using (1) mean, (2) standard deviation and (3) p-value within t-tests.
 
 While `position` consist of 64 x and y coordinates of each channels on a scalp. 
 =#

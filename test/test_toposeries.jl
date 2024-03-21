@@ -25,7 +25,7 @@ end
 end
 
 @testset "toposeries with differend comb functions " begin
-    f = Figure(size = (400, 500))
+    f = Figure(size = (500, 500))
     plot_topoplotseries!(
         f[1, 1],
         df,
