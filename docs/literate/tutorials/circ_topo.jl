@@ -21,7 +21,7 @@ df = DataFrame(
 df = flatten(df, :estimate);
 
 # # Plot generations
-# Note how the plots are located at the angles of the `circular_variable'.
+# Note how the plots are located at the angles of the `circular_variable`.
 plot_circular_topoplots(
     df;
     positions = pos,
