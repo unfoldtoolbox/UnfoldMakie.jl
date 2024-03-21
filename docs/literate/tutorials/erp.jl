@@ -1,10 +1,9 @@
 # ## [ERP Plot Visualization](@id erp_vis)
-# Here we discuss ERP plot visualization. 
+# ERP plot is plot type for visualisation of Event-related potentials. 
+# It can fully represent time and condition dimensions using lines.
 
 
 # ## Package loading
-
-# The following modules are necessary for following this tutorial:
 
 using Unfold
 using UnfoldMakie
@@ -32,21 +31,20 @@ m = fit(
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
-# ## Plot the results
+# ## Figure plotting
 plot_erp(results)
 
-# # Configuration of ERP plots
-
-# With some general configurations we can modify the default visualization. Here we will use the following configuration:
+# # Additional features
 
 # ## Effect plot
+
+# Effect plot shows how ERP voltage is affected by variation of some variable (here: `:contionous`).
 
 # - `categorical_color::Bool = true`\\
 #     Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
 # - `categorical_group::Bool = true`\\
 #    Treat `:group` as categorical variable by default in case of numeric `:group` column.
 
-# Effect plot shows how ERP voltage is affected by variation of some variable (here: `:contionous`).
 
 plot_erp(
     res_effects;
@@ -78,7 +76,6 @@ plot_erp(results; :pvalue => pvals)
 # - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
 
 # Display a colored band on the graph to indicate lower and higher estimates based on the standard error.
-
 # For the generalizability of your results, it is always better to include error bands.
 
 f = Figure()

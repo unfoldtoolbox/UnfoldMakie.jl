@@ -1,5 +1,10 @@
 # # Package loading
 
+# ERP image is a plot type for visualizing EEG activity for all trials. 
+# It can fully represent time and trial dimensions using a heatmap. 
+# Y-axis represents all trials, x-axis represents time, while color represents voltage. 
+# The ERP image can also be sorted by specific experimental variables, which helps to reveal important correlations. 
+
 using Unfold
 using UnfoldMakie
 using CairoMakie
@@ -35,7 +40,7 @@ plot_erpimage(
 
 # # Sorted ERP image
 
-# First, generate a data. Second, specify the necessary sorting parameter. 
+# Generate the data and specify the necessary sorting parameter. 
 
 #=
 - `sortvalues::Vector{Int64} = false`\\ 

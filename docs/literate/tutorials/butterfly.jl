@@ -1,6 +1,9 @@
 # # [Butterfly Plot Visualization](@id bfp_vis)
-# Here we discuss Butterfly plot visualization.
-# Since the configurations for ERP plots can be applied to butterfly plots as well. [Here](@ref erp_vis) you can find the configurations for ERP plots.
+# Butterfly plot is a plot type for visualisation of Event-related potentials. 
+# It can fully represent time and channels dimensions using lines. With addition of topoplot inset it can also represent location of channels.
+# It called "butterfly" becasue the envelope of channels reminds butterfly wings🦋. 
+
+# The configurations of [ERP plots](@ref erp_vis) and Butterfly plots are somehow similar.
 
 # # Package loading
 
