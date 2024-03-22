@@ -89,7 +89,7 @@ plot_erp(coeftable(m))
 
 Contributions are very welcome. These can be typos, bug reports, feature requests, speed improvements, new solvers, better code, better documentation.
 
-### How-to Contribute
+### How to Contribute
 
 You are very welcome to submit issues and start pull requests!
 

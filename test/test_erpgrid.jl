@@ -22,7 +22,7 @@ end
 end
 
 @testset "erpgrid plot in GridLayout" begin
-    f = Figure(resolution = (1200, 1400))
+    f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
     gb = f[2, 1] = GridLayout()
     gd = f[2, 2] = GridLayout()

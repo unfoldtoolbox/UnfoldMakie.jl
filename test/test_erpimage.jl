@@ -65,7 +65,7 @@ end
         sortvalues = evts.Δlatency,
         axis = (; ylabel = "test"),
     )
-    plot_erpimage!(f[1, 2], times, dat_e;)
-    plot_erpimage!(f[2, 2], times, dat_e; sortvalues = evts.Δlatency)
+    plot_erpimage!(f[1, 2], times, dat_norm;)
+    plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency)
     f
 end

@@ -64,6 +64,13 @@ function example_data(example = "TopoPlots.jl")
         # generate ModelStruct
         return fit(UnfoldModel, Dict(Any => (f, basis)), evts, data)
 
+    elseif example == "UnfoldTimeExpanded"
+        df, evts = UnfoldSim.predef_eeg()
+        f = @formula 0 ~ 1 + condition + continuous
+        basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
+        #basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10)
+        bfDict = Dict(Any => (f, basisfunction))
+        return fit(UnfoldModel, bfDict, evts, df)
     elseif example == "TopoPlots.jl"
         data, chanlocs = TopoPlots.example_data()
         df = DataFrame(
@@ -99,7 +106,7 @@ function example_data(example = "TopoPlots.jl")
             UnfoldSim.predef_eeg(; onset = LogNormalOnset(μ = 3.5, σ = 0.4), noiselevel = 5)
         dat_e, times = Unfold.epoch(dat, evts, [-0.1, 1], 100)
         evts, dat_e = Unfold.dropMissingEpochs(evts, dat_e)
-        evts.Δlatency = vcat(0, diff(evts.latency))
+        evts.Δlatency = vcat(diff(evts.latency), 0)
         dat_e = dat_e[1, :, :]
         evts = filter(row -> row.Δlatency > 0, evts)
         return dat_e, evts, times
