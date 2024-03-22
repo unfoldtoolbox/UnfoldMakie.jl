@@ -185,7 +185,7 @@ function PlotConfig(T::Val{:designmat})
             ylabel = "Trials",
             xticklabelrotation = round(pi / 8, digits = 2),
         ),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = ""),
     )
     return cfg
 end
