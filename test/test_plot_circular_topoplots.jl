@@ -54,7 +54,7 @@ end
 end
 
 @testset "circularplot plot in GridLayout" begin
-    f = Figure(resolution = (1200, 1400))
+    f = Figure(size = (1200, 1400))
     data, pos = TopoPlots.example_data()
     dat = data[:, 240, 1]
 
@@ -81,7 +81,7 @@ end
 
 @testset "circularplot plot in GridLayout" begin
     d_topo, positions = example_data("TopoPlots.jl")
-    f = Figure(resolution = (2000, 2000))
+    f = Figure(size = (2000, 2000))
     plot_circular_topoplots!(
         f[3:4, 4:5],
         d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];

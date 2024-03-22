@@ -147,11 +147,29 @@ function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
         cfg,
-        axis = (; title = "", fontsize = 20, font = :bold),
+        axis = (;
+            title = "",
+            titlesize = 16,
+            titlefont = :bold,
+            xlabel = "Time windows [s]",
+            ylabel = "",
+            xlim_topo = (-0.25, 1.25),
+            ylim_topo = (-0.25, 1.25),
+            ylabelpadding = 25,
+            xlabelpadding = 25,
+        ),
         layout = (; use_colorbar = true),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        colorbar = (;
+            flipaxis = true,
+            labelrotation = -π / 2,
+            label = "Voltage [µV]",
+            colorrange = nothing,
+        ),
         visual = (;
-            label_text = false # true doesnt work again
+            label_text = false, # true doesnt work again
+            colormap = Reverse(:RdBu),
+            enlarge = 1,
+            label_scatter = false,
         ),
         mapping = (; col = (:time,), row = (nothing,)),
     )
@@ -161,12 +179,13 @@ function PlotConfig(T::Val{:designmat})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (;
-            use_colorbar = true,
-            xlabelFromMapping = nothing,
-            ylabelFromMapping = nothing,
+        layout = (; use_colorbar = true,),
+        axis = (;
+            xlabel = "Conditions",
+            ylabel = "Trials",
+            xticklabelrotation = round(pi / 8, digits = 2),
         ),
-        axis = (; xticklabelrotation = pi / 8),
+        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = ""),
     )
     return cfg
 end
@@ -188,8 +207,10 @@ function PlotConfig(T::Val{:butterfly})
             color = (:channel, :channels, :trial, :trials),
             positions = (:pos, :positions, :position, :topo_positions, :x, nothing),
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
+            group = (:channel,),
         ),
         axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
+        visual = (; color = nothing, colormap = nothing),
     )
     return cfg
 end

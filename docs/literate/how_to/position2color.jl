@@ -1,3 +1,4 @@
+# ## [Change colormap of Butterfly plot ](@id pos2color)
 # You want to change the colors of the lines and markers on the inserted topoplot.
 # To do that you need to change the color scheme (aka color map) of the butterfly plot. 
 

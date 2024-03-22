@@ -1,5 +1,5 @@
 @testset "8 plots" begin
-    f = Figure(resolution = (1200, 1400))
+    f = Figure(size = (1200, 1400))
     ga = f[1, 1]
     gc = f[2, 1]
     ge = f[3, 1]
@@ -100,7 +100,7 @@ end
 
 
 @testset "8 plots with a Figure" begin
-    f = Figure(resolution = (1200, 1400))
+    f = Figure(size = (1200, 1400))
 
     include("../docs/example_data.jl")
     d_topo, positions = example_data("TopoPlots.jl")
@@ -176,7 +176,7 @@ end
     data, positions = TopoPlots.example_data()
     times = -0.099609375:0.001953125:1.0
 
-    f = Figure(resolution = (2000, 2000))
+    f = Figure(size = (2000, 2000))
 
     plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
 

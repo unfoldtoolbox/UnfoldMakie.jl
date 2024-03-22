@@ -1,4 +1,6 @@
-# Here we discuss parallel coordinates plot (PCP) visualization. 
+# Parallel Coordinates Plot (PCP) is a plot type used to visualize EEG activity for some channels. 
+# It can fully represent state and channel dimensions using lines. It can also partially represent time or trials
+# Y-axis represents time points, vertical axes represent channels, while lines show voltage changes. 
 
 # # Package loading
 
@@ -6,7 +8,6 @@ using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
-
 
 # # Data generation
 
@@ -17,7 +18,6 @@ r2.coefname .= "B" # create a second category
 r2.estimate .+= rand(length(r2.estimate)) * 0.1
 results_plot = vcat(r1, r2);
 nothing #hide
-
 
 # # Plot PCPs
 
@@ -90,7 +90,7 @@ plot_parallelcoordinates(
 # Specify tick labels on axis. There are four different options for the tick labels.
 
 
-f = Figure(resolution = (400, 800))
+f = Figure(size = (400, 800))
 plot_parallelcoordinates(
     f[1, 1],
     subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);

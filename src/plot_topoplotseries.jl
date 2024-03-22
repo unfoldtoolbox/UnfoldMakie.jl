@@ -13,7 +13,7 @@ Multiple miniature topoplots in regular distances.
     A number for how large one time bin should be.\\
     `Δbin` is in units of the `data.time` column.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `combinefun::Function = mean`\\
     Specify how the samples within `Δbin` are summarised.\\
     Example functions: `mean`, `median`, `std`. 
@@ -24,9 +24,9 @@ Multiple miniature topoplots in regular distances.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels. 
 - `labels::Vector{String} = nothing`\\
-    Shows channel labels.
+    Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
-    Shows channel positions.
+    Specify channel positions. Requires the list of x and y positions for all unique electrode.
 
 $(_docstring(:topoplotseries))
 
@@ -73,40 +73,40 @@ function plot_topoplotseries!(
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
         combinefun = combinefun,
-        positions = positions,
+        xlim_topo = config.axis.xlim_topo,
+        ylim_topo = config.axis.ylim_topo,
         config.visual...,
+        positions,
     )
-
-    Label(
-        f[1, 1, Top()],
-        text = config.axis.title,
-        fontsize = config.axis.fontsize,
-        font = config.axis.font,
-    )
-    if config.layout.use_colorbar
-        if typeof(ftopo) == Figure
-            d = ftopo.content[1].scene.plots[1]
-            Colorbar(
-                f[1, end+1],
-                colormap = d.colormap,
-                colorrange = d.colorrange,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
-        else
-            # println(fieldnames(typeof((axlist[1]))))
-            d = axlist[1].scene.plots[1].attributes
-            Colorbar(
-                f[:, :][1, length(axlist)+1],
-                colormap = d.colormap,
-                colorrange = d.colorrange,
-                flipaxis = config.colorbar.flipaxis,
-                labelrotation = config.colorbar.labelrotation,
-                label = config.colorbar.label,
-            )
-        end
+    if (config.colorbar.colorrange !== nothing)
+        config_kwargs!(config)
+    else
+        data_mean = df_timebin(
+            data,
+            Δbin;
+            col_y = config.mapping.y,
+            fun = combinefun,
+            grouping = [:label, config.mapping.col, config.mapping.row],
+        )
+        colorrange = extract_colorrange(data_mean, config.mapping.y)
+        config_kwargs!(config, colorbar = (; colorrange = colorrange))
     end
+
+    if !config.layout.use_colorbar
+        config_kwargs!(config, layout = (; use_colorbar = false, show_legend = false))
+    end
+
+    ax = Axis(
+        f[1, 1],
+        xlabel = config.axis.xlabel,
+        ylabel = config.axis.ylabel,
+        title = config.axis.title,
+        titlesize = config.axis.titlesize,
+        titlefont = config.axis.titlefont,
+        ylabelpadding = config.axis.ylabelpadding,
+        xlabelpadding = config.axis.xlabelpadding,
+    )
+    apply_layout_settings!(config; fig = f, ax = ax)
     return f
 
 end

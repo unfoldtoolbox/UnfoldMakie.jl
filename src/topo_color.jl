@@ -3,7 +3,7 @@ function getTopoPositions(; labels = nothing, positions = nothing)
     if isnothing(positions) && !isnothing(labels)
         positions = getLabelPos.(labels)
     end
-    @assert !isnothing(positions) "No Positions found, did you forget to provide them via positions=XX, or labels=YY?"
+    @assert !isnothing(positions) "No positions found, did you forget to provide them via positions=XX, or labels=YY?"
     return positions .|> (p -> Point2f(p[1], p[2]))
 end
 
@@ -31,7 +31,7 @@ function posToColorHSV(pos)
     rx = 0.5 - pos[1]
     ry = 0.5 - pos[2]
 
-    b = 0.5#1.0 - (2*sqrt(cx^2+cy^2))^2
+    b = 0.5
     θ, r = cart2pol.(rx, ry)
 
     colorwheel = HSV(θ * 360, b, (r ./ 0.7) ./ 2 + 0.5)
@@ -55,4 +55,15 @@ function cart2pol(x, y)
     θ = atan(x, y) ./ (2 * π) + 0.5
     r = sqrt(x^2 + y^2)
     return θ, r
+end
+
+function extract_colorrange(data_mean, y)
+    # aggregate the data over time bins
+    # using same colormap + contour levels for all plots
+    (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
+    # make them symmetrical
+    q_min = q_max = max(abs(q_min), abs(q_max))
+    q_min = -q_min
+    colorrange = (q_min, q_max)
+    return colorrange
 end

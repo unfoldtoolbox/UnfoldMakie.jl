@@ -6,6 +6,7 @@ using DataFrames
 using TopoPlots
 using Colors
 using Statistics
+using AlgebraOfGraphics
 
 include("../docs/example_data.jl")
 

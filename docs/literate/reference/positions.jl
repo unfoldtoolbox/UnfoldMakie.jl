@@ -23,7 +23,7 @@ pos3d = hcat(values(pyconvert(Dict, biosemi_montage.get_positions()["ch_pos"])).
 
 pos2 = to_positions(pos3d)
 
-f = Figure(resolution = (600, 300))
+f = Figure(size = (600, 300))
 scatter(f[1, 1], pos3d[1:2, :])
 scatter(f[1, 2], pos2)
 f

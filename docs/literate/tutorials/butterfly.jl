@@ -1,6 +1,9 @@
 # # [Butterfly Plot Visualization](@id bfp_vis)
-# Here we discuss Butterfly plot visualization.
-# Since the configurations for ERP plots can be applied to butterfly plots as well. [Here](@ref erp_vis) you can find the configurations for ERP plots.
+# Butterfly plot is a plot type for visualisation of Event-related potentials. 
+# It can fully represent time and channels dimensions using lines. With addition of topoplot inset it can also represent location of channels.
+# It called "butterfly" becasue the envelope of channels reminds butterfly wings🦋. 
+
+# The configurations of [ERP plots](@ref erp_vis) and Butterfly plots are somehow similar.
 
 # # Package loading
 
@@ -10,6 +13,7 @@ using UnfoldMakie
 using Unfold
 using CairoMakie
 using DataFrames
+using Colors
 
 # Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
@@ -52,6 +56,48 @@ plot_butterfly(
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),
 )
 
+# # Changing the colors of channels
+
+# Please check [this page](@id pos2color).
+
+# Highlight channels
+# You want to highlight a specific channel or channels. 
+# Specify channels first:
+
+df.highlight1 = in.(df.channel, Ref([12])) # for single channel
+df.highlight2 = in.(df.channel, Ref([10, 12])) # for multiple channels
+nothing #hide 
+
+# Second, you can highlight it or them by color.
+
+gray = Colors.RGB(128 / 255, 128 / 255, 128 / 255)
+f = Figure(size = (1000, 400))
+plot_butterfly!(
+    f[1, 1],
+    df;
+    positions = pos,
+    mapping = (; color = :highlight1),
+    visual = (; color = 1:2, colormap = [gray, :red]),
+)
+plot_butterfly!(
+    f[1, 2],
+    df;
+    positions = pos,
+    mapping = (; color = :highlight2),
+    visual = (; color = 1:2, colormap = [gray, :red]),
+)
+f
+
+# Or by faceting:
+
+df.highlight2 = replace(df.highlight2, true => "channels 10, 12", false => "all channels")
+
+plot_butterfly(
+    df;
+    positions = pos,
+    mapping = (; color = :highlight2, col = :highlight2),
+    visual = (; color = 1:2, colormap = [gray, :red]),
+)
 
 # # Column Mappings for Butterfly Plot
 

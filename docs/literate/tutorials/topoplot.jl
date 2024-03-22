@@ -1,4 +1,9 @@
 # ## [Topoplot Visualization](@id topo_vis)
+# Topoplot (aka topography plot) is a plot type for visualisation of EEG activity in a specific time stemp or time interval. 
+# It can fully represent channel and channel location dimensions using contour lines.
+
+# The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
+
 # # Package loading
 
 using Unfold
@@ -14,14 +19,23 @@ using DataFrames
 
 data, positions = TopoPlots.example_data()
 
-# Here we select a time point (340 msec) and the first entry of dimension 3 (the mean estimate, the others are p-value and std).
+#= 
+The size of `data` is 64×400×3. This means
+- 64 channels;
+- 400 timepoints in range from -0.3 to 0.5 mseconds;
+- Estimates of 3 averaging functions. Instead of displaying the EEG data for all subjects, here we aggregate the data using (1) mean, (2) standard deviation and (3) p-value within t-tests.
+
+While `position` consist of 64 x and y coordinates of each channels on a scalp. 
+=#
+
+# Here we select a time point in 340 msec and the mean estimate. 
 plot_topoplot(data[:, 340, 1]; positions = positions)
 
 df = DataFrame(:estimate => data[:, 340, 1])
 plot_topoplot(df; positions = positions)
 
 
-# ## Setting Sensor Positions
+# ## Setting sensor positions
 
 #=
 The `plot_topoplot()` needs the sensor positions to be specified. There are several ways to do this:

@@ -7,36 +7,30 @@ using LinearAlgebra
         
 Plot an ERP plot.   
 
-## Arguments
+## Arguments:
 
-- `f::Union{GridPosition, GridLayout, Figure}`\\
-    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}`\\
-    Data for the Line plot visualization.
-- `kwargs...`\\
-    Additional styling behavior. \\
-    Often used as: `plot_erp(df; mapping = (; color = :coefname, col = :conditionA))`.
+- `f::Union{GridPosition, GridLayout, Figure}`: Figure, GridLayout or GridPosition that the plot should be drawn into.
+- `plot_data::DataFrame`: Data for the line plot visualization.
+- `kwargs...`: Additional styling behavior. Often used: `plot_erp(df; mapping=(; color=:coefname, col=:conditionA))`.
 
-## Keyword argumets (kwargs)
+## kwargs (...; ...):
 
-- `categorical_color::Bool = true`\\
-    Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
-- `categorical_group::Bool = true`\\
-    Treat `:group` as categorical variable by default in case of numeric `:group` column. 
-- `stderror::Bool = false`\\
-    Add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue::Array = []`\\
-    Show a pvalue.\\
-    Example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])`.\\
-    If `coefname` is not specified, the significance lines will be black.
+- `categorical_color` (`bool`, default = `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
+- `categorical_group` (`bool`, default = `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
+- `stderror` (`bool`, default = `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+- `pvalue` (`Array`, default = `[]`): show a pvalue.
+    - example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
+- `positions` (`Array`, default = `[]`): see plot_butterfly.
+- `topolegend` (`bool`, default = `false`): (see `plot_butterfly`).
 
-Internal use only:
-- `butterfly::Bool = true`\\
-    A butterfly plot instead of an ERP plot. See `plot_butterfly`
+Internal-use only:
+- `butterfly` (`bool`, default = `true`): a butterfly plot instead of an ERP plot. See `plot_butterfly`
 
 $(_docstring(:erp))
 
-**Return Value:** `Figure` displaying the ERP plot.
+## Return Value:
+
+- f - Figure() or the inputed `f`
 
 """
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
@@ -46,22 +40,15 @@ plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwa
 
 Plot a Butterfly plot.
 
-## Keyword argumets (kwargs)
-- `positions::Array = []` \\
-    Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
+## kwargs (...; ...):
+- `positions` (`Array`, default = `[]`): if specified, adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
-- `topolegend::Bool = true`\\
-    Show an inlay topoplot with corresponding electrodes. Requires `positions`.
-- `topomarkersize::Real = 10` \\
-    Change the size of the electrode markers in topoplot.
-- `topowidth::Real = 0.25` \\
-    Change the width of inlay topoplot.
-- `topoheigth::Real = 0.25` \\
-    Change the height of inlay topoplot.
-- `topopositions_to_color::x -> posToColorRomaO(x)`\\
-    Change the line colors.
+- `topolegend` (`bool`, default = `true`): show an inlay topoplot with corresponding electrodes. Requires `positions` to be provided.
+- `topomarkersize` (`Real`, default = `10`): change the size of the markers, topoplot-inlay electrodes.
+- `topowidth` (`Real`, default = `0.25`): change the size of the inlay topoplot width.
+- `topoheigth` (`Real`, default = `0.25`): change the size of the inlay topoplot height.
+- `topopositions_to_color` (function, `x -> posToColorRomaO(x)`): change the colors of the channel lines.
 
-**Return Value:** `Figure` displaying Butterfly plot.
 
 $(_docstring(:butterfly))
 see also [`plot_erp`](@id erp_vis)
@@ -100,21 +87,20 @@ function plot_erp!(
     topowidth = nothing,
     topoheigth = nothing,
     topopositions_to_color = nothing,
+    mapping = (;),
     kwargs...,
 )
     config = PlotConfig(:erp)
-    config_kwargs!(config; kwargs...)
+    config_kwargs!(config; mapping, kwargs...)
     if butterfly
         config = PlotConfig(:butterfly)
-        config_kwargs!(config; kwargs...)
+        config_kwargs!(config; mapping, kwargs...)
     end
 
     plot_data = deepcopy(plot_data) # XXX why?
 
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
-    #println(values(config.mapping))
-
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -123,13 +109,12 @@ function plot_erp!(
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
 
-
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
         plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
     end
 
-    # check if stderror values exist and create new collumsn with high and low band
+    # check if stderror values exist and create new columns with high and low band
     if "stderror" ∈ names(plot_data) && stderror
         plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
         plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
@@ -140,14 +125,17 @@ function plot_erp!(
     if (butterfly)
         if isnothing(positions) && isnothing(labels)
             topolegend = false
-            #colors = config.visual.colormap# get(colorschemes[config.visual.colormap],range(0,1,length=nrow(plot_data)))
             colors = nothing
-            #config.mapping = merge(config.mapping,(;color=config.))
         else
             allPositions = getTopoPositions(; positions = positions, labels = labels)
-            colors = getTopoColor(allPositions, topopositions_to_color)
+            if (config.visual.colormap !== nothing)
+                colors = config.visual.colormap
+                un = length(unique(plot_data[:, config.mapping.color]))
+                colors = cgrad(config.visual.colormap, un, categorical = true)
+            else
+                colors = getTopoColor(allPositions, topopositions_to_color)
+            end
         end
-
     end
     # Categorical mapping
     # convert color column into string, so no wrong grouping happens
@@ -162,31 +150,32 @@ function plot_erp!(
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
     #@show colors
-    mapp = mapping()
+    mapp = AlgebraOfGraphics.mapping()
 
     if (:color ∈ keys(config.mapping))
-        mapp = mapp * mapping(; config.mapping.color)
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
     end
 
     if (:group ∈ keys(config.mapping))
-        mapp = mapp * mapping(; config.mapping.group)
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.group)
     end
 
     # remove x / y
     mappingOthers = deleteKeys(config.mapping, [:x, :y])
 
-    xy_mapp = mapping(config.mapping.x, config.mapping.y; mappingOthers...)
+    xy_mapp =
+        AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mappingOthers...)
 
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
     if stderror
-        m_se = mapping(config.mapping.x, :se_low, :se_high)
+        m_se = AlgebraOfGraphics.mapping(config.mapping.x, :se_low, :se_high)
         basic = basic + visual(Band, alpha = 0.5) * m_se
     end
 
     basic = basic * data(plot_data)
 
-    # add the pvalues
+    # add the p-values
     if !isempty(pvalue)
         basic = basic + addPvalues(plot_data, pvalue, config)
     end
@@ -196,6 +185,7 @@ function plot_erp!(
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
     if butterfly
+        # no extra legend
         # add topolegend
         if (topolegend)
             topoAxis = Axis(
@@ -206,9 +196,15 @@ function plot_erp!(
                 valign = 0.95,
                 aspect = 1,
             )
-            topoplotLegend(topoAxis, topomarkersize, topopositions_to_color, allPositions)
+            ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
+            topoplotLegend(
+                topoAxis,
+                topomarkersize,
+                plot_data[ix, config.mapping.color[1]],
+                colors,
+                allPositions,
+            )
         end
-        # no extra legend
         if isnothing(colors)
             drawing = draw!(f_grid, plotEquation; axis = config.axis)
         else
@@ -220,16 +216,11 @@ function plot_erp!(
             )
         end
     else
-        # draw a normal ERP lineplot 
-
+        # draw a normal ERP lineplot      
         drawing = draw!(f_grid, plotEquation; axis = config.axis)
-
-
     end
-
-    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing) #, drawing = drawing)
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
-
 end
 
 function eegHeadMatrix(positions, center, radius)
@@ -244,14 +235,15 @@ function eegHeadMatrix(positions, center, radius)
     )
 end
 
-function topoplotLegend(axis, topomarkersize, topopositions_to_color, allPositions)
+# topopositions_to_color = colors?
+function topoplotLegend(axis, topomarkersize, unique_val, colors, allPositions)
     allPositions = unique(allPositions)
 
     topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
 
-    # colorscheme where first entry is 0, and exactly length(positions)+1 entries
+    un = unique(unique_val)
     specialColors = ColorScheme(
-        vcat(RGB(1, 1, 1.0), [topopositions_to_color(pos) for pos in allPositions]...),
+        vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]),
     )
 
     xlims!(low = -0.2, high = 1.2)
