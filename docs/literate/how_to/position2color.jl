@@ -1,6 +1,9 @@
-# ## [Change colormap of Butterfly plot ](@id pos2color)
+# # [Change colormap of Butterfly plot ](@id pos2color)
+
 # You want to change the colors of the lines and markers on the inserted topoplot.
 # To do that you need to change the color scheme (aka color map) of the butterfly plot. 
+
+# # Setup
 
 using UnfoldMakie
 using CairoMakie
@@ -13,7 +16,8 @@ include("../../../example_data.jl")
 results, positions = example_data("TopoPlots.jl")
 plot_butterfly(results; positions = positions)
 
-# ## MNE-like color scheme
+# # Color schemes
+# ## MNE style
 
 #= 
 We can change the color scale by specifying a function that maps from an `(x,y)` tuple to a color. UnfoldMakie currently provides three different color scales: 

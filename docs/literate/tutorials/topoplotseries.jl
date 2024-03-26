@@ -1,8 +1,11 @@
+# # Topoplot Series
+
 # Topoplot Series is a plot type for visualizing EEG activity in a given time frame or time interval. 
 # It can fully represent channel and channel location dimensions using contour lines. It can also partially represent the time dimension.
 # Basically, it is a series of Topoplots.
 
-# # Package loading
+# # Setup
+# ## Package loading
 
 using Unfold
 using UnfoldMakie
@@ -11,9 +14,7 @@ using CairoMakie
 using TopoPlots
 using Statistics
 
-# # Plot Topoplot series
-
-# ## Example data
+# ## Data input
 
 
 data, positions = TopoPlots.example_data()

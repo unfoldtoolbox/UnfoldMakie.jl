@@ -1,13 +1,14 @@
-# Here we discuss design matrix visualization. 
+# # Design matrix
 
-# # Package loading
+# # Setup
+# ## Package loading
 
 using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-# # Data
+# ## Data
 
 include("../../../example_data.jl")
 uf = example_data("UnfoldLinearModel")
