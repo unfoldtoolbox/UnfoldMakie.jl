@@ -2,12 +2,20 @@ using UnfoldSim
 using TopoPlots
 using Unfold
 using Random
-"""
-Makes use of TopoPlots example data (originating from eegvis matlab toolbox).
-type ==
-"TopoPlots.jl"(default) Returns tidy DataFrame with two conditions, 64 channels and 800ms of data. This is an average over many subjects.
-"""
 
+"""
+    example_data(String) 
+
+Creates example data. Currently, 7 datasets are available.
+- `TopoPlots.jl` (default) - tidy DataFrame from `TopoPlots.jl` with 2 conditions, 64 channels and 800 ms time range. 
+- `UnfoldLinearModel`
+- `UnfoldLinearModelMultiChannel`
+- `UnfoldLinearModelContinuousTime`
+- `7channels`
+- `UnfoldTimeExpanded`
+- `sort_data` - includes DataFrame EEG recordings `dat` and `evts` with event variables occured during experiment. `evts` could be used for sorting EEG data in ERP image. 
+**Return Value:** `DataFrame`.
+"""
 function example_data(example = "TopoPlots.jl")
 
     if example == "UnfoldLinearModel"
