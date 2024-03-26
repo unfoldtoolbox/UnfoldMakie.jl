@@ -63,6 +63,23 @@ function example_data(example = "TopoPlots.jl")
         basis = firbasis([0, 0.5], 100)
         # generate ModelStruct
         return fit(UnfoldModel, Dict(Any => (f, basis)), evts, data)
+    elseif example == "7channels"
+        design =
+            SingleSubjectDesign(conditions = Dict(:condA => ["levelA", "levelB"])) |>
+            x -> RepeatDesign(x, 20)
+        c = LinearModelComponent(;
+            basis = p100(),
+            formula = @formula(0 ~ 1 + condA),
+            β = [1, 0.5],
+        )
+        mc = MultichannelComponent(c, [1, 2, -1, 3, 5, 2.3, 1])
+        onset = UniformOnset(; width = 20, offset = 4)
+        df, evnts =
+            simulate(MersenneTwister(1), design, [mc], onset, PinkNoise(noiselevel = 0.05))
+        basisfunction = firbasis((-0.1, 0.5), 100)
+        f = @formula 0 ~ 1 + condA
+        bf_dict = Dict(Any => (f, basisfunction))
+        return fit(UnfoldModel, bf_dict, evnts, df)
 
     elseif example == "UnfoldTimeExpanded"
         df, evts = UnfoldSim.predef_eeg()

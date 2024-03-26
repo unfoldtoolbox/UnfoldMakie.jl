@@ -162,6 +162,15 @@ function plot_erp!(
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
+
+    if (
+        :col ∈ keys(config.mapping) &&
+        typeof(plot_data[:, config.mapping.col]) == Vector{Int64}
+    )
+        config.mapping =
+            merge(config.mapping, (; col = config.mapping.col => nonnumeric))
+    end
+
     #@show colors
     mapp = AlgebraOfGraphics.mapping()
 
