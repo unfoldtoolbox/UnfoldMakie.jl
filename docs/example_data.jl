@@ -1,6 +1,7 @@
 using UnfoldSim
 using TopoPlots
 using Unfold
+using Random
 """
 Makes use of TopoPlots example data (originating from eegvis matlab toolbox).
 type ==
