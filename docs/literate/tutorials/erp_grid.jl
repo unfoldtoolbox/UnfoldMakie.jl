@@ -1,6 +1,7 @@
-# Here we discuss ERP grid visualization. 
+## ERP grid 
 
-# # Package loading
+# # Setup
+# ## Package loading
 
 using Unfold
 using UnfoldMakie

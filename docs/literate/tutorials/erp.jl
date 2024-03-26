@@ -1,8 +1,9 @@
-# ## [ERP Plot Visualization](@id erp_vis)
-# ERP plot is plot type for visualisation of Event-related potentials. 
-# It can fully represent time and condition dimensions using lines.
+# # [ERP Plot](@id erp_vis)
 
+# ERP plot is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/). 
+# It can fully represent time and experimental condition dimensions using lines.
 
+# # Setup
 # ## Package loading
 
 using Unfold
@@ -14,7 +15,7 @@ using UnfoldSim
 using UnfoldMakie
 include("../../../example_data.jl")
 
-# ## Setup
+# ## Data generation
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
 data = reshape(data, (1, size(data)...))

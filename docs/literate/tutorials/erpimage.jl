@@ -1,23 +1,29 @@
-# # Package loading
+# # ERP image
 
 # ERP image is a plot type for visualizing EEG activity for all trials. 
 # It can fully represent time and trial dimensions using a heatmap. 
 # Y-axis represents all trials, x-axis represents time, while color represents voltage. 
 # The ERP image can also be sorted by specific experimental variables, which helps to reveal important correlations. 
 
+# # Setup
+# ## Package loading
+
+
 using Unfold
 using UnfoldMakie
 using CairoMakie
 using UnfoldSim
 using Statistics
+
+# ## Data input
+
 include("../../../example_data.jl")
+data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+plot_erpimage(data)
 
 # # Plot ERP image
 
 # The following code will result in the default configuration. 
-
-data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-plot_erpimage(data)
 
 # # Additional features
 
