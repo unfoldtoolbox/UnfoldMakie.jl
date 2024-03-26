@@ -7,7 +7,7 @@ using UnfoldMakie
     to_positions(raw::PyMNE.Py; kwargs...)
 
 Calls `make_eeg_layout` from MNE-Python with optional kwargs.
-Returns an array of `Points`.
+**Return Value:** `Vector{Point2{Float64}`.
     """
 function UnfoldMakie.to_positions(raw::PyMNE.Py; kwargs...)
     layout_from_raw = PyMNE.channels.make_eeg_layout(raw.info; kwargs...).pos

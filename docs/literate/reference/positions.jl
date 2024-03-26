@@ -6,7 +6,6 @@ using CairoMakie
 using TopoPlots
 using PyMNE
 
-
 # # Get positions from MNE
 
 # Generate an MNE structure [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
