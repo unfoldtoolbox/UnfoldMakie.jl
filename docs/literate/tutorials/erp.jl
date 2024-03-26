@@ -119,7 +119,12 @@ plot_erp(select(results, Not(:stderror)); stderror = true)
 # !!! note
 #        `:stderror` has precedence over `:se_low`/`:se_high`.
 
+# ## Faceting
+# Creation of column facets for each channel. 
 
+m7 = example_data("7channels")
+results7 = coeftable(m7)
+plot_erp(results7, mapping = (; col = :channel, group = :channel))
 # # Configurations of ERP plot
 
 # ```@docs
