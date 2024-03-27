@@ -119,6 +119,19 @@ end
     plot_erp(results; :pvalue => pvals)
 end
 
+@testset "ERP plot with 7 channels faceted" begin
+    m7 = example_data("7channels")
+    results7 = coeftable(m7)
+    plot_erp(results7, mapping = (; col = :channel, group = :channel))
+end
+
+@testset "Effect plot, faceted" begin
+    results = coeftable(m)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+    res_effects.channel = push!(repeat(["1", "2"], 472), "1")
+    plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, col = :channel))
+end
+
 #= @testset "ERP plot with legend and colorbar" begin
     results = coeftable(m)
     coefnames = unique(results.coefname)
