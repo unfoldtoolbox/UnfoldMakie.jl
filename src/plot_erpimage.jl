@@ -20,7 +20,9 @@ Plot an ERP image.
 - `sortindex::Vector{Int64} = nothing`\\
     Sorting over index values.
 - `meanplot::bool = false`\\
-    Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+    Add a line plot below the ERP image, showing the mean of the data.
+- `show_sortval::bool = false`\\
+    Add a plot below the ERP image, showing the distribution of the sorting data.
 - `axis.ylabel::String = "Trials"`\\
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
 
@@ -72,11 +74,6 @@ function plot_erpimage!(
     )
 
     yvals = 1:size(filtered_data, 2)
-    #= if !isnothing(sortvalues)
-        yvals = [minimum(sortvalues), maximum(sortvalues)]
-    end =#
-    #println(sortvalues)
-
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     UnfoldMakie.apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
@@ -96,6 +93,9 @@ function plot_erpimage!(
             lines!(axright, mean(plot, dims = 2)[:, 1])
         end
         if show_sortval
+            if isnothing(sortvalues)
+                error("`show_sortval` needs `sortvalues` argument")
+            end
             subConfig2 = deepcopy(config)
             config_kwargs!(
                 subConfig2;
@@ -112,8 +112,6 @@ function plot_erpimage!(
     end
     ylims!(ax, low = 0, high = 1997.0) # how to solve high value??
     #println(ax.finallimits)
-
-
     return f
 
 end
