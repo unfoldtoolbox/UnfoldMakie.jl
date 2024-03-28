@@ -69,3 +69,24 @@ end
     plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency)
     f
 end
+
+@testset "ERP image with meanplot and show_sortval" begin
+    dat_e, evts, times = example_data("sort_data")
+    plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = evts.Δlatency,
+        meanplot = true,
+        show_sortval = true,
+    )
+end
+
+@testset "ERP image with show_sortval" begin
+    dat_e, evts, times = example_data("sort_data")
+    plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = evts.Δlatency,
+        show_sortval = true,
+    )
+end
