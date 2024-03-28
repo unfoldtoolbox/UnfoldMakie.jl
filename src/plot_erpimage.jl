@@ -46,6 +46,7 @@ function plot_erpimage!(
     sortindex = nothing,
     meanplot = false,
     erpblur = 10,
+    show_sortval = false,
     kwargs...,
 )
 
@@ -71,32 +72,47 @@ function plot_erpimage!(
     )
 
     yvals = 1:size(filtered_data, 2)
-    if !isnothing(sortvalues)
+    #= if !isnothing(sortvalues)
         yvals = [minimum(sortvalues), maximum(sortvalues)]
-    end
+    end =#
+    #println(sortvalues)
 
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     UnfoldMakie.apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
 
-    if meanplot
-        # UserInput
-        subConfig = deepcopy(config)
+    if meanplot || show_sortval
+        subConfig1 = deepcopy(config)
         config_kwargs!(
-            subConfig;
+            subConfig1;
             layout = (; show_legend = false),
             axis = (;
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
-
-        axisOffset =
-            (config.layout.show_legend && config.layout.legend_position == :bottom) ? 1 : 0
-        subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
-
-        lines!(subAxis, mean(plot, dims = 2)[:, 1])
-        apply_layout_settings!(subConfig; fig = f, ax = subAxis)
+        subAxis = f[5, 1:2] = GridLayout()
+        if meanplot
+            axright = Axis(subAxis[1, 1]; subConfig1.axis...)
+            lines!(axright, mean(plot, dims = 2)[:, 1])
+        end
+        if show_sortval
+            subConfig2 = deepcopy(config)
+            config_kwargs!(
+                subConfig2;
+                layout = (; show_legend = false),
+                axis = (; xlabel = "Trials", ylabel = "Sorting\nvalue"),
+            )
+            axleft = Axis(subAxis[1, 2]; subConfig2.axis...)
+            lines!(axleft, sortvalues)
+            apply_layout_settings!(subConfig2; fig = f, ax = subAxis)
+            ylims!(axleft, low = 0)
+            colgap!(subAxis, 20)
+        end
+        apply_layout_settings!(subConfig1; fig = f, ax = subAxis)
     end
+    ylims!(ax, low = 0, high = 1997.0) # how to solve high value??
+    #println(ax.finallimits)
+
 
     return f
 
