@@ -25,25 +25,6 @@ plot_erpimage(data)
 
 # The following code will result in the default configuration. 
 
-# # Additional features
-
-# Since ERP images use a `Matrix` as an input, the library does not need any informations about the mapping.
-
-#=
-- `erpblur::Number = 10`\\
-    Number indicating how much blur is applied to the image. \\
-    Gaussian blur of the `ImageFiltering` module is used.\\
-- `meanplot::bool = false`\\
-    Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
-=#
-
-plot_erpimage(
-    data;
-    meanplot = true,
-    colorbar = (label = "Voltage [µV]",),
-    visual = (colormap = :viridis, colorrange = (-40, 40)),
-)
-
 # # Sorted ERP image
 
 # Generate the data and specify the necessary sorting parameter. 
@@ -72,6 +53,36 @@ plot_erpimage!(
 plot_erpimage!(f[1, 2], times, dat_norm;)
 plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency)
 f
+
+
+# # Additional features
+
+# Since ERP images use a `Matrix` as an input, the library does not need any informations about the mapping.
+
+#=
+- `erpblur::Number = 10`\\
+    Number indicating how much blur is applied to the image. \\
+    Gaussian blur of the `ImageFiltering` module is used.\\
+- `meanplot::bool = false`\\
+    Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+=#
+
+# Example of mean plot
+plot_erpimage(
+    data;
+    meanplot = true,
+    colorbar = (label = "Voltage [µV]",),
+    visual = (colormap = :viridis, colorrange = (-40, 40)),
+)
+
+# Example of mean plot and plot of sorted values
+plot_erpimage(
+    times,
+    dat_e;
+    sortvalues = evts.Δlatency,
+    meanplot = true,
+    show_sortval = true,
+)
 
 # # Configurations for ERP image
 
