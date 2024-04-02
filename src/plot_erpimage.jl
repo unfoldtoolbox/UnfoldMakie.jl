@@ -60,6 +60,7 @@ function plot_erpimage!(
 
     !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1]; config.axis...)
+
     if isnothing(sortindex)
         if isnothing(sortvalues)
             sortindex = 1:size(plot, 2)
@@ -78,7 +79,10 @@ function plot_erpimage!(
 
     UnfoldMakie.apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
 
-    if meanplot || show_sortval
+
+    if meanplot
+        ax.xlabelvisible = false
+        ax.xticklabelsvisible = false
         subConfig1 = deepcopy(config)
         config_kwargs!(
             subConfig1;
@@ -87,30 +91,34 @@ function plot_erpimage!(
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
-        subAxis = f[5, 1:2] = GridLayout()
-        if meanplot
-            axright = Axis(subAxis[1, 1]; subConfig1.axis...)
-            lines!(axright, mean(plot, dims = 2)[:, 1])
-        end
-        if show_sortval
-            if isnothing(sortvalues)
-                error("`show_sortval` needs `sortvalues` argument")
-            end
-            subConfig2 = deepcopy(config)
-            config_kwargs!(
-                subConfig2;
-                layout = (; show_legend = false),
-                axis = (; xlabel = "Trials", ylabel = "Sorting\nvalue"),
-            )
-            axleft = Axis(subAxis[1, 2]; subConfig2.axis...)
-            lines!(axleft, sortvalues)
-            apply_layout_settings!(subConfig2; fig = f, ax = subAxis)
-            ylims!(axleft, low = 0)
-            colgap!(subAxis, 20)
-        end
-        apply_layout_settings!(subConfig1; fig = f, ax = subAxis)
+        axright = Axis(f[5, 1]; xlabelpadding = 0, subConfig1.axis...)
+        lines!(axright, times, mean(plot, dims = 2)[:, 1])
+        apply_layout_settings!(subConfig1; fig = f, ax = axright)
+        linkxaxes!(ax, axright)
+        rowgap!(f.layout, -30)
     end
-    ylims!(ax, low = 0, high = 1997.0) # how to solve high value??
+    if show_sortval
+        if isnothing(sortvalues)
+            error("`show_sortval` needs `sortvalues` argument")
+        end
+        subConfig2 = deepcopy(config)
+        config_kwargs!(
+            subConfig2;
+            layout = (; show_legend = false),
+            axis = (; ylabel = "Trials sorted", xlabel = "Sorting value"),
+        )
+        axleft =
+            Axis(f[1:4, 3]; yaxisposition = :right, flip_ylabel = true, subConfig2.axis...)
+        # @show size(sort(sortvalues))
+        xs = 1:1:size(sortvalues, 1)
+        ys = sort(sortvalues)[:, 1]
+        lines!(axleft, ys, xs)
+        apply_layout_settings!(subConfig2; fig = f, ax = axleft)
+        ylims!(axleft, low = 0)
+        xlims!(axleft, low = 0)
+
+    end
+    ylims!(ax, low = 0) # how to solve high value??
     #println(ax.finallimits)
     return f
 
