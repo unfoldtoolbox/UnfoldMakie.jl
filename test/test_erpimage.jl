@@ -83,10 +83,15 @@ end
 
 @testset "ERP image with show_sortval" begin
     dat_e, evts, times = example_data("sort_data")
+    plot_erpimage(times, dat_e; sortvalues = evts.Δlatency, show_sortval = true)
+end
+
+#= @testset "ERP image with show_sortval" begin
+
+    dat_e, evts, times = example_data("sort_data")
     plot_erpimage(
         times,
         dat_e;
-        sortvalues = evts.Δlatency,
         show_sortval = true,
-    )
-end
+    ) #should learn that it must be Error
+=#
