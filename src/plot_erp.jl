@@ -18,7 +18,7 @@ Plot an ERP plot.
 - `categorical_color` (`bool`, default = `true`): in case of numeric `:color` column, treat `:color` as continuous or categorical variable.
 - `categorical_group` (`bool`, default = `true`): in case of numeric `:group` column, treat `:group` as categorical variable by default.
 - `stderror` (`bool`, default = `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue` (`Array`, default = `[]`): show a pvalue.
+- `pvalue` (`DataFrame`, default = `nothing`): show pvalues as bars.
     - example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])` -  if coefname is not specified, the lines will be black.
 - `positions` (`Array`, default = `[]`): see plot_butterfly.
 - `topolegend` (`bool`, default = `false`): (see `plot_butterfly`).
@@ -80,7 +80,7 @@ function plot_erp!(
     categorical_color = true,
     categorical_group = true,
     stderror = false, # XXX if it exists, should be plotted
-    pvalue = [],
+    pvalue = nothing,
     butterfly = false,
     topolegend = nothing,
     topomarkersize = nothing,
@@ -176,7 +176,7 @@ function plot_erp!(
     basic = basic * data(plot_data)
 
     # add the p-values
-    if !isempty(pvalue)
+    if !isnothing(pvalue)
         basic = basic + addPvalues(plot_data, pvalue, config)
     end
 
