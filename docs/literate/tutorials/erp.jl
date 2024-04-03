@@ -41,9 +41,11 @@ plot_erp(results)
 
 # Effect plot shows how ERP voltage is affected by variation of some variable (here: `:contionous`).
 
-# - `categorical_color::Bool = true` \\
+# - `categorical_color::Bool = true` 
+
 #     Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
-# - `categorical_group::Bool = true` \\
+# - `categorical_group::Bool = true` 
+
 #    Treat `:group` as categorical variable by default in case of numeric `:group` column.
 
 
@@ -125,6 +127,7 @@ plot_erp(select(results, Not(:stderror)); stderror = true)
 m7 = example_data("7channels")
 results7 = coeftable(m7)
 plot_erp(results7, mapping = (; col = :channel, group = :channel))
+
 # # Configurations of ERP plot
 
 # ```@docs
