@@ -56,10 +56,14 @@ function plot_erpimage!(
     if isnothing(sortindex) && !isnothing(sortvalues)
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
-    config_kwargs!(config; kwargs...)
+    config_kwargs!(
+        config;
+        layout = (; show_legend = false, use_colorbar = false),
+        kwargs...,
+    )
 
     !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
-    ax = Axis(f[1:4, 1]; config.axis...)
+    ax = Axis(f[1:4, 1:4]; config.axis...)
 
     if isnothing(sortindex)
         if isnothing(sortvalues)
@@ -77,49 +81,63 @@ function plot_erpimage!(
     yvals = 1:size(filtered_data, 2)
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
-    UnfoldMakie.apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
-
-
     if meanplot
         ax.xlabelvisible = false
         ax.xticklabelsvisible = false
-        subConfig1 = deepcopy(config)
+        sub_config1 = deepcopy(config)
         config_kwargs!(
-            subConfig1;
+            sub_config1;
             layout = (; show_legend = false),
             axis = (;
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
-        axright = Axis(f[5, 1]; xlabelpadding = 0, subConfig1.axis...)
-        lines!(axright, times, mean(plot, dims = 2)[:, 1])
-        apply_layout_settings!(subConfig1; fig = f, ax = axright)
-        linkxaxes!(ax, axright)
-        rowgap!(f.layout, -30)
+        axbottom = Axis(f[5, 1:4]; xlabelpadding = 0, sub_config1.axis...)
+        lines!(axbottom, times, mean(plot, dims = 2)[:, 1])
+        apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
+        linkxaxes!(ax, axbottom)
+        if show_sortval
+            rowgap!(f.layout, -30)
+        end
     end
     if show_sortval
         if isnothing(sortvalues)
             error("`show_sortval` needs `sortvalues` argument")
         end
-        subConfig2 = deepcopy(config)
+        sub_config2 = deepcopy(config)
         config_kwargs!(
-            subConfig2;
-            layout = (; show_legend = false),
+            sub_config2;
+            layout = (; show_legend = false, use_colorbar = false),
             axis = (; ylabel = "Trials sorted", xlabel = "Sorting value"),
         )
-        axleft =
-            Axis(f[1:4, 3]; yaxisposition = :right, flip_ylabel = true, subConfig2.axis...)
-        # @show size(sort(sortvalues))
+        axleft = Axis(
+            f[1:4, 5];
+            ylabelvisible = false,
+            yticklabelsvisible = false,
+            sub_config2.axis...,
+        )
         xs = 1:1:size(sortvalues, 1)
         ys = sort(sortvalues)[:, 1]
         lines!(axleft, ys, xs)
-        apply_layout_settings!(subConfig2; fig = f, ax = axleft)
-        ylims!(axleft, low = 0)
+        Colorbar(
+            f[1:4, 6],
+            hm,
+            label = config.colorbar.label,
+            labelrotation = config.colorbar.labelrotation,
+        )
+        apply_layout_settings!(sub_config2; fig = f, ax = axleft)
         xlims!(axleft, low = 0)
-
+    else
+        Colorbar(
+            f[1:4, 5],
+            hm,
+            label = config.colorbar.label,
+            labelrotation = config.colorbar.labelrotation,
+        )
     end
+
     ylims!(ax, low = 0) # how to solve high value??
-    #println(ax.finallimits)
+    apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
 
 end

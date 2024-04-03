@@ -1,52 +1,42 @@
 include("../docs/example_data.jl")
 
+data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+dat_e, evts_e, times = example_data("sort_data")
 @testset "ERP image basic" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
     plot_erpimage(data;)
 end
 
-@testset "ERP image with mean erp plot" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage(data; meanplot = true)
-end
-
 @testset "ERP image with changing erpblur to zero" begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage(data; meanplot = true, erpblur = 0)
+    plot_erpimage(data; erpblur = 0)
 end
 
 @testset "ERP image with GridPosition" begin
     f = Figure()
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-    plot_erpimage!(f[1, 1], data; meanplot = true)
+    plot_erpimage!(f[1, 1], data)
 end
 
 @testset "ERP image with sortvalues" begin
-    dat_e, evts, times = example_data("sort_data")
-    plot_erpimage(times, dat_e; sortvalues = evts.Δlatency)
+    plot_erpimage(times, dat_e; sortvalues = evts_e.Δlatency)
 end
 
 
 @testset "ERP image with sortindex" begin
-    dat_e, evts, times = example_data("sort_data")
-    plot_erpimage(times, dat_e; sortindex = evts.Δlatency)
+    plot_erpimage(times, dat_e; sortindex = evts_e.Δlatency)
 end
 
-@testset "ERP image normalised" begin
-    dat_e, evts, times = example_data("sort_data")
+@testset "ERP image normalized" begin
     dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2)
-    plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency)
+    plot_erpimage(times, dat_norm; sortvalues = evts_e.Δlatency)
 end
 
-@testset "ERP image with and withour sorting" begin
+@testset "ERP image with and without sorting" begin
     f = Figure()
-    dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(f[1, 1], times, dat_e; axis = (; title = "Bad"))
     plot_erpimage!(
         f[2, 1],
         times,
         dat_e;
-        sortvalues = evts.Δlatency,
+        sortvalues = evts_e.Δlatency,
         axis = (; title = "Good"),
     )
     f
@@ -55,40 +45,40 @@ end
 
 @testset "ERP image with different labels" begin
     f = Figure()
-    dat_e, evts, times = example_data("sort_data")
     dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2)
     plot_erpimage!(f[1, 1], times, dat_e; axis = (; ylabel = "test"))
     plot_erpimage!(
         f[2, 1],
         times,
         dat_e;
-        sortvalues = evts.Δlatency,
+        sortvalues = evts_e.Δlatency,
         axis = (; ylabel = "test"),
     )
     plot_erpimage!(f[1, 2], times, dat_norm;)
-    plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency)
+    plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts_e.Δlatency)
     f
 end
 
+@testset "ERP image with mean plot" begin
+    plot_erpimage(data; meanplot = true)
+end
+
 @testset "ERP image with meanplot and show_sortval" begin
-    dat_e, evts, times = example_data("sort_data")
     plot_erpimage(
         times,
         dat_e;
-        sortvalues = evts.Δlatency,
+        sortvalues = evts_e.Δlatency,
         meanplot = true,
         show_sortval = true,
     )
 end
 
 @testset "ERP image with show_sortval" begin
-    dat_e, evts, times = example_data("sort_data")
-    plot_erpimage(times, dat_e; sortvalues = evts.Δlatency, show_sortval = true)
+    dat_e, evts_e, times = example_data("sort_data")
+    plot_erpimage(times, dat_e; sortvalues = evts_e.Δlatency, show_sortval = true)
 end
 
 #= @testset "ERP image with show_sortval" begin
-
-    dat_e, evts, times = example_data("sort_data")
     plot_erpimage(
         times,
         dat_e;
