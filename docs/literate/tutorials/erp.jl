@@ -1,8 +1,9 @@
-# ## [ERP Plot Visualization](@id erp_vis)
-# ERP plot is plot type for visualisation of Event-related potentials. 
-# It can fully represent time and condition dimensions using lines.
+# # [ERP Plot](@id erp_vis)
 
+# ERP plot is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/). 
+# It can fully represent time and experimental condition dimensions using lines.
 
+# # Setup
 # ## Package loading
 
 using Unfold
@@ -14,7 +15,7 @@ using UnfoldSim
 using UnfoldMakie
 include("../../../example_data.jl")
 
-# ## Setup
+# ## Data generation
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
 data = reshape(data, (1, size(data)...))
@@ -40,9 +41,11 @@ plot_erp(results)
 
 # Effect plot shows how ERP voltage is affected by variation of some variable (here: `:contionous`).
 
-# - `categorical_color::Bool = true`\\
+# - `categorical_color::Bool = true` 
+
 #     Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
-# - `categorical_group::Bool = true`\\
+# - `categorical_group::Bool = true` 
+
 #    Treat `:group` as categorical variable by default in case of numeric `:group` column.
 
 
@@ -118,6 +121,12 @@ plot_erp(select(results, Not(:stderror)); stderror = true)
 # !!! note
 #        `:stderror` has precedence over `:se_low`/`:se_high`.
 
+# ## Faceting
+# Creation of column facets for each channel. 
+
+m7 = example_data("7channels")
+results7 = coeftable(m7)
+plot_erp(results7, mapping = (; col = :channel, group = :channel))
 
 # # Configurations of ERP plot
 

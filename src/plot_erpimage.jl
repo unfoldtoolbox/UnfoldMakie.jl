@@ -20,7 +20,9 @@ Plot an ERP image.
 - `sortindex::Vector{Int64} = nothing`\\
     Sorting over index values.
 - `meanplot::bool = false`\\
-    Indicating whether the plot should add a line plot below the ERP image, showing the mean of the data.
+    Add a line plot below the ERP image, showing the mean of the data.
+- `show_sortval::bool = false`\\
+    Add a plot below the ERP image, showing the distribution of the sorting data.
 - `axis.ylabel::String = "Trials"`\\
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
 
@@ -46,6 +48,7 @@ function plot_erpimage!(
     sortindex = nothing,
     meanplot = false,
     erpblur = 10,
+    show_sortval = false,
     kwargs...,
 )
 
@@ -53,10 +56,15 @@ function plot_erpimage!(
     if isnothing(sortindex) && !isnothing(sortvalues)
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
-    config_kwargs!(config; kwargs...)
+    config_kwargs!(
+        config;
+        layout = (; show_legend = false, use_colorbar = false),
+        kwargs...,
+    )
 
     !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
-    ax = Axis(f[1:4, 1]; config.axis...)
+    ax = Axis(f[1:4, 1:4]; config.axis...)
+
     if isnothing(sortindex)
         if isnothing(sortvalues)
             sortindex = 1:size(plot, 2)
@@ -71,33 +79,65 @@ function plot_erpimage!(
     )
 
     yvals = 1:size(filtered_data, 2)
-    if !isnothing(sortvalues)
-        yvals = [minimum(sortvalues), maximum(sortvalues)]
-    end
-
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
-    UnfoldMakie.apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
-
     if meanplot
-        # UserInput
-        subConfig = deepcopy(config)
+        ax.xlabelvisible = false
+        ax.xticklabelsvisible = false
+        sub_config1 = deepcopy(config)
         config_kwargs!(
-            subConfig;
+            sub_config1;
             layout = (; show_legend = false),
             axis = (;
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
-
-        axisOffset =
-            (config.layout.show_legend && config.layout.legend_position == :bottom) ? 1 : 0
-        subAxis = Axis(f[5+axisOffset, 1]; subConfig.axis...)
-
-        lines!(subAxis, mean(plot, dims = 2)[:, 1])
-        apply_layout_settings!(subConfig; fig = f, ax = subAxis)
+        axbottom = Axis(f[5, 1:4]; xlabelpadding = 0, sub_config1.axis...)
+        lines!(axbottom, times, mean(plot, dims = 2)[:, 1])
+        apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
+        linkxaxes!(ax, axbottom)
+        if show_sortval
+            rowgap!(f.layout, -30)
+        end
+    end
+    if show_sortval
+        if isnothing(sortvalues)
+            error("`show_sortval` needs `sortvalues` argument")
+        end
+        sub_config2 = deepcopy(config)
+        config_kwargs!(
+            sub_config2;
+            layout = (; show_legend = false, use_colorbar = false),
+            axis = (; ylabel = "Trials sorted", xlabel = "Sorting value"),
+        )
+        axleft = Axis(
+            f[1:4, 5];
+            ylabelvisible = false,
+            yticklabelsvisible = false,
+            sub_config2.axis...,
+        )
+        xs = 1:1:size(sortvalues, 1)
+        ys = sort(sortvalues)[:, 1]
+        lines!(axleft, ys, xs)
+        Colorbar(
+            f[1:4, 6],
+            hm,
+            label = config.colorbar.label,
+            labelrotation = config.colorbar.labelrotation,
+        )
+        apply_layout_settings!(sub_config2; fig = f, ax = axleft)
+        xlims!(axleft, low = 0)
+    else
+        Colorbar(
+            f[1:4, 5],
+            hm,
+            label = config.colorbar.label,
+            labelrotation = config.colorbar.labelrotation,
+        )
     end
 
+    ylims!(ax, low = 0) # how to solve high value??
+    apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
 
 end

@@ -1,24 +1,33 @@
 using UnfoldSim
 using TopoPlots
 using Unfold
-"""
-Makes use of TopoPlots example data (originating from eegvis matlab toolbox).
-type ==
-"TopoPlots.jl"(default) Returns tidy DataFrame with two conditions, 64 channels and 800ms of data. This is an average over many subjects.
-"""
+using Random
 
+"""
+    example_data(String) 
+
+Creates example data. Currently, 7 datasets are available.
+- `TopoPlots.jl` (default) - tidy DataFrame from `TopoPlots.jl` with 2 conditions, 64 channels and 800 ms time range. 
+- `UnfoldLinearModel`
+- `UnfoldLinearModelMultiChannel`
+- `UnfoldLinearModelContinuousTime`
+- `7channels`
+- `UnfoldTimeExpanded`
+- `sort_data` - includes DataFrame EEG recordings `dat` and `evts` with event variables occured during experiment. `evts` could be used for sorting EEG data in ERP image. 
+**Return Value:** `DataFrame`.
+"""
 function example_data(example = "TopoPlots.jl")
 
     if example == "UnfoldLinearModel"
         # load and generate a simulated Unfold Design
-        data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-        data = reshape(data, 1, size(data)...)
+        data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+        data = reshape(data, (1, size(data)...))
         f = @formula 0 ~ 1 + condition + continuous
         # generate ModelStruct
         se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
         return fit(
             UnfoldModel,
-            (Dict(Any => (f, range(0, length = size(data, 2), step = 1 / 100)))),
+            Dict(Any => (f, range(0, length = size(data, 2), step = 1 / 100))),
             evts,
             data;
             solver = se_solver,
@@ -63,6 +72,23 @@ function example_data(example = "TopoPlots.jl")
         basis = firbasis([0, 0.5], 100)
         # generate ModelStruct
         return fit(UnfoldModel, Dict(Any => (f, basis)), evts, data)
+    elseif example == "7channels"
+        design =
+            SingleSubjectDesign(conditions = Dict(:condA => ["levelA", "levelB"])) |>
+            x -> RepeatDesign(x, 20)
+        c = LinearModelComponent(;
+            basis = p100(),
+            formula = @formula(0 ~ 1 + condA),
+            β = [1, 0.5],
+        )
+        mc = MultichannelComponent(c, [1, 2, -1, 3, 5, 2.3, 1])
+        onset = UniformOnset(; width = 20, offset = 4)
+        df, evnts =
+            simulate(MersenneTwister(1), design, [mc], onset, PinkNoise(noiselevel = 0.05))
+        basisfunction = firbasis((-0.1, 0.5), 100)
+        f = @formula 0 ~ 1 + condA
+        bf_dict = Dict(Any => (f, basisfunction))
+        return fit(UnfoldModel, bf_dict, evnts, df)
 
     elseif example == "UnfoldTimeExpanded"
         df, evts = UnfoldSim.predef_eeg()

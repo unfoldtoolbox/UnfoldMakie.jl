@@ -1,10 +1,11 @@
-# ## [Topoplot Visualization](@id topo_vis)
+# # [Topoplot](@id topo_vis)
 # Topoplot (aka topography plot) is a plot type for visualisation of EEG activity in a specific time stemp or time interval. 
 # It can fully represent channel and channel location dimensions using contour lines.
 
 # The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
 
-# # Package loading
+# Setup
+# ## Package loading
 
 using Unfold
 using UnfoldMakie
@@ -12,8 +13,6 @@ using DataFrames
 using CairoMakie
 using TopoPlots
 using DataFrames
-
-# # Plot Topoplots
 
 # ## Data loading
 
@@ -27,6 +26,8 @@ The size of `data` is 64×400×3. This means
 
 While `position` consist of 64 x and y coordinates of each channels on a scalp. 
 =#
+
+# # Plot Topoplots
 
 # Here we select a time point in 340 msec and the mean estimate. 
 plot_topoplot(data[:, 340, 1]; positions = positions)
@@ -62,7 +63,7 @@ cfgDefault.mapping.y
 
 # # Labelling
 #=
-`label_text` draws labels next to their positions.
+`label_text` draws labels next to their positions. 
 Example: `plot_topoplot(...; visual=(; label_text = true))`
 
 `label_scatter (boolean)` draws the markers at the given positions.

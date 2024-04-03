@@ -1,10 +1,11 @@
-# [Include multiple Visualizations in one Figure](@id ht_mvf)
+# # [Include multiple Visualizations in one Figure](@id ht_mvf)
 
 #=
 This section discusses how users can incorporate multiple plots into a single figure.
 =#
 
-# # Library load
+# # Setup
+# ## Library load
 
 using UnfoldMakie
 using CairoMakie
@@ -14,7 +15,7 @@ using Unfold
 using MakieThemes
 set_theme!(theme_ggthemr(:fresh)) # nicer defaults - should maybe be default?
 
-# # Data input
+# ## Data input
 include("../../../example_data.jl")
 d_topo, positions = example_data("TopoPlots.jl")
 uf_deconv = example_data("UnfoldLinearModelContinuousTime")
@@ -26,7 +27,7 @@ dat_e, evts, times = example_data("sort_data")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 nothing #hide
 
-# # Basic combined figure
+# # Basic complex figure
 
 #=
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
@@ -48,7 +49,7 @@ plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
 
 f
 
-# # Very complex plot
+# # Very complex figure
 #=
 We can create a large figure with any type of plot using predefined data.
 
@@ -120,7 +121,7 @@ plot_circular_topoplots!(
 # ```
 f
 
-# # In two columns
+# # Complex figure in two columns
 
 # ```@raw html
 # <details>

@@ -1,11 +1,12 @@
-# # [Butterfly Plot Visualization](@id bfp_vis)
+# # [Butterfly Plot](@id bfp_vis)
 # Butterfly plot is a plot type for visualisation of Event-related potentials. 
 # It can fully represent time and channels dimensions using lines. With addition of topoplot inset it can also represent location of channels.
-# It called "butterfly" becasue the envelope of channels reminds butterfly wings🦋. 
+# It called "butterfly" because the envelope of channels reminds butterfly wings🦋. 
 
 # The configurations of [ERP plots](@ref erp_vis) and Butterfly plots are somehow similar.
 
-# # Package loading
+# # Setup
+# ## Package loading
 
 # The following modules are necessary for run this tutorial:
 
@@ -17,7 +18,7 @@ using Colors
 
 # Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
-# # Data
+# ## Data
 
 # We filter the data to make it more clearly represented:
 
@@ -47,7 +48,6 @@ hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
 f
 
-
 # You want to remove all decorations:
 
 plot_butterfly(
@@ -60,7 +60,6 @@ plot_butterfly(
 
 # Please check [this page](@id pos2color).
 
-# Highlight channels
 # You want to highlight a specific channel or channels. 
 # Specify channels first:
 
