@@ -25,8 +25,8 @@ Plot an ERP plot.
     Treat `:group` as categorical variable by default in case of numeric `:group` column. 
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue::Array = []`\\
-    Show a pvalue.\\
+- `pvalue::DataFrame = nothing`\\
+    Show a p-values as a horizontal bars.\\
     Example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])`.\\
     If `coefname` is not specified, the significance lines will be black.
 
@@ -93,7 +93,7 @@ function plot_erp!(
     categorical_color = true,
     categorical_group = true,
     stderror = false, # XXX if it exists, should be plotted
-    pvalue = [],
+    pvalue = nothing,
     butterfly = false,
     topolegend = nothing,
     topomarkersize = nothing,
@@ -198,7 +198,7 @@ function plot_erp!(
     basic = basic * data(plot_data)
 
     # add the p-values
-    if !isempty(pvalue)
+    if !isnothing(pvalue)
         basic = basic + addPvalues(plot_data, pvalue, config)
     end
 
