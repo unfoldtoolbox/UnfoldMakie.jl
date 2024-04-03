@@ -5,5 +5,4 @@
 
     # What if you forget `;` - that is, forget to specify a `NamedTuple`.
     @test_throws AssertionError UnfoldMakie.config_kwargs!(cfg; visual = (bla = :blub))
-
 end

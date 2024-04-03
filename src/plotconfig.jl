@@ -259,7 +259,7 @@ function PlotConfig(T::Val{:channelimage})
     config_kwargs!(
         cfg;
         #layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
+        colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
         axis = (xlabel = "Time [s]", ylabel = "Channels", yticklabelsize = 14),
         visual = (; colormap = Reverse("RdBu")), #cork
     )
@@ -270,7 +270,7 @@ function PlotConfig(T::Val{:erpimage})
     config_kwargs!(
         cfg;
         layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]", labelrotation = 4.7),
+        colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
         axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
