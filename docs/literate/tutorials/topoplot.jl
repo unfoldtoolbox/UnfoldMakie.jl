@@ -63,7 +63,7 @@ cfgDefault.mapping.y
 
 # # Labelling
 #=
-`label_text` draws labels next to their positions. <br>
+`label_text` draws labels next to their positions. 
 Example: `plot_topoplot(...; visual=(; label_text = true))`
 
 `label_scatter (boolean)` draws the markers at the given positions.
