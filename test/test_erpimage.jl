@@ -73,9 +73,17 @@ end
     )
 end
 
+
 @testset "ERP image with show_sortval" begin
     dat_e, evts_e, times = example_data("sort_data")
     plot_erpimage(times, dat_e; sortvalues = evts_e.Δlatency, show_sortval = true)
+end
+
+@testset "ERP image with Observables" begin
+    obs = Observable(data)
+    f = plot_erpimage(obs)
+    obs[] = rand(size(to_value(data))...)
+
 end
 
 #= @testset "ERP image with show_sortval" begin
