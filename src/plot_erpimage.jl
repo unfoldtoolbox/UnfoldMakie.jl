@@ -86,10 +86,12 @@ function plot_erpimage!(
 
     ax.yticks = [
         1,
-        size(to_value(data), 2) ÷ 3,
-        size(to_value(data), 2) ÷ 3 * 2,
+        size(to_value(data), 2) ÷ 4,
+        size(to_value(data), 2) ÷ 2,
+        size(to_value(data), 2) - (size(to_value(data), 2) ÷ 4),
         size(to_value(data), 2),
     ]
+
     if isnothing(to_value(sortindex))
         if isnothing(to_value(sortvalues))
             sortindex = @lift(1:size($data, 2))
@@ -126,7 +128,9 @@ function plot_erpimage!(
             xautolimitmargin = (0, 0),
             sub_config1.axis...,
         )
-        #axbottom.xticks = (minimum(to_value(times)), 0.0, maximum(to_value(times)) ÷ 3, maximum(to_value(times)) ÷ 3 * 2, maximum(to_value(times)))
+        #println(to_value(times))
+        #axbottom.xticks = minimum(to_value(times)):0.3:maximum(to_value(times))
+        #println(axbottom.xticks)
 
         lines!(axbottom, times, @lift(mean($data, dims = 2)[:, 1]))
         apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
@@ -179,7 +183,6 @@ function plot_erpimage!(
         )
     end
 
-    ylims!(ax, low = 0) # how to solve high value??
     apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
 
