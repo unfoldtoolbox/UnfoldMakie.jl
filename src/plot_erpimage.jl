@@ -30,27 +30,46 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
-plot_erpimage(data::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no times + no figure?
+plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no times + no figure?
 
 # no times?
-plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::Union{<:Observable,<:AbstractMatrix}; kwargs...) =
-    plot_erpimage!(f, 1:size(data, 1), data; kwargs...)
+plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::AbstractMatrix; kwargs...) =
+    plot_erpimage!(f, Observable(data); kwargs...)
 
-# no figure?
+
+plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, args...; kwargs...) =
+    plot_erpimage!(f, map(_as_observable, args)...; kwargs...)
+
+plot_erpimage!(
+    f::Union{GridPosition,GridLayout,Figure},
+    data::Observable{<:AbstractMatrix};
+    kwargs...,
+) = plot_erpimage!(f, @lift(1:size($data, 1)), data; kwargs...)
+
+# argument list has no figure? Add one!
 plot_erpimage(times::AbstractVector, data::Matrix{<:Real}; kwargs...) =
     plot_erpimage!(Figure(), times, data; kwargs...)
 
+
+
+_as_observable(x) = Observable(x)
+_as_observable(x::Observable) = x
+
 function plot_erpimage!(
     f::Union{GridPosition,GridLayout,Figure},
-    times::AbstractVector,
-    data::Matrix{<:Real};
-    sortvalues = nothing,
-    sortindex = nothing,
+    times::Observable{<:AbstractVector},
+    data::Observable{<:AbstractMatrix{<:Real}};
+    sortvalues = Observable(nothing),
+    sortindex = Observable(nothing),
+    erpblur = Observable(10),
     meanplot = false,
-    erpblur = 10,
     show_sortval = false,
-    kwargs...,
+    kwargs..., # not observables for a while ;)
 )
+
+    sortvalues = _as_observable(sortvalues)
+    sortindex = _as_observable(sortindex)
+    erpblur = _as_observable(erpblur)
 
     config = PlotConfig(:erpimage)
     if isnothing(sortindex) && !isnothing(sortvalues)
@@ -62,28 +81,37 @@ function plot_erpimage!(
         kwargs...,
     )
 
-    !isnothing(sortindex) ? @assert(sortindex isa Vector{Int}) : ""
+    !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(f[1:4, 1:4]; config.axis...)
 
-    if isnothing(sortindex)
-        if isnothing(sortvalues)
-            sortindex = 1:size(data, 2)
+    ax.yticks = [
+        1,
+        size(to_value(data), 2) ÷ 3,
+        size(to_value(data), 2) ÷ 3 * 2,
+        size(to_value(data), 2),
+    ]
+    if isnothing(to_value(sortindex))
+        if isnothing(to_value(sortvalues))
+            sortindex = @lift(1:size($data, 2))
         else
-            sortindex = sortperm(sortvalues)
+            sortindex = @lift(sortperm($sortvalues))
         end
     end
 
-    filtered_data = UnfoldMakie.imfilter(
-        data[:, sortindex],
-        UnfoldMakie.Kernel.gaussian((0, max(erpblur, 0))),
+    filtered_data = @lift(
+        UnfoldMakie.imfilter(
+            $data[:, $sortindex],
+            UnfoldMakie.Kernel.gaussian((0, max($erpblur, 0))),
+        )
     )
 
-    yvals = 1:size(filtered_data, 2)
+    yvals = @lift(1:size($filtered_data, 2))
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
         ax.xlabelvisible = false
         ax.xticklabelsvisible = false
+
         sub_config1 = deepcopy(config)
         config_kwargs!(
             sub_config1;
@@ -92,8 +120,15 @@ function plot_erpimage!(
                 ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
             ),
         )
-        axbottom = Axis(f[5, 1:4]; xlabelpadding = 0, sub_config1.axis...)
-        lines!(axbottom, times, mean(data, dims = 2)[:, 1])
+        axbottom = Axis(
+            f[5, 1:4];
+            xlabelpadding = 0,
+            xautolimitmargin = (0, 0),
+            sub_config1.axis...,
+        )
+        #axbottom.xticks = (minimum(to_value(times)), 0.0, maximum(to_value(times)) ÷ 3, maximum(to_value(times)) ÷ 3 * 2, maximum(to_value(times)))
+
+        lines!(axbottom, times, @lift(mean($data, dims = 2)[:, 1]))
         apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
         linkxaxes!(ax, axbottom)
         if show_sortval
@@ -101,7 +136,7 @@ function plot_erpimage!(
         end
     end
     if show_sortval
-        if isnothing(sortvalues)
+        if isnothing(to_value(sortvalues))
             error("`show_sortval` needs `sortvalues` argument")
         end
         sub_config2 = deepcopy(config)
@@ -114,10 +149,12 @@ function plot_erpimage!(
             f[1:4, 5];
             ylabelvisible = false,
             yticklabelsvisible = false,
+            xautolimitmargin = (0, 0),
+            yautolimitmargin = (0, 0),
             sub_config2.axis...,
         )
-        xs = 1:1:size(sortvalues, 1)
-        ys = sort(sortvalues)[:, 1]
+        xs = @lift(1:1:size($sortvalues, 1))
+        ys = @lift(sort($sortvalues)[:, 1])
         lines!(axleft, ys, xs)
         Colorbar(
             f[1:4, 6],
@@ -125,8 +162,14 @@ function plot_erpimage!(
             label = config.colorbar.label,
             labelrotation = config.colorbar.labelrotation,
         )
+        axleft.xticks = [
+            minimum(to_value(sortvalues)),
+            maximum(to_value(sortvalues)) ÷ 3,
+            maximum(to_value(sortvalues)) ÷ 3 * 2,
+            maximum(to_value(sortvalues)),
+        ]
         apply_layout_settings!(sub_config2; fig = f, ax = axleft)
-        xlims!(axleft, low = 0)
+        linkyaxes!(ax, axleft)
     else
         Colorbar(
             f[1:4, 5],
