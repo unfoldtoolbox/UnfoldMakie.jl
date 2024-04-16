@@ -30,20 +30,20 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
-plot_erpimage(plot::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), plot; kwargs...) # no times + no figure?
+plot_erpimage(data::Matrix{<:Real}; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no times + no figure?
 
 # no times?
-plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, plot::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(f, 1:size(plot, 1), plot; kwargs...)
+plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::Union{<:Observable,<:AbstractMatrix}; kwargs...) =
+    plot_erpimage!(f, 1:size(data, 1), data; kwargs...)
 
 # no figure?
-plot_erpimage(times::AbstractVector, plot::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(Figure(), times, plot; kwargs...)
+plot_erpimage(times::AbstractVector, data::Matrix{<:Real}; kwargs...) =
+    plot_erpimage!(Figure(), times, data; kwargs...)
 
 function plot_erpimage!(
     f::Union{GridPosition,GridLayout,Figure},
     times::AbstractVector,
-    plot::Matrix{<:Real};
+    data::Matrix{<:Real};
     sortvalues = nothing,
     sortindex = nothing,
     meanplot = false,
@@ -67,14 +67,14 @@ function plot_erpimage!(
 
     if isnothing(sortindex)
         if isnothing(sortvalues)
-            sortindex = 1:size(plot, 2)
+            sortindex = 1:size(data, 2)
         else
             sortindex = sortperm(sortvalues)
         end
     end
 
     filtered_data = UnfoldMakie.imfilter(
-        plot[:, sortindex],
+        data[:, sortindex],
         UnfoldMakie.Kernel.gaussian((0, max(erpblur, 0))),
     )
 
@@ -93,7 +93,7 @@ function plot_erpimage!(
             ),
         )
         axbottom = Axis(f[5, 1:4]; xlabelpadding = 0, sub_config1.axis...)
-        lines!(axbottom, times, mean(plot, dims = 2)[:, 1])
+        lines!(axbottom, times, mean(data, dims = 2)[:, 1])
         apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
         linkxaxes!(ax, axbottom)
         if show_sortval
