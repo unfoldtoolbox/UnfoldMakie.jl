@@ -157,3 +157,60 @@ end
     pos = [Point2.(pos[k, 1], pos[k, 2]) for k = 1:size(pos, 1)]
     UnfoldMakie.eeg_topoplot_series(df, 5; positions = pos)
 end
+
+@testset "toposeries with GridSubposition" begin
+    f = Figure(size = (500, 500))
+    plot_topoplotseries!(
+        f[2, 1][1, 1],
+        df,
+        Δbin;
+        positions = positions,
+        combinefun = mean,
+        axis = (; title = "combinefun = mean"),
+    )
+end
+
+#= 
+using CSV
+tmp = CSV.read("dev/UnfoldMakie/test/output2.csv", DataFrame)
+tmp = stack(tmp, 1:21)
+rename!(tmp, :variable => :condition, :value => :estimate)
+tmp.time = 1:nrow(tmp)
+
+Δbin = 140
+
+tmp2 = filter(x -> x.condition == "type" || x.condition == "duration", tmp)
+
+plot_topoplotseries(
+    tmp2,
+    Δbin;
+    positions = rand(Point2f, 128),
+    combinefun = x -> x,
+    mapping = (; :col => :condition),
+)
+
+
+tmp3 = filter(x -> x.condition != "type", tmp)
+n = size(tmp3, 1) ÷ 4
+tmp3.row = vcat(fill("A", n), fill("B", n), fill("C", n), fill("D", n))
+
+Δbin = 134
+plot_topoplotseries(
+    tmp3,
+    Δbin;
+    positions = rand(Point2f, 128),
+    combinefun = x -> x,
+    mapping = (; :col => :condition, :row => :row),
+)
+
+using Images
+
+function filt(img)
+    filtered_data = UnfoldMakie.imfilter(img, UnfoldMakie.Kernel.gaussian((1, max(30, 0))))
+end
+
+Images.entropy((dat[:, :, shuffle(1:end)]))
+
+
+map((x) -> Images.entropy((dat[x, :, shuffle(1:end)])) * 2, 1:size(dat, 1))
+ =#
