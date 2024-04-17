@@ -36,7 +36,7 @@ plot_topoplotseries(data::DataFrame, Δbin::Real; kwargs...) =
     plot_topoplotseries!(Figure(), data, Δbin; kwargs...)
 
 function plot_topoplotseries!(
-    f::Union{GridPosition,GridLayout,Figure},
+    f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
     data::DataFrame,
     Δbin;
     positions = nothing,
@@ -89,7 +89,12 @@ function plot_topoplotseries!(
             grouping = [:label, config.mapping.col, config.mapping.row],
         )
         colorrange = extract_colorrange(data_mean, config.mapping.y)
-        config_kwargs!(config, colorbar = (; colorrange = colorrange))
+        println(colorrange)
+        config_kwargs!(
+            config,
+            visual = (; colorrange = colorrange),
+            colorbar = (; colorrange = colorrange),
+        )
     end
 
     if !config.layout.use_colorbar

@@ -175,7 +175,7 @@ function eeg_topoplot_series!(
             push!(axlist, ax)
         end
     end
-    if typeof(fig) != GridLayout
+    if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
 
