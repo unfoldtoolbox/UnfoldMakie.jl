@@ -26,16 +26,15 @@ df = flatten(df, :estimate);
 plot_circular_topoplots(
     df;
     positions = pos,
-    axis = (; label = "Incoming saccade"),
+    center_label = "Visual angle [°]",
     predictor = :circular_variable,
 )
-
 
 # If the bounding variable is not between 0 and 360, since we are using time, we must specify it. 
 plot_circular_topoplots(
     df;
     positions = pos,
-    axis = (; label = "Time?!"),
+    center_label = "Time [msec]",
     predictor = :time,
     predictor_bounds = [80, 320],
 )

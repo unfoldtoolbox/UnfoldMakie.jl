@@ -1,5 +1,6 @@
 """
     plot_circular_topoplots!(f, data::DataFrame; kwargs...)
+using DocStringExtensions: print_mutable_struct_or_struct
     plot_circular_topoplots(data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
@@ -21,13 +22,13 @@ Plot a circular EEG topoplot.
 - `center_label::String = ""`\\
     The text in the center of the cricle.
 - `labels::Vector{String} = nothing`\\
-    Labels for the [`plot_topoplot`](@ref topo_vis).
+    Labels for the [`plot_topoplots`](@ref topo_vis).
 
 $(_docstring(:circtopos))
 
 
 
-**Return Value:** `Figure` displaying the Circular topoplot.
+**Return Value:** `Figure` displaying the Circular topoplot series.
 
 """
 plot_circular_topoplots(data::DataFrame; kwargs...) =
@@ -50,7 +51,7 @@ function plot_circular_topoplots!(
 
     positions = getTopoPositions(; positions = positions, labels = labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
-    predictorValues = data[:, predictor]
+    predictor_values = data[:, predictor]
 
     if (length(predictor_bounds) != 2)
         error("predictor_bounds needs exactly two values")
@@ -59,14 +60,14 @@ function plot_circular_topoplots!(
         error("predictor_bounds[1] needs to be smaller than predictor_bounds[2]")
     end
     if (
-        (length(predictorValues[predictorValues.<predictor_bounds[1]]) != 0) ||
-        (length(predictorValues[predictorValues.>predictor_bounds[2]]) != 0)
+        (length(predictor_values[predictor_values.<predictor_bounds[1]]) != 0) ||
+        (length(predictor_values[predictor_values.>predictor_bounds[2]]) != 0)
     )
         error(
             "all values in the data's effect column have to be within the predictor_bounds range",
         )
     end
-    if (all(predictorValues .<= 2 * pi))
+    if (all(predictor_values .<= 2 * pi))
         @warn "insert the predictor values in degrees instead of radian, or change predictor_bounds"
     end
 
@@ -75,24 +76,23 @@ function plot_circular_topoplots!(
     hidedecorations!(ax)
     hidespines!(ax)
 
-    plotCircularAxis!(ax, predictor_bounds, center_label)
+    plot_circular_axis!(ax, predictor_bounds, center_label)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
-    min, max = calculateGlobalMaxValues(data[:, config.mapping.y], predictorValues)
+    min, max = calculate_global_max_values(data[:, config.mapping.y], predictor_values)
 
-    positions = getTopoPositions(; positions = positions, labels = labels)
-    plotTopoPlots!(
+    plot_topo_plots!(
         ax,
         data[:, config.mapping.y],
         positions,
-        predictorValues,
+        predictor_values,
         predictor_bounds,
         min,
         max,
+        labels
     )
     # setting the colorbar to the bottom right of the box.
-    # Relative values got determined by checking what subjectively
-    # looks best
-    #RelativeAxis(ax,(0.85,0.95,0.06,0.25))
+    # Relative values got determined by checking what subjectively looks best
+
     Colorbar(
         f[1, 2],
         colormap = config.colorbar.colormap,
@@ -107,22 +107,19 @@ function plot_circular_topoplots!(
     return f
 end
 
-function calculateGlobalMaxValues(data, predictor)
+function calculate_global_max_values(data, predictor)
 
     x = combine(
         groupby(DataFrame(:e => data, :p => predictor), :p),
-        :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :localMaxVal,
+        :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :local_max_val,
     )
-    globalMaxVal = maximum(x.localMaxVal)
-    return (-globalMaxVal, globalMaxVal)
+    global_max_val = maximum(x.local_max_val)
+    return (-global_max_val, global_max_val)
 end
 
-function plotCircularAxis!(ax, predictor_bounds, label)
-    # the axis position is always the middle of the
-    # screen (means it uses the GridLayout's full size)
-    #circleAxis = Axis(f,aspect = 1)#typeof(f) == Figure ? Axis(f[1:f.layout.size[1],1:f.layout.size[2]], aspect = 1, backgroundcolor = bgcolor) : Axis(f[1,1], aspect = 1, backgroundcolor = bgcolor)
-    #xlims!(-9,9)
-    #ylims!(-9,9)
+function plot_circular_axis!(ax, predictor_bounds, center_label)
+    # The axis position is always the middle of the screen 
+    # It uses the GridLayout's full size
 
     lines!(
         ax,
@@ -131,8 +128,6 @@ function plotCircularAxis!(ax, predictor_bounds, label)
         color = (:black, 0.5),
         linewidth = 3,
     )
-
-    #minsize = minimum([origin[1]+widths[1],origin[2]+widths[2]])
 
     # labels and label lines for the circle
     circlepoints_lines =
@@ -149,16 +144,15 @@ function plotCircularAxis!(ax, predictor_bounds, label)
     )
     text!(
         circlepoints_labels,
-        text = calculateAxisLabels(predictor_bounds),
+        text = calculate_axis_labels(predictor_bounds),
         align = (:center, :center),
         #textsize = round(minsize*0.03)
     )
-    text!(ax, 0, 0, text = label, align = (:center, :center))#,textsize = round(minsize*0.04))
-
+    text!(ax, 0, 0, text = center_label, align = (:center, :center)) #,textsize = round(minsize*0.04))
 end
 
 # four labels around the circle, middle values are the 0.25, 0.5, and 0.75 quantiles
-function calculateAxisLabels(predictor_bounds)
+function calculate_axis_labels(predictor_bounds)
     nonboundlabels = quantile(predictor_bounds, [0.25, 0.5, 0.75])
     # third label is on the left and it tends to cover the circle
     # so added some blank spaces to tackle that
@@ -170,23 +164,24 @@ function calculateAxisLabels(predictor_bounds)
     ]
 end
 
-function plotTopoPlots!(
+function plot_topo_plots!(
     f,
     data,
     positions,
-    predictorValues,
+    predictor_values,
     predictor_bounds,
     globalmin,
     globalmax,
+    labels
 )
-    #for (index, datapoints) in enumerate(data)
-    df = DataFrame(:e => data, :p => predictorValues)
+    df = DataFrame(:e => data, :p => predictor_values)
     gp = groupby(df, :p)
+    i = 0
     for g in gp
-
-        bbox = calculateBBox([0, 0], [1, 1], g.p[1], predictor_bounds)
-
-        # convet BBox to rect
+        i += 1
+        bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds)
+        
+        # convert BBox to rect
         rect = (
             Float64.([
                 bbox.origin[1],
@@ -195,57 +190,47 @@ function plotTopoPlots!(
                 bbox.origin[2] + bbox.widths[2],
             ])...,
         )
-
-
-        eegaxis = RelativeAxis(f, rect; aspect = 1)
+        
+        eeg_axis = RelativeAxis(f, rect; xlabel = labels[i], aspect = 1) # produces warnings
 
         TopoPlots.eeg_topoplot!(
-            eegaxis,
+            eeg_axis,
             g.e;
             positions = positions,
             colorrange = (globalmin, globalmax),
             enlarge = 1,
         )
-        hidedecorations!(eegaxis)
-        hidespines!(eegaxis)
-
-
+        hidedecorations!(eeg_axis, label = false)
+        hidespines!(eeg_axis)
     end
 end
 
-function calculateBBox(origin, widths, predictorValue, bounds)
+function calculate_BBox(origin, widths, predictor_value, bounds)
 
     minwidth = minimum(widths)
-    predictorRatio = (predictorValue - bounds[1]) / (bounds[2] - bounds[1])
+    predictor_ratio = (predictor_value - bounds[1]) / (bounds[2] - bounds[1])
     radius = (minwidth * 0.7) / 2
-    sizeOfBBox = minwidth / 5
+    size_of_BBox = minwidth / 5
     # the middle point of the circle for the topoplot positions
     # has to be moved a bit into the direction of the longer axis
-    # to be centered on a scene that's not shaped like a square
-    resShift = [
+    # to be centered on a scene that's not shaped like a square.
+    res_shift = [
         ((origin[1] + widths[1]) - widths[1]) / 2,
         ((origin[2] + widths[2]) - widths[2]) / 2,
     ]
-    resShift[resShift.<0] .= 0
+    res_shift[res_shift.<0] .= 0
 
-    x = radius * cos(predictorRatio * 2 * pi) + resShift[1]
-    y = radius * sin(predictorRatio * 2 * pi) + resShift[2]
-
+    x = radius * cos(predictor_ratio * 2 * pi) + res_shift[1]
+    y = radius * sin(predictor_ratio * 2 * pi) + res_shift[2]
 
     # notice that the bbox defines the bottom left and the top
     # right point of the axis. This means that you have to 
-    # move the bbox to the bottom left by sizeofbbox/2 to move
-    # the center of the axis to a point 
+    # move the bbox to the bottom left by size_of_bbox/2 to move
+    # the center of the axis to a point. 
     return BBox(
-        (origin[1] + widths[1]) / 2 - sizeOfBBox / 2 + x,
-        (origin[1] + widths[1]) / 2 + sizeOfBBox - sizeOfBBox / 2 + x,
-        (origin[2] + widths[2]) / 2 - sizeOfBBox / 2 + y,
-        (origin[2] + widths[2]) / 2 + sizeOfBBox - sizeOfBBox / 2 + y,
+        (origin[1] + widths[1]) / 2 - size_of_BBox / 2 + x,
+        (origin[1] + widths[1]) / 2 + size_of_BBox - size_of_BBox / 2 + x,
+        (origin[2] + widths[2]) / 2 - size_of_BBox / 2 + y,
+        (origin[2] + widths[2]) / 2 + size_of_BBox - size_of_BBox / 2 + y,
     )
 end
-
-
-# uncomment everything below this to try out the code
-#data,pos = TopoPlots.example_data();
-#df= (DataFrame(    :effect=>Float64.([dat;dat;dat;dat;dat;dat]),    :predictor=>repeat([0,50,80,120,180,210],inner=length(dat)),    :positions=>repeat(pos,6)))
-#plot_circular_topoplots!(df)
