@@ -54,7 +54,7 @@ end
 end
 
 @testset "circularplot plot in GridLayout" begin
-    f = Figure(size = (1200, 1400))
+    f = Figure()
     data, pos = TopoPlots.example_data()
     dat = data[:, 240, 1]
 
@@ -71,10 +71,10 @@ end
         ga,
         df;
         positions = pos,
-        axis = (; label = "Time?!"), # no effect
+        center_label = "Visual angle [°]",
         predictor = :time,
         predictor_bounds = [80, 320],
-        labels = labels, # no effect
+        labels = labels,
     )
     f
 end

@@ -1,10 +1,14 @@
 
+struct RelativeAxis
+    layoutobservables::GridLayoutBase.LayoutObservables{GridLayout}
+    relative_bbox::NTuple
+end
 
 """
     RelativeAxis(fig, p::NTuple{4, Float64}; kwargs...)
 
 Returns an `Axis` whose position is relative to a `GridLayout` element (via `BBox`) and not relative to the `Scene`.
-Default behavior is `Axis(..., bbox=BBox())`.
+Default behavior is `Axis(..., bbox = BBox())`.
 
 - `p::NTuple{4,Float64}`: specify the position relative to the GridPosition
     left:right; bottom:top, typical numbers between 0 and 1, e.g. (0.25, 0.75, 0.25, 0.75) would center an `Axis` inside this `GridPosition`.
@@ -16,19 +20,11 @@ Default behavior is `Axis(..., bbox=BBox())`.
 
 **Return Value:** `Axis`.
 """
-struct RelativeAxis
-    layoutobservables::GridLayoutBase.LayoutObservables{GridLayout}
-    relative_bbox::NTuple
-end
-
-
 function RelativeAxis(
     figlike::Union{GridPosition,GridSubposition,Axis},
     rel::NTuple{4,Float64};
     kwargs...,
 )
-
-
     # it's all fake!
     layoutobservables = GridLayoutBase.LayoutObservables(
         Observable(nothing),
@@ -43,10 +39,9 @@ function RelativeAxis(
 
     # generate placeholder container
     r = RelativeAxis(layoutobservables, rel)
-    # lift bbox to make it relative
-
-
-    bbox = lift(suggestedbbox(figlike, r), r.relative_bbox) do old, rel
+    # lift bbox to make it relative 
+    
+    bbox = lift(suggestedbbox(figlike, r), r.relative_bbox) do old, rel # produces warnings
         return rel_to_abs_bbox(old, rel)
     end
 
@@ -56,6 +51,7 @@ function RelativeAxis(
     return ax
 
 end
+
 function suggestedbbox(figlike::Union{GridPosition,GridSubposition}, r::RelativeAxis)
     # asign it to GridLayout to get suggestedbbox
     figlike[] = r
@@ -96,4 +92,4 @@ function rel_to_abs_bbox(org, rel)
 
 
     return BBox(tup...)
-end;
+end
