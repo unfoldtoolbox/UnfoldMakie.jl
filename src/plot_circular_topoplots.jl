@@ -88,7 +88,7 @@ function plot_circular_topoplots!(
         predictor_bounds,
         min,
         max,
-        labels
+        labels,
     )
     # setting the colorbar to the bottom right of the box.
     # Relative values got determined by checking what subjectively looks best
@@ -172,7 +172,7 @@ function plot_topo_plots!(
     predictor_bounds,
     globalmin,
     globalmax,
-    labels
+    labels,
 )
     df = DataFrame(:e => data, :p => predictor_values)
     gp = groupby(df, :p)
@@ -180,7 +180,7 @@ function plot_topo_plots!(
     for g in gp
         i += 1
         bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds)
-        
+
         # convert BBox to rect
         rect = (
             Float64.([
@@ -190,8 +190,20 @@ function plot_topo_plots!(
                 bbox.origin[2] + bbox.widths[2],
             ])...,
         )
-        
-        eeg_axis = RelativeAxis(f, rect; xlabel = labels[i], aspect = 1) # produces warnings
+
+        eeg_axis = RelativeAxis(f, rect; xlabel = labels[i], aspect = 1)
+        #= b = rel_to_abs_bbox(f.scene.viewport[] - 15, rect)
+        eeg_axis = Axis(
+            get_figure(f);
+            bbox = b,
+            xlabel = labels[i],
+            aspect = 1,
+            width = Relative(1),
+            height = Relative(1),
+            #halign = -15.5,
+            #valign = 1.1,
+            backgroundcolor = :white,
+        ) =#
 
         TopoPlots.eeg_topoplot!(
             eeg_axis,
