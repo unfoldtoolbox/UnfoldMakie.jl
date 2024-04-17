@@ -15,7 +15,7 @@ Default behavior is `Axis(..., bbox = BBox())`.
 - `kwargs...` - inserted into the axis.
 
     f = Figure()
-    ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1,2]
+    ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1, 2]
 
 
 **Return Value:** `Axis`.
@@ -40,7 +40,7 @@ function RelativeAxis(
     # generate placeholder container
     r = RelativeAxis(layoutobservables, rel)
     # lift bbox to make it relative 
-    
+
     bbox = lift(suggestedbbox(figlike, r), r.relative_bbox) do old, rel # produces warnings
         return rel_to_abs_bbox(old, rel)
     end
@@ -59,8 +59,8 @@ function suggestedbbox(figlike::Union{GridPosition,GridSubposition}, r::Relative
 
 end
 function suggestedbbox(figlike::Axis, r::RelativeAxis)
-    # need to use px_area to follow the aspect ratio of an axis
-    return figlike.scene.px_area
+    # need to use viewport to follow the aspect ratio of an axis
+    return figlike.scene.viewport
 end
 
 get_figure(f::GridPosition) = f.layout.parent
