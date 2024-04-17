@@ -1,6 +1,5 @@
 """
     plot_circular_topoplots!(f, data::DataFrame; kwargs...)
-using DocStringExtensions: print_mutable_struct_or_struct
     plot_circular_topoplots(data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
