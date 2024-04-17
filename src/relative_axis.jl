@@ -15,7 +15,7 @@ Default behavior is `Axis(..., bbox = BBox())`.
 - `kwargs...` - inserted into the axis.
 
     f = Figure()
-    ax = RelativeAxis(f[1,2], (0.25, 0.75, 0.25, 0.75))	 # returns Axis centered within f[1, 2]
+    ax = RelativeAxis(f[1, 2], (0.25, 0.75, 0.25, 0.75)# returns Axis centered within f[1, 2]
 
 
 **Return Value:** `Axis`.
@@ -41,7 +41,7 @@ function RelativeAxis(
     r = RelativeAxis(layoutobservables, rel)
     # lift bbox to make it relative 
 
-    bbox = lift(suggestedbbox(figlike, r), r.relative_bbox) do old, rel # produces warnings
+    bbox = lift(suggestedbbox(figlike, r), r.relative_bbox) do old, rel
         return rel_to_abs_bbox(old, rel)
     end
 
