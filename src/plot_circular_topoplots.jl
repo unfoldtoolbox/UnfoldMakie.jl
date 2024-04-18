@@ -190,7 +190,11 @@ function plot_topo_plots!(
             ])...,
         )
 
-        eeg_axis = RelativeAxis(f, rect; xlabel = labels[i], aspect = 1)
+        if isnothing(labels)
+            eeg_axis = RelativeAxis(f, rect; aspect = 1)
+        else
+            eeg_axis = RelativeAxis(f, rect; xlabel = labels[i], aspect = 1)
+        end
         #= b = rel_to_abs_bbox(f.scene.viewport[] - 15, rect)
         eeg_axis = Axis(
             get_figure(f);
