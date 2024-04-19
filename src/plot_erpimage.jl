@@ -114,7 +114,7 @@ function plot_erpimage!(
         ax.xlabelvisible = false
         ax.xticklabelsvisible = false
 
-        sub_config1 = deepcopy(config)
+        sub_config1 = PlotConfig(:erpimage)
         config_kwargs!(
             sub_config1;
             layout = (; show_legend = false),
@@ -128,9 +128,7 @@ function plot_erpimage!(
             xautolimitmargin = (0, 0),
             sub_config1.axis...,
         )
-        #println(to_value(times))
         #axbottom.xticks = minimum(to_value(times)):0.3:maximum(to_value(times))
-        #println(axbottom.xticks)
 
         lines!(axbottom, times, @lift(mean($data, dims = 2)[:, 1]))
         apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
@@ -143,7 +141,7 @@ function plot_erpimage!(
         if isnothing(to_value(sortvalues))
             error("`show_sortval` needs `sortvalues` argument")
         end
-        sub_config2 = deepcopy(config)
+        sub_config2 = PlotConfig(:erpimage)
         config_kwargs!(
             sub_config2;
             layout = (; show_legend = false, use_colorbar = false),
