@@ -78,7 +78,7 @@ plot_erp!(
     stderror = true,
 )
 
-plot_designmatrix!(f[2, 3], designmatrix(uf))
+plot_designmatrix!(f[2, 3], designmatrix(uf)[1])
 
 plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
 plot_topoplotseries!(
@@ -141,9 +141,36 @@ d_topo, pos = example_data("TopoPlots.jl")
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 raw_ch_names = [
-    "FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7", "PO3", "O1",
-    "Oz", "Pz", "CPz", "FP2", "Fz", "F4", "F8", "FC4", "FCz", "Cz",
-    "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2",
+    "FP1",
+    "F3",
+    "F7",
+    "FC3",
+    "C3",
+    "C5",
+    "P3",
+    "P7",
+    "P9",
+    "PO7",
+    "PO3",
+    "O1",
+    "Oz",
+    "Pz",
+    "CPz",
+    "FP2",
+    "Fz",
+    "F4",
+    "F8",
+    "FC4",
+    "FCz",
+    "Cz",
+    "C4",
+    "C6",
+    "P4",
+    "P8",
+    "P10",
+    "PO8",
+    "PO4",
+    "O2",
 ]
 
 m = example_data("UnfoldLinearModel")
