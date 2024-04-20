@@ -39,7 +39,7 @@ function plot_designmatrix!(
 )
     config = PlotConfig(:designmat)
     config_kwargs!(config; kwargs...)
-    designmat = Unfold.get_Xs(data)
+    designmat = Unfold.modelmatrices(data)
     if standardize_data
         designmat = designmat ./ std(designmat, dims = 1)
         designmat[isinf.(designmat)] .= 1.0
