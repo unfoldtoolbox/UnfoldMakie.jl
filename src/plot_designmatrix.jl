@@ -31,7 +31,7 @@ plot_designmatrix(data::AbstractDesignMatrix; kwargs...) =
     plot_designmatrix!(Figure(), data; kwargs...)
 function plot_designmatrix!(
     f::Union{GridPosition,GridLayout,Figure},
-    data::Unfold.AbstractDesignMatrix;
+    data::AbstractDesignMatrix;
     xticks = nothing,
     sort_data = false,
     standardize_data = false,
