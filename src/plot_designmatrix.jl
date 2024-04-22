@@ -27,11 +27,20 @@ $(_docstring(:designmat))
 
 **Return Value:** `Figure` displaying the Design matrix. 
 """
-plot_designmatrix(data::Unfold.DesignMatrix; kwargs...) =
-    plot_designmatrix!(Figure(), data; kwargs...)
+plot_designmatrix(
+    data::Union{<:Vector{<:AbstractDesignMatrix},<:AbstractDesignMatrix};
+    kwargs...,
+) = plot_designmatrix!(Figure(), data; kwargs...)
+
+function plot_designmatrix!(f, data::Vector{<:AbstractDesignMatrix}; kwargs...)
+    if length(data) > 1
+        @warn "multiple $(length(data)) designmatrices found, plotting the first one"
+    end
+    plot_designmatrix!(f, data[1]; kwargs...)
+end
 function plot_designmatrix!(
     f::Union{GridPosition,GridLayout,Figure},
-    data::Unfold.DesignMatrix;
+    data::AbstractDesignMatrix;
     xticks = nothing,
     sort_data = false,
     standardize_data = false,
@@ -39,7 +48,7 @@ function plot_designmatrix!(
 )
     config = PlotConfig(:designmat)
     config_kwargs!(config; kwargs...)
-    designmat = Unfold.get_Xs(data)
+    designmat = UnfoldMakie.modelmatrices(data)
     if standardize_data
         designmat = designmat ./ std(designmat, dims = 1)
         designmat[isinf.(designmat)] .= 1.0
