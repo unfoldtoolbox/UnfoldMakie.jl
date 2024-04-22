@@ -73,7 +73,6 @@ end
     )
 end
 
-
 @testset "ERP image with show_sortval" begin
     dat_e, evts_e, times = example_data("sort_data")
     plot_erpimage(times, dat_e; sortvalues = evts_e.Δlatency, show_sortval = true)
@@ -83,9 +82,42 @@ end
     obs = Observable(data)
     f = plot_erpimage(obs)
     obs[] = rand(size(to_value(data))...)
-
 end
 
+@testset "ERP image with Observables and sort_val" begin
+    obs = Observable(data)
+    sort_val = Observable(evts_e.Δlatency)
+    f = plot_erpimage(times, dat_e; sortvalues = sort_val, show_sortval = true)
+    sort_val[] = rand(Int, size(to_value(evts_e.Δlatency))...)
+end
+
+@testset "ERP image with Observables and title as Observable" begin
+    obs = Observable(data)
+    chan_i = Observable(1)
+    sort_val = Observable(evts_e.Δlatency)
+    str = @lift("ERP image: channel " * string($chan_i))
+    f = plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = sort_val,
+        show_sortval = true,
+        axis = (; title = str),
+    )
+    str[] = "TEST"
+end
+
+@testset "ERP image with sortval_xlabel" begin
+    str = Observable("&&&")
+    plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = evts_e.Δlatency,
+        meanplot = true,
+        show_sortval = true,
+        sortval_xlabel = str,
+    )
+    str[] = "TEST"
+end
 #= @testset "ERP image with show_sortval" begin
     plot_erpimage(
         times,
