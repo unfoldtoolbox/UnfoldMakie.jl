@@ -4,7 +4,7 @@
 
 # The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
 
-# Setup
+# # Setup
 # ## Package loading
 
 using Unfold
@@ -17,9 +17,8 @@ using DataFrames
 # ## Data loading
 
 data, positions = TopoPlots.example_data()
-
 #= 
-The size of `data` is 64×400×3. This means
+The size of `data` is 64×400×3. This means:
 - 64 channels;
 - 400 timepoints in range from -0.3 to 0.5 mseconds;
 - Estimates of 3 averaging functions. Instead of displaying the EEG data for all subjects, here we aggregate the data using (1) mean, (2) standard deviation and (3) p-value within t-tests.
