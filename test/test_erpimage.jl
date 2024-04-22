@@ -106,6 +106,18 @@ end
     str[] = "TEST"
 end
 
+@testset "ERP image with sortval_xlabel" begin
+    str = Observable("&&&")
+    plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = evts_e.Δlatency,
+        meanplot = true,
+        show_sortval = true,
+        sortval_xlabel = str,
+    )
+    str[] = "TEST"
+end
 #= @testset "ERP image with show_sortval" begin
     plot_erpimage(
         times,
