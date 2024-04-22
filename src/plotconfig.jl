@@ -269,7 +269,7 @@ function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (; use_colorbar = true),
+        layout = (; use_colorbar = true, show_legend = false),
         colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
         axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
