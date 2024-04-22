@@ -79,6 +79,15 @@ function plot_circular_topoplots!(
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
     min, max = calculate_global_max_values(data[:, config.mapping.y], predictor_values)
 
+    # setting the colorbar to the bottom right of the box.
+    # Relative values got determined by checking what subjectively looks best 
+    Colorbar(
+        f[1, 2],
+        colormap = config.colorbar.colormap,
+        colorrange = (min, max),
+        label = config.colorbar.label,
+        height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
+    )
     plot_topo_plots!(
         ax,
         data[:, config.mapping.y],
@@ -89,16 +98,7 @@ function plot_circular_topoplots!(
         max,
         labels,
     )
-    # setting the colorbar to the bottom right of the box.
-    # Relative values got determined by checking what subjectively looks best
 
-    Colorbar(
-        f[1, 2],
-        colormap = config.colorbar.colormap,
-        colorrange = (min, max),
-        label = config.colorbar.label,
-        height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
-    )
     apply_layout_settings!(config; ax = ax)
 
     # set the scene's background color according to config
@@ -155,12 +155,24 @@ function calculate_axis_labels(predictor_bounds)
     nonboundlabels = quantile(predictor_bounds, [0.25, 0.5, 0.75])
     # third label is on the left and it tends to cover the circle
     # so added some blank spaces to tackle that
-    return [
-        string(trunc(Int, predictor_bounds[1])),
-        string(trunc(Int, nonboundlabels[1])),
-        string(trunc(Int, nonboundlabels[2]), "   "),
-        string(trunc(Int, nonboundlabels[3])),
-    ]
+
+    if typeof(predictor_bounds[1]) == Float64
+        res = [
+            string(trunc(predictor_bounds[1], digits = 1)),
+            string(trunc(nonboundlabels[1], digits = 1)),
+            string(trunc(nonboundlabels[2], digits = 1)),
+            string(trunc(nonboundlabels[3], digits = 1)),
+        ]
+
+    else
+        res = [
+            string(trunc(Int, predictor_bounds[1])),
+            string(trunc(Int, nonboundlabels[1])),
+            string(trunc(Int, nonboundlabels[2]), " "),
+            string(trunc(Int, nonboundlabels[3])),
+        ]
+    end
+    return res
 end
 
 function plot_topo_plots!(
@@ -190,23 +202,20 @@ function plot_topo_plots!(
             ])...,
         )
 
-        if isnothing(labels)
-            eeg_axis = RelativeAxis(f, rect; aspect = 1)
-        else
-            eeg_axis = RelativeAxis(f, rect; xlabel = labels[i], aspect = 1)
-        end
-        #= b = rel_to_abs_bbox(f.scene.viewport[] - 15, rect)
+        b = rel_to_abs_bbox(f.scene.viewport[], rect)
         eeg_axis = Axis(
             get_figure(f);
-            bbox = b,
-            xlabel = labels[i],
             aspect = 1,
-            width = Relative(1),
-            height = Relative(1),
-            #halign = -15.5,
-            #valign = 1.1,
+            width = Relative(0.99),
+            height = Relative(0.99),
+            halign = b.origin[1],
+            valign = b.origin[2],
             backgroundcolor = :white,
-        ) =#
+        )
+
+        if !isnothing(labels)
+            eeg_axis.xlabel = labels[i]
+        end
 
         TopoPlots.eeg_topoplot!(
             eeg_axis,

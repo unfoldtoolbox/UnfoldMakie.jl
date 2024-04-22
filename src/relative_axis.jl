@@ -71,7 +71,7 @@ get_figure(f::Axis) = f.parent
 """
     rel_to_abs_bbox(org, rel)
 
-Takes a rectangle `org` and applies the relative transformation tuple `rel`.
+Takes a rectangle `org` consiting of origins and applies the relative transformation tuple `rel`.
 
 **Return Value:** `Makie.BBox`.
 """
@@ -89,7 +89,6 @@ function rel_to_abs_bbox(org, rel)
     new_left = org.origin[1] + org.widths[1] * org_left
     new_bottom = org.origin[2] + org.widths[2] * org_bottom
     tup = new_left, new_left + new_width, new_bottom, new_bottom + new_heigth
-
 
     return BBox(tup...)
 end
