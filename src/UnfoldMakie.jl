@@ -39,9 +39,11 @@ if isdefined(Unfold, :AbstractDesignMatrix)
     # nothing to do for AbstractDesignMatrix, already imprted
     # backward compatible accessor
     const drop_missing_epochs = Unfold.drop_missing_epochs
+    const modelmatrices = Unfold.modelmatrices
 else
     const AbstractDesignMatrix = Unfold.DesignMatrix
     const drop_missing_epochs = Unfold.dropMissingEpochs
+    const modelmatrices = Unfold.get_Xs
 end
 
 include("plotconfig.jl")
