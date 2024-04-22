@@ -35,7 +35,7 @@ end
 end
 
 @testset "Circular EEG topoplot" begin
-    include("test_plot_circular_topoplots.jl")
+    include("test_circular_topoplots.jl")
 end
 
 @testset "Complex plots" begin
