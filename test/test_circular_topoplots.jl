@@ -50,9 +50,9 @@ end
 
 @testset "testing calculate_axis_labels" begin
     # notice: this function uses the 0.01 and the 0.99 quantile
-    @test UnfoldMakie.calculate_axis_labels([0, 360]) == ["0", "90", "180   ", "270"]
-    @test UnfoldMakie.calculate_axis_labels([-180, 180]) == ["-180", "-90", "0   ", "90"]
-    @test UnfoldMakie.calculate_axis_labels([0, 100]) == ["0", "25", "50   ", "75"]
+    @test UnfoldMakie.calculate_axis_labels([0, 360]) == ["0", "90", "180 ", "270"]
+    @test UnfoldMakie.calculate_axis_labels([-180, 180]) == ["-180", "-90", "0 ", "90"]
+    @test UnfoldMakie.calculate_axis_labels([0, 100]) == ["0", "25", "50 ", "75"]
 end
 
 @testset "testing calculate_BBox" begin
@@ -63,7 +63,6 @@ end
     @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], -180, [-180, 180]) ==
           BBox(750.0, 950.0, 400.0, 600.0)
 end
-
 
 @testset "circularplot plot basic" begin
     plot_circular_topoplots(
