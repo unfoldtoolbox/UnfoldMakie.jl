@@ -60,15 +60,20 @@ eeg_topoplot_series(df, 5; positions = pos)
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
-function eeg_topoplot_series(data::DataFrame, Δbin; figure = NamedTuple(), kwargs...)
-    return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)
-end
-function eeg_topoplot_series(data::AbstractMatrix, Δbin; figure = NamedTuple(), kwargs...)
+function eeg_topoplot_series(
+    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix},
+    Δbin;
+    figure = NamedTuple(),
+    kwargs...,
+)
     return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)
 end
 # allow to specify Δbin as an keyword for nicer readability
-eeg_topoplot_series(data::DataFrame; Δbin, kwargs...) =
-    eeg_topoplot_series(data, Δbin; kwargs...)
+eeg_topoplot_series(
+    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix};
+    Δbin,
+    kwargs...,
+) = eeg_topoplot_series(data, Δbin; kwargs...)
 # AbstractMatrix
 function eeg_topoplot_series!(fig, data::AbstractMatrix, Δbin; kwargs...)
     return eeg_topoplot_series!(fig, data, string.(1:size(data, 1)), Δbin; kwargs...)
@@ -84,7 +89,7 @@ end
 
 function eeg_topoplot_series!(
     fig,
-    data::DataFrame,
+    data::Union{<:Observable{<:DataFrame},<:DataFrame},
     Δbin;
     y = :erp,
     label = :label,
@@ -122,9 +127,12 @@ function eeg_topoplot_series!(
     )
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
-    data_mean =
-        df_timebin(data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
-    (q_min, q_max) = extract_colorrange(data_mean, y)
+
+    data = _as_observable(data)
+    data_mean = @lift(
+        df_timebin($data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
+    )
+    (q_min, q_max) = extract_colorrange(to_value(data_mean), y)
     topoplot_attributes = merge(
         (
             colorrange = (q_min, q_max),
@@ -136,27 +144,27 @@ function eeg_topoplot_series!(
 
     # do the col/row plot
 
-    select_col = isnothing(col) ? 1 : unique(data_mean[:, col])
-    select_row = isnothing(row) ? 1 : unique(data_mean[:, row])
+    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
+    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
 
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
             ax = Axis(fig[:, :][r, c]; axisOptions...)
             # select one topoplot
-            sel = 1 .== ones(size(data_mean, 1)) # select all
+            sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
             if !isnothing(col)
-                sel = sel .&& (data_mean[:, col] .== select_col[c]) # subselect
+                sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
             end
             if !isnothing(row)
-                sel = sel .&& (data_mean[:, row] .== select_row[r]) # subselect
+                sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
             end
-            df_single = data_mean[sel, :]
+            df_single = @lift($data_mean[sel, :])
 
             # select labels
-            labels = df_single[:, label]
+            labels = to_value(df_single)[:, label]
             # select data
-            d_vec = df_single[:, y]
+            d_vec = @lift($df_single[:, y])
             # plot it
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
 
@@ -164,12 +172,12 @@ function eeg_topoplot_series!(
                 ax2.plots[1].plots[1].rasterize = true
             end
             if r == length(select_row) && col_labels
-                ax.xlabel = string(df_single.time[1])
+                ax.xlabel = string(to_value(df_single).time[1])
                 ax.xlabelvisible = true
             end
             if c == 1 && length(select_row) > 1 && row_labels
                 #@show df_single
-                ax.ylabel = string(df_single[1, row])
+                ax.ylabel = string(to_value(df_single)[1, row])
                 ax.ylabelvisible = true
             end
             push!(axlist, ax)

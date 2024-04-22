@@ -37,7 +37,7 @@ plot_topoplotseries(data::DataFrame, Δbin::Real; kwargs...) =
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
-    data::DataFrame,
+    data::Union{<:Observable{<:DataFrame},DataFrame},
     Δbin;
     positions = nothing,
     labels = nothing,
@@ -51,22 +51,20 @@ function plot_topoplotseries!(
     config = PlotConfig(:topoplotseries)
     config_kwargs!(config; kwargs...)
 
-    data = deepcopy(data)
 
+    data = _as_observable(data)
     # resolve columns with data
-    config.mapping = resolve_mappings(data, config.mapping)
+    config.mapping = resolve_mappings(to_value(data), config.mapping)
     positions = getTopoPositions(; positions = positions, labels = labels)
 
-    if "label" ∉ names(data)
-        data.label = data.channel
-    end
+    label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data,
         Δbin;
         y = config.mapping.y,
-        label = :label,
+        label = label,
         col = config.mapping.col,
         row = config.mapping.row,
         col_labels = col_labels,
@@ -82,7 +80,7 @@ function plot_topoplotseries!(
         config_kwargs!(config)
     else
         data_mean = df_timebin(
-            data,
+            to_value(data),
             Δbin;
             col_y = config.mapping.y,
             fun = combinefun,
