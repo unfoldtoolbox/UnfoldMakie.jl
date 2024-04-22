@@ -64,6 +64,7 @@ function plot_erpimage!(
     erpblur = Observable(10),
     meanplot = false,
     show_sortval = false,
+    sortval_xlabel = Observable("Sorting value"),
     kwargs..., # not observables for a while ;)
 )
 
@@ -111,29 +112,19 @@ function plot_erpimage!(
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
-        ax.xlabelvisible = false
+        ax.xlabelvisible = false #padding of the main plot
         ax.xticklabelsvisible = false
 
-        sub_config1 = deepcopy(config)
-        config_kwargs!(
-            sub_config1;
-            layout = (; show_legend = false),
-            axis = (;
-                ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label
-            ),
-        )
         axbottom = Axis(
             f[5, 1:4];
+            ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
             xlabelpadding = 0,
             xautolimitmargin = (0, 0),
-            sub_config1.axis...,
         )
-        #println(to_value(times))
         #axbottom.xticks = minimum(to_value(times)):0.3:maximum(to_value(times))
-        #println(axbottom.xticks)
 
         lines!(axbottom, times, @lift(mean($data, dims = 2)[:, 1]))
-        apply_layout_settings!(sub_config1; fig = f, ax = axbottom)
+        apply_layout_settings!(config; fig = f, ax = axbottom)
         linkxaxes!(ax, axbottom)
         if show_sortval
             rowgap!(f.layout, -30)
@@ -143,19 +134,13 @@ function plot_erpimage!(
         if isnothing(to_value(sortvalues))
             error("`show_sortval` needs `sortvalues` argument")
         end
-        sub_config2 = deepcopy(config)
-        config_kwargs!(
-            sub_config2;
-            layout = (; show_legend = false, use_colorbar = false),
-            axis = (; ylabel = "Trials sorted", xlabel = "Sorting value"),
-        )
         axleft = Axis(
             f[1:4, 5];
+            xlabel = to_value(sortval_xlabel),
             ylabelvisible = false,
             yticklabelsvisible = false,
             xautolimitmargin = (0, 0),
             yautolimitmargin = (0, 0),
-            sub_config2.axis...,
         )
         xs = @lift(1:1:size($sortvalues, 1))
         ys = @lift(sort($sortvalues)[:, 1])
@@ -172,7 +157,7 @@ function plot_erpimage!(
             maximum(to_value(sortvalues)) ÷ 3 * 2,
             maximum(to_value(sortvalues)),
         ]
-        apply_layout_settings!(sub_config2; fig = f, ax = axleft)
+        apply_layout_settings!(config; fig = f, ax = axleft)
         linkyaxes!(ax, axleft)
     else
         Colorbar(
