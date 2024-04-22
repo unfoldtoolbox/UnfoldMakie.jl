@@ -79,13 +79,17 @@ function plot_topoplotseries!(
     if (config.colorbar.colorrange !== nothing)
         config_kwargs!(config)
     else
-        data_mean = df_timebin(
-            to_value(data),
-            Δbin;
-            col_y = config.mapping.y,
-            fun = combinefun,
-            grouping = [:label, config.mapping.col, config.mapping.row],
-        )
+        data_mean = if eltype(to_value(data)[!, config.mapping.col]) <: Number
+            df_timebin(
+                to_value(data),
+                Δbin;
+                col_y = config.mapping.y,
+                fun = combinefun,
+                grouping = [:label, config.mapping.col, config.mapping.row],
+            )
+        else
+            to_value(data)
+        end
         colorrange = extract_colorrange(data_mean, config.mapping.y)
         println(colorrange)
         config_kwargs!(
