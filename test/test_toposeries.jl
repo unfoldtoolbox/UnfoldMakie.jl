@@ -170,6 +170,53 @@ end
     )
 end
 
+
+@testset "observables" begin
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    df_obs = Observable(df)
+
+    plot_topoplotseries!(
+        f[1:2, 1:2],
+        df_obs,
+        Δbin;
+        col_labels = true,
+        mapping = (; row = :condition),
+        positions = positions,
+        visual = (label_scatter = false,),
+        layout = (; use_colorbar = true),
+    )
+    f
+    df = to_value(df_obs)
+    df.estimate .= rand(length(df.estimate))
+    df_obs[] = df
+end
+
+
+@testset "categorical cols" begin
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    plot_topoplotseries!(
+        f[1:2, 1:2],
+        0,
+        df;
+        col_labels = true,
+        mapping = (; col = :condition),
+        positions = positions,
+        visual = (label_scatter = false,),
+        layout = (; use_colorbar = true),
+    )
+    f
+    df = to_value(df_obs)
+    df.estimate .= rand(length(df.estimate))
+    df_obs[] = df
+end
+
+
 #= 
 using CSV
 tmp = CSV.read("dev/UnfoldMakie/test/output2.csv", DataFrame)
