@@ -26,7 +26,7 @@ df = flatten(df, :estimate);
 plot_circular_topoplots(
     df;
     positions = pos,
-    center_label = "Visual angle [°]",
+    center_label = "Relative angle [°]",
     predictor = :circular_variable,
 )
 
@@ -39,7 +39,7 @@ plot_circular_topoplots(
     predictor_bounds = [80, 320],
 )
 
-# # Configurations of Circular EEG Plot
+# # Configurations of Circular Topoplots
 
 # ```@docs
 # plot_circular_topoplots
