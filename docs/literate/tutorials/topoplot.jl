@@ -23,7 +23,7 @@ data, positions = TopoPlots.example_data()
 # - 400 timepoints in range from -0.3 to 0.5 mseconds;
 # - Estimates of 3 averaging functions. Instead of displaying the EEG data for all subjects, here we aggregate the data using (1) mean, (2) standard deviation and (3) p-value within t-tests.
 
-#While `position` consist of 64 x and y coordinates of each channels on a scalp. 
+# While `position` consist of 64 x and y coordinates of each channels on a scalp. 
 
 
 # # Plot Topoplots
