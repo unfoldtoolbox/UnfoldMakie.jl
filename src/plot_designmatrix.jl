@@ -29,6 +29,10 @@ $(_docstring(:designmat))
 """
 plot_designmatrix(data::AbstractDesignMatrix; kwargs...) =
     plot_designmatrix!(Figure(), data; kwargs...)
+plot_designmatrix(data::Vector{AbstractDesignMatrix}; kwargs...) =
+    plot_designmatrix!(data[1]; kwargs...)
+plot_designmatrix(f, data::Vector{AbstractDesignMatrix}; kwargs...) =
+    plot_designmatrix!(f, data[1]; kwargs...)
 function plot_designmatrix!(
     f::Union{GridPosition,GridLayout,Figure},
     data::AbstractDesignMatrix;
