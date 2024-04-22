@@ -6,7 +6,7 @@ using UnfoldMakie
 """
     to_positions(raw::PyMNE.Py; kwargs...)
 
-Calls `make_eeg_layout` from MNE-Python with optional kwargs.
+Generates EEG positions. Calls `make_eeg_layout` from MNE-Python with optional kwargs.
 **Return Value:** `Vector{Point2{Float64}`.
     """
 function UnfoldMakie.to_positions(raw::PyMNE.Py; kwargs...)
