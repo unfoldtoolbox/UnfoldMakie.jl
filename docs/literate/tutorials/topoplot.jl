@@ -17,6 +17,7 @@ using DataFrames
 # ## Data loading
 
 data, positions = TopoPlots.example_data()
+#
 #= 
 The size of `data` is 64×400×3. This means:
 - 64 channels;
