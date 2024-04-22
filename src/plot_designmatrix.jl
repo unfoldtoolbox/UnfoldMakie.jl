@@ -27,11 +27,12 @@ $(_docstring(:designmat))
 
 **Return Value:** `Figure` displaying the Design matrix. 
 """
-plot_designmatrix(data::AbstractDesignMatrix; kwargs...) =
-    plot_designmatrix!(Figure(), data; kwargs...)
-plot_designmatrix(data::Vector{AbstractDesignMatrix}; kwargs...) =
-    plot_designmatrix!(data[1]; kwargs...)
-function plot_designmatrix(f, data::Vector{AbstractDesignMatrix}; kwargs...)
+plot_designmatrix(
+    data::Union{<:Vector{<:AbstractDesignMatrix},<:AbstractDesignMatrix};
+    kwargs...,
+) = plot_designmatrix!(Figure(), data; kwargs...)
+
+function plot_designmatrix(f, data::Vector{<:AbstractDesignMatrix}; kwargs...)
     if length(data) > 1
         @warn "multiple $(length(data)) designmatrices found, plotting the first one"
     end
