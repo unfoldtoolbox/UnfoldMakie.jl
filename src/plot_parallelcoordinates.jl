@@ -58,7 +58,6 @@ function plot_parallelcoordinates(
 
     config.mapping = UnfoldMakie.resolve_mappings(data, config.mapping)
 
-    println(typeof(normalize))
     # remove all unspecified columns
     d = select(data, config.mapping...)
 
@@ -240,7 +239,7 @@ function parallelcoordinates(
     axlist = Makie.LineAxis[]
     for i in eachindex(x_pos)
         # link them to the parent axes size
-        axis_endpoints = lift(ax.scene.px_area) do area
+        axis_endpoints = lift(ax.scene.viewport) do area
             center(x_pos[i], x_pos[end], area)
         end
         if isa(minlist, AbstractArray)
@@ -276,7 +275,6 @@ function parallelcoordinates(
 
         append!(axlist, [ax_pcp])
     end
-
 
     # add some space to the left and top
     pro = ax.layoutobservables.protrusions[]
@@ -336,7 +334,6 @@ function pcp_title!(
         inspectable = false,
     )
 end
-
 
 """
     PCPTicks
