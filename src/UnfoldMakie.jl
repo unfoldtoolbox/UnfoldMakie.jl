@@ -37,8 +37,10 @@ import AlgebraOfGraphics.hidedecorations!
 # Unfold Backward Compatability. AbstractDesignMatrix was introduced only in v0.7
 if isdefined(Unfold, :AbstractDesignMatrix)
     # nothing, already imprted
+
 else
     const AbstractDesignMatrix = Unfold.DesignMatrix
+    const drop_missing_epochs = Unfold.dropMissingEpochs
 end
 
 include("plotconfig.jl")
