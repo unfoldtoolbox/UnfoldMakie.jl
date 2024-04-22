@@ -32,7 +32,7 @@ plot_designmatrix(
     kwargs...,
 ) = plot_designmatrix!(Figure(), data; kwargs...)
 
-function plot_designmatrix(f, data::Vector{<:AbstractDesignMatrix}; kwargs...)
+function plot_designmatrix!(f, data::Vector{<:AbstractDesignMatrix}; kwargs...)
     if length(data) > 1
         @warn "multiple $(length(data)) designmatrices found, plotting the first one"
     end
