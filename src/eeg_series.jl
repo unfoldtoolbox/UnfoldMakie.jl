@@ -101,6 +101,7 @@ function eeg_topoplot_series!(
     combinefun = mean,
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
+    interactive_scatter = false,
     topoplot_attributes...,
 )
 
@@ -158,7 +159,12 @@ function eeg_topoplot_series!(
 
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
-    @debug "select" select_col select_row row_labels col_labels col row
+
+    if interactive_scatter != false
+        @assert isa(interactive_scatter, Observable)
+    end
+
+
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -193,6 +199,26 @@ function eeg_topoplot_series!(
                 ax.ylabel = string(to_value(df_single)[1, row])
                 ax.ylabelvisible = true
             end
+
+            if interactive_scatter != false
+                @debug r c
+                on(events(ax2).mousebutton) do event
+                    if event.button == Mouse.left && event.action == Mouse.press
+
+                        plt, p = pick(ax2)
+                        @debug typeof(plt) plt ax2 typeof(plt.parent.parent)
+                        if plt == ax2
+                            @debug "same"
+                        end
+                        #@debug [isnothing(row) ? 1 : row, isnothing(col) ? 1 : col]
+                        if isa(plt, Makie.Scatter)
+                            interactive_scatter[] = (r, c, p)
+                        end
+
+                    end
+                end
+            end
+
             push!(axlist, ax)
         end
     end

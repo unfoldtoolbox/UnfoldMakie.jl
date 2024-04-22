@@ -215,6 +215,28 @@ end
 end
 
 
+@testset "observables on scatterpoints" begin
+    ##--
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    obs_mat = Observable((0, 0, 0))
+    plot_topoplotseries(
+        df,
+        0;
+        col_labels = true,
+        mapping = (; col = :condition),
+        positions = positions,
+        visual = (label_scatter = (markersize = 20,),),
+        layout = (; use_colorbar = true),
+        interactive_scatter = obs_mat,
+    )
+    f
+
+end
+
+
 #= 
 using CSV
 tmp = CSV.read("dev/UnfoldMakie/test/output2.csv", DataFrame)
