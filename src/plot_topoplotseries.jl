@@ -45,6 +45,7 @@ function plot_topoplotseries!(
     col_labels = true,
     row_labels = true,
     rasterize_heatmaps = true,
+    interactive_scatter = false,
     kwargs...,
 )
 
@@ -68,7 +69,6 @@ function plot_topoplotseries!(
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  - overkll as we would only need to check the xlabel ;)
     end
 
-
     positions = getTopoPositions(; positions = positions, labels = labels)
 
     label = "label" ∉ names(to_value(data)) ? :channel : :label
@@ -87,6 +87,7 @@ function plot_topoplotseries!(
         combinefun = combinefun,
         xlim_topo = config.axis.xlim_topo,
         ylim_topo = config.axis.ylim_topo,
+        interactive_scatter = interactive_scatter,
         config.visual...,
         positions,
     )
