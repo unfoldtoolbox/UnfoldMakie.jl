@@ -17,11 +17,11 @@ uf = example_data("UnfoldLinearModel")
 
 # The following code will result in the default configuration. 
 
-plot_designmatrix(designmatrix(uf)[1])
+plot_designmatrix(designmatrix(uf))
 
 # To make the design matrix easier to read, you may want to sort it using `sort_data`.
 
-plot_designmatrix(designmatrix(uf)[1]; sort_data = true)
+plot_designmatrix(designmatrix(uf); sort_data = true)
 
 # # Configurations for Design matrix plot
 

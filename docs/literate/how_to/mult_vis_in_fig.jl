@@ -78,7 +78,7 @@ plot_erp!(
     stderror = true,
 )
 
-plot_designmatrix!(f[2, 3], designmatrix(uf)[1])
+plot_designmatrix!(f[2, 3], designmatrix(uf))
 
 plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
 plot_topoplotseries!(
