@@ -129,9 +129,21 @@ function eeg_topoplot_series!(
     # using same colormap + contour levels for all plots
 
     data = _as_observable(data)
-    data_mean = @lift(
-        df_timebin($data, Δbin; col_y = y, fun = combinefun, grouping = [label, col, row])
-    )
+    if eltype(to_value(data)[!, col]) <: Number
+
+        data_mean = @lift(
+            df_timebin(
+                $data,
+                Δbin;
+                col_y = y,
+                fun = combinefun,
+                grouping = [label, col, row],
+            )
+        )
+    else
+        # categorical detected, no binning necessary
+        data_mean = data
+    end
     (q_min, q_max) = extract_colorrange(to_value(data_mean), y)
     topoplot_attributes = merge(
         (
@@ -146,7 +158,7 @@ function eeg_topoplot_series!(
 
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
-
+    @debug "select" select_col select_row
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -159,6 +171,7 @@ function eeg_topoplot_series!(
             if !isnothing(row)
                 sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
             end
+
             df_single = @lift($data_mean[sel, :])
 
             # select labels
@@ -166,6 +179,7 @@ function eeg_topoplot_series!(
             # select data
             d_vec = @lift($df_single[:, y])
             # plot it
+            @debug "topoplot" size(to_value(d_vec)) size(labels) topoplot_attributes
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
 
             if rasterize_heatmaps
