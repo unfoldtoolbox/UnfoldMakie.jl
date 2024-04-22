@@ -158,7 +158,7 @@ function eeg_topoplot_series!(
 
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
-    @debug "select" select_col select_row
+    @debug "select" select_col select_row row_labels col_labels col row
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -179,14 +179,13 @@ function eeg_topoplot_series!(
             # select data
             d_vec = @lift($df_single[:, y])
             # plot it
-            @debug "topoplot" size(to_value(d_vec)) size(labels) topoplot_attributes
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
 
             if rasterize_heatmaps
                 ax2.plots[1].plots[1].rasterize = true
             end
             if r == length(select_row) && col_labels
-                ax.xlabel = string(to_value(df_single).time[1])
+                ax.xlabel = string(to_value(df_single)[1, col])
                 ax.xlabelvisible = true
             end
             if c == 1 && length(select_row) > 1 && row_labels

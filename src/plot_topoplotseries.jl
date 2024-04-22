@@ -48,13 +48,27 @@ function plot_topoplotseries!(
     kwargs...,
 )
 
+    data = _as_observable(data)
+
+
     config = PlotConfig(:topoplotseries)
+    # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
 
 
-    data = _as_observable(data)
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
+
+
+    cat_or_cont_columns =
+        eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
+    if cat_or_cont_columns == "cat"
+        # overwrite Time windows [s] default if categorical
+        config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
+        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  - overkll as we would only need to check the xlabel ;)
+    end
+
+
     positions = getTopoPositions(; positions = positions, labels = labels)
 
     label = "label" ∉ names(to_value(data)) ? :channel : :label
@@ -79,7 +93,7 @@ function plot_topoplotseries!(
     if (config.colorbar.colorrange !== nothing)
         config_kwargs!(config)
     else
-        data_mean = if eltype(to_value(data)[!, config.mapping.col]) <: Number
+        data_mean = if cat_or_cont_columns == "cont"
             df_timebin(
                 to_value(data),
                 Δbin;
@@ -91,7 +105,6 @@ function plot_topoplotseries!(
             to_value(data)
         end
         colorrange = extract_colorrange(data_mean, config.mapping.y)
-        println(colorrange)
         config_kwargs!(
             config,
             visual = (; colorrange = colorrange),
