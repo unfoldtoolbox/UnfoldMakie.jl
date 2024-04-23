@@ -186,7 +186,7 @@ function eeg_topoplot_series!(
             d_vec = @lift($df_single[:, y])
             # plot it
             ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
-
+            @debug typeof(ax2) typeof(ax)
             if rasterize_heatmaps
                 ax2.plots[1].plots[1].rasterize = true
             end
@@ -204,14 +204,10 @@ function eeg_topoplot_series!(
                 @debug r c
                 on(events(ax2).mousebutton) do event
                     if event.button == Mouse.left && event.action == Mouse.press
-
                         plt, p = pick(ax2)
-                        @debug typeof(plt) plt ax2 typeof(plt.parent.parent)
-                        if plt == ax2
-                            @debug "same"
-                        end
-                        #@debug [isnothing(row) ? 1 : row, isnothing(col) ? 1 : col]
-                        if isa(plt, Makie.Scatter)
+                        @debug ax.scene.plots
+                        if isa(plt, Makie.Scatter) && plt == ax2.plots[1].plots[3]
+                            @debug r, c, p
                             interactive_scatter[] = (r, c, p)
                         end
 
