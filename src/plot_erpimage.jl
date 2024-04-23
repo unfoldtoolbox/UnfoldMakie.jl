@@ -138,7 +138,7 @@ function plot_erpimage!(
         end
         axleft = Axis(
             f[1:4, 5];
-            xlabel = to_value(sortval_xlabel), #@lift($sortval_xlabel),
+            xlabel = sortval_xlabel,
             ylabelvisible = false,
             yticklabelsvisible = false,
             xautolimitmargin = (0, 0),

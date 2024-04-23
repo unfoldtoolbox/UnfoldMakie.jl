@@ -116,7 +116,7 @@ end
         show_sortval = true,
         sortval_xlabel = str,
     )
-    str[] = "TEST"
+    str[] = "TEST2"
 end
 #= @testset "ERP image with show_sortval" begin
     plot_erpimage(

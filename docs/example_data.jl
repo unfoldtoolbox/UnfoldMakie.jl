@@ -54,7 +54,7 @@ function example_data(example = "TopoPlots.jl")
 
             m = fit(
                 UnfoldModel,
-                (Dict(Any => (f, range(0, length = size(data, 2), step = 1 / 100)))),
+                [(Any => (f, range(0, length = size(data, 2), step = 1 / 100)))],
                 evts,
                 data,
             )
@@ -71,7 +71,7 @@ function example_data(example = "TopoPlots.jl")
         f = @formula 0 ~ 1 + condition + continuous
         basis = firbasis([0, 0.5], 100)
         # generate ModelStruct
-        return fit(UnfoldModel, Dict(Any => (f, basis)), evts, data)
+        return fit(UnfoldModel, [Any => (f, basis)], evts, data)
     elseif example == "7channels"
         design =
             SingleSubjectDesign(conditions = Dict(:condA => ["levelA", "levelB"])) |>
@@ -87,7 +87,7 @@ function example_data(example = "TopoPlots.jl")
             simulate(MersenneTwister(1), design, [mc], onset, PinkNoise(noiselevel = 0.05))
         basisfunction = firbasis((-0.1, 0.5), 100)
         f = @formula 0 ~ 1 + condA
-        bf_dict = Dict(Any => (f, basisfunction))
+        bf_dict = [Any => (f, basisfunction)]
         return fit(UnfoldModel, bf_dict, evnts, df)
 
     elseif example == "UnfoldTimeExpanded"
@@ -95,7 +95,7 @@ function example_data(example = "TopoPlots.jl")
         f = @formula 0 ~ 1 + condition + continuous
         basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
         #basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10)
-        bfDict = Dict(Any => (f, basisfunction))
+        bfDict = [Any => (f, basisfunction)]
         return fit(UnfoldModel, bfDict, evts, df)
     elseif example == "TopoPlots.jl"
         data, chanlocs = TopoPlots.example_data()
