@@ -153,12 +153,19 @@ function plot_erpimage!(
             label = config.colorbar.label,
             labelrotation = config.colorbar.labelrotation,
         )
-        axleft.xticks = [
-            minimum(to_value(sortvalues)),
-            maximum(to_value(sortvalues)) ÷ 3,
-            maximum(to_value(sortvalues)) ÷ 3 * 2,
-            maximum(to_value(sortvalues)),
-        ]
+
+       #=  axleft.xticks = [
+            minimum(to_value(xs)),
+            maximum(to_value(xs)) ÷ 3,
+            maximum(to_value(xs)) ÷ 3 * 2,
+            maximum(to_value(xs)),
+        ] =#
+       #=  axleft.xticks = @lift([
+            minimum($sortvalues),
+            maximum($sortvalues) ÷ 3,
+            maximum($sortvalues) ÷ 3 * 2,
+            maximum($sortvalues),
+        ]) =#
         apply_layout_settings!(config; fig = f, ax = axleft)
         linkyaxes!(ax, axleft)
     else
