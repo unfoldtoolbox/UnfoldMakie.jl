@@ -52,7 +52,7 @@ SparseArrays = "1"
 StaticArrays = "1"
 Statistics = "1"
 TopoPlots = "0.1"
-Unfold = "0.3, 0.4, 0.5, 0.6"
+Unfold = "0.3, 0.4, 0.5, 0.6, 0.7"
 julia = "1"
 
 [extras]
