@@ -102,6 +102,7 @@ function eeg_topoplot_series!(
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
     interactive_scatter = false,
+    highlight_scatter = false,#Observable([0]),
     topoplot_attributes...,
 )
 
@@ -185,10 +186,35 @@ function eeg_topoplot_series!(
             # select data
             d_vec = @lift($df_single[:, y])
             # plot it
-            ax2 = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
-            @debug typeof(ax2) typeof(ax)
+            if highlight_scatter != false || interactive_scatter != false
+
+                #    pos = @lift topoplot_attributes[:positions][highlight_scatter]
+                strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
+
+
+                highlight_feature = (; strokecolor = strokecolor)
+                if :label_scatter ∈ keys(topoplot_attributes)
+                    topoplot_attributes = merge(
+                        topoplot_attributes,
+                        (;
+                            label_scatter = merge(
+                                topoplot_attributes[:label_scatter],
+                                highlight_feature,
+                            )
+                        ),
+                    )
+                else
+                    topoplot_attributes =
+                        merge(topoplot_attributes, (; label_scatter = highlight_feature))
+                end
+
+
+            end
+            h_topo = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
+            @debug typeof(h_topo) typeof(ax)
+
             if rasterize_heatmaps
-                ax2.plots[1].plots[1].rasterize = true
+                h_topo.plots[1].plots[1].rasterize = true
             end
             if r == length(select_row) && col_labels
                 ax.xlabel = string(to_value(df_single)[1, col])
@@ -201,13 +227,17 @@ function eeg_topoplot_series!(
             end
 
             if interactive_scatter != false
-                @debug r c
-                on(events(ax2).mousebutton) do event
+
+                on(events(h_topo).mousebutton) do event
                     if event.button == Mouse.left && event.action == Mouse.press
-                        plt, p = pick(ax2)
-                        @debug ax.scene.plots
-                        if isa(plt, Makie.Scatter) && plt == ax2.plots[1].plots[3]
-                            @debug r, c, p
+                        plt, p = pick(h_topo)
+
+                        if isa(plt, Makie.Scatter) && plt == h_topo.plots[1].plots[3]
+
+                            plt.strokecolor[] .= :black
+                            plt.strokecolor[][p] = :white
+                            notify(plt.strokecolor) # not sure why this is necessary, but oh well..
+
                             interactive_scatter[] = (r, c, p)
                         end
 
