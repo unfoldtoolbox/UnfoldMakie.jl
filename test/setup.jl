@@ -10,4 +10,4 @@ using AlgebraOfGraphics
 using Random
 include("../docs/example_data.jl")
 
-raw_ch_names =  example_data("raw_ch_names")
+raw_ch_names = example_data("raw_ch_names")
