@@ -26,7 +26,7 @@ end
     f = @formula 0 ~ 1 + condition + continuous
     #basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
     basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10, name = "")
-    bfDict = Dict(Any => (f, basisfunction))
+    bfDict = [Any => (f, basisfunction)]
     td = fit(UnfoldModel, bfDict, evts, df)
     plot_designmatrix(designmatrix(td))
 end

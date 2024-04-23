@@ -62,15 +62,15 @@ cfgDefault.mapping.y
 
 # # Labelling
 #=
-`label_text` draws labels next to their positions. 
+- `label_text` draws labels next to their positions. 
 Example: `plot_topoplot(...; visual=(; label_text = true))`
 
-`label_scatter (boolean)` draws the markers at the given positions.
+- `label_scatter (boolean)` draws the markers at the given positions.
 
 Example: `plot_topoplot(...; visual=(; label_scatter = true))`
 =#
 
-plot_topoplot(
+plot_topoplot( # should be both cases here
     data[1:4, 340, 1];
     visual = (; label_scatter = false),
     labels = ["O1", "F2", "F3", "P4"],

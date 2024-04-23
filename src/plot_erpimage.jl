@@ -23,6 +23,8 @@ Plot an ERP image.
     Add a line plot below the ERP image, showing the mean of the data.
 - `show_sortval::bool = false`\\
     Add a plot below the ERP image, showing the distribution of the sorting data.
+- `sortval_xlabel::String = "Sorting value"`\\
+    If `show_sortval = true` controls xlabel.
 - `axis.ylabel::String = "Trials"`\\
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
 
@@ -136,7 +138,7 @@ function plot_erpimage!(
         end
         axleft = Axis(
             f[1:4, 5];
-            xlabel = to_value(sortval_xlabel),
+            xlabel = sortval_xlabel,
             ylabelvisible = false,
             yticklabelsvisible = false,
             xautolimitmargin = (0, 0),

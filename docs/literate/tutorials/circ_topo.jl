@@ -34,7 +34,7 @@ plot_circular_topoplots(
 plot_circular_topoplots(
     df;
     positions = pos,
-    center_label = "Time [msec]",
+    center_label = "Time [sec]",
     predictor = :time,
     predictor_bounds = [80, 320],
 )
