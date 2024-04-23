@@ -38,6 +38,10 @@ end
     include("test_circular_topoplots.jl")
 end
 
+@testset "Design matricies" begin
+    include("test_dm.jl")
+end
+
 @testset "Complex plots" begin
     include("test_complexplots.jl")
 end
