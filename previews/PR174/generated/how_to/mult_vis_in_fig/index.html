@@ -92,38 +92,7 @@ gh = f[4, 2]
 d_topo, pos = example_data(&quot;TopoPlots.jl&quot;)
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-raw_ch_names = [
-    &quot;FP1&quot;,
-    &quot;F3&quot;,
-    &quot;F7&quot;,
-    &quot;FC3&quot;,
-    &quot;C3&quot;,
-    &quot;C5&quot;,
-    &quot;P3&quot;,
-    &quot;P7&quot;,
-    &quot;P9&quot;,
-    &quot;PO7&quot;,
-    &quot;PO3&quot;,
-    &quot;O1&quot;,
-    &quot;Oz&quot;,
-    &quot;Pz&quot;,
-    &quot;CPz&quot;,
-    &quot;FP2&quot;,
-    &quot;Fz&quot;,
-    &quot;F4&quot;,
-    &quot;F8&quot;,
-    &quot;FC4&quot;,
-    &quot;FCz&quot;,
-    &quot;Cz&quot;,
-    &quot;C4&quot;,
-    &quot;C6&quot;,
-    &quot;P4&quot;,
-    &quot;P8&quot;,
-    &quot;P10&quot;,
-    &quot;PO8&quot;,
-    &quot;PO4&quot;,
-    &quot;O2&quot;,
-]
+raw_ch_names = example_data(&quot;raw_ch_names&quot;)
 
 m = example_data(&quot;UnfoldLinearModel&quot;)
 results = coeftable(m)
@@ -194,4 +163,4 @@ for (label, layout) in
         padding = (20, 20, 22, 0),
         halign = :right,
     )
-end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="4255ba26.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Decorations and Axis Spines</a><a class="docs-footer-nextpage" href="../../reference/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.0 on <span class="colophon-date" title="Tuesday 23 April 2024 10:57">Tuesday 23 April 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="31d5559d.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide Decorations and Axis Spines</a><a class="docs-footer-nextpage" href="../../reference/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.0 on <span class="colophon-date" title="Tuesday 23 April 2024 11:03">Tuesday 23 April 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
