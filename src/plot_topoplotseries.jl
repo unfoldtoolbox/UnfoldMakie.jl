@@ -89,7 +89,7 @@ function plot_topoplotseries!(
             grouping = [:label, config.mapping.col, config.mapping.row],
         )
         colorrange = extract_colorrange(data_mean, config.mapping.y)
-        println(colorrange)
+        #println(colorrange)
         config_kwargs!(
             config,
             visual = (; colorrange = colorrange),

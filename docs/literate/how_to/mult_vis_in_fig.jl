@@ -140,38 +140,7 @@ gh = f[4, 2]
 d_topo, pos = example_data("TopoPlots.jl")
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-raw_ch_names = [
-    "FP1",
-    "F3",
-    "F7",
-    "FC3",
-    "C3",
-    "C5",
-    "P3",
-    "P7",
-    "P9",
-    "PO7",
-    "PO3",
-    "O1",
-    "Oz",
-    "Pz",
-    "CPz",
-    "FP2",
-    "Fz",
-    "F4",
-    "F8",
-    "FC4",
-    "FCz",
-    "Cz",
-    "C4",
-    "C6",
-    "P4",
-    "P8",
-    "P10",
-    "PO8",
-    "PO4",
-    "O2",
-]
+raw_ch_names = example_data("raw_ch_names")
 
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
