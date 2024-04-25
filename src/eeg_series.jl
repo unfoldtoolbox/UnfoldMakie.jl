@@ -125,6 +125,12 @@ function eeg_topoplot_series!(
         rightspinevisible = false,
         topspinevisible = false,
         bottomspinevisible = false,
+        xpanlock = true,
+        ypanlock = true,
+        xzoomlock = true,
+        yzoomlock = true,
+        xrectzoom = false,
+        yrectzoom = false,
         limits = (xlim_topo, ylim_topo),
     )
     # aggregate the data over time bins
