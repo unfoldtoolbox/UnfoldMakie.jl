@@ -37,7 +37,7 @@ plot_topoplotseries(data::DataFrame, Δbin::Real; kwargs...) =
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
-    data::DataFrame,
+    data::Union{<:Observable{<:DataFrame},DataFrame},
     Δbin;
     positions = nothing,
     labels = nothing,
@@ -45,28 +45,41 @@ function plot_topoplotseries!(
     col_labels = true,
     row_labels = true,
     rasterize_heatmaps = true,
+    interactive_scatter = false,
     kwargs...,
 )
 
+    data = _as_observable(data)
+
+
     config = PlotConfig(:topoplotseries)
+    # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
 
-    data = deepcopy(data)
 
     # resolve columns with data
-    config.mapping = resolve_mappings(data, config.mapping)
+    config.mapping = resolve_mappings(to_value(data), config.mapping)
+
+
+    cat_or_cont_columns =
+        eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
+    if cat_or_cont_columns == "cat"
+        # overwrite Time windows [s] default if categorical
+        config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
+        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
+        # overkll as we would only need to check the xlabel ;)
+    end
+
     positions = getTopoPositions(; positions = positions, labels = labels)
 
-    if "label" ∉ names(data)
-        data.label = data.channel
-    end
+    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data,
         Δbin;
         y = config.mapping.y,
-        label = :label,
+        label = chan_or_label,
         col = config.mapping.col,
         row = config.mapping.row,
         col_labels = col_labels,
@@ -75,21 +88,25 @@ function plot_topoplotseries!(
         combinefun = combinefun,
         xlim_topo = config.axis.xlim_topo,
         ylim_topo = config.axis.ylim_topo,
+        interactive_scatter = interactive_scatter,
         config.visual...,
         positions,
     )
     if (config.colorbar.colorrange !== nothing)
         config_kwargs!(config)
     else
-        data_mean = df_timebin(
-            data,
-            Δbin;
-            col_y = config.mapping.y,
-            fun = combinefun,
-            grouping = [:label, config.mapping.col, config.mapping.row],
-        )
+        data_mean = if cat_or_cont_columns == "cont"
+            df_timebin(
+                to_value(data),
+                Δbin;
+                col_y = config.mapping.y,
+                fun = combinefun,
+                grouping = [chan_or_label, config.mapping.col, config.mapping.row],
+            )
+        else
+            to_value(data)
+        end
         colorrange = extract_colorrange(data_mean, config.mapping.y)
-        #println(colorrange)
         config_kwargs!(
             config,
             visual = (; colorrange = colorrange),
