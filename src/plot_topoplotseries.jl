@@ -66,19 +66,20 @@ function plot_topoplotseries!(
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
-        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  - overkll as we would only need to check the xlabel ;)
+        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
+        # overkll as we would only need to check the xlabel ;)
     end
 
     positions = getTopoPositions(; positions = positions, labels = labels)
 
-    label = "label" ∉ names(to_value(data)) ? :channel : :label
+    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data,
         Δbin;
         y = config.mapping.y,
-        label = label,
+        label = chan_or_label,
         col = config.mapping.col,
         row = config.mapping.row,
         col_labels = col_labels,
@@ -100,7 +101,7 @@ function plot_topoplotseries!(
                 Δbin;
                 col_y = config.mapping.y,
                 fun = combinefun,
-                grouping = [:label, config.mapping.col, config.mapping.row],
+                grouping = [chan_or_label, config.mapping.col, config.mapping.row],
             )
         else
             to_value(data)
