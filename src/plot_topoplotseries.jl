@@ -5,13 +5,14 @@
 Multiple miniature topoplots in regular distances. 
 ## Arguments  
 
-- `f::Union{GridPosition, GridLayout, Figure}`\\
-    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}`\\
-    DataFrame with data. Requires a `time` column.
+- `f::Union{GridPosition, GridLayout, GridLayoutBase.GridSubposition, Figure}`\\
+    `Figure`, `GridLayout`, `GridPosition`, or GridLayoutBase.GridSubposition to draw the plot.
+- `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
+    DataFrame with data or Observable DataFrame. Requires a `time` column. 
 - `Δbin::Real`\\
     A number for how large one time bin should be.\\
-    `Δbin` is in units of the `data.time` column.
+    `Δbin` is in units of the `data.time` column.\\
+    Should be `0` if `mapping.col` or `mapping.row` are categorical.
 
 ## Keyword arguments (kwargs)
 - `combinefun::Function = mean`\\
@@ -27,6 +28,10 @@ Multiple miniature topoplots in regular distances.
     Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
     Specify channel positions. Requires the list of x and y positions for all unique electrode.
+- `interactive_scatter = false`\\
+    Enable interactive mode. \\ 
+    If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable numbers by clicking topopplot markers.\\
+    `(0, 0, 0)` will correspond to  the number of row, column and channell. 
 
 $(_docstring(:topoplotseries))
 
@@ -51,15 +56,12 @@ function plot_topoplotseries!(
 
     data = _as_observable(data)
 
-
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
 
-
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-
 
     cat_or_cont_columns =
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
