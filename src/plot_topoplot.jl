@@ -36,7 +36,7 @@ function plot_topoplot!(
         data = data[:, config.mapping.y]
     end
 
-    positions = getTopoPositions(; positions = positions, labels = labels)
+    positions = get_topo_positions(; positions = positions, labels = labels)
     eeg_topoplot!(axis, data, labels; positions, config.visual...)
 
     clims = (min(data...), max(data...))

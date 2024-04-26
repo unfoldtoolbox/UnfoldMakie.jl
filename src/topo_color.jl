@@ -1,4 +1,4 @@
-function getTopoPositions(; labels = nothing, positions = nothing)
+function get_topo_positions(; labels = nothing, positions = nothing)
     # positions have priority over labels
     if isnothing(positions) && !isnothing(labels)
         positions = getLabelPos.(labels)
@@ -7,7 +7,7 @@ function getTopoPositions(; labels = nothing, positions = nothing)
     return positions .|> (p -> Point2f(p[1], p[2]))
 end
 
-function getTopoColor(positions, posToColor)
+function get_topo_color(positions, posToColor)
     if isnothing(positions)
         return nothing
     end
@@ -15,7 +15,7 @@ function getTopoColor(positions, posToColor)
 
 end
 
-function posToColorRGB(pos)
+function pos_to_color_RGB(pos)
     cx = 0.5 - pos[1]
     cy = 0.5 - pos[2]
     # rotate to mimick MNE
@@ -27,7 +27,7 @@ function posToColorRGB(pos)
     return colorwheel
 end
 
-function posToColorHSV(pos)
+function pos_to_color_HSV(pos)
     rx = 0.5 - pos[1]
     ry = 0.5 - pos[2]
 
@@ -40,7 +40,7 @@ function posToColorHSV(pos)
 end
 
 
-function posToColorRomaO(pos)
+function pos_to_color_RomaO(pos)
     rx = 0.5 - pos[1]
     ry = 0.5 - pos[2]
 

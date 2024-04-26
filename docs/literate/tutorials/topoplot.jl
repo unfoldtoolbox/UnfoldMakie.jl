@@ -69,12 +69,25 @@ Example: `plot_topoplot(...; visual=(; label_text = true))`
 
 Example: `plot_topoplot(...; visual=(; label_scatter = true))`
 =#
-
-plot_topoplot( # should be both cases here
+f = Figure(size = (500, 500))
+labs4 = ["O1", "F2", "F3", "P4"]
+plot_topoplot!(
+    f[1, 1],
     data[1:4, 340, 1];
     visual = (; label_scatter = false),
-    labels = ["O1", "F2", "F3", "P4"],
+    labels = labs4,
+    axis = (; title = "no channel scatter"),
 )
+
+plot_topoplot!(
+    f[1, 2], 
+    data[1:4, 340, 1];
+    visual = (; label_text = true, label_scatter = (markersize = 15, strokewidth = 2)),
+    labels = labs4,
+    axis = (; title = "channel scatter with text"),
+    mapping = (; labels = labels)
+)
+f
 
 # # Configurations of Topoplot
 

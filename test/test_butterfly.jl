@@ -63,12 +63,12 @@ end
 end
 
 @testset "changing color from ROMA to HSV" begin
-    plot_butterfly(df; positions = pos, topopositions_to_color = UnfoldMakie.posToColorHSV)
+    plot_butterfly(df; positions = pos, topopositions_to_color = UnfoldMakie.pos_to_color_HSV)
 end
 
 
 @testset "changing color from ROMA to RGB" begin
-    plot_butterfly(df; positions = pos, topopositions_to_color = UnfoldMakie.posToColorRGB)
+    plot_butterfly(df; positions = pos, topopositions_to_color = UnfoldMakie.pos_to_color_RGB)
 end
 
 # would be nice these colors to be colowheeled
@@ -100,7 +100,7 @@ end
 
 # Channel highlighted
 @testset "butterfly with single color highlighted channel" begin
-    f = pos -> UnfoldMakie.posToColorRGB(pos)
+    f = pos -> UnfoldMakie.pos_to_color_RGB(pos)
     f =
         p ->
             p == pos[10] ? Colors.RGB(1, 0, 0) : Colors.RGB(128 / 255, 128 / 255, 128 / 255)

@@ -72,7 +72,7 @@ function plot_topoplotseries!(
         # overkll as we would only need to check the xlabel ;)
     end
 
-    positions = getTopoPositions(; positions = positions, labels = labels)
+    positions = get_topo_positions(; positions = positions, labels = labels)
 
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
