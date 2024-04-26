@@ -48,7 +48,7 @@ function plot_circular_topoplots!(
     config_kwargs!(config; kwargs...)
     config.mapping = resolve_mappings(data, config.mapping)
 
-    positions = getTopoPositions(; positions = positions, labels = labels)
+    positions = get_topo_positions(; positions = positions, labels = labels)
     # moving the values of the predictor to a different array to perform boolean queries on them
     predictor_values = data[:, predictor]
 
