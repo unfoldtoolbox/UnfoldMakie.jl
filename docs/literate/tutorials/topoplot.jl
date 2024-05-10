@@ -80,12 +80,12 @@ plot_topoplot!(
 )
 
 plot_topoplot!(
-    f[1, 2], 
+    f[1, 2],
     data[1:4, 340, 1];
     visual = (; label_text = true, label_scatter = (markersize = 15, strokewidth = 2)),
     labels = labs4,
     axis = (; title = "channel scatter with text"),
-    mapping = (; labels = labels)
+    mapping = (; labels = labels),
 )
 f
 

@@ -140,13 +140,13 @@ function plot_erp!(
             topolegend = false
             colors = nothing
         else
-            allPositions = getTopoPositions(; positions = positions, labels = labels)
+            allPositions = get_topo_positions(; positions = positions, labels = labels)
             if (config.visual.colormap !== nothing)
                 colors = config.visual.colormap
                 un = length(unique(plot_data[:, config.mapping.color]))
                 colors = cgrad(config.visual.colormap, un, categorical = true)
             else
-                colors = getTopoColor(allPositions, topopositions_to_color)
+                colors = get_topo_color(allPositions, topopositions_to_color)
             end
         end
     end

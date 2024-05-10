@@ -118,6 +118,15 @@ end
     )
     str[] = "TEST2"
 end
+
+@testset "ERP image with sortval_xlabel" begin
+    sortval = Observable(evts_e.Δlatency)
+    plot_erpimage(times, dat_e; sortvalues = sortval, meanplot = true, show_sortval = true)
+    sortval = Observable(evts_e.continuous)
+end
+
+
+
 #= @testset "ERP image with show_sortval" begin
     plot_erpimage(
         times,

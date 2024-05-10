@@ -63,12 +63,20 @@ end
 end
 
 @testset "changing color from ROMA to HSV" begin
-    plot_butterfly(df; positions = pos, topopositions_to_color = UnfoldMakie.pos_to_color_HSV)
+    plot_butterfly(
+        df;
+        positions = pos,
+        topopositions_to_color = UnfoldMakie.pos_to_color_HSV,
+    )
 end
 
 
 @testset "changing color from ROMA to RGB" begin
-    plot_butterfly(df; positions = pos, topopositions_to_color = UnfoldMakie.pos_to_color_RGB)
+    plot_butterfly(
+        df;
+        positions = pos,
+        topopositions_to_color = UnfoldMakie.pos_to_color_RGB,
+    )
 end
 
 # would be nice these colors to be colowheeled
