@@ -17,4 +17,4 @@ Here in documentation you can find user-friendly examples of how to use plots.
 - **Scientific colormaps as default**
 According to our study (Mikheev, 2024), 40% of EEG researchers do not know about the issue of scientific color maps. To protect the scientific integrity, we used `Reverse(:RdBu)` and `Roma` as default color maps. 
 - **Interactivity** 
-Several plots use Observables and have interactive mode. Check `plot_topoplotseries` and `plot_erpimage`.
+Several plots use Observables and have interactive mode so you can click on them and change their layout. Check `plot_topoplotseries` and `plot_erpimage`.
