@@ -142,10 +142,6 @@ function plot_erpimage!(
         if isnothing(to_value(sortvalues))
             error("`show_sortval` needs non-empty `sortvalues` argument")
         end
-        println("TEST2")
-
-        println(size(to_value(sortvalues)))
-        println(size(to_value(sortvalues), 1))
         axleft = Axis(
             f[1:4, 5];
             xlabel = sortval_xlabel,
