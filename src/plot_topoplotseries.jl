@@ -129,6 +129,12 @@ function plot_topoplotseries!(
         titlefont = config.axis.titlefont,
         ylabelpadding = config.axis.ylabelpadding,
         xlabelpadding = config.axis.xlabelpadding,
+        xpanlock = true,
+        ypanlock = true,
+        xzoomlock = true,
+        yzoomlock = true,
+        xrectzoom = false,
+        yrectzoom = false,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
