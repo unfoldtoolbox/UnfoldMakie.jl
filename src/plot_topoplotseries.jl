@@ -28,7 +28,7 @@ Multiple miniature topoplots in regular distances.
     Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
     Specify channel positions. Requires the list of x and y positions for all unique electrode.
-- `interactive_scatter = false`\\
+- `interactive_scatter = nothing`\\
     Enable interactive mode. \\ 
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
     `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
@@ -50,7 +50,7 @@ function plot_topoplotseries!(
     col_labels = true,
     row_labels = true,
     rasterize_heatmaps = true,
-    interactive_scatter = false,
+    interactive_scatter = nothing,
     kwargs...,
 )
 

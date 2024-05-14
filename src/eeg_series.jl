@@ -101,7 +101,7 @@ function eeg_topoplot_series!(
     combinefun = mean,
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
-    interactive_scatter = false,
+    interactive_scatter = nothing,
     highlight_scatter = false,#Observable([0]),
     topoplot_attributes...,
 )
@@ -167,7 +167,7 @@ function eeg_topoplot_series!(
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
 
-    if interactive_scatter != false
+    if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
 
@@ -192,7 +192,7 @@ function eeg_topoplot_series!(
             # select data
             d_vec = @lift($df_single[:, y])
             # plot it
-            if highlight_scatter != false || interactive_scatter != false
+            if highlight_scatter != false || interactive_scatter != nothing
 
                 #    pos = @lift topoplot_attributes[:positions][highlight_scatter]
                 strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
