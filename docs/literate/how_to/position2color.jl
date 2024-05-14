@@ -32,7 +32,7 @@ Also you can specify a uniform color.
 plot_butterfly(
     results;
     positions = positions,
-    topopositions_to_color = pos -> UnfoldMakie.posToColorRGB(pos),
+    topopositions_to_color = pos -> UnfoldMakie.pos_to_color_RGB(pos),
 )
 
 
@@ -41,7 +41,7 @@ plot_butterfly(
 plot_butterfly(
     results;
     positions = positions,
-    topopositions_to_color = UnfoldMakie.posToColorHSV,
+    topopositions_to_color = UnfoldMakie.pos_to_color_HSV,
 )
 
 

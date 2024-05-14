@@ -1,7 +1,7 @@
 # # The Dilemma of Multidimensionality
 
 # !!! note
-#        Please read the paper [The Art of Brainwaves](https://www.biorxiv.org/content/10.1101/2023.12.20.572507v2.full), if you want to know more about how we come up with these plot types.
+#        Please read the paper [The Art of Brainwaves](https://apertureneuro.org/article/116386-the-art-of-brainwaves-a-survey-on-event-related-potential-visualization-practices), if you want to know more about how we come up with these plot types.
 #=
 EEG – multidimensional data and could be presented differently.
 
