@@ -5,13 +5,14 @@
 Multiple miniature topoplots in regular distances. 
 ## Arguments  
 
-- `f::Union{GridPosition, GridLayout, Figure}`\\
-    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}`\\
-    DataFrame with data. Requires a `time` column.
+- `f::Union{GridPosition, GridLayout, GridLayoutBase.GridSubposition, Figure}`\\
+    `Figure`, `GridLayout`, `GridPosition`, or GridLayoutBase.GridSubposition to draw the plot.
+- `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
+    DataFrame with data or Observable DataFrame. Requires a `time` column. 
 - `Δbin::Real`\\
     A number for how large one time bin should be.\\
-    `Δbin` is in units of the `data.time` column.
+    `Δbin` is in units of the `data.time` column.\\
+    Should be `0` if `mapping.col` or `mapping.row` are categorical.
 
 ## Keyword arguments (kwargs)
 - `combinefun::Function = mean`\\
@@ -27,6 +28,10 @@ Multiple miniature topoplots in regular distances.
     Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
     Specify channel positions. Requires the list of x and y positions for all unique electrode.
+- `interactive_scatter = nothing`\\
+    Enable interactive mode. \\ 
+    If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
+    `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
 
 $(_docstring(:topoplotseries))
 
@@ -45,21 +50,18 @@ function plot_topoplotseries!(
     col_labels = true,
     row_labels = true,
     rasterize_heatmaps = true,
-    interactive_scatter = false,
+    interactive_scatter = nothing,
     kwargs...,
 )
 
     data = _as_observable(data)
 
-
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
 
-
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-
 
     cat_or_cont_columns =
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
@@ -70,7 +72,7 @@ function plot_topoplotseries!(
         # overkll as we would only need to check the xlabel ;)
     end
 
-    positions = getTopoPositions(; positions = positions, labels = labels)
+    positions = get_topo_positions(; positions = positions, labels = labels)
 
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
@@ -127,6 +129,12 @@ function plot_topoplotseries!(
         titlefont = config.axis.titlefont,
         ylabelpadding = config.axis.ylabelpadding,
         xlabelpadding = config.axis.xlabelpadding,
+        xpanlock = config.axis.xpanlock,
+        ypanlock = config.axis.ypanlock,
+        xzoomlock = config.axis.xzoomlock,
+        yzoomlock = config.axis.yzoomlock,
+        xrectzoom = config.axis.xrectzoom,
+        yrectzoom = config.axis.yrectzoom,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
     return f

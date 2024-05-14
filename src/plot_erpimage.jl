@@ -49,10 +49,11 @@ plot_erpimage!(
 ) = plot_erpimage!(f, @lift(1:size($data, 1)), data; kwargs...)
 
 # argument list has no figure? Add one!
-plot_erpimage(times::AbstractVector, data::Matrix{<:Real}; kwargs...) =
-    plot_erpimage!(Figure(), times, data; kwargs...)
-
-
+plot_erpimage(
+    times::AbstractVector,
+    data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}};
+    kwargs...,
+) = plot_erpimage!(Figure(), times, data; kwargs...)
 
 _as_observable(x) = Observable(x)
 _as_observable(x::Observable) = x
@@ -117,15 +118,23 @@ function plot_erpimage!(
         ax.xlabelvisible = false #padding of the main plot
         ax.xticklabelsvisible = false
 
+        trace = @lift(mean($data, dims = 2)[:, 1])
         axbottom = Axis(
             f[5, 1:4];
             ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
+            xlabel = "Time [s]",
             xlabelpadding = 0,
             xautolimitmargin = (0, 0),
+            #xticks = @lift([round(minimum($sortvalues), digits=2), round(mean($sortvalues), digits=2), round(maximum($sortvalues), digits=2)]),
+            limits = @lift((
+                minimum($times),
+                maximum($times),
+                minimum($trace),
+                maximum($trace),
+            )),
         )
-        #axbottom.xticks = minimum(to_value(times)):0.3:maximum(to_value(times))
 
-        lines!(axbottom, times, @lift(mean($data, dims = 2)[:, 1]))
+        lines!(axbottom, times, trace)
         apply_layout_settings!(config; fig = f, ax = axbottom)
         linkxaxes!(ax, axbottom)
         if show_sortval
@@ -134,7 +143,7 @@ function plot_erpimage!(
     end
     if show_sortval
         if isnothing(to_value(sortvalues))
-            error("`show_sortval` needs `sortvalues` argument")
+            error("`show_sortval` needs non-empty `sortvalues` argument")
         end
         axleft = Axis(
             f[1:4, 5];
@@ -143,9 +152,20 @@ function plot_erpimage!(
             yticklabelsvisible = false,
             xautolimitmargin = (0, 0),
             yautolimitmargin = (0, 0),
+            xticks = @lift([
+                round(minimum($sortvalues), digits = 2),
+                round(maximum($sortvalues), digits = 2),
+            ]),
+            limits = @lift((
+                minimum($sortvalues),
+                maximum($sortvalues),
+                1,
+                size($sortvalues, 1),
+            )),
         )
         xs = @lift(1:1:size($sortvalues, 1))
         ys = @lift(sort($sortvalues)[:, 1])
+
         lines!(axleft, ys, xs)
         Colorbar(
             f[1:4, 6],
@@ -153,12 +173,6 @@ function plot_erpimage!(
             label = config.colorbar.label,
             labelrotation = config.colorbar.labelrotation,
         )
-        axleft.xticks = [
-            minimum(to_value(sortvalues)),
-            maximum(to_value(sortvalues)) ÷ 3,
-            maximum(to_value(sortvalues)) ÷ 3 * 2,
-            maximum(to_value(sortvalues)),
-        ]
         apply_layout_settings!(config; fig = f, ax = axleft)
         linkyaxes!(ax, axleft)
     else

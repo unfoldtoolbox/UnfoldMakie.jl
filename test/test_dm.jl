@@ -30,4 +30,3 @@ end
     td = fit(UnfoldModel, bfDict, evts, df)
     plot_designmatrix(designmatrix(td))
 end
-

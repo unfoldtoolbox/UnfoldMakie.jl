@@ -58,7 +58,7 @@ Plot a Butterfly plot.
     Change the width of inlay topoplot.
 - `topoheigth::Real = 0.25` \\
     Change the height of inlay topoplot.
-- `topopositions_to_color::x -> posToColorRomaO(x)`\\
+- `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
     Change the line colors.
 
 **Return Value:** `Figure` displaying Butterfly plot.
@@ -81,7 +81,7 @@ plot_butterfly!(
     topomarkersize = 10,
     topowidth = 0.25,
     topoheigth = 0.25,
-    topopositions_to_color = x -> posToColorRomaO(x),
+    topopositions_to_color = x -> pos_to_color_RomaO(x),
     kwargs...,
 )
 
@@ -140,13 +140,13 @@ function plot_erp!(
             topolegend = false
             colors = nothing
         else
-            allPositions = getTopoPositions(; positions = positions, labels = labels)
+            allPositions = get_topo_positions(; positions = positions, labels = labels)
             if (config.visual.colormap !== nothing)
                 colors = config.visual.colormap
                 un = length(unique(plot_data[:, config.mapping.color]))
                 colors = cgrad(config.visual.colormap, un, categorical = true)
             else
-                colors = getTopoColor(allPositions, topopositions_to_color)
+                colors = get_topo_color(allPositions, topopositions_to_color)
             end
         end
     end

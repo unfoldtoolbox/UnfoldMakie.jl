@@ -194,7 +194,6 @@ end
     df_obs[] = df
 end
 
-
 @testset "categorical cols" begin
     f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
@@ -213,7 +212,6 @@ end
     f
 
 end
-
 
 @testset "observables on scatterpoints" begin
     ##--
