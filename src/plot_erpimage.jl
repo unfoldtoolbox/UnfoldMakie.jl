@@ -49,9 +49,12 @@ plot_erpimage!(
 ) = plot_erpimage!(f, @lift(1:size($data, 1)), data; kwargs...)
 
 # argument list has no figure? Add one!
-plot_erpimage(times::AbstractVector, data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}}; kwargs...) =
-    plot_erpimage!(Figure(), times, data; kwargs...)
-    
+plot_erpimage(
+    times::AbstractVector,
+    data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}};
+    kwargs...,
+) = plot_erpimage!(Figure(), times, data; kwargs...)
+
 _as_observable(x) = Observable(x)
 _as_observable(x::Observable) = x
 
