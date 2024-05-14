@@ -30,8 +30,8 @@ Multiple miniature topoplots in regular distances.
     Specify channel positions. Requires the list of x and y positions for all unique electrode.
 - `interactive_scatter = false`\\
     Enable interactive mode. \\ 
-    If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable numbers by clicking topopplot markers.\\
-    `(0, 0, 0)` will correspond to  the number of row, column and channell. 
+    If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
+    `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
 
 $(_docstring(:topoplotseries))
 
@@ -129,12 +129,12 @@ function plot_topoplotseries!(
         titlefont = config.axis.titlefont,
         ylabelpadding = config.axis.ylabelpadding,
         xlabelpadding = config.axis.xlabelpadding,
-        xpanlock = true,
-        ypanlock = true,
-        xzoomlock = true,
-        yzoomlock = true,
-        xrectzoom = false,
-        yrectzoom = false,
+        xpanlock = config.axis.xpanlock,
+        ypanlock = config.axis.ypanlock,
+        xzoomlock = config.axis.xzoomlock,
+        yzoomlock = config.axis.yzoomlock,
+        xrectzoom = config.axis.xrectzoom,
+        yrectzoom = config.axis.yrectzoom,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
