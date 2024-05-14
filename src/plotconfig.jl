@@ -157,6 +157,12 @@ function PlotConfig(T::Val{:topoplotseries})
             ylim_topo = (-0.25, 1.25),
             ylabelpadding = 25,
             xlabelpadding = 25,
+            xpanlock = true,
+            ypanlock = true,
+            xzoomlock = true,
+            yzoomlock = true,
+            xrectzoom = false,
+            yrectzoom = false,
         ),
         layout = (; use_colorbar = true),
         colorbar = (;
