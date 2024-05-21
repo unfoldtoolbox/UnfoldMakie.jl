@@ -130,6 +130,23 @@ end
     f
 end
 
+@testset "facetting by layout" begin
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 200:1:240, 1], string.(1:length(positions)))
+
+    f = Figure(size = (600, 500))
+    plot_topoplotseries!(
+        f[1:2, 1:2],
+        df,
+        Δbin;
+        col_labels = true,
+        mapping = (; layout = :time),
+        positions = positions,
+        visual = (label_scatter = false,),
+        layout = (; use_colorbar = true),
+    )
+    f
+end
+
 @testset "toposeries with xlabel" begin
     plot_topoplotseries(df, Δbin; positions = positions, axis = (; xlabel = "test"))
 end
@@ -229,10 +246,7 @@ end
         layout = (; use_colorbar = true),
         interactive_scatter = obs_tuple,
     )
-
-
 end
-
 
 #= 
 using CSV
