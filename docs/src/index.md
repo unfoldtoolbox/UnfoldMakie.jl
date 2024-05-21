@@ -4,17 +4,19 @@
 <img src="assets/complex_plot.png" width="300" align="right"/>
 ```
 
-This is the documentation of the UnfoldMakie.jl module (aka library) for the Julia programming language. 
+This is the documentation of the UnfoldMakie.jl package for the Julia programming language. 
 
-## Benefits of UnfoldMakie.jl
+## Highlights of UnfoldMakie.jl
 
 - **10 plot functions for displaying ERPs.**
 Each plot emphasizes certain dimensions while collapsing others.
+- **Speed**
+Plot one figure with 20 topoplots in 1 second? No problemo!
 - **Highly adaptable.**
-The module is based on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/) modules, so you can use configurations from these modules to add new features to your figures.
+The package is primarily based on [Unfold.jl](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie.jl](https://makie.juliaplots.org/stable/).
 - **Many usage examples**
-Here in documentation you can find user-friendly examples of how to use plots.
+Here in the documentation you can find many user-friendly examples of how to use and adapt the plots.
 - **Scientific colormaps as default**
-According to our study (Mikheev, 2024), 40% of EEG researchers do not know about the issue of scientific color maps. To protect the scientific integrity, we used `Reverse(:RdBu)` and `Roma` as default color maps. 
+According to our study (Mikheev, 2024), 40% of EEG researchers do not know about the issue of scientific color maps. By default, we use `Reverse(:RdBu)` (based on colorbrewer) and `Roma` (based on Sceintific Colormaps by Fabiano Cramerie) as default color maps. 
 - **Interactivity** 
-Several plots use Observables and have interactive mode so you can click on them and change their layout. Check `plot_topoplotseries` and `plot_erpimage`.
+Several plots make use of `Observables.jl` which allows for rapid updating of the underlying data. Several plots already have predfined interactive features, allowing you to click on e.g. labels to activate / deactivate them. As examples check out `plot_topoplotseries` and `plot_erpimage`.
