@@ -89,7 +89,7 @@ function plot_circular_topoplots!(
         height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
     )
     plot_topo_plots!(
-        ax,
+        f[1,1],
         data[:, config.mapping.y],
         positions,
         predictor_values,
@@ -191,26 +191,15 @@ function plot_topo_plots!(
     for g in gp
         i += 1
         bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds)
-
-        # convert BBox to rect
-        rect = (
-            Float64.([
-                bbox.origin[1],
-                bbox.origin[1] + bbox.widths[1],
-                bbox.origin[2],
-                bbox.origin[2] + bbox.widths[2],
-            ])...,
-        )
-
-        b = rel_to_abs_bbox(f.scene.viewport[], rect)
+    
         eeg_axis = Axis(
-            get_figure(f);
+            f,#get_figure(f)[1,1]; # this creates an axis at the same grid-location of the current axis
             aspect = 1,
-            width = Relative(0.99),
-            height = Relative(0.99),
-            halign = b.origin[1],
-            valign = b.origin[2],
-            backgroundcolor = :white,
+            width = Relative(0.2), # size of bboxes
+            height = Relative(0.2),
+            halign = bbox.origin[1]+ bbox.widths[1]/2, # coordinates 
+            valign = bbox.origin[2]+ bbox.widths[2]/2,
+            #backgroundcolor = nothing,
         )
 
         if !isnothing(labels)
@@ -233,7 +222,7 @@ function calculate_BBox(origin, widths, predictor_value, bounds)
 
     minwidth = minimum(widths)
     predictor_ratio = (predictor_value - bounds[1]) / (bounds[2] - bounds[1])
-    radius = (minwidth * 0.7) / 2
+    radius = (minwidth * 0.8) / 2 # radius of the circ-topoplot position circle
     size_of_BBox = minwidth / 5
     # the middle point of the circle for the topoplot positions
     # has to be moved a bit into the direction of the longer axis
