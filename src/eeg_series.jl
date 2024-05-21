@@ -216,6 +216,9 @@ function eeg_topoplot_series!(
 
 
             end
+            if isempty(to_value(d_vec))
+                continue
+            end
             h_topo = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
             @debug typeof(h_topo) typeof(ax)
 
