@@ -127,11 +127,7 @@ end
 
 @testset "check error of empty sortvalues" begin
     err1 = nothing
-    t() = error(plot_erpimage(
-    times,
-    dat_e;
-    show_sortval = true,
-    ))
+    t() = error(plot_erpimage(times, dat_e; show_sortval = true))
     try
         t()
     catch err1
@@ -139,5 +135,3 @@ end
 
     @test err1 == ErrorException("`show_sortval` needs non-empty `sortvalues` argument")
 end
-
-
