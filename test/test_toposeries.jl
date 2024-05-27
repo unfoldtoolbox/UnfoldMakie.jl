@@ -131,7 +131,10 @@ end
 end
 
 @testset "facetting by layout" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 200:1:240, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_matrix_to_dataframe(
+        dat[:, 200:1:240, 1],
+        string.(1:length(positions)),
+    )
 
     f = Figure(size = (600, 500))
     plot_topoplotseries!(
@@ -186,7 +189,6 @@ end
         axis = (; title = "combinefun = mean"),
     )
 end
-
 
 @testset "observables" begin
     f = Figure()
