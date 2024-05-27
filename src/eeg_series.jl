@@ -163,7 +163,6 @@ function eeg_topoplot_series!(
     )
 
     # do the col/row plot
-
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
 
@@ -196,7 +195,6 @@ function eeg_topoplot_series!(
 
                 #    pos = @lift topoplot_attributes[:positions][highlight_scatter]
                 strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
-
 
                 highlight_feature = (; strokecolor = strokecolor)
                 if :label_scatter ∈ keys(topoplot_attributes)

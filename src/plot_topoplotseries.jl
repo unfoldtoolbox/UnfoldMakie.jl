@@ -67,8 +67,6 @@ function plot_topoplotseries!(
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
-
-        
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
         # overkll as we would only need to check the xlabel ;)
@@ -82,18 +80,16 @@ function plot_topoplotseries!(
         @debug "hello layout!!"
         data = deepcopy(to_value(data))
 
-        un_layout = unique(data[:,config.mapping.layout])
-        ix = findall.(isequal.(un_layout), [data[:,config.mapping.layout]])
-@debug ix[1][1:5] size(ix) size(ix[1])
+        un_layout = unique(data[:, config.mapping.layout])
+        ix = findall.(isequal.(un_layout), [data[:, config.mapping.layout]])
+        @debug ix[1][1:5] size(ix) size(ix[1])
         n_topoplots = length(un_layout)
-        
 
-        
         n_cols = Int(ceil(sqrt(n_topoplots)))
-        n_rows = Int(ceil(n_topoplots/n_cols))
-        
-        _col = repeat(1:n_cols,outer=n_rows)[1:n_topoplots]
-        _row = repeat(1:n_rows,inner=n_cols)[1:n_topoplots]
+        n_rows = Int(ceil(n_topoplots / n_cols))
+
+        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
         data._col .= 0
         data._row .= 0
         for topo = 1:n_topoplots
@@ -101,14 +97,9 @@ function plot_topoplotseries!(
             data._row[ix[topo]] .= _row[topo]
         end
         #return data
-        config_kwargs!(config; mapping = (; row = :_row,col=:_col))
-        
-        
+        config_kwargs!(config; mapping = (; row = :_row, col = :_col))
     end
 
-    
-
-    
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data,
