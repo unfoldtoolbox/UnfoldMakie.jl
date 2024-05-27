@@ -20,6 +20,8 @@ Plot a circular EEG topoplot.
     Positions of the [`plot_topoplot`](@ref topo_vis).
 - `center_label::String = ""`\\
     The text in the center of the cricle.
+- `plot_radius::String = 0.8`\\
+    The radius of the circular topoplot series plot calucalted by formula: `radius = (minwidth * plot_radius) / 2`.
 - `labels::Vector{String} = nothing`\\
     Labels for the [`plot_topoplots`](@ref topo_vis).
 
@@ -40,6 +42,7 @@ function plot_circular_topoplots!(
     positions = nothing,
     labels = nothing,
     center_label = "",
+    plot_radius = 0.8,
     kwargs...,
 )
     config = PlotConfig(:circtopos)
@@ -95,6 +98,7 @@ function plot_circular_topoplots!(
         min,
         max,
         labels,
+        plot_radius,
     )
 
     apply_layout_settings!(config; ax = ax)
@@ -117,7 +121,6 @@ end
 function plot_circular_axis!(ax, predictor_bounds, center_label)
     # The axis position is always the middle of the screen 
     # It uses the GridLayout's full size
-
     lines!(
         ax,
         1 * cos.(LinRange(0, 2 * pi, 500)),
@@ -182,14 +185,14 @@ function plot_topo_plots!(
     globalmin,
     globalmax,
     labels,
+    plot_radius,
 )
     df = DataFrame(:e => data, :p => predictor_values)
     gp = groupby(df, :p)
     i = 0
     for g in gp
         i += 1
-        bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds)
-
+        bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds, plot_radius)
         eeg_axis = Axis(
             f, # this creates an axis at the same grid location of the current axis
             aspect = 1,
@@ -216,11 +219,11 @@ function plot_topo_plots!(
     end
 end
 
-function calculate_BBox(origin, widths, predictor_value, bounds)
+function calculate_BBox(origin, widths, predictor_value, bounds, plot_radius)
 
     minwidth = minimum(widths)
     predictor_ratio = (predictor_value - bounds[1]) / (bounds[2] - bounds[1])
-    radius = (minwidth * 0.8) / 2 # radius of the position circle of a circular topoplot 
+    radius = (minwidth * plot_radius) / 2 # radius of the position circle of a circular topoplot 
     size_of_BBox = minwidth / 5
     # the middle point of the circle for the topoplot positions
     # has to be moved a bit into the direction of the longer axis
