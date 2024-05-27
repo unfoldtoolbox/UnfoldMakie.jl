@@ -125,12 +125,19 @@ end
     sortval = Observable(evts_e.continuous)
 end
 
+@testset "check error of empty sortvalues" begin
+    err1 = nothing
+    t() = error(plot_erpimage(
+    times,
+    dat_e;
+    show_sortval = true,
+    ))
+    try
+        t()
+    catch err1
+    end
+
+    @test err1 == ErrorException("`show_sortval` needs non-empty `sortvalues` argument")
+end
 
 
-#= @testset "ERP image with show_sortval" begin
-    plot_erpimage(
-        times,
-        dat_e;
-        show_sortval = true,
-    ) #should learn that it must be Error
-=#
