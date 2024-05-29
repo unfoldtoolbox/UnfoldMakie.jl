@@ -120,8 +120,6 @@ function PlotConfig(T::Val{:topoplot})
         cfg;
         layout = (
             show_legend = true,
-            xlabelFromMapping = nothing,
-            ylabelFromMapping = nothing,
             use_colorbar = true,
             hidespines = (),
             hidedecorations = (Dict(:label => false)),
