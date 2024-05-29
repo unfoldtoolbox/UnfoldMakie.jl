@@ -175,7 +175,7 @@ function PlotConfig(T::Val{:topoplotseries})
             enlarge = 1,
             label_scatter = false,
         ),
-        mapping = (; col = (:time,), row = (nothing,)),
+        mapping = (; col = :time, row = nothing, layout = nothing),
     )
     return cfg
 end
