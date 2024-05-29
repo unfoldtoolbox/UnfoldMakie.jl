@@ -24,13 +24,13 @@ nothing #hide
 # # Plotting
 
 Δbin = 80
-plot_topoplotseries(df, Δbin; positions = positions)
+plot_topoplotseries(df; Δbin, positions = positions)
 
 # # Additional features
 
 # ## Disabling colorbar
 
-plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar = false))
+plot_topoplotseries(df; Δbin, positions = positions, layout = (; use_colorbar = false))
 
 # ## Aggregating functions
 # In this example `combinefun` is specified by `mean`, `median` and `std`. 
@@ -38,24 +38,24 @@ plot_topoplotseries(df, Δbin; positions = positions, layout = (; use_colorbar =
 f = Figure(size = (500, 500))
 plot_topoplotseries!(
     f[1, 1],
-    df,
-    Δbin;
+    df;
+    Δbin,
     positions = positions,
     combinefun = mean,
     axis = (; title = "combinefun = mean"),
 )
 plot_topoplotseries!(
     f[2, 1],
-    df,
-    Δbin;
+    df;
+    Δbin,
     positions = positions,
     combinefun = median,
     axis = (; title = "combinefun = median"),
 )
 plot_topoplotseries!(
     f[3, 1],
-    df,
-    Δbin;
+    df;
+    Δbin,
     positions = positions,
     combinefun = std,
     axis = (; title = "combinefun = std"),
@@ -83,8 +83,8 @@ f = Figure(size = (600, 500))
 
 plot_topoplotseries!(
     f[1:2, 1:2],
-    df1,
-    Δbin;
+    df1;
+    Δbin,
     col_labels = true,
     mapping = (; row = :condition),
     axis = (; ylabel = "Conditions"),

@@ -16,9 +16,10 @@ end
 
 """
     eeg_topoplot_series(data::DataFrame,
-        fig,
-        data::DataFrame,
-        Δbin;
+        f,
+        data::DataFrame;
+        Δbin,
+        num_bin,
         y = :erp,
         label = :label,
         col = :time,
@@ -35,7 +36,7 @@ end
 
 Plot a series of topoplots. 
 The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
-- `fig` \\
+- `f` \\
     Figure object. \\
 - `data::DataFrame`\\
     Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
@@ -61,36 +62,47 @@ eeg_topoplot_series(df, 5; positions = pos)
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
 function eeg_topoplot_series(
-    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix},
-    Δbin;
+    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix};
     figure = NamedTuple(),
     kwargs...,
 )
-    return eeg_topoplot_series!(Figure(; figure...), data, Δbin; kwargs...)
+    return eeg_topoplot_series!(Figure(; figure...), data; kwargs...)
 end
 # allow to specify Δbin as an keyword for nicer readability
-eeg_topoplot_series(
-    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix};
-    Δbin,
-    kwargs...,
-) = eeg_topoplot_series(data, Δbin; kwargs...)
+
+eeg_topoplot_series(data::Union{<:Observable,<:DataFrame,<:AbstractMatrix}; kwargs...) =
+    eeg_topoplot_series(data; kwargs...)
 # AbstractMatrix
-function eeg_topoplot_series!(fig, data::AbstractMatrix, Δbin; kwargs...)
-    return eeg_topoplot_series!(fig, data, string.(1:size(data, 1)), Δbin; kwargs...)
+function eeg_topoplot_series!(
+    fig,
+    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix};
+    kwargs...,
+)
+    return eeg_topoplot_series!(fig, data, string.(1:size(data, 1)); kwargs...)
 end
 
 # convert a 2D Matrix to the dataframe
-function eeg_topoplot_series(data::AbstractMatrix, labels, Δbin; kwargs...)
-    return eeg_topoplot_series(eeg_matrix_to_dataframe(data, labels), Δbin; kwargs...)
+function eeg_topoplot_series(
+    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix},
+    labels;
+    kwargs...,
+)
+    return eeg_topoplot_series(eeg_matrix_to_dataframe(data, labels); kwargs...)
 end
-function eeg_topoplot_series!(fig, data::AbstractMatrix, labels, Δbin; kwargs...)
-    return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels), Δbin; kwargs...)
+function eeg_topoplot_series!(
+    fig,
+    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix},
+    labels;
+    kwargs...,
+)
+    return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels); kwargs...)
 end
 
 function eeg_topoplot_series!(
     fig,
-    data::Union{<:Observable{<:DataFrame},<:DataFrame},
-    Δbin;
+    data::Union{<:Observable{<:DataFrame},<:DataFrame};
+    Δbin = nothing,
+    num_bin = nothing,
     y = :erp,
     label = :label,
     col = :time,
@@ -102,12 +114,12 @@ function eeg_topoplot_series!(
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
     interactive_scatter = nothing,
-    highlight_scatter = false,#Observable([0]),
+    highlight_scatter = false, #Observable([0]),
     topoplot_attributes...,
 )
 
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
-    axisOptions = (
+    axis_options = (
         aspect = 1,
         xgridvisible = false,
         xminorgridvisible = false,
@@ -138,11 +150,11 @@ function eeg_topoplot_series!(
 
     data = _as_observable(data)
     if eltype(to_value(data)[!, col]) <: Number
-
         data_mean = @lift(
             df_timebin(
-                $data,
-                Δbin;
+                $data;
+                Δbin = Δbin,
+                num_bin = num_bin,
                 col_y = y,
                 fun = combinefun,
                 grouping = [label, col, row],
@@ -170,11 +182,10 @@ function eeg_topoplot_series!(
         @assert isa(interactive_scatter, Observable)
     end
 
-
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
-            ax = Axis(fig[:, :][r, c]; axisOptions...)
+            ax = Axis(fig[:, :][r, c]; axis_options...)
             # select one topoplot
             sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
             if !isnothing(col)
@@ -192,10 +203,7 @@ function eeg_topoplot_series!(
             d_vec = @lift($df_single[:, y])
             # plot it
             if highlight_scatter != false || interactive_scatter != nothing
-
-                #    pos = @lift topoplot_attributes[:positions][highlight_scatter]
                 strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
-
                 highlight_feature = (; strokecolor = strokecolor)
                 if :label_scatter ∈ keys(topoplot_attributes)
                     topoplot_attributes = merge(
@@ -211,15 +219,11 @@ function eeg_topoplot_series!(
                     topoplot_attributes =
                         merge(topoplot_attributes, (; label_scatter = highlight_feature))
                 end
-
-
             end
             if isempty(to_value(d_vec))
                 continue
             end
             h_topo = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
-            @debug typeof(h_topo) typeof(ax)
-
             if rasterize_heatmaps
                 h_topo.plots[1].plots[1].rasterize = true
             end
@@ -228,13 +232,11 @@ function eeg_topoplot_series!(
                 ax.xlabelvisible = true
             end
             if c == 1 && length(select_row) > 1 && row_labels
-                #@show df_single
                 ax.ylabel = string(to_value(df_single)[1, row])
                 ax.ylabelvisible = true
             end
 
             if interactive_scatter != false
-
                 on(events(h_topo).mousebutton) do event
                     if event.button == Mouse.left && event.action == Mouse.press
                         plt, p = pick(h_topo)
@@ -280,18 +282,29 @@ Arguments:
 
 **Return Value:** `DataFrame`.
 """
-function df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
+function df_timebin(
+    df;
+    Δbin = nothing,
+    num_bin = nothing,
+    col_y = :erp,
+    fun = mean,
+    grouping = [],
+)
+    @assert !(isnothing(Δbin) && isnothing(num_bin))
     tmin = minimum(df.time)
     tmax = maximum(df.time)
 
-    bins = range(; start = tmin, step = Δbin, stop = tmax)
+    if isnothing(Δbin)
+        bins = range(; start = tmin, length = num_bin + 1, stop = tmax)
+    else
+        bins = range(; start = tmin, step = Δbin, stop = tmax)
+    end
     df = deepcopy(df) # cut seems to change stuff inplace
     df.time = cut(df.time, bins; extend = true)
 
     grouping = grouping[.!isnothing.(grouping)]
 
     df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
-    #df_m = combine(groupby(df, Not(y)), y=>fun)
-    rename!(df_m, names(df_m)[end] => col_y) # remove the _fun part of the new column
+    rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
     return df_m
 end

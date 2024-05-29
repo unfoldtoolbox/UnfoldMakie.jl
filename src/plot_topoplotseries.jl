@@ -1,6 +1,6 @@
 """
-    plot_topoplotseries(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame, Δbin::Real; kwargs...)
-    plot_topoplotseries!(data::DataFrame, Δbin::Real; kwargs...)
+    plot_topoplotseries(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame; kwargs...)
+    plot_topoplotseries!(data::DataFrame; kwargs...)
         
 Multiple miniature topoplots in regular distances. 
 ## Arguments  
@@ -37,13 +37,14 @@ $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.
 """
-plot_topoplotseries(data::DataFrame, Δbin::Real; kwargs...) =
-    plot_topoplotseries!(Figure(), data, Δbin; kwargs...)
+plot_topoplotseries(data::DataFrame; kwargs...) =
+    plot_topoplotseries!(Figure(), data; kwargs...)
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
-    data::Union{<:Observable{<:DataFrame},DataFrame},
-    Δbin;
+    data::Union{<:Observable{<:DataFrame},DataFrame};
+    Δbin = nothing,
+    num_bin = nothing,
     positions = nothing,
     labels = nothing,
     combinefun = mean,
@@ -75,14 +76,12 @@ function plot_topoplotseries!(
     positions = get_topo_positions(; positions = positions, labels = labels)
 
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
-    @debug "hellooooo" keys(config.mapping)
     if :layout ∈ keys(config.mapping)
-        @debug "hello layout!!"
         data = deepcopy(to_value(data))
 
         un_layout = unique(data[:, config.mapping.layout])
         ix = findall.(isequal.(un_layout), [data[:, config.mapping.layout]])
-        @debug ix[1][1:5] size(ix) size(ix[1])
+
         n_topoplots = length(un_layout)
 
         n_cols = Int(ceil(sqrt(n_topoplots)))
@@ -90,6 +89,7 @@ function plot_topoplotseries!(
 
         _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
         _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+
         data._col .= 0
         data._row .= 0
         for topo = 1:n_topoplots
@@ -102,8 +102,9 @@ function plot_topoplotseries!(
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
-        data,
-        Δbin;
+        data;
+        Δbin = Δbin,
+        num_bin = num_bin,
         y = config.mapping.y,
         label = chan_or_label,
         col = config.mapping.col,
@@ -123,8 +124,9 @@ function plot_topoplotseries!(
     else
         data_mean = if cat_or_cont_columns == "cont"
             df_timebin(
-                to_value(data),
-                Δbin;
+                to_value(data);
+                Δbin,
+                num_bin,
                 col_y = config.mapping.y,
                 fun = combinefun,
                 grouping = [chan_or_label, config.mapping.col, config.mapping.row],

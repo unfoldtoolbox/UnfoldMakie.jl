@@ -48,8 +48,8 @@
 
     plot_topoplotseries!(
         gd,
-        df,
-        80;
+        df;
+        Δbin = 80,
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -130,8 +130,8 @@ end
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions = positions)
     plot_topoplotseries!(
         f[2, 2],
-        d_topo,
-        0.1;
+        d_topo;
+        Δbin = 0.1,
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -200,8 +200,8 @@ end
     plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
     plot_topoplotseries!(
         f[4, 1:3],
-        d_topo,
-        0.1;
+        d_topo;
+        Δbin = 0.1,
         positions = positions,
         mapping = (; label = :channel),
     )
