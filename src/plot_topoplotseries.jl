@@ -9,12 +9,15 @@ Multiple miniature topoplots in regular distances.
     `Figure`, `GridLayout`, `GridPosition`, or GridLayoutBase.GridSubposition to draw the plot.
 - `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
     DataFrame with data or Observable DataFrame. Requires a `time` column. 
-- `Δbin::Real`\\
-    A number for how large one time bin should be.\\
-    `Δbin` is in units of the `data.time` column.\\
-    Should be `0` if `mapping.col` or `mapping.row` are categorical.
 
 ## Keyword arguments (kwargs)
+- `Δbin::Real = nothing`\\
+    Number specifing the width of time bin.\\
+    `Δbin` is in units of the `data.time` column.\\
+- `num_bin::Real = nothing`\\
+    Number of topoplots.\\
+    Either `Δbin`, or `num_bin` should be specified. Error if they are both specified\\
+    If `mapping.col` or `mapping.row` are categorical `Δbin` and `num_bin` should be `nothing`.
 - `combinefun::Function = mean`\\
     Specify how the samples within `Δbin` are summarised.\\
     Example functions: `mean`, `median`, `std`. 
@@ -32,6 +35,9 @@ Multiple miniature topoplots in regular distances.
     Enable interactive mode. \\ 
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
     `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
+- `mapping.layout = nothing`\\
+    When equals `:time` arrange topoplots by rows. 
+
 
 $(_docstring(:topoplotseries))
 

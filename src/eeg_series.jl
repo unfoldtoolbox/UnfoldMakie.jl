@@ -271,8 +271,10 @@ Split or combine `DataFrame` according to equally spaced time bins.
 Arguments:
 - `df::AbstractTable`\\
     With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `Δbin`\\
-    Bin size in `:time` units;
+- `Δbin::Real = nothing`\\
+    Bin width in `:time` units;
+- `num_bin::Real = nothing`\\
+    Number of topoplots;
 - `col_y = :erp` \\
     The column to combine over (with `fun`);
 - `fun = mean()`\\
@@ -290,7 +292,11 @@ function df_timebin(
     fun = mean,
     grouping = [],
 )
-    @assert !(isnothing(Δbin) && isnothing(num_bin))
+    if (Δbin != nothing && num_bin != nothing)
+        error("Ambigious parameters: specify only `Δbin` or `num_bin`.")
+    elseif (isnothing(Δbin) && isnothing(num_bin))
+        error("You haven't specified `Δbin` or `num_bin`. Such option is available only with categorical `mapping.col` or `mapping.row`.")
+    end
     tmin = minimum(df.time)
     tmax = maximum(df.time)
 
