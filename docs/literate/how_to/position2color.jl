@@ -54,3 +54,19 @@ plot_butterfly(
     positions = positions,
     topopositions_to_color = x -> Colors.RGB(0.5),
 )
+
+# Transparency
+# Unlike RGB, RGBA has a fourth channel, alpha, which is responsible for transparency.
+# Here are two examples of how to manipulate it.
+
+plot_butterfly(
+    results;
+    positions = positions,
+    topopositions_to_color = x -> (RGBA(UnfoldMakie.pos_to_color_RomaO(x), 1)),
+)
+
+plot_butterfly(
+    results;
+    positions = positions,
+    topopositions_to_color = x -> (GrayA(UnfoldMakie.pos_to_color_RomaO(x), 0.5)),
+)

@@ -56,8 +56,8 @@ makedocs(;
             "Hide Decorations and Axis Spines" => "generated/how_to/hide_deco.md",
             "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
         ],
-        "Reference" => [
-            "Convert electrode positions from 3D to 2D" => "generated/reference/positions.md",
+        "Explanations" => [
+            "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
         ],
         "API / DocStrings" => "api.md",
         "Utilities" => "helper.md",
