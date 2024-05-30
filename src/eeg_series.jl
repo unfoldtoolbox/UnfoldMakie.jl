@@ -18,8 +18,8 @@ end
     eeg_topoplot_series(data::DataFrame,
         f,
         data::DataFrame;
-        Δbin,
-        num_bin,
+        bin_width,
+        bin_num,
         y = :erp,
         label = :label,
         col = :time,
@@ -32,16 +32,16 @@ end
         ylim_topo,
         topoplot_attributes...,
     )
-    eeg_topoplot_series!(fig, data::DataFrame, Δbin; kwargs..)
+    eeg_topoplot_series!(fig, data::DataFrame, bin_width; kwargs..)
 
 Plot a series of topoplots. 
-The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `Δbin` steps.
+The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `bin_width` steps.
 - `f` \\
     Figure object. \\
 - `data::DataFrame`\\
     Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- `Δbin = :time` \\
+- `bin_width = :time` \\
     In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. \\
     In most cases, the user should specify the electrode positions with `positions = pos`.
 - `col`, `row = :time` \\
@@ -68,7 +68,7 @@ function eeg_topoplot_series(
 )
     return eeg_topoplot_series!(Figure(; figure...), data; kwargs...)
 end
-# allow to specify Δbin as an keyword for nicer readability
+# allow to specify bin_width as an keyword for nicer readability
 
 eeg_topoplot_series(data::Union{<:Observable,<:DataFrame,<:AbstractMatrix}; kwargs...) =
     eeg_topoplot_series(data; kwargs...)
@@ -101,8 +101,8 @@ end
 function eeg_topoplot_series!(
     fig,
     data::Union{<:Observable{<:DataFrame},<:DataFrame};
-    Δbin = nothing,
-    num_bin = nothing,
+    bin_width = nothing,
+    bin_num = nothing,
     y = :erp,
     label = :label,
     col = :time,
@@ -153,8 +153,8 @@ function eeg_topoplot_series!(
         data_mean = @lift(
             df_timebin(
                 $data;
-                Δbin = Δbin,
-                num_bin = num_bin,
+                bin_width = bin_width,
+                bin_num = bin_num,
                 col_y = y,
                 fun = combinefun,
                 grouping = [label, col, row],
@@ -223,25 +223,32 @@ function eeg_topoplot_series!(
             if isempty(to_value(d_vec))
                 continue
             end
-            h_topo = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
+            single_topoplot = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
             if rasterize_heatmaps
-                h_topo.plots[1].plots[1].rasterize = true
+                single_topoplot.plots[1].plots[1].rasterize = true
             end
-            if r == length(select_row) && col_labels
-                ax.xlabel = string(to_value(df_single)[1, col])
+
+            # to put column and row labels
+            if col_labels == true
+                if r == length(select_row) && col_labels
+                    ax.xlabel = string(to_value(df_single)[1, col])
+                    ax.xlabelvisible = true
+                end
+                if c == 1 && length(select_row) > 1 && row_labels
+                    ax.ylabel = string(to_value(df_single)[1, row])
+                    ax.ylabelvisible = true
+                end
+            else
                 ax.xlabelvisible = true
-            end
-            if c == 1 && length(select_row) > 1 && row_labels
-                ax.ylabel = string(to_value(df_single)[1, row])
-                ax.ylabelvisible = true
+                ax.xlabel = string(to_value(df_single).time[1, :][])
             end
 
             if interactive_scatter != false
-                on(events(h_topo).mousebutton) do event
+                on(events(single_topoplot).mousebutton) do event
                     if event.button == Mouse.left && event.action == Mouse.press
-                        plt, p = pick(h_topo)
+                        plt, p = pick(single_topoplot)
 
-                        if isa(plt, Makie.Scatter) && plt == h_topo.plots[1].plots[3]
+                        if isa(plt, Makie.Scatter) && plt == single_topoplot.plots[1].plots[3]
 
                             plt.strokecolor[] .= :black
                             plt.strokecolor[][p] = :white
@@ -265,15 +272,15 @@ function eeg_topoplot_series!(
 end
 
 """
-    df_timebin(df, Δbin; col_y = :erp, fun = mean, grouping = [])
+    df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
 Split or combine `DataFrame` according to equally spaced time bins.
 
 Arguments:
 - `df::AbstractTable`\\
     With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `Δbin::Real = nothing`\\
+- `bin_width::Real = nothing`\\
     Bin width in `:time` units;
-- `num_bin::Real = nothing`\\
+- `bin_num::Real = nothing`\\
     Number of topoplots;
 - `col_y = :erp` \\
     The column to combine over (with `fun`);
@@ -286,31 +293,31 @@ Arguments:
 """
 function df_timebin(
     df;
-    Δbin = nothing,
-    num_bin = nothing,
+    bin_width = nothing,
+    bin_num = nothing,
     col_y = :erp,
     fun = mean,
     grouping = [],
 )
-    if (Δbin != nothing && num_bin != nothing)
-        error("Ambigious parameters: specify only `Δbin` or `num_bin`.")
-    elseif (isnothing(Δbin) && isnothing(num_bin))
-        error("You haven't specified `Δbin` or `num_bin`. Such option is available only with categorical `mapping.col` or `mapping.row`.")
+    if (bin_width != nothing && bin_num != nothing)
+        error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
+    elseif (isnothing(bin_width) && isnothing(bin_num))
+        error("You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.")
     end
     tmin = minimum(df.time)
     tmax = maximum(df.time)
 
-    if isnothing(Δbin)
-        bins = range(; start = tmin, length = num_bin + 1, stop = tmax)
+    if isnothing(bin_width)
+        bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
     else
-        bins = range(; start = tmin, step = Δbin, stop = tmax)
+        bins = range(; start = tmin, step = bin_width, stop = tmax)
     end
     df = deepcopy(df) # cut seems to change stuff inplace
     df.time = cut(df.time, bins; extend = true)
 
     grouping = grouping[.!isnothing.(grouping)]
-
     df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
     rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
+    
     return df_m
 end

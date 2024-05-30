@@ -11,22 +11,22 @@ Multiple miniature topoplots in regular distances.
     DataFrame with data or Observable DataFrame. Requires a `time` column. 
 
 ## Keyword arguments (kwargs)
-- `Δbin::Real = nothing`\\
+- `bin_width::Real = nothing`\\
     Number specifing the width of time bin.\\
-    `Δbin` is in units of the `data.time` column.\\
-- `num_bin::Real = nothing`\\
+    `bin_width` is in units of the `data.time` column.\\
+- `bin_num::Real = nothing`\\
     Number of topoplots.\\
-    Either `Δbin`, or `num_bin` should be specified. Error if they are both specified\\
-    If `mapping.col` or `mapping.row` are categorical `Δbin` and `num_bin` should be `nothing`.
+    Either `bin_width`, or `bin_num` should be specified. Error if they are both specified\\
+    If `mapping.col` or `mapping.row` are categorical `bin_width` and `bin_num` should be `nothing`.
 - `combinefun::Function = mean`\\
-    Specify how the samples within `Δbin` are summarised.\\
+    Specify how the samples within `bin_width` are summarised.\\
     Example functions: `mean`, `median`, `std`. 
 - `rasterize_heatmaps::Bool = true`\\
     Force rasterization of the plot heatmap when saving in `svg` format.\\
     Except for the interpolated heatmap, all lines/points are vectors.\\
     This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything super slow.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
-    Shows column and row labels. 
+    Shows column and row labels for categorical values (?). 
 - `labels::Vector{String} = nothing`\\
     Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
@@ -49,12 +49,13 @@ plot_topoplotseries(data::DataFrame; kwargs...) =
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
     data::Union{<:Observable{<:DataFrame},DataFrame};
-    Δbin = nothing,
-    num_bin = nothing,
+    bin_width = nothing,
+    bin_num = nothing,
     positions = nothing,
-    labels = nothing,
+    nrows = 1,
+    labels = nothing, # rename to channel_labels?
     combinefun = mean,
-    col_labels = true,
+    col_labels = false,
     row_labels = true,
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
@@ -62,7 +63,6 @@ function plot_topoplotseries!(
 )
 
     data = _as_observable(data)
-
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
@@ -82,35 +82,52 @@ function plot_topoplotseries!(
     positions = get_topo_positions(; positions = positions, labels = labels)
 
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
-    if :layout ∈ keys(config.mapping)
+
+    # arrangment of topoplots by rows and cols
+    n_topoplots = number_of_topoplots(to_value(data); bin_width, bin_num)
         data = deepcopy(to_value(data))
+        tmin = minimum(data.time)
+        tmax = maximum(data.time)
 
-        un_layout = unique(data[:, config.mapping.layout])
-        ix = findall.(isequal.(un_layout), [data[:, config.mapping.layout]])
+        if isnothing(bin_width)
+            bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
+        else
+            bins = range(; start = tmin, step = bin_width, stop = tmax)
+        end
+        data.timecuts = cut(data.time, bins; extend = true)
+        un_layout = unique(data.timecuts)
+        ix = findall.(isequal.(un_layout), [data.timecuts])
 
-        n_topoplots = length(un_layout)
-
+        #n_topoplots = length(un_layout) # this is just wrong!
+    if :layout ∈ keys(config.mapping)
         n_cols = Int(ceil(sqrt(n_topoplots)))
         n_rows = Int(ceil(n_topoplots / n_cols))
-
-        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-
-        data._col .= 0
-        data._row .= 0
-        for topo = 1:n_topoplots
-            data._col[ix[topo]] .= _col[topo]
-            data._row[ix[topo]] .= _row[topo]
-        end
-        #return data
-        config_kwargs!(config; mapping = (; row = :_row, col = :_col))
+    else
+        n_rows = nrows
+        n_cols = Int(ceil(n_topoplots / nrows))
     end
+    _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+    _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+    data._col .= 1
+    data._row .= 1
+    for topo = 1:n_topoplots
+        data._col[ix[topo]] .= _col[topo]
+        data._row[ix[topo]] .= _row[topo]
+    end
+    data.colrow = map(x->join(x,":"),zip(data._col,string.(data._row))) 
+ #=    @show ix[1]
+    @show _col
+    @show _row
+    @show data._col
+    @show data._row
+    @show StatsBase.countmap(data.colrow) =#
+    config_kwargs!(config; mapping = (; row = :_row, col = :_col))
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data;
-        Δbin = Δbin,
-        num_bin = num_bin,
+        bin_width = bin_width,
+        bin_num = bin_num,
         y = config.mapping.y,
         label = chan_or_label,
         col = config.mapping.col,
@@ -131,8 +148,8 @@ function plot_topoplotseries!(
         data_mean = if cat_or_cont_columns == "cont"
             df_timebin(
                 to_value(data);
-                Δbin,
-                num_bin,
+                bin_width,
+                bin_num,
                 col_y = config.mapping.y,
                 fun = combinefun,
                 grouping = [chan_or_label, config.mapping.col, config.mapping.row],
@@ -171,4 +188,26 @@ function plot_topoplotseries!(
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
 
+end
+
+function number_of_topoplots(
+    df::DataFrame;
+    bin_width = nothing,
+    bin_num = nothing,
+)
+    if (bin_width != nothing && bin_num != nothing)
+        error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
+    elseif (isnothing(bin_width) && isnothing(bin_num))
+        error("You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.")
+    end
+    tmin = minimum(df.time)
+    tmax = maximum(df.time)
+
+    if isnothing(bin_width)
+        bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
+    else
+        bins = range(; start = tmin, step = bin_width, stop = tmax)
+    end
+    time_new = cut(df.time, bins; extend = true)
+    return length(unique(time_new))
 end
