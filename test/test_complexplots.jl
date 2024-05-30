@@ -49,7 +49,7 @@
     plot_topoplotseries!(
         gd,
         df;
-        Δbin = 80,
+        bin_width = 80,
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -131,7 +131,7 @@ end
     plot_topoplotseries!(
         f[2, 2],
         d_topo;
-        Δbin = 0.1,
+        bin_width = 0.1,
         positions = positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
@@ -201,7 +201,7 @@ end
     plot_topoplotseries!(
         f[4, 1:3],
         d_topo;
-        Δbin = 0.1,
+        bin_width = 0.1,
         positions = positions,
         mapping = (; label = :channel),
     )

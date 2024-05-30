@@ -25,6 +25,7 @@ using DataFrames
 using SparseArrays
 using CategoricalArrays # for cut for TopoPlotSeries
 using StaticArrays
+using StatsBase
 
 using CoordinateTransformations # for 3D positions to 2D
 

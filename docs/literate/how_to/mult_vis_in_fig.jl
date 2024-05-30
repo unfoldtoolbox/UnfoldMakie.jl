@@ -84,7 +84,7 @@ plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
 plot_topoplotseries!(
     f[4, 1:3],
     d_topo;
-    Δbin = 0.1,
+    bin_width = 0.1,
     positions = positions,
     mapping = (; label = :channel),
 )
@@ -167,7 +167,7 @@ plot_topoplot!(gc, data[:, 340, 1]; positions = positions, axis = (; xlabel = "[
 plot_topoplotseries!(
     gd,
     df;
-    Δbin = 80,
+    bin_width = 80,
     positions = positions,
     visual = (label_scatter = false,),
     layout = (; use_colorbar = true),
