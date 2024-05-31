@@ -26,8 +26,12 @@ end
     include("test_topoplot.jl")
 end
 
-@testset "Topoplot series" begin
-    include("test_toposeries.jl")
+@testset "Topoplot series simple" begin
+    include("test_toposeries1.jl")
+end
+
+@testset "Topoplot series advanced" begin
+    include("test_toposeries2.jl")
 end
 
 @testset "Parallel coordinates plot" begin
