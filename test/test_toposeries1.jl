@@ -16,6 +16,14 @@ end
     plot_topoplotseries(df; bin_num = 5, nrows = 2, positions = positions)
 end
 
+@testset "toposeries basic with nrows specified" begin
+    plot_topoplotseries(df; bin_num = 5, nrows = 3, positions = positions)
+end
+
+@testset "toposeries basic with nrows specified" begin
+    plot_topoplotseries(df; bin_num = 5, nrows = -6, positions = positions)
+end
+
 @testset "error checking: bin_width and bin_num specified" begin
     err1 = nothing
     t() = error(plot_topoplotseries(df; bin_width, bin_num = 5, positions = positions))
@@ -40,12 +48,7 @@ end
 end
 
 @testset "toposeries basic with channel names" begin
-    plot_topoplotseries(
-        df;
-        bin_width,
-        positions = positions,
-        labels = raw_ch_names,
-    )
+    plot_topoplotseries(df; bin_width, positions = positions, labels = raw_ch_names)
 end # doesnt work rn
 
 @testset "toposeries with xlabel" begin
@@ -70,7 +73,7 @@ end
         bin_width,
         positions = positions,
         combinefun = mean,
-        axis = (; title = "combinefun = mean"),
+        axis = (; xlabel = "", title = "combinefun = mean"),
     )
     plot_topoplotseries!(
         f[2, 1],
@@ -78,7 +81,7 @@ end
         bin_width,
         positions = positions,
         combinefun = median,
-        axis = (; title = "combinefun = median"),
+        axis = (; xlabel = "", title = "combinefun = median"),
     )
     plot_topoplotseries!(
         f[3, 1],

@@ -105,14 +105,6 @@ function PlotConfig(T::Val{:circtopos})
     return cfg
 end
 
-
-function PlotConfig(T::Val{:topoarray})
-    cfg = PlotConfig(:erp)
-
-    config_kwargs!(cfg; layout = (;), colorbar = (;), mapping = (;), axis = (;))
-    return cfg
-end
-
 function PlotConfig(T::Val{:topoplot})
     cfg = PlotConfig()
 
@@ -175,7 +167,9 @@ function PlotConfig(T::Val{:topoplotseries})
             enlarge = 1,
             label_scatter = false,
         ),
-        mapping = (; col = :time, row = nothing, #layout = nothing
+        mapping = (;
+            col = :time,
+            row = nothing, #layout = nothing
         ),
     )
     return cfg
