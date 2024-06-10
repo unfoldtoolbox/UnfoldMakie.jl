@@ -4,69 +4,17 @@ dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
-@testset "14 topoplots and GridPosition" begin # horrific
+@testset "14 topoplots, 4 rows" begin # horrific
     f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     bin_width = 30
     plot_topoplotseries!(
         f[1, 1:5],
         df;
-        bin_width,
-        nrows = 14, 
+        bin_num = 14,
+        nrows = 4,
         positions = positions,
         visual = (; label_scatter = false),
-    )
-    f
-end
-
-@testset "14 topoplots and GridPosition" begin # horrific
-    f = Figure()
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-    bin_width = 30
-    plot_topoplotseries!(
-        f[1, 1:5],
-        df;
-        bin_width,
-        nrows = -1, 
-        positions = positions,
-        visual = (; label_scatter = false),
-    )
-    f
-end
-
-@testset "row faceting, 2 conditions" begin
-    f = Figure()
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
-
-    plot_topoplotseries!(
-        f[1:2, 1:2],
-        df;
-        bin_width,
-        col_labels = true,
-        mapping = (; row = :condition),
-        positions = positions,
-        visual = (; label_scatter = false),
-        layout = (; use_colorbar = true),
-    )
-    f
-end
-
-@testset "row faceting, 5 conditions" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-    df.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)
-
-    f = Figure(size = (600, 500))
-    plot_topoplotseries!(
-        f[1:2, 1:2],
-        df;
-        bin_width,
-        col_labels = true,
-        mapping = (; row = :condition),
-        axis = (; ylabel = "Conditions"),
-        positions = positions,
-        visual = (label_scatter = false,),
-        layout = (; use_colorbar = true),
     )
     f
 end
@@ -82,14 +30,77 @@ end
         f[1:2, 1:2],
         df;
         bin_width = 1,
-        col_labels = false,
         mapping = (; layout = :time),
         positions = positions,
-        visual = (label_scatter = false,),
-        layout = (; use_colorbar = true),
     )
     f
 end
+
+@testset "categorical columns" begin
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        col_labels = true,
+        mapping = (; col = :condition),
+        positions = positions,
+    )
+    f
+end
+
+@testset "4 conditions" begin
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+
+    f = Figure(size = (600, 500))
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        positions = positions,
+        col_labels = true,
+        axis = (; ylabel = "Conditions"),
+        mapping = (; col = :condition),
+    )
+    f
+end
+
+@testset "4 conditions in 2 rows" begin # TBD
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+
+    f = Figure(size = (600, 500))
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        nrows = 2,
+        positions = positions,
+        col_labels = true,
+        axis = (; ylabel = "Conditions"),
+        mapping = (; col = :condition),
+    )
+    f
+end
+
+@testset "change xlabel" begin
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        col_labels = true,
+        mapping = (; col = :condition),
+        axis = (; xlabel = "test"),
+        positions = positions,
+    )
+    f
+end
+
+
 
 
 @testset "interactive data" begin
@@ -106,8 +117,6 @@ end
         col_labels = true,
         mapping = (; row = :condition),
         positions = positions,
-        visual = (label_scatter = false,),
-        layout = (; use_colorbar = true),
     )
     f
     df = to_value(df_obs)
@@ -125,25 +134,7 @@ end
         col_labels = true,
         mapping = (; col = :condition),
         positions = positions,
-        visual = (label_scatter = (markersize = 15, strokewidth = 2),),
-        layout = (; use_colorbar = true),
+        visual = (label_scatter = (markersize = 15, strokewidth = 2)),
         interactive_scatter = obs_tuple,
     )
-end
-
-@testset "categorical columns" begin
-    f = Figure()
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
-    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
-
-    plot_topoplotseries!(
-        f[1:2, 1:2],
-        df;
-        col_labels = true,
-        mapping = (; col = :condition),
-        positions = positions,
-        visual = (label_scatter = false,),
-        layout = (; use_colorbar = true),
-    )
-    f
 end

@@ -117,7 +117,7 @@ function eeg_topoplot_series!(
     highlight_scatter = false, #Observable([0]),
     topoplot_attributes...,
 )
-
+    @show topoplot_attributes[:label_scatter]
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
     axis_options = (
         aspect = 1,
@@ -205,6 +205,9 @@ function eeg_topoplot_series!(
             if highlight_scatter != false || interactive_scatter != nothing
                 strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
                 highlight_feature = (; strokecolor = strokecolor)
+                @show highlight_feature
+
+                @show topoplot_attributes[:label_scatter]
                 if :label_scatter ∈ keys(topoplot_attributes)
                     topoplot_attributes = merge(
                         topoplot_attributes,
@@ -248,7 +251,8 @@ function eeg_topoplot_series!(
                     if event.button == Mouse.left && event.action == Mouse.press
                         plt, p = pick(single_topoplot)
 
-                        if isa(plt, Makie.Scatter) && plt == single_topoplot.plots[1].plots[3]
+                        if isa(plt, Makie.Scatter) &&
+                           plt == single_topoplot.plots[1].plots[3]
 
                             plt.strokecolor[] .= :black
                             plt.strokecolor[][p] = :white
@@ -269,55 +273,4 @@ function eeg_topoplot_series!(
     end
 
     return fig, axlist
-end
-
-"""
-    df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
-Split or combine `DataFrame` according to equally spaced time bins.
-
-Arguments:
-- `df::AbstractTable`\\
-    With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `bin_width::Real = nothing`\\
-    Bin width in `:time` units;
-- `bin_num::Real = nothing`\\
-    Number of topoplots;
-- `col_y = :erp` \\
-    The column to combine over (with `fun`);
-- `fun = mean()`\\
-    Function to combine.
-- `grouping = []`\\
-    Vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
-
-**Return Value:** `DataFrame`.
-"""
-function df_timebin(
-    df;
-    bin_width = nothing,
-    bin_num = nothing,
-    col_y = :erp,
-    fun = mean,
-    grouping = [],
-)
-    if (bin_width != nothing && bin_num != nothing)
-        error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
-    elseif (isnothing(bin_width) && isnothing(bin_num))
-        error("You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.")
-    end
-    tmin = minimum(df.time)
-    tmax = maximum(df.time)
-
-    if isnothing(bin_width)
-        bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
-    else
-        bins = range(; start = tmin, step = bin_width, stop = tmax)
-    end
-    df = deepcopy(df) # cut seems to change stuff inplace
-    df.time = cut(df.time, bins; extend = true)
-
-    grouping = grouping[.!isnothing.(grouping)]
-    df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
-    rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
-    
-    return df_m
 end

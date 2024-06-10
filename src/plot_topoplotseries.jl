@@ -63,65 +63,58 @@ function plot_topoplotseries!(
 )
 
     data = _as_observable(data)
+    positions = get_topo_positions(; positions = positions, labels = labels)
+    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
+
     config = PlotConfig(:topoplotseries)
+    @show config.visual
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
 
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-
+    @show config.visual
     cat_or_cont_columns =
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
+
+    @show cat_or_cont_columns
+    data = deepcopy(to_value(data))
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
-        # overkll as we would only need to check the xlabel ;)
-    end
-
-    positions = get_topo_positions(; positions = positions, labels = labels)
-
-    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
-
-    # arrangment of topoplots by rows and cols
-    n_topoplots = number_of_topoplots(to_value(data); bin_width, bin_num)
-        data = deepcopy(to_value(data))
-        tmin = minimum(data.time)
-        tmax = maximum(data.time)
-
-        if isnothing(bin_width)
-            bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
-        else
-            bins = range(; start = tmin, step = bin_width, stop = tmax)
-        end
-        data.timecuts = cut(data.time, bins; extend = true)
-        un_layout = unique(data.timecuts)
-        ix = findall.(isequal.(un_layout), [data.timecuts])
-
-        #n_topoplots = length(un_layout) # this is just wrong!
-    if :layout ∈ keys(config.mapping)
-        n_cols = Int(ceil(sqrt(n_topoplots)))
-        n_rows = Int(ceil(n_topoplots / n_cols))
+    # overkll as we would only need to check the xlabel ;)
     else
-        n_rows = nrows
-        n_cols = Int(ceil(n_topoplots / nrows))
+        # arrangment of topoplots by rows and cols
+        bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
+        n_topoplots = number_of_topoplots(data; bin_width, bin_num, bins, config.mapping)
+
+        data.timecuts = cut(data.time, bins; extend = true)
+        unique_cuts = unique(data.timecuts)
+        ix = findall.(isequal.(unique_cuts), [data.timecuts])
+        if :layout ∈ keys(config.mapping)
+            n_cols = Int(ceil(sqrt(n_topoplots)))
+            n_rows = Int(ceil(n_topoplots / n_cols))
+        else
+            n_rows = nrows
+            if 0 > n_topoplots / nrows
+                @warn "Impossible number of rows, set to 1 row"
+                n_rows = 1
+            elseif n_topoplots / nrows < 1
+                @warn "Impossible number of rows, set to $(n_topoplots) rows"
+            end
+            n_cols = Int(ceil(n_topoplots / n_rows))
+        end
+        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+        data._col .= 1
+        data._row .= 1
+        for topo = 1:n_topoplots
+            data._col[ix[topo]] .= _col[topo]
+            data._row[ix[topo]] .= _row[topo]
+        end
+        config_kwargs!(config; mapping = (; row = :_row, col = :_col))
     end
-    _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-    _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-    data._col .= 1
-    data._row .= 1
-    for topo = 1:n_topoplots
-        data._col[ix[topo]] .= _col[topo]
-        data._row[ix[topo]] .= _row[topo]
-    end
-    data.colrow = map(x->join(x,":"),zip(data._col,string.(data._row))) 
- #=    @show ix[1]
-    @show _col
-    @show _row
-    @show data._col
-    @show data._row
-    @show StatsBase.countmap(data.colrow) =#
-    config_kwargs!(config; mapping = (; row = :_row, col = :_col))
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
@@ -186,28 +179,85 @@ function plot_topoplotseries!(
         yrectzoom = config.axis.yrectzoom,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
+
     return f
 
+end
+
+function bins_estimation(time; bin_width = nothing, bin_num = nothing, cat_or_cont_columns)
+    tmin = minimum(time)
+    tmax = maximum(time)
+    if (!isnothing(bin_width) && !isnothing(bin_num))
+        error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
+    elseif (isnothing(bin_width) && isnothing(bin_num) && cat_or_cont_columns == "cont")
+        error(
+            "You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.",
+        )
+    end
+    if isnothing(bin_width)
+        bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
+    else
+        bins = range(; start = tmin, step = bin_width, stop = tmax)
+    end
+    return bins
 end
 
 function number_of_topoplots(
     df::DataFrame;
     bin_width = nothing,
     bin_num = nothing,
+    bins,
+    mapping = config.mapping,
 )
-    if (bin_width != nothing && bin_num != nothing)
-        error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
-    elseif (isnothing(bin_width) && isnothing(bin_num))
-        error("You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.")
-    end
-    tmin = minimum(df.time)
-    tmax = maximum(df.time)
-
-    if isnothing(bin_width)
-        bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
+    if !isnothing(bin_width)
+        time_new = cut(df.time, bins; extend = true)
+        n = length(unique(time_new))
+    elseif !isnothing(bin_num)
+        time_new = cut(df.time, bins; extend = true)
+        n = length(unique(time_new))
     else
-        bins = range(; start = tmin, step = bin_width, stop = tmax)
+        n = unique(df[:, mapping.col])
     end
-    time_new = cut(df.time, bins; extend = true)
-    return length(unique(time_new))
+    return n
+end
+
+
+"""
+    df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
+Split or combine `DataFrame` according to equally spaced time bins.
+
+Arguments:
+- `df::AbstractTable`\\
+    With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
+- `bin_width::Real = nothing`\\
+    Bin width in `:time` units;
+- `bin_num::Real = nothing`\\
+    Number of topoplots;
+- `col_y = :erp` \\
+    The column to combine over (with `fun`);
+- `fun = mean()`\\
+    Function to combine.
+- `grouping = []`\\
+    Vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
+
+**Return Value:** `DataFrame`.
+"""
+function df_timebin(
+    df;
+    bin_width = nothing,
+    bin_num = nothing,
+    col_y = :erp,
+    fun = mean,
+    grouping = [],
+)
+    bins = bins_estimation(df.time; bin_width, bin_num, cat_or_cont_columns = "cont")
+    @show bins
+    df = deepcopy(df) # cut seems to change stuff inplace
+    df.time = cut(df.time, bins; extend = true)
+
+    grouping = grouping[.!isnothing.(grouping)]
+    df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
+    rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
+
+    return df_m
 end
