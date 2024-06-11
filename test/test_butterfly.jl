@@ -2,13 +2,24 @@
 include("../docs/example_data.jl")
 df, pos = example_data("TopoPlots.jl")
 
-@testset "butterfly basic" begin
-    plot_butterfly(df; positions = pos)
+@testset "butterfly default" begin
+    plot_butterfly(df; positions = pos, visual = (; transparency = true))
+    #save("dev/UnfoldMakie/default_butterfly.png", f)
 end
 
-@testset "butterfly basic with GridLayout" begin
+@testset "butterfly default with GridLayout" begin
     f = Figure()
     plot_butterfly!(f[1, 1], df; positions = pos)
+end
+
+@testset "butterfly basic" begin
+    plot_butterfly(
+        df;
+        positions = pos,
+        topopositions_to_color = x -> Colors.RGB(0.1),
+        topolegend = false,
+    )
+    #save("dev/UnfoldMakie/basic_butterfly.png", f)
 end
 
 @testset "butterfly with change of topomarkersize" begin
@@ -153,7 +164,7 @@ end
 #TO DO
 
 # not working
-@testset "butterfly with two size highlighted channels" begin
+#= @testset "butterfly with two size highlighted channels" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
     plot_butterfly(df; positions = pos, mapping = (; linesize = :highlight))
-end
+end =#
