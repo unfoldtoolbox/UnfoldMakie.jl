@@ -70,8 +70,8 @@ function eeg_topoplot_series(
 end
 # allow to specify bin_width as an keyword for nicer readability
 
-eeg_topoplot_series(data::Union{<:Observable,<:DataFrame,<:AbstractMatrix}; kwargs...) =
-    eeg_topoplot_series(data; kwargs...)
+#eeg_topoplot_series(data::Union{<:Observable,<:DataFrame,<:AbstractMatrix}; kwargs...) =
+#    eeg_topoplot_series(data; kwargs...)
 # AbstractMatrix
 function eeg_topoplot_series!(
     fig,
@@ -117,7 +117,6 @@ function eeg_topoplot_series!(
     highlight_scatter = false, #Observable([0]),
     topoplot_attributes...,
 )
-    @show topoplot_attributes[:label_scatter]
     # cannot be made easier right now, but Simon promised a simpler solution "soonish"
     axis_options = (
         aspect = 1,
@@ -169,7 +168,7 @@ function eeg_topoplot_series!(
         (
             colorrange = (q_min, q_max),
             interp_resolution = (128, 128),
-            contours = (levels = range(q_min, q_max; length = 7),),
+            contours = (levels = range(q_min, q_max; length = 7)),
         ),
         topoplot_attributes,
     )
@@ -185,87 +184,27 @@ function eeg_topoplot_series!(
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
-            ax = Axis(fig[:, :][r, c]; axis_options...)
-            # select one topoplot
-            sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
-            if !isnothing(col)
-                sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
-            end
-            if !isnothing(row)
-                sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
-            end
-
-            df_single = @lift($data_mean[sel, :])
-
-            # select labels
-            labels = to_value(df_single)[:, label]
-            # select data
-            d_vec = @lift($df_single[:, y])
-            # plot it
-            if highlight_scatter != false || interactive_scatter != nothing
-                strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
-                highlight_feature = (; strokecolor = strokecolor)
-                @show highlight_feature
-
-                @show topoplot_attributes[:label_scatter]
-                if :label_scatter ∈ keys(topoplot_attributes)
-                    topoplot_attributes = merge(
-                        topoplot_attributes,
-                        (;
-                            label_scatter = merge(
-                                topoplot_attributes[:label_scatter],
-                                highlight_feature,
-                            )
-                        ),
-                    )
-                else
-                    topoplot_attributes =
-                        merge(topoplot_attributes, (; label_scatter = highlight_feature))
-                end
-            end
-            if isempty(to_value(d_vec))
-                continue
-            end
-            single_topoplot = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
-            if rasterize_heatmaps
-                single_topoplot.plots[1].plots[1].rasterize = true
-            end
-
-            # to put column and row labels
-            if col_labels == true
-                if r == length(select_row) && col_labels
-                    ax.xlabel = string(to_value(df_single)[1, col])
-                    ax.xlabelvisible = true
-                end
-                if c == 1 && length(select_row) > 1 && row_labels
-                    ax.ylabel = string(to_value(df_single)[1, row])
-                    ax.ylabelvisible = true
-                end
-            else
-                ax.xlabelvisible = true
-                ax.xlabel = string(to_value(df_single).time[1, :][])
-            end
-
-            if interactive_scatter != false
-                on(events(single_topoplot).mousebutton) do event
-                    if event.button == Mouse.left && event.action == Mouse.press
-                        plt, p = pick(single_topoplot)
-
-                        if isa(plt, Makie.Scatter) &&
-                           plt == single_topoplot.plots[1].plots[3]
-
-                            plt.strokecolor[] .= :black
-                            plt.strokecolor[][p] = :white
-                            notify(plt.strokecolor) # not sure why this is necessary, but oh well..
-
-                            interactive_scatter[] = (r, c, p)
-                        end
-
-                    end
-                end
-            end
-
+            ax = single_topoplot(
+                fig,
+                r,
+                c,
+                row,
+                col,
+                select_row,
+                select_col,
+                y,
+                label,
+                axis_options,
+                data_mean,
+                highlight_scatter,
+                interactive_scatter,
+                topoplot_attributes,
+                col_labels,
+                row_labels,
+                rasterize_heatmaps,
+            )
             push!(axlist, ax)
+
         end
     end
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
@@ -273,4 +212,106 @@ function eeg_topoplot_series!(
     end
 
     return fig, axlist
+end
+
+
+function single_topoplot(
+    fig,
+    r,
+    c,
+    row,
+    col,
+    select_row,
+    select_col,
+    y,
+    label,
+    axis_options,
+    data_mean,
+    highlight_scatter,
+    interactive_scatter,
+    topoplot_attributes,
+    col_labels,
+    row_labels,
+    rasterize_heatmaps,
+)
+    ax = Axis(fig[:, :][r, c]; axis_options...)
+    # select one topoplot
+    sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
+    if !isnothing(col)
+        sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
+    end
+    if !isnothing(row)
+        sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
+    end
+
+
+    df_single = @lift($data_mean[sel, :])
+
+    # select labels
+    labels = to_value(df_single)[:, label]
+    # select data
+    d_vec = @lift($df_single[:, y])
+    # plot it
+    if highlight_scatter != false || interactive_scatter != nothing
+        strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
+        highlight_feature = (; strokecolor = strokecolor)
+
+        if :label_scatter ∈ keys(topoplot_attributes)
+            topoplot_attributes = merge(
+                topoplot_attributes,
+                (;
+                    label_scatter = if isa(topoplot_attributes[:label_scatter], NamedTuple)
+                        merge(topoplot_attributes[:label_scatter], highlight_feature)
+                    else
+                        highlight_feature
+                    end
+                ),
+            )
+
+        else
+            topoplot_attributes =
+                merge(topoplot_attributes, (; label_scatter = highlight_feature))
+        end
+    end
+    if isempty(to_value(d_vec))
+        return
+    end
+    single_topoplot = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
+    if rasterize_heatmaps
+        single_topoplot.plots[1].plots[1].rasterize = true
+    end
+
+    # to put column and row labels
+    if col_labels == true
+        if r == length(select_row) && col_labels
+            ax.xlabel = string(to_value(df_single)[1, col])
+            ax.xlabelvisible = true
+        end
+        if c == 1 && length(select_row) > 1 && row_labels
+            ax.ylabel = string(to_value(df_single)[1, row])
+            ax.ylabelvisible = true
+        end
+    else
+        ax.xlabelvisible = true
+        ax.xlabel = string(to_value(df_single).time[1, :][])
+    end
+
+    if interactive_scatter != false
+        on(events(single_topoplot).mousebutton) do event
+            if event.button == Mouse.left && event.action == Mouse.press
+                plt, p = pick(single_topoplot)
+
+                if isa(plt, Makie.Scatter) && plt == single_topoplot.plots[1].plots[3]
+
+                    plt.strokecolor[] .= :black
+                    plt.strokecolor[][p] = :white
+                    notify(plt.strokecolor) # not sure why this is necessary, but oh well..
+
+                    interactive_scatter[] = (r, c, p)
+                end
+
+            end
+        end
+    end
+    return ax
 end
