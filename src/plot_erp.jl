@@ -183,7 +183,7 @@ function plot_erp!(
     end
 
     # remove x / y
-    mappingOthers = deleteKeys(config.mapping, [:x, :y])
+    mappingOthers = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
 
     xy_mapp =
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mappingOthers...)
@@ -202,7 +202,7 @@ function plot_erp!(
         basic = basic + addPvalues(plot_data, pvalue, config)
     end
 
-    plotEquation = basic * mapp
+    plot_equation = basic * mapp
 
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
@@ -227,19 +227,20 @@ function plot_erp!(
                 allPositions,
             )
         end
+
         if isnothing(colors)
-            drawing = draw!(f_grid, plotEquation; axis = config.axis)
+            drawing = draw!(f_grid, plot_equation; axis = config.axis)
         else
             drawing = draw!(
                 f_grid,
-                plotEquation;
+                plot_equation;
                 axis = config.axis,
                 palettes = (color = colors,),
             )
         end
     else
         # draw a normal ERP lineplot      
-        drawing = draw!(f_grid, plotEquation; axis = config.axis)
+        drawing = draw!(f_grid, plot_equation; axis = config.axis)
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
