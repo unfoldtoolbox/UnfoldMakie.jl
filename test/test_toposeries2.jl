@@ -100,22 +100,19 @@ end
     f
 end
 
-
-
-
+# use with WGlMakie
 @testset "interactive data" begin
-    f = Figure()
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     df_obs = Observable(df)
 
+    f = Figure()
     plot_topoplotseries!(
-        f[1:2, 1:2],
+        f[1, 1],
         df_obs;
-        bin_width,
         col_labels = true,
-        mapping = (; row = :condition),
+        mapping = (; col = :condition),
         positions = positions,
     )
     f
@@ -134,7 +131,7 @@ end
         col_labels = true,
         mapping = (; col = :condition),
         positions = positions,
-        visual = (label_scatter = (markersize = 15, strokewidth = 2)),
+        visual = (; label_scatter = (markersize = 15, strokewidth = 2)),
         interactive_scatter = obs_tuple,
     )
 end

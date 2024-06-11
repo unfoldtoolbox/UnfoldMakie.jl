@@ -67,23 +67,19 @@ function plot_topoplotseries!(
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     config = PlotConfig(:topoplotseries)
-    @show config.visual
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
 
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-    @show config.visual
     cat_or_cont_columns =
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
-
-    @show cat_or_cont_columns
     data = deepcopy(to_value(data))
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
-    # overkll as we would only need to check the xlabel ;)
+        # overkll as we would only need to check the xlabel ;)
     else
         # arrangment of topoplots by rows and cols
         bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
@@ -161,27 +157,12 @@ function plot_topoplotseries!(
     if !config.layout.use_colorbar
         config_kwargs!(config, layout = (; use_colorbar = false, show_legend = false))
     end
-
     ax = Axis(
-        f[1, 1],
-        xlabel = config.axis.xlabel,
-        ylabel = config.axis.ylabel,
-        title = config.axis.title,
-        titlesize = config.axis.titlesize,
-        titlefont = config.axis.titlefont,
-        ylabelpadding = config.axis.ylabelpadding,
-        xlabelpadding = config.axis.xlabelpadding,
-        xpanlock = config.axis.xpanlock,
-        ypanlock = config.axis.ypanlock,
-        xzoomlock = config.axis.xzoomlock,
-        yzoomlock = config.axis.yzoomlock,
-        xrectzoom = config.axis.xrectzoom,
-        yrectzoom = config.axis.yrectzoom,
+        f[1, 1];
+        (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)...,
     )
     apply_layout_settings!(config; fig = f, ax = ax)
-
     return f
-
 end
 
 function bins_estimation(time; bin_width = nothing, bin_num = nothing, cat_or_cont_columns)
@@ -251,7 +232,6 @@ function df_timebin(
     grouping = [],
 )
     bins = bins_estimation(df.time; bin_width, bin_num, cat_or_cont_columns = "cont")
-    @show bins
     df = deepcopy(df) # cut seems to change stuff inplace
     df.time = cut(df.time, bins; extend = true)
 
