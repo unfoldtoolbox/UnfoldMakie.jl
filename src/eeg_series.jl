@@ -114,36 +114,10 @@ function eeg_topoplot_series!(
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
     interactive_scatter = nothing,
-    highlight_scatter = false, #Observable([0]),
+    highlight_scatter = false,
     topoplot_attributes...,
 )
-    # cannot be made easier right now, but Simon promised a simpler solution "soonish"
-    axis_options = (
-        aspect = 1,
-        xgridvisible = false,
-        xminorgridvisible = false,
-        xminorticksvisible = false,
-        xticksvisible = false,
-        xticklabelsvisible = false,
-        xlabelvisible = false,
-        ygridvisible = false,
-        yminorgridvisible = false,
-        yminorticksvisible = false,
-        yticksvisible = false,
-        yticklabelsvisible = false,
-        ylabelvisible = false,
-        leftspinevisible = false,
-        rightspinevisible = false,
-        topspinevisible = false,
-        bottomspinevisible = false,
-        xpanlock = true,
-        ypanlock = true,
-        xzoomlock = true,
-        yzoomlock = true,
-        xrectzoom = false,
-        yrectzoom = false,
-        limits = (xlim_topo, ylim_topo),
-    )
+    axis_options = create_axis_options(xlim_topo, ylim_topo)
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
 
@@ -180,7 +154,7 @@ function eeg_topoplot_series!(
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
-
+    
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -210,10 +184,8 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-
     return fig, axlist
 end
-
 
 function single_topoplot(
     fig,
@@ -243,8 +215,6 @@ function single_topoplot(
     if !isnothing(row)
         sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
     end
-
-
     df_single = @lift($data_mean[sel, :])
 
     # select labels
@@ -267,7 +237,6 @@ function single_topoplot(
                     end
                 ),
             )
-
         else
             topoplot_attributes =
                 merge(topoplot_attributes, (; label_scatter = highlight_feature))
@@ -295,23 +264,51 @@ function single_topoplot(
         ax.xlabelvisible = true
         ax.xlabel = string(to_value(df_single).time[1, :][])
     end
+    interctive_toposeries(interactive_scatter, single_topoplot)
+    return ax
+end
 
+function interctive_toposeries(interactive_scatter, single_topoplot)
     if interactive_scatter != false
         on(events(single_topoplot).mousebutton) do event
             if event.button == Mouse.left && event.action == Mouse.press
                 plt, p = pick(single_topoplot)
-
                 if isa(plt, Makie.Scatter) && plt == single_topoplot.plots[1].plots[3]
-
                     plt.strokecolor[] .= :black
                     plt.strokecolor[][p] = :white
                     notify(plt.strokecolor) # not sure why this is necessary, but oh well..
-
                     interactive_scatter[] = (r, c, p)
                 end
-
             end
         end
     end
-    return ax
+end
+
+function create_axis_options(xlim_topo, ylim_topo)
+    return(
+        aspect = 1,
+        xgridvisible = false,
+        xminorgridvisible = false,
+        xminorticksvisible = false,
+        xticksvisible = false,
+        xticklabelsvisible = false,
+        xlabelvisible = false,
+        ygridvisible = false,
+        yminorgridvisible = false,
+        yminorticksvisible = false,
+        yticksvisible = false,
+        yticklabelsvisible = false,
+        ylabelvisible = false,
+        leftspinevisible = false,
+        rightspinevisible = false,
+        topspinevisible = false,
+        bottomspinevisible = false,
+        xpanlock = true,
+        ypanlock = true,
+        xzoomlock = true,
+        yzoomlock = true,
+        xrectzoom = false,
+        yrectzoom = false,
+        limits = (xlim_topo, ylim_topo),
+    )
 end
