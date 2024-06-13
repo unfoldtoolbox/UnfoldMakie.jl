@@ -154,7 +154,7 @@ function eeg_topoplot_series!(
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
-    
+
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -285,7 +285,7 @@ function interctive_toposeries(interactive_scatter, single_topoplot)
 end
 
 function create_axis_options(xlim_topo, ylim_topo)
-    return(
+    return (
         aspect = 1,
         xgridvisible = false,
         xminorgridvisible = false,

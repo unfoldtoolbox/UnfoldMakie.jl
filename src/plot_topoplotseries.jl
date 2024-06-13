@@ -79,7 +79,7 @@ function plot_topoplotseries!(
         # overwrite Time windows [s] default if categorical
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
-        # overkll as we would only need to check the xlabel ;)
+    # overkll as we would only need to check the xlabel ;)
     else
         # arrangment of topoplots by rows and cols
         bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
