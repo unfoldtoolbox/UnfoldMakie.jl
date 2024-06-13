@@ -24,9 +24,14 @@ end
 @testset "hierarchical labels (bugged)" begin
     df, evts = UnfoldSim.predef_eeg()
     f = @formula 0 ~ 1 + condition + continuous
-    #basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
-    basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10, name = "")
+    basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 5, name = "stimulus")
+    #basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10, name = "")
     bfDict = [Any => (f, basisfunction)]
     td = fit(UnfoldModel, bfDict, evts, df)
     plot_designmatrix(designmatrix(td))
 end
+
+
+#julia > Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(td)})
+
+#julia > Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(uf)})

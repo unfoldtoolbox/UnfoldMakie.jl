@@ -27,7 +27,7 @@ end
         df;
         positions = pos,
         topomarkersize = 10,
-        topoheigth = 0.4,
+        topoheight = 0.4,
         topowidth = 0.4,
     )
 end
@@ -58,7 +58,7 @@ end
         df;
         positions = pos,
         topomarkersize = 10,
-        topoheigth = 0.4,
+        topoheight = 0.4,
         topowidth = 0.4,
         layout = (;
             hidedecorations = (:label => true, :ticks => true, :ticklabels => true)

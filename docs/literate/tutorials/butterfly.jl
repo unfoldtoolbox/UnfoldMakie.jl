@@ -38,7 +38,7 @@ plot_butterfly(df; positions = pos)
 
 # You want to change size of topomarkers and size of topoplot:
 
-plot_butterfly(df; positions = pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4)
+plot_butterfly(df; positions = pos, topomarkersize = 10, topoheight = 0.4, topowidth = 0.4)
 
 # You want to add vline and hline:
 
