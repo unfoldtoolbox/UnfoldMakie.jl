@@ -1,6 +1,6 @@
 # # Topoplot Series
 
-# Topoplot Series is a plot type for visualizing EEG activity in a given time frame or time interval. 
+# **Topoplot series** is a plot type for visualizing EEG activity in a given time frame or time interval. 
 # It can fully represent channel and channel location dimensions using contour lines. It can also partially represent the time dimension.
 # Basically, it is a series of Topoplots.
 
@@ -84,8 +84,8 @@ f
 
 #=
 If you decide to use categorical values instead of time intvervals for sepration of topoplots do this:
-- Do not specify bin_width or bin_num
-- Put categorical value in mapping.col
+- Do not specify `bin_width` or `bin_num`
+- Put categorical value in `mapping.col`
 =#
 
 df2 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))

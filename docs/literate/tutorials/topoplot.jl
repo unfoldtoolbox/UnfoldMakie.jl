@@ -1,5 +1,5 @@
 # # [Topoplot](@id topo_vis)
-# Topoplot (aka topography plot) is a plot type for visualisation of EEG activity in a specific time stemp or time interval. 
+# **Topoplot** (aka topography plot) is a plot type for visualisation of EEG activity in a specific time stemp or time interval. 
 # It can fully represent channel and channel location dimensions using contour lines.
 
 # The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
