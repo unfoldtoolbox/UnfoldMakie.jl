@@ -162,7 +162,6 @@ end
 end
 
 #TO DO
-
 # not working
 #= @testset "butterfly with two size highlighted channels" begin
     df.highlight = in.(df.channel, Ref([10, 12]))

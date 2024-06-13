@@ -7,7 +7,6 @@ bin_width = 80
 @testset "14 topoplots, 4 rows" begin # horrific
     f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-    bin_width = 30
     plot_topoplotseries!(
         f[1, 1:5],
         df;
