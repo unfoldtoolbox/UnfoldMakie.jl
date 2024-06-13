@@ -81,6 +81,9 @@ plot_butterfly!(
     topomarkersize = 10,
     topowidth = 0.25,
     topoheight = 0.25,
+    topohalign = 0.05,
+    topovalign = 0.95,
+    topoaspect = 1,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
     kwargs...,
 )
@@ -207,16 +210,15 @@ function plot_erp!(
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
     if butterfly
-        # no extra legend
         # add topolegend
         if (topolegend)
             topoAxis = Axis(
                 f_grid,
                 width = Relative(topowidth),
                 height = Relative(topoheight),
-                halign = 0.05,
-                valign = 0.95,
-                aspect = 1,
+                halign = topohalign,
+                valign = topovalign,
+                aspect = topoaspect,
             )
             ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
             topoplotLegend(
@@ -227,7 +229,6 @@ function plot_erp!(
                 allPositions,
             )
         end
-
         if isnothing(colors)
             drawing = draw!(f_grid, plot_equation; axis = config.axis)
         else
