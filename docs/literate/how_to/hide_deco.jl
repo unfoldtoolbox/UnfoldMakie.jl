@@ -28,7 +28,7 @@ plot_butterfly!(
     data;
     positions = pos,
     topomarkersize = 10,
-    topoheigth = 0.4,
+    topoheight = 0.4,
     topowidth = 0.4,
     axis = (; title = "With decorations"),
 )
@@ -37,7 +37,7 @@ plot_butterfly!(
     data;
     positions = pos,
     topomarkersize = 10,
-    topoheigth = 0.4,
+    topoheight = 0.4,
     topowidth = 0.4,
     axis = (; title = "Without decorations"),
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),

@@ -157,7 +157,7 @@ plot_butterfly!(
     d_topo;
     positions = pos,
     topomarkersize = 10,
-    topoheigth = 0.4,
+    topoheight = 0.4,
     topowidth = 0.4,
 )
 hlines!(0, color = :gray, linewidth = 1)

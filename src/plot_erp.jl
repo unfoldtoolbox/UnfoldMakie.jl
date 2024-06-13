@@ -56,7 +56,7 @@ Plot a Butterfly plot.
     Change the size of the electrode markers in topoplot.
 - `topowidth::Real = 0.25` \\
     Change the width of inlay topoplot.
-- `topoheigth::Real = 0.25` \\
+- `topoheight::Real = 0.25` \\
     Change the height of inlay topoplot.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
     Change the line colors.
@@ -80,7 +80,7 @@ plot_butterfly!(
     topolegend = true,
     topomarkersize = 10,
     topowidth = 0.25,
-    topoheigth = 0.25,
+    topoheight = 0.25,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
     kwargs...,
 )
@@ -98,7 +98,7 @@ function plot_erp!(
     topolegend = nothing,
     topomarkersize = nothing,
     topowidth = nothing,
-    topoheigth = nothing,
+    topoheight = nothing,
     topopositions_to_color = nothing,
     mapping = (;),
     kwargs...,
@@ -213,7 +213,7 @@ function plot_erp!(
             topoAxis = Axis(
                 f_grid,
                 width = Relative(topowidth),
-                height = Relative(topoheigth),
+                height = Relative(topoheight),
                 halign = 0.05,
                 valign = 0.95,
                 aspect = 1,
