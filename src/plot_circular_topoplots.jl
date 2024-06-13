@@ -220,7 +220,6 @@ function plot_topo_plots!(
 end
 
 function calculate_BBox(origin, widths, predictor_value, bounds, plot_radius)
-
     minwidth = minimum(widths)
     predictor_ratio = (predictor_value - bounds[1]) / (bounds[2] - bounds[1])
     radius = (minwidth * plot_radius) / 2 # radius of the position circle of a circular topoplot 
@@ -241,6 +240,9 @@ function calculate_BBox(origin, widths, predictor_value, bounds, plot_radius)
     # right point of the axis. This means that you have to 
     # move the bbox to the bottom left by size_of_bbox/2 to move
     # the center of the axis to a point. 
+    if abs(y) < 1
+        y = round(y, digits = 2)
+    end
     return BBox(
         (origin[1] + widths[1]) / 2 - size_of_BBox / 2 + x,
         (origin[1] + widths[1]) / 2 + size_of_BBox - size_of_BBox / 2 + x,
