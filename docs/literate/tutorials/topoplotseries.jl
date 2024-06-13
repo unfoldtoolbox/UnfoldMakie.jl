@@ -89,7 +89,7 @@ If you decide to use categorical values instead of time intvervals for sepration
 =#
 
 df2 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
-df2.condition = repeat(["A", "B", "C", "D", "E"], size(df1, 1) ÷ 5)
+df2.condition = repeat(["A", "B", "C", "D", "E"], size(df2, 1) ÷ 5)
 
 f = Figure(size = (600, 500))
 
