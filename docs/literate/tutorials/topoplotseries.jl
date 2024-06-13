@@ -42,7 +42,7 @@ plot_topoplotseries!(
     bin_width,
     positions = positions,
     combinefun = mean,
-    axis = (; title = "combinefun = mean"),
+    axis = (; xlabel = "", title = "combinefun = mean"),
 )
 plot_topoplotseries!(
     f[2, 1],
@@ -50,7 +50,7 @@ plot_topoplotseries!(
     bin_width,
     positions = positions,
     combinefun = median,
-    axis = (; title = "combinefun = median"),
+    axis = (; xlabel = "", title = "combinefun = median"),
 )
 plot_topoplotseries!(
     f[3, 1],
@@ -66,36 +66,54 @@ f
 
 #=
 If you need to plot many topoplots, you should display them in multiple rows. 
+=#
 
-Here you can specify:
-- Grouping condition using `mapping.row`.
-- Label the y-axis with `axis.ylabel`.
+f = Figure()
+df1 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+plot_topoplotseries!(
+    f[1, 1:5],
+    df1;
+    bin_num = 14,
+    nrows = 4,
+    positions = positions,
+    visual = (; label_scatter = false),
+)
+f
+
+# ## Categorical topoplots
+
+#=
+If you decide to use categorical values instead of time intvervals for sepration of topoplots do this:
+- Do not specify bin_width or bin_num
+- Put categorical value in mapping.col
+=#
+
+df2 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
+df2.condition = repeat(["A", "B", "C", "D", "E"], size(df1, 1) ÷ 5)
+
+f = Figure(size = (600, 500))
+
+plot_topoplotseries!(
+    f[1, 1],
+    df2;
+    col_labels = true,
+    mapping = (; col = :condition),
+    axis = (; xlabel = "Conditions"),
+    positions = positions,
+)
+f
+
+# # Configurations of Topoplot series
+
+#=
+Also you can specify:
+- Label the x-axis with `axis.xlabel`.
 - Hide electrode markers with `visual.label_scatter`.
 - Change the color map with `visual.colormap`. The default is `Reverse(:RdBu)`.
 - Adjust the limits of the topoplot boxes with `axis.xlim_topo` and `axis.ylim_topo`. By default both are `(-0.25, 1.25)`.
 - Adjust the size of the figure with `Figure(size = (x, y))`.
 - Adjust the padding between topoplot labels and axis labels using `xlabelpadding` and `ylabelpadding`.
 =#
-df1 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-df1.condition = repeat(["A", "B", "C", "D", "E"], size(df, 1) ÷ 5)
-
-f = Figure(size = (600, 500))
-
-plot_topoplotseries!(
-    f[1:2, 1:2],
-    df1;
-    bin_width,
-    col_labels = true,
-    mapping = (; row = :condition),
-    axis = (; ylabel = "Conditions"),
-    positions = positions,
-    visual = (label_scatter = false,),
-    layout = (; use_colorbar = true),
-)
-f
-
-# # Configurations of Topoplot series
-
 # ```@docs
 # plot_topoplotseries
 # ```
