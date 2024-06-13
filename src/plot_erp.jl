@@ -103,6 +103,9 @@ function plot_erp!(
     topowidth = nothing,
     topoheight = nothing,
     topopositions_to_color = nothing,
+    topohalign = 0.05,
+    topovalign = 0.95,
+    topoaspect = 1,
     mapping = (;),
     kwargs...,
 )
