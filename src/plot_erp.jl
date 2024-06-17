@@ -56,7 +56,7 @@ Plot a Butterfly plot.
     Change the size of the electrode markers in topoplot.
 - `topowidth::Real = 0.25` \\
     Change the width of inlay topoplot.
-- `topoheigth::Real = 0.25` \\
+- `topoheight::Real = 0.25` \\
     Change the height of inlay topoplot.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
     Change the line colors.
@@ -80,7 +80,10 @@ plot_butterfly!(
     topolegend = true,
     topomarkersize = 10,
     topowidth = 0.25,
-    topoheigth = 0.25,
+    topoheight = 0.25,
+    topohalign = 0.05,
+    topovalign = 0.95,
+    topoaspect = 1,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
     kwargs...,
 )
@@ -98,8 +101,11 @@ function plot_erp!(
     topolegend = nothing,
     topomarkersize = nothing,
     topowidth = nothing,
-    topoheigth = nothing,
+    topoheight = nothing,
     topopositions_to_color = nothing,
+    topohalign = 0.05,
+    topovalign = 0.95,
+    topoaspect = 1,
     mapping = (;),
     kwargs...,
 )
@@ -140,13 +146,13 @@ function plot_erp!(
             topolegend = false
             colors = nothing
         else
-            allPositions = get_topo_positions(; positions = positions, labels = labels)
+            all_positions = get_topo_positions(; positions = positions, labels = labels)
             if (config.visual.colormap !== nothing)
                 colors = config.visual.colormap
                 un = length(unique(plot_data[:, config.mapping.color]))
                 colors = cgrad(config.visual.colormap, un, categorical = true)
             else
-                colors = get_topo_color(allPositions, topopositions_to_color)
+                colors = get_topo_color(all_positions, topopositions_to_color)
             end
         end
     end
@@ -183,7 +189,7 @@ function plot_erp!(
     end
 
     # remove x / y
-    mappingOthers = deleteKeys(config.mapping, [:x, :y])
+    mappingOthers = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
 
     xy_mapp =
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mappingOthers...)
@@ -202,21 +208,20 @@ function plot_erp!(
         basic = basic + addPvalues(plot_data, pvalue, config)
     end
 
-    plotEquation = basic * mapp
+    plot_equation = basic * mapp
 
     f_grid = f[1, 1]
     # butterfly plot is drawn slightly different
     if butterfly
-        # no extra legend
         # add topolegend
         if (topolegend)
             topoAxis = Axis(
                 f_grid,
                 width = Relative(topowidth),
-                height = Relative(topoheigth),
-                halign = 0.05,
-                valign = 0.95,
-                aspect = 1,
+                height = Relative(topoheight),
+                halign = topohalign,
+                valign = topovalign,
+                aspect = topoaspect,
             )
             ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
             topoplotLegend(
@@ -224,22 +229,22 @@ function plot_erp!(
                 topomarkersize,
                 plot_data[ix, config.mapping.color[1]],
                 colors,
-                allPositions,
+                all_positions,
             )
         end
         if isnothing(colors)
-            drawing = draw!(f_grid, plotEquation; axis = config.axis)
+            drawing = draw!(f_grid, plot_equation; axis = config.axis)
         else
             drawing = draw!(
                 f_grid,
-                plotEquation;
+                plot_equation;
                 axis = config.axis,
                 palettes = (color = colors,),
             )
         end
     else
         # draw a normal ERP lineplot      
-        drawing = draw!(f_grid, plotEquation; axis = config.axis)
+        drawing = draw!(f_grid, plot_equation; axis = config.axis)
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
@@ -258,10 +263,10 @@ function eegHeadMatrix(positions, center, radius)
 end
 
 # topopositions_to_color = colors?
-function topoplotLegend(axis, topomarkersize, unique_val, colors, allPositions)
-    allPositions = unique(allPositions)
+function topoplotLegend(axis, topomarkersize, unique_val, colors, all_positions)
+    all_positions = unique(all_positions)
 
-    topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
+    topoMatrix = eegHeadMatrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
     specialColors = ColorScheme(
@@ -272,11 +277,11 @@ function topoplotLegend(axis, topomarkersize, unique_val, colors, allPositions)
     ylims!(low = -0.2, high = 1.2)
     topoplot = eeg_topoplot!(
         axis,
-        1:length(allPositions), # go from 1:npos
-        string.(1:length(allPositions));
-        positions = allPositions,
+        1:length(all_positions), # go from 1:npos
+        string.(1:length(all_positions));
+        positions = all_positions,
         interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
-        colorrange = (0, length(allPositions)), # add the 0 for the white-first color
+        colorrange = (0, length(all_positions)), # add the 0 for the white-first color
         colormap = specialColors,
         head = (color = :black, linewidth = 1, model = topoMatrix),
         label_scatter = (markersize = topomarkersize, strokewidth = 0.5),

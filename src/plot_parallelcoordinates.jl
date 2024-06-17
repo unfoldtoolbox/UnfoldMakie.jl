@@ -185,7 +185,7 @@ function parallelcoordinates(
             color_ix = [findfirst(un_c .== c) for c in color]
             #@assert length(un_c) == 1 "Only single color found, please don't specify color, "
             if length(un_c) == 1
-                @warn "only a single unique value found in specified color-vec"
+                @warn "The only a single unique value found in the specified color vector"
                 color = cgrad(colormap, 2)[color_ix]
             else
                 color = cgrad(colormap, length(un_c))[color_ix]
@@ -259,20 +259,19 @@ function parallelcoordinates(
         ax_pcp = Makie.LineAxis(
             scene;
             limits = limits,
+            dim_convert = Makie.NoDimConversion(),
             ticks = PCPTicks(),
             endpoints = axis_endpoints,
             tickformat = tickformater,
             axesOptions...,
         )
+
         pcp_title!(
             scene,
             ax_pcp.attributes.endpoints,
             ax_labels[i];
             titlegap = def[:titlegap],
         )
-
-
-
         append!(axlist, [ax_pcp])
     end
 

@@ -105,14 +105,6 @@ function PlotConfig(T::Val{:circtopos})
     return cfg
 end
 
-
-function PlotConfig(T::Val{:topoarray})
-    cfg = PlotConfig(:erp)
-
-    config_kwargs!(cfg; layout = (;), colorbar = (;), mapping = (;), axis = (;))
-    return cfg
-end
-
 function PlotConfig(T::Val{:topoplot})
     cfg = PlotConfig()
 
@@ -120,8 +112,6 @@ function PlotConfig(T::Val{:topoplot})
         cfg;
         layout = (
             show_legend = true,
-            xlabelFromMapping = nothing,
-            ylabelFromMapping = nothing,
             use_colorbar = true,
             hidespines = (),
             hidedecorations = (Dict(:label => false)),

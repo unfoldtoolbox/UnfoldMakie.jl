@@ -1,6 +1,6 @@
 # # ERP image
 
-# ERP image is a plot type for visualizing EEG activity for all trials. 
+# **ERP image** is a plot type for visualizing EEG activity for all trials. 
 # It can fully represent time and trial dimensions using a heatmap. 
 # Y-axis represents all trials, x-axis represents time, while color represents voltage. 
 # The ERP image can also be sorted by specific experimental variables, which helps to reveal important correlations. 

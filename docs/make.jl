@@ -15,7 +15,7 @@ using Glob
 
 GENERATED = joinpath(@__DIR__, "src", "generated")
 SOURCE = joinpath(@__DIR__, "literate")
-for subfolder ∈ ["how_to", "intro", "tutorials", "reference"]
+for subfolder ∈ ["how_to", "intro", "tutorials", "explanations"]
     local SOURCE_FILES = Glob.glob(subfolder * "/*.jl", SOURCE)
     foreach(fn -> Literate.markdown(fn, GENERATED * "/" * subfolder), SOURCE_FILES)
 end
@@ -38,6 +38,7 @@ makedocs(;
         "Intro" => [
             "Installation" => "generated/intro/installation.md",
             "Plot types" => "generated/intro/plot_types.md",
+            "Code principles" => "generated/intro/code_principles.md",
         ],
         "Visualization Types" => [
             "ERP plot" => "generated/tutorials/erp.md",
@@ -56,8 +57,8 @@ makedocs(;
             "Hide Decorations and Axis Spines" => "generated/how_to/hide_deco.md",
             "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
         ],
-        "Reference" => [
-            "Convert electrode positions from 3D to 2D" => "generated/reference/positions.md",
+        "Explanations" => [
+            "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
         ],
         "API / DocStrings" => "api.md",
         "Utilities" => "helper.md",
