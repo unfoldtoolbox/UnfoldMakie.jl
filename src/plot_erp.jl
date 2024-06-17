@@ -146,13 +146,13 @@ function plot_erp!(
             topolegend = false
             colors = nothing
         else
-            allPositions = get_topo_positions(; positions = positions, labels = labels)
+            all_positions = get_topo_positions(; positions = positions, labels = labels)
             if (config.visual.colormap !== nothing)
                 colors = config.visual.colormap
                 un = length(unique(plot_data[:, config.mapping.color]))
                 colors = cgrad(config.visual.colormap, un, categorical = true)
             else
-                colors = get_topo_color(allPositions, topopositions_to_color)
+                colors = get_topo_color(all_positions, topopositions_to_color)
             end
         end
     end
@@ -229,7 +229,7 @@ function plot_erp!(
                 topomarkersize,
                 plot_data[ix, config.mapping.color[1]],
                 colors,
-                allPositions,
+                all_positions,
             )
         end
         if isnothing(colors)
@@ -263,10 +263,10 @@ function eegHeadMatrix(positions, center, radius)
 end
 
 # topopositions_to_color = colors?
-function topoplotLegend(axis, topomarkersize, unique_val, colors, allPositions)
-    allPositions = unique(allPositions)
+function topoplotLegend(axis, topomarkersize, unique_val, colors, all_positions)
+    all_positions = unique(all_positions)
 
-    topoMatrix = eegHeadMatrix(allPositions, (0.5, 0.5), 0.5)
+    topoMatrix = eegHeadMatrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
     specialColors = ColorScheme(
@@ -277,11 +277,11 @@ function topoplotLegend(axis, topomarkersize, unique_val, colors, allPositions)
     ylims!(low = -0.2, high = 1.2)
     topoplot = eeg_topoplot!(
         axis,
-        1:length(allPositions), # go from 1:npos
-        string.(1:length(allPositions));
-        positions = allPositions,
+        1:length(all_positions), # go from 1:npos
+        string.(1:length(all_positions));
+        positions = all_positions,
         interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
-        colorrange = (0, length(allPositions)), # add the 0 for the white-first color
+        colorrange = (0, length(all_positions)), # add the 0 for the white-first color
         colormap = specialColors,
         head = (color = :black, linewidth = 1, model = topoMatrix),
         label_scatter = (markersize = topomarkersize, strokewidth = 0.5),

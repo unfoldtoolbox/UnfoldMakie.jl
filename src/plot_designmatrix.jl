@@ -86,34 +86,34 @@ function plot_designmatrix!(
     if (xticks !== nothing && xticks < lLength)
         @assert(xticks >= 0, "xticks shouldn't be negative")
         # sections between xticks
-        sectionSize = (lLength - 2) / (xticks - 1)
-        newLabels = []
+        section_size = (lLength - 2) / (xticks - 1)
+        new_labels = []
 
         # first tick. Empty if 0 ticks
         if xticks >= 1
-            push!(newLabels, labels0[1])
+            push!(new_labels, labels0[1])
         else
-            push!(newLabels, "")
+            push!(new_labels, "")
         end
 
         # fill in ticks in the middle
         for i = 1:(lLength-2)
             # checks if we're at the end of a section, but NO tick on the very last section
-            if i % sectionSize < 1 && i < ((xticks - 1) * sectionSize)
-                push!(newLabels, labels0[i+1])
+            if i % section_size < 1 && i < ((xticks - 1) * section_size)
+                push!(new_labels, labels0[i+1])
             else
-                push!(newLabels, "")
+                push!(new_labels, "")
             end
         end
 
         # last tick at the end
         if xticks >= 2
-            push!(newLabels, labels0[lLength-1])
+            push!(new_labels, labels0[lLength-1])
         else
-            push!(newLabels, "")
+            push!(new_labels, "")
         end
 
-        labels0 = newLabels
+        labels0 = new_labels
     end
     if length(split(labels0[1], ": ")) > 1
         ax2 = Axis(
