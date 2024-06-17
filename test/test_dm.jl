@@ -32,6 +32,5 @@ end
 end
 
 
-#julia > Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(td)})
-
-#julia > Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(uf)})
+#Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(td)})
+#Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(uf)})
