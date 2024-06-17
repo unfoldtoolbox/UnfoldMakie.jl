@@ -1,6 +1,6 @@
 # # Parallel Coordinates
 
-# Parallel Coordinates Plot (PCP) is a plot type used to visualize EEG activity for some channels. 
+# **Parallel Coordinates Plot** (PCP) is a plot type used to visualize EEG activity for some channels. 
 # It can fully represent state and channel dimensions using lines. It can also partially represent time or trials
 # Y-axis represents time points, vertical axes represent channels, while lines show voltage changes. 
 

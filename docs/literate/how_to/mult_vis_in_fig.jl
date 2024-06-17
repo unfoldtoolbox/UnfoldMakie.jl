@@ -83,8 +83,8 @@ plot_designmatrix!(f[2, 3], designmatrix(uf))
 plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
 plot_topoplotseries!(
     f[4, 1:3],
-    d_topo,
-    0.1;
+    d_topo;
+    bin_width = 0.1,
     positions = positions,
     mapping = (; label = :channel),
 )
@@ -157,7 +157,7 @@ plot_butterfly!(
     d_topo;
     positions = pos,
     topomarkersize = 10,
-    topoheigth = 0.4,
+    topoheight = 0.4,
     topowidth = 0.4,
 )
 hlines!(0, color = :gray, linewidth = 1)
@@ -166,8 +166,8 @@ plot_topoplot!(gc, data[:, 340, 1]; positions = positions, axis = (; xlabel = "[
 
 plot_topoplotseries!(
     gd,
-    df,
-    80;
+    df;
+    bin_width = 80,
     positions = positions,
     visual = (label_scatter = false,),
     layout = (; use_colorbar = true),

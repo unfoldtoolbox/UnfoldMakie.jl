@@ -1,5 +1,5 @@
 # # [Butterfly Plot](@id bfp_vis)
-# Butterfly plot is a plot type for visualisation of Event-related potentials. 
+# **Butterfly plot** is a plot type for visualisation of Event-related potentials. 
 # It can fully represent time and channels dimensions using lines. With addition of topoplot inset it can also represent location of channels.
 # It called "butterfly" because the envelope of channels reminds butterfly wings🦋. 
 
@@ -38,7 +38,7 @@ plot_butterfly(df; positions = pos)
 
 # You want to change size of topomarkers and size of topoplot:
 
-plot_butterfly(df; positions = pos, topomarkersize = 10, topoheigth = 0.4, topowidth = 0.4)
+plot_butterfly(df; positions = pos, topomarkersize = 10, topoheight = 0.4, topowidth = 0.4)
 
 # You want to add vline and hline:
 

@@ -56,12 +56,12 @@ end
 end
 
 @testset "testing calculate_BBox" begin
-    @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], 180, [0, 360]) ==
-          BBox(50.0, 250.0, 400.0, 600.0)
-    @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], -45, [0, 360]) ==
-          BBox(647.48737, 847.48737, 152.51262, 352.51262)
-    @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], -180, [-180, 180]) ==
-          BBox(750.0, 950.0, 400.0, 600.0)
+    @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], 180, [0, 360], 0.8) ==
+          BBox(0.0, 200.0, 400.0, 600)
+    @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], -45, [0, 360], 0.8) ==
+          BBox(682.842712474619, 882.842712474619, 117.15728752538104, 317.15728752538104)
+    @test UnfoldMakie.calculate_BBox([0, 0], [1000, 1000], -180, [-180, 180], 0.8) ==
+          BBox(800.0, 1000.0, 400.0, 600.0)
 end
 
 @testset "circularplot plot basic" begin

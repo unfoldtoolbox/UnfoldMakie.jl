@@ -53,14 +53,6 @@ function apply_layout_settings!(
     if :hidedecorations ∈ keys(config.layout) && !isnothing(config.layout.hidedecorations)
         hidedecorations!(ax; config.layout.hidedecorations...)
     end
-
-    # automatic labels
-    #if !isnothing(config.layout.xlabelFromMapping)
-    #    ax.xlabel = string(config.mapping[config.layout.xlabelFromMapping])
-    #end
-    #if !isnothing(config.layout.ylabelFromMapping)
-    #    ax.ylabel = string(config.mapping[config.layout.ylabelFromMapping])
-    #end
 end
 Makie.hidedecorations!(ax::Matrix{AxisEntries}; kwargs...) =
     Makie.hidedecorations!.(ax; kwargs...)
