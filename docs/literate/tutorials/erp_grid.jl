@@ -1,6 +1,6 @@
 # # ERP grid 
 # **ERP grid** is a plot type for visualisation of Event-related potentials. 
-# It can fully represent time, channel, and layout dimensions using lines. It can also partially represent condition dimensions.
+# It can fully represent time, channel, and layout (channel locations) dimensions using lines. It can also partially represent condition dimensions.
 # Lines are displayed on a grid. The location of each axis represents the location of the electrode.
 # This plot type is not as popular because it is too cluttered. 
 

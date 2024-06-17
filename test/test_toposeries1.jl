@@ -12,6 +12,14 @@ end
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
+@testset "toposeries basic: checking mapping" begin
+    plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; x = df.time))
+end
+
+#= @testset "toposeries with Δbin deprecated" begin #fail
+    plot_topoplotseries(df, Δbin; positions = positions)
+end =#
+
 @testset "toposeries basic with nrows specified" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 2, positions = positions)
 end

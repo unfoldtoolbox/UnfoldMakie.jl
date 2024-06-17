@@ -8,7 +8,7 @@ Multiple miniature topoplots in regular distances.
 - `f::Union{GridPosition, GridLayout, GridLayoutBase.GridSubposition, Figure}`\\
     `Figure`, `GridLayout`, `GridPosition`, or GridLayoutBase.GridSubposition to draw the plot.
 - `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
-    DataFrame with data or Observable DataFrame. Requires a `time` column. 
+    DataFrame with data or Observable DataFrame. Requires a `time` column, but could be also specified in mapping.x. 
 
 ## Keyword arguments (kwargs)
 - `bin_width::Real = nothing`\\
@@ -26,7 +26,7 @@ Multiple miniature topoplots in regular distances.
     Except for the interpolated heatmap, all lines/points are vectors.\\
     This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything super slow.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
-    Shows column and row labels for categorical values (?). 
+    Shows column and row labels for categorical values. 
 - `labels::Vector{String} = nothing`\\
     Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
@@ -35,6 +35,8 @@ Multiple miniature topoplots in regular distances.
     Enable interactive mode. \\ 
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
     `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
+- `mapping.x = :time`\\
+    Specification of x value, could be any contionous variable. 
 - `mapping.layout = nothing`\\
     When equals `:time` arrange topoplots by rows. 
 
@@ -45,6 +47,8 @@ $(_docstring(:topoplotseries))
 """
 plot_topoplotseries(data::DataFrame; kwargs...) =
     plot_topoplotseries!(Figure(), data; kwargs...)
+
+#@deprecate plot_topoplotseries(data::DataFrame, Δbin; kwargs...)  plot_topoplotseries(data::DataFrame; bin_width, kwargs...) 
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
@@ -74,7 +78,7 @@ function plot_topoplotseries!(
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     cat_or_cont_columns =
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
-    data = deepcopy(to_value(data))
+    data = (to_value(data))
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
@@ -165,7 +169,7 @@ function plot_topoplotseries!(
     return f
 end
 
-function bins_estimation(time; bin_width = nothing, bin_num = nothing, cat_or_cont_columns)
+function bins_estimation(time; bin_width = nothing, bin_num = nothing, cat_or_cont_columns = "cont")
     tmin = minimum(time)
     tmax = maximum(time)
     if (!isnothing(bin_width) && !isnothing(bin_num))

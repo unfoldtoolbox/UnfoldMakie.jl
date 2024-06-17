@@ -65,13 +65,13 @@ function plot_designmatrix!(
     if sort_data
         designmat = Base.sortslices(designmat, dims = 1)
     end
-    labels0 = replace(Unfold.get_coefnames(data), r"\s*:" => ":")
-    println(labels0)
+    labels0 = replace.(Unfold.get_coefnames(data), r"\s*:" => ":")
+
     if length(split(labels0[1], ": ")) > 1
         labels = map(x -> join(split(x, ": ")[3]), labels0)
-        labels_top1 = map(x -> join(split(x, ": ")[2]), labels0)
+        labels_top1 = Unfold.extract_coef_info(Unfold.get_coefnames(data), 2)
         unique_names = String[]
-        labels_top2 = String[]
+        labels_top2 = String[""]
         for el in labels_top1
             if !in(el, unique_names)
                 push!(unique_names, el)
@@ -80,10 +80,6 @@ function plot_designmatrix!(
                 push!(labels_top2, "")
             end
         end
-        println(labels)
-        println(labels_top1)
-        println(labels_top2)
-        println(unique_names)
     end
     lLength = length(labels0)
     # only change xticks if we want less then all
