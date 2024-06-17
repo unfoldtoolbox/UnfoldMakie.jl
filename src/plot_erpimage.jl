@@ -125,7 +125,6 @@ function plot_erpimage!(
             xlabel = "Time [s]",
             xlabelpadding = 0,
             xautolimitmargin = (0, 0),
-            #xticks = @lift([round(minimum($sortvalues), digits=2), round(mean($sortvalues), digits=2), round(maximum($sortvalues), digits=2)]),
             limits = @lift((
                 minimum($times),
                 maximum($times),
