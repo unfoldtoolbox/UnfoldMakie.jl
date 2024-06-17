@@ -169,7 +169,12 @@ function plot_topoplotseries!(
     return f
 end
 
-function bins_estimation(time; bin_width = nothing, bin_num = nothing, cat_or_cont_columns = "cont")
+function bins_estimation(
+    time;
+    bin_width = nothing,
+    bin_num = nothing,
+    cat_or_cont_columns = "cont",
+)
     tmin = minimum(time)
     tmax = maximum(time)
     if (!isnothing(bin_width) && !isnothing(bin_num))
