@@ -1,5 +1,3 @@
-# Note: This is copied from https://github.com/MakieOrg/TopoPlots.jl/pull/3 because they apparently cannot do a review in ~9month...
-
 """
     eeg_matrix_to_dataframe(data::Matrix, label)
 
