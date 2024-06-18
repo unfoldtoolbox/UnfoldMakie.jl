@@ -98,9 +98,9 @@ end
 
 function eeg_topoplot_series!(
     fig,
-    data::Union{<:Observable{<:DataFrame},<:DataFrame};
-    bin_width = nothing,
-    bin_num = nothing,
+    data_mean::Union{<:Observable{<:DataFrame},<:DataFrame};
+    #bin_width = nothing,
+    #bin_num = nothing,
     y = :erp,
     label = :label,
     col = :time,
@@ -108,7 +108,7 @@ function eeg_topoplot_series!(
     col_labels = false,
     row_labels = false,
     rasterize_heatmaps = true,
-    combinefun = mean,
+    #combinefun = mean,
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
     interactive_scatter = nothing,
@@ -119,22 +119,6 @@ function eeg_topoplot_series!(
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
 
-    data = _as_observable(data)
-    if eltype(to_value(data)[!, col]) <: Number
-        data_mean = @lift(
-            df_timebin(
-                $data;
-                bin_width = bin_width,
-                bin_num = bin_num,
-                col_y = y,
-                fun = combinefun,
-                grouping = [label, col, row],
-            )
-        )
-    else
-        # categorical detected, no binning necessary
-        data_mean = data
-    end
     (q_min, q_max) = extract_colorrange(to_value(data_mean), y)
     topoplot_attributes = merge(
         (
