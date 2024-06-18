@@ -105,8 +105,10 @@ function plot_topoplotseries!(
             axis = (; xlabel = string(config.mapping.col)),
             mapping = (; row = :_row, col = :_col),
         )
-        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
-    # overkll as we would only need to check the xlabel ;)
+        data = _as_observable(data)
+        data_mean = data
+        #config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
+        # overkll as we would only need to check the xlabel ;)
     else
         # arrangment of topoplots by rows and cols
         bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
@@ -118,7 +120,6 @@ function plot_topoplotseries!(
 
 
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        @debug unique_cuts
         _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
         _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
         data._col .= 1
@@ -129,13 +130,24 @@ function plot_topoplotseries!(
             data._row[ix[topo]] .= _row[topo]
         end
         config_kwargs!(config; mapping = (; row = :_row, col = :_col))
+        data = _as_observable(data)
+        data_mean = @lift(
+            df_timebin(
+                $data;
+                bin_width = bin_width,
+                bin_num = bin_num,
+                col_y = config.mapping.y,
+                fun = combinefun,
+                grouping = [chan_or_label, config.mapping.col, config.mapping.row],
+            )
+        )
     end
 
     ftopo, axlist = eeg_topoplot_series!(
         f,
-        data;
-        bin_width = bin_width,
-        bin_num = bin_num,
+        data_mean;
+        #bin_width = bin_width,
+        #bin_num = bin_num,
         y = config.mapping.y,
         label = chan_or_label,
         col = config.mapping.col,
@@ -143,7 +155,7 @@ function plot_topoplotseries!(
         col_labels = col_labels,
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
-        combinefun = combinefun,
+        #combinefun = combinefun,
         xlim_topo = config.axis.xlim_topo,
         ylim_topo = config.axis.ylim_topo,
         interactive_scatter = interactive_scatter,
