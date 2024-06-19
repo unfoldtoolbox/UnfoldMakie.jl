@@ -88,21 +88,11 @@ function plot_topoplotseries!(
             )
         n_topoplots =
             number_of_topoplots(data; bin_width, bin_num, bins = 0, config.mapping)
-        n_rows, n_cols = row_col_management(n_topoplots, nrows, config)
+        data = row_col_management(data, ix, n_topoplots, nrows, config)
 
-        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-        data._col .= 1
-        data._row .= 1
-
-        for topo = 1:n_topoplots
-            data._col[ix[topo]] .= _col[topo]
-            data._row[ix[topo]] .= _row[topo]
-        end
         #@debug _row
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
-        data = _as_observable(data)
-        data_mean = data
+        data_mean = _as_observable(data)
 
         #config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
         # overkll as we would only need to check the xlabel ;)
@@ -113,19 +103,9 @@ function plot_topoplotseries!(
 
         data.timecuts = cut(data.time, bins; extend = true)
         unique_cuts = unique(data.timecuts)
-        n_rows, n_cols = row_col_management(n_topoplots, nrows, config)
-
-
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-        data._col .= 1
-        data._row .= 1
+        data = row_col_management(data, ix, n_topoplots, nrows, config)
 
-        for topo = 1:n_topoplots
-            data._col[ix[topo]] .= _col[topo]
-            data._row[ix[topo]] .= _row[topo]
-        end
         config_kwargs!(config)
         data = _as_observable(data)
         data_mean = @lift(
@@ -192,7 +172,7 @@ function plot_topoplotseries!(
     return f
 end
 
-function row_col_management(n_topoplots, nrows, config)
+function row_col_management(data, ix, n_topoplots, nrows, config)
     if :layout ∈ keys(config.mapping)
         n_cols = Int(ceil(sqrt(n_topoplots)))
         n_rows = Int(ceil(n_topoplots / n_cols))
@@ -206,7 +186,16 @@ function row_col_management(n_topoplots, nrows, config)
         end
         n_cols = Int(ceil(n_topoplots / n_rows))
     end
-    return n_rows, n_cols
+    _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+    _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+    data._col .= 1
+    data._row .= 1
+
+    for topo = 1:n_topoplots
+        data._col[ix[topo]] .= _col[topo]
+        data._row[ix[topo]] .= _row[topo]
+    end
+    return data
 end
 
 function bins_estimation(
