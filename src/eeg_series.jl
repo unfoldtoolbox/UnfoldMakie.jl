@@ -105,8 +105,6 @@ function eeg_topoplot_series!(
     row = nothing,
     col_labels = false,
     row_labels = false,
-    coord_col = nothing,
-    coord_row = nothing,
     rasterize_heatmaps = true,
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
@@ -130,10 +128,6 @@ function eeg_topoplot_series!(
     # do the col/row plot
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
-
-    if interactive_scatter != nothing
-        @assert isa(interactive_scatter, Observable)
-    end
 
     axlist = []
     for r = 1:length(select_row)
@@ -239,6 +233,9 @@ function scatter_manager(
 end
 
 function interctive_toposeries(interactive_scatter, single_topoplot)
+    if interactive_scatter != nothing
+        @assert isa(interactive_scatter, Observable)
+    end
     if interactive_scatter != false
         on(events(single_topoplot).mousebutton) do event
             if event.button == Mouse.left && event.action == Mouse.press
