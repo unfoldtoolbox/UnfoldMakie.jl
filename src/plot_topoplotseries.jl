@@ -99,14 +99,11 @@ function plot_topoplotseries!(
             data._col[ix[topo]] .= _col[topo]
             data._row[ix[topo]] .= _row[topo]
         end
-        #@debug data
-        config_kwargs!(
-            config;
-            axis = (; xlabel = string(config.mapping.col)),
-            mapping = (; row = :_row, col = :_col),
-        )
+        #@debug _row
+        config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
         data = _as_observable(data)
         data_mean = data
+
         #config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
         # overkll as we would only need to check the xlabel ;)
     else
@@ -129,7 +126,7 @@ function plot_topoplotseries!(
             data._col[ix[topo]] .= _col[topo]
             data._row[ix[topo]] .= _row[topo]
         end
-        config_kwargs!(config; mapping = (; row = :_row, col = :_col))
+        config_kwargs!(config)
         data = _as_observable(data)
         data_mean = @lift(
             df_timebin(
@@ -142,20 +139,19 @@ function plot_topoplotseries!(
             )
         )
     end
-
+    #@debug config.mapping.col
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data_mean;
-        #bin_width = bin_width,
-        #bin_num = bin_num,
         y = config.mapping.y,
         label = chan_or_label,
         col = config.mapping.col,
         row = config.mapping.row,
+        coord_col = to_value(data)._col,
+        coord_row = to_value(data)._row,
         col_labels = col_labels,
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
-        #combinefun = combinefun,
         xlim_topo = config.axis.xlim_topo,
         ylim_topo = config.axis.ylim_topo,
         interactive_scatter = interactive_scatter,

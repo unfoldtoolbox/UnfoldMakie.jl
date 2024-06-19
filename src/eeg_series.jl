@@ -99,16 +99,15 @@ end
 function eeg_topoplot_series!(
     fig,
     data_mean::Union{<:Observable{<:DataFrame},<:DataFrame};
-    #bin_width = nothing,
-    #bin_num = nothing,
     y = :erp,
     label = :label,
     col = :time,
     row = nothing,
     col_labels = false,
     row_labels = false,
+    coord_col = nothing,
+    coord_row = nothing,
     rasterize_heatmaps = true,
-    #combinefun = mean,
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
     interactive_scatter = nothing,
@@ -202,32 +201,13 @@ function single_topoplot(
     # select labels
     labels = to_value(df_single)[:, label]
     # select data
-    d_vec = @lift($df_single[:, y])
+    single_y = @lift($df_single[:, y])
     # plot it
-    if highlight_scatter != false || interactive_scatter != nothing
-        strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
-        highlight_feature = (; strokecolor = strokecolor)
-
-        if :label_scatter ∈ keys(topoplot_attributes)
-            topoplot_attributes = merge(
-                topoplot_attributes,
-                (;
-                    label_scatter = if isa(topoplot_attributes[:label_scatter], NamedTuple)
-                        merge(topoplot_attributes[:label_scatter], highlight_feature)
-                    else
-                        highlight_feature
-                    end
-                ),
-            )
-        else
-            topoplot_attributes =
-                merge(topoplot_attributes, (; label_scatter = highlight_feature))
-        end
-    end
-    if isempty(to_value(d_vec))
+    scatter_manager(single_y, topoplot_attributes, highlight_scatter, interactive_scatter)
+    if isempty(to_value(single_y))
         return
     end
-    single_topoplot = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
+    single_topoplot = eeg_topoplot!(ax, single_y, labels; topoplot_attributes...)
     if rasterize_heatmaps
         single_topoplot.plots[1].plots[1].rasterize = true
     end
@@ -248,6 +228,34 @@ function single_topoplot(
     end
     interctive_toposeries(interactive_scatter, single_topoplot)
     return ax
+end
+
+function scatter_manager(
+    single_y,
+    topoplot_attributes,
+    highlight_scatter,
+    interactive_scatter,
+)
+    if highlight_scatter != false || interactive_scatter != nothing
+        strokecolor = Observable(repeat([:black], length(to_value(single_y))))
+        highlight_feature = (; strokecolor = strokecolor)
+
+        if :label_scatter ∈ keys(topoplot_attributes)
+            topoplot_attributes = merge(
+                topoplot_attributes,
+                (;
+                    label_scatter = if isa(topoplot_attributes[:label_scatter], NamedTuple)
+                        merge(topoplot_attributes[:label_scatter], highlight_feature)
+                    else
+                        highlight_feature
+                    end
+                ),
+            )
+        else
+            topoplot_attributes =
+                merge(topoplot_attributes, (; label_scatter = highlight_feature))
+        end
+    end
 end
 
 function interctive_toposeries(interactive_scatter, single_topoplot)
