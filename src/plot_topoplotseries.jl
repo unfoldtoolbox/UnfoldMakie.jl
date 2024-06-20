@@ -78,24 +78,12 @@ function plot_topoplotseries!(
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     cat_or_cont_columns =
         eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
-    data = deepcopy(to_value(data))
-    if cat_or_cont_columns == "cat" # overwrite Time windows [s] default if categorical
-        #@debug unique(data[!, config.mapping.col])
-        ix =
-            findall.(
-                isequal.(unique(data[!, config.mapping.col])),
-                [data[!, config.mapping.col]],
-            )
-        n_topoplots =
-            number_of_topoplots(data; bin_width, bin_num, bins = 0, config.mapping)
-        data = row_col_management(data, ix, n_topoplots, nrows, config)
-
-        #@debug _row
+    data = (to_value(data))
+    if cat_or_cont_columns == "cat"
+        # overwrite Time windows [s] default if categorical
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
-        data_mean = _as_observable(data)
-
-        #config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
-        # overkll as we would only need to check the xlabel ;)
+        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
+    # overkll as we would only need to check the xlabel ;)
     else
         # arrangment of topoplots by rows and cols
         bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
@@ -104,34 +92,43 @@ function plot_topoplotseries!(
         data.timecuts = cut(data.time, bins; extend = true)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        data = row_col_management(data, ix, n_topoplots, nrows, config)
-
-        config_kwargs!(config)
-        data = _as_observable(data)
-        data_mean = @lift(
-            df_timebin(
-                $data;
-                bin_width = bin_width,
-                bin_num = bin_num,
-                col_y = config.mapping.y,
-                fun = combinefun,
-                grouping = [chan_or_label, config.mapping.col, config.mapping.row],
-            )
-        )
+        if :layout ∈ keys(config.mapping)
+            n_cols = Int(ceil(sqrt(n_topoplots)))
+            n_rows = Int(ceil(n_topoplots / n_cols))
+        else
+            n_rows = nrows
+            if 0 > n_topoplots / nrows
+                @warn "Impossible number of rows, set to 1 row"
+                n_rows = 1
+            elseif n_topoplots / nrows < 1
+                @warn "Impossible number of rows, set to $(n_topoplots) rows"
+            end
+            n_cols = Int(ceil(n_topoplots / n_rows))
+        end
+        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+        data._col .= 1
+        data._row .= 1
+        for topo = 1:n_topoplots
+            data._col[ix[topo]] .= _col[topo]
+            data._row[ix[topo]] .= _row[topo]
+        end
+        config_kwargs!(config; mapping = (; row = :_row, col = :_col))
     end
-    #@debug config.mapping.col
+
     ftopo, axlist = eeg_topoplot_series!(
         f,
-        data_mean;
+        data;
+        bin_width = bin_width,
+        bin_num = bin_num,
         y = config.mapping.y,
         label = chan_or_label,
         col = config.mapping.col,
         row = config.mapping.row,
-        coord_col = to_value(data)._col,
-        coord_row = to_value(data)._row,
         col_labels = col_labels,
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
+        combinefun = combinefun,
         xlim_topo = config.axis.xlim_topo,
         ylim_topo = config.axis.ylim_topo,
         interactive_scatter = interactive_scatter,
@@ -172,32 +169,6 @@ function plot_topoplotseries!(
     return f
 end
 
-function row_col_management(data, ix, n_topoplots, nrows, config)
-    if :layout ∈ keys(config.mapping)
-        n_cols = Int(ceil(sqrt(n_topoplots)))
-        n_rows = Int(ceil(n_topoplots / n_cols))
-    else
-        n_rows = nrows
-        if 0 > n_topoplots / nrows
-            @warn "Impossible number of rows, set to 1 row"
-            n_rows = 1
-        elseif n_topoplots / nrows < 1
-            @warn "Impossible number of rows, set to $(n_topoplots) rows"
-        end
-        n_cols = Int(ceil(n_topoplots / n_rows))
-    end
-    _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-    _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-    data._col .= 1
-    data._row .= 1
-
-    for topo = 1:n_topoplots
-        data._col[ix[topo]] .= _col[topo]
-        data._row[ix[topo]] .= _row[topo]
-    end
-    return data
-end
-
 function bins_estimation(
     time;
     bin_width = nothing,
@@ -225,7 +196,7 @@ function number_of_topoplots(
     df::DataFrame;
     bin_width = nothing,
     bin_num = nothing,
-    bins = 1,
+    bins,
     mapping = config.mapping,
 )
     if !isnothing(bin_width)
@@ -235,10 +206,11 @@ function number_of_topoplots(
         time_new = cut(df.time, bins; extend = true)
         n = length(unique(time_new))
     else
-        n = length(unique(df[:, mapping.col]))
+        n = unique(df[:, mapping.col])
     end
     return n
 end
+
 
 """
     df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
