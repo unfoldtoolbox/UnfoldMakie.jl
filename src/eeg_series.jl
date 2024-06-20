@@ -147,16 +147,14 @@ function eeg_topoplot_series!(
     )
 
     # do the col/row plot
-    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
-    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
-
+    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, :_col])
+    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, :_row])
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
             ax = Axis(fig[:, :][r, c]; axis_options...)
             df_single =
                 topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
-
             # select labels
             labels = to_value(df_single)[:, label]
             # select data
@@ -195,29 +193,13 @@ function label_managment(ax, cat_or_cont_columns, df_single, col)
     end
 end
 
-#= function label_managment(ax, df_single, col_labels, row_labels, col, row, r, c, select_row)
-    if col_labels == true
-        if r == length(select_row) && col_labels
-            ax.xlabel = string(to_value(df_single)[1, col])
-            ax.xlabelvisible = true
-        end
-        if c == 1 && length(select_row) > 1 && row_labels
-            ax.ylabel = string(to_value(df_single)[1, row])
-            ax.ylabelvisible = true
-        end
-    else 
-        ax.xlabelvisible = true
-        ax.xlabel = string(to_value(df_single).time[1, :][])
-    end
-end =#
-
 function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
     sel = 1 .== ones(size(to_value(data_mean), 1))
     if !isnothing(col)
-        sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
+        sel = sel .&& (to_value(data_mean)[:, :_col] .== select_col[c]) # subselect
     end
     if !isnothing(row)
-        sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
+        sel = sel .&& (to_value(data_mean)[:, :_row] .== select_row[r]) # subselect
     end
     df_single = @lift($data_mean[sel, :])
     return df_single
