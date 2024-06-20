@@ -99,6 +99,7 @@ end
 function eeg_topoplot_series!(
     fig,
     data::Union{<:Observable{<:DataFrame},<:DataFrame};
+    cat_or_cont_columns = "cont",
     bin_width = nothing,
     bin_num = nothing,
     y = :erp,
@@ -173,18 +174,7 @@ function eeg_topoplot_series!(
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
-            label_managment(
-                ax,
-                df_single,
-                col_labels,
-                row_labels,
-                col,
-                row,
-                r,
-                c,
-                select_row,
-            ) # to put column and row labels
-
+            label_managment(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
             interctive_toposeries(interactive_scatter, single_topoplot)
             push!(axlist, ax)
         end
@@ -195,21 +185,17 @@ function eeg_topoplot_series!(
     return fig, axlist
 end
 
-
-function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
-    # select one topoplot
-    sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
-    if !isnothing(col)
-        sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
+function label_managment(ax, cat_or_cont_columns, df_single, col)
+    if cat_or_cont_columns == "cat"
+        ax.xlabel = string(to_value(df_single)[1, col])
+        ax.xlabelvisible = true
+    else
+        ax.xlabelvisible = true
+        ax.xlabel = string(to_value(df_single).time[1, :][])
     end
-    if !isnothing(row)
-        sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
-    end
-    df_single = @lift($data_mean[sel, :])
-    return df_single
 end
 
-function label_managment(ax, df_single, col_labels, row_labels, col, row, r, c, select_row)
+#= function label_managment(ax, df_single, col_labels, row_labels, col, row, r, c, select_row)
     if col_labels == true
         if r == length(select_row) && col_labels
             ax.xlabel = string(to_value(df_single)[1, col])
@@ -219,10 +205,22 @@ function label_managment(ax, df_single, col_labels, row_labels, col, row, r, c, 
             ax.ylabel = string(to_value(df_single)[1, row])
             ax.ylabelvisible = true
         end
-    else
+    else 
         ax.xlabelvisible = true
         ax.xlabel = string(to_value(df_single).time[1, :][])
     end
+end =#
+
+function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+    sel = 1 .== ones(size(to_value(data_mean), 1))
+    if !isnothing(col)
+        sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
+    end
+    if !isnothing(row)
+        sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
+    end
+    df_single = @lift($data_mean[sel, :])
+    return df_single
 end
 
 function scatter_manager(
