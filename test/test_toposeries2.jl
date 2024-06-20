@@ -18,6 +18,21 @@ bin_width = 80
     f
 end
 
+@testset "14 topoplots, 4 rows, col_labels = true" begin # horrific
+    f = Figure()
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    plot_topoplotseries!(
+        f[1, 1:5],
+        df;
+        bin_num = 14,
+        nrows = 4,
+        positions = positions,
+        col_labels = true,
+        visual = (; label_scatter = false),
+    )
+    f
+end
+
 @testset "facetting by layout" begin # could be changed to nrwos = "auto"
     df = UnfoldMakie.eeg_matrix_to_dataframe(
         dat[:, 200:1:206, 1],
@@ -59,7 +74,7 @@ end
         f[1, 1],
         df;
         positions = positions,
-        col_labels = true,
+        #col_labels = true,
         axis = (; ylabel = "Conditions"),
         mapping = (; col = :condition),
     )
@@ -77,7 +92,6 @@ end
         nrows = 2,
         positions = positions,
         col_labels = true,
-        #axis = (; ylabel = "Conditions"),
         mapping = (; col = :condition),
     )
     f

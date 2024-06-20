@@ -83,7 +83,37 @@ function plot_topoplotseries!(
         # overwrite Time windows [s] default if categorical
         n_topoplots =
             number_of_topoplots(data; bin_width, bin_num, bins = 0, config.mapping)
-        config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
+        ix =
+            findall.(
+                isequal.(unique(data[!, config.mapping.col])),
+                [data[!, config.mapping.col]],
+            )
+        if :layout ∈ keys(config.mapping)
+            n_cols = Int(ceil(sqrt(n_topoplots)))
+            n_rows = Int(ceil(n_topoplots / n_cols))
+        else
+            n_rows = nrows
+            if 0 > n_topoplots / nrows
+                @warn "Impossible number of rows, set to 1 row"
+                n_rows = 1
+            elseif n_topoplots / nrows < 1
+                @warn "Impossible number of rows, set to $(n_topoplots) rows"
+            end
+            n_cols = Int(ceil(n_topoplots / n_rows))
+        end
+        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+        data._col .= 1
+        data._row .= 1
+        for topo = 1:n_topoplots
+            data._col[ix[topo]] .= _col[topo]
+            data._row[ix[topo]] .= _row[topo]
+        end
+        config_kwargs!(
+            config;
+            mapping = (; row = :_row, col = :_col),
+            axis = (; xlabel = string(config.mapping.col)),
+        )
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
     # overkll as we would only need to check the xlabel ;)
     else
@@ -121,7 +151,7 @@ function plot_topoplotseries!(
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data;
-        cat_or_cont_columns = cat_or_cont_columns, 
+        cat_or_cont_columns = cat_or_cont_columns,
         bin_width = bin_width,
         bin_num = bin_num,
         y = config.mapping.y,
@@ -209,7 +239,7 @@ function number_of_topoplots(
         time_new = cut(df.time, bins; extend = true)
         n = length(unique(time_new))
     else
-        n = unique(df[:, mapping.col])
+        n = length(unique(df[:, mapping.col]))
     end
     return n
 end
