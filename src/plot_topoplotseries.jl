@@ -121,6 +121,7 @@ function plot_topoplotseries!(
     ftopo, axlist = eeg_topoplot_series!(
         f,
         data;
+        cat_or_cont_columns = cat_or_cont_columns, 
         bin_width = bin_width,
         bin_num = bin_num,
         y = config.mapping.y,
