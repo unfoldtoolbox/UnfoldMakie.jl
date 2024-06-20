@@ -81,6 +81,8 @@ function plot_topoplotseries!(
     data = (to_value(data))
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
+        n_topoplots =
+            number_of_topoplots(data; bin_width, bin_num, bins = 0, config.mapping)
         config_kwargs!(config; axis = (; xlabel = string(config.mapping.col)))
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
     # overkll as we would only need to check the xlabel ;)
