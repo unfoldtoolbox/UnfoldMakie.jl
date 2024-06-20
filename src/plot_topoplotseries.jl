@@ -88,27 +88,7 @@ function plot_topoplotseries!(
                 isequal.(unique(data[!, config.mapping.col])),
                 [data[!, config.mapping.col]],
             )
-        if :layout ∈ keys(config.mapping)
-            n_cols = Int(ceil(sqrt(n_topoplots)))
-            n_rows = Int(ceil(n_topoplots / n_cols))
-        else
-            n_rows = nrows
-            if 0 > n_topoplots / nrows
-                @warn "Impossible number of rows, set to 1 row"
-                n_rows = 1
-            elseif n_topoplots / nrows < 1
-                @warn "Impossible number of rows, set to $(n_topoplots) rows"
-            end
-            n_cols = Int(ceil(n_topoplots / n_rows))
-        end
-        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-        data._col .= 1
-        data._row .= 1
-        for topo = 1:n_topoplots
-            data._col[ix[topo]] .= _col[topo]
-            data._row[ix[topo]] .= _row[topo]
-        end
+        data, _row, _col = row_col_management(data, ix, n_topoplots, nrows, config)
         config_kwargs!(
             config;
             mapping = (; row = :_row, col = :_col),
@@ -124,27 +104,7 @@ function plot_topoplotseries!(
         data.timecuts = cut(data.time, bins; extend = true)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        if :layout ∈ keys(config.mapping)
-            n_cols = Int(ceil(sqrt(n_topoplots)))
-            n_rows = Int(ceil(n_topoplots / n_cols))
-        else
-            n_rows = nrows
-            if 0 > n_topoplots / nrows
-                @warn "Impossible number of rows, set to 1 row"
-                n_rows = 1
-            elseif n_topoplots / nrows < 1
-                @warn "Impossible number of rows, set to $(n_topoplots) rows"
-            end
-            n_cols = Int(ceil(n_topoplots / n_rows))
-        end
-        _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-        _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-        data._col .= 1
-        data._row .= 1
-        for topo = 1:n_topoplots
-            data._col[ix[topo]] .= _col[topo]
-            data._row[ix[topo]] .= _row[topo]
-        end
+        data, _row, _col = row_col_management(data, ix, n_topoplots, nrows, config)
         config_kwargs!(config; mapping = (; row = :_row, col = :_col))
     end
 
@@ -200,6 +160,31 @@ function plot_topoplotseries!(
     )
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
+end
+
+function row_col_management(data, ix, n_topoplots, nrows, config)
+    if :layout ∈ keys(config.mapping)
+        n_cols = Int(ceil(sqrt(n_topoplots)))
+        n_rows = Int(ceil(n_topoplots / n_cols))
+    else
+        n_rows = nrows
+        if 0 > n_topoplots / nrows
+            @warn "Impossible number of rows, set to 1 row"
+            n_rows = 1
+        elseif n_topoplots / nrows < 1
+            @warn "Impossible number of rows, set to $(n_topoplots) rows"
+        end
+        n_cols = Int(ceil(n_topoplots / n_rows))
+    end
+    _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+    _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
+    data._col .= 1
+    data._row .= 1
+    for topo = 1:n_topoplots
+        data._col[ix[topo]] .= _col[topo]
+        data._row[ix[topo]] .= _row[topo]
+    end
+    return data, _row, _col
 end
 
 function bins_estimation(
