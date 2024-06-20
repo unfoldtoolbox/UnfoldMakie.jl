@@ -98,7 +98,9 @@ end
 
 function eeg_topoplot_series!(
     fig,
-    data_mean::Union{<:Observable{<:DataFrame},<:DataFrame};
+    data::Union{<:Observable{<:DataFrame},<:DataFrame};
+    bin_width = nothing,
+    bin_num = nothing,
     y = :erp,
     label = :label,
     col = :time,
@@ -106,6 +108,7 @@ function eeg_topoplot_series!(
     col_labels = false,
     row_labels = false,
     rasterize_heatmaps = true,
+    combinefun = mean,
     xlim_topo = (-0.25, 1.25),
     ylim_topo = (-0.25, 1.25),
     interactive_scatter = nothing,
@@ -116,6 +119,22 @@ function eeg_topoplot_series!(
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
 
+    data = _as_observable(data)
+    if eltype(to_value(data)[!, col]) <: Number
+        data_mean = @lift(
+            df_timebin(
+                $data;
+                bin_width = bin_width,
+                bin_num = bin_num,
+                col_y = y,
+                fun = combinefun,
+                grouping = [label, col, row],
+            )
+        )
+    else
+        # categorical detected, no binning necessary
+        data_mean = data
+    end
     (q_min, q_max) = extract_colorrange(to_value(data_mean), y)
     topoplot_attributes = merge(
         (
@@ -125,6 +144,7 @@ function eeg_topoplot_series!(
         ),
         topoplot_attributes,
     )
+
     # do the col/row plot
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
@@ -133,14 +153,14 @@ function eeg_topoplot_series!(
     for r = 1:length(select_row)
         for c = 1:length(select_col)
             ax = Axis(fig[:, :][r, c]; axis_options...)
-            # select one topoplot
+
             df_single =
-                topoplot_subselection(data_mean, col, row, select_col, select_row, c, r)
+                topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+
             # select labels
             labels = to_value(df_single)[:, label]
             # select data
             single_y = @lift($df_single[:, y])
-            # plot it
             scatter_manager(
                 single_y,
                 topoplot_attributes,
@@ -167,7 +187,6 @@ function eeg_topoplot_series!(
             ) # to put column and row labels
             interctive_toposeries(interactive_scatter, single_topoplot)
             push!(axlist, ax)
-
         end
     end
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
@@ -176,7 +195,8 @@ function eeg_topoplot_series!(
     return fig, axlist
 end
 
-function topoplot_subselection(data_mean, col, row, select_col, select_row, c, r)
+function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+    # select one topoplot
     sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
     if !isnothing(col)
         sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
