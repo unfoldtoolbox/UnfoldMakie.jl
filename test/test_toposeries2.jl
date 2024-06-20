@@ -77,7 +77,7 @@ end
         nrows = 2,
         positions = positions,
         col_labels = true,
-        axis = (; ylabel = "Conditions"),
+        #axis = (; ylabel = "Conditions"),
         mapping = (; col = :condition),
     )
     f

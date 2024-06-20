@@ -152,27 +152,41 @@ function eeg_topoplot_series!(
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
-            ax = single_topoplot(
-                fig,
-                r,
-                c,
-                row,
-                col,
-                select_row,
-                select_col,
-                y,
-                label,
-                axis_options,
-                data_mean,
+            ax = Axis(fig[:, :][r, c]; axis_options...)
+            df_single =
+                topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+
+            # select labels
+            labels = to_value(df_single)[:, label]
+            # select data
+            single_y = @lift($df_single[:, y])
+            scatter_manager(
+                single_y,
+                topoplot_attributes,
                 highlight_scatter,
                 interactive_scatter,
-                topoplot_attributes,
+            )
+            if isempty(to_value(single_y))
+                break
+            end
+            single_topoplot = eeg_topoplot!(ax, single_y, labels; topoplot_attributes...)
+            if rasterize_heatmaps
+                single_topoplot.plots[1].plots[1].rasterize = true
+            end
+            label_managment(
+                ax,
+                df_single,
                 col_labels,
                 row_labels,
-                rasterize_heatmaps,
-            )
-            push!(axlist, ax)
+                col,
+                row,
+                r,
+                c,
+                select_row,
+            ) # to put column and row labels
 
+            interctive_toposeries(interactive_scatter, single_topoplot)
+            push!(axlist, ax)
         end
     end
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
@@ -181,46 +195,6 @@ function eeg_topoplot_series!(
     return fig, axlist
 end
 
-function single_topoplot(
-    fig,
-    r,
-    c,
-    row,
-    col,
-    select_row,
-    select_col,
-    y,
-    label,
-    axis_options,
-    data_mean,
-    highlight_scatter,
-    interactive_scatter,
-    topoplot_attributes,
-    col_labels,
-    row_labels,
-    rasterize_heatmaps,
-)
-    ax = Axis(fig[:, :][r, c]; axis_options...)
-
-    df_single = topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
-
-    # select labels
-    labels = to_value(df_single)[:, label]
-    # select data
-    single_y = @lift($df_single[:, y])
-    scatter_manager(single_y, topoplot_attributes, highlight_scatter, interactive_scatter)
-    if isempty(to_value(single_y))
-        return
-    end
-    single_topoplot = eeg_topoplot!(ax, single_y, labels; topoplot_attributes...)
-    if rasterize_heatmaps
-        single_topoplot.plots[1].plots[1].rasterize = true
-    end
-    label_managment(ax, df_single, col_labels, row_labels, col, row, r, c, select_row) # to put column and row labels
-
-    interctive_toposeries(interactive_scatter, single_topoplot)
-    return ax
-end
 
 function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
     # select one topoplot

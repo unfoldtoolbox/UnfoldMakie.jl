@@ -20,15 +20,15 @@ end
     plot_topoplotseries(df, Δbin; positions = positions)
 end =#
 
-@testset "toposeries basic with nrows specified" begin
+@testset "toposeries basic with nrows = 2" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 2, positions = positions)
 end
 
-@testset "toposeries basic with nrows specified" begin
+@testset "toposeries basic with nrows = 5" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 3, positions = positions)
 end
 
-@testset "toposeries basic with nrows specified" begin
+@testset "toposeries basic with nrows = -6" begin
     plot_topoplotseries(df; bin_num = 5, nrows = -6, positions = positions)
 end
 
