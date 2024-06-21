@@ -177,3 +177,7 @@ end =#
         axis = (; title = "combinefun = mean"),
     )
 end
+
+@testset "eeg_matrix_to_dataframe" begin
+    eeg_matrix_to_dataframe(rand(2, 2))
+end
