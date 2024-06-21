@@ -173,7 +173,7 @@ function eeg_topoplot_series!(
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
             label_managment(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
-            interctive_toposeries(interactive_scatter, single_topoplot)
+            interactive_toposeries(interactive_scatter, single_topoplot)
             push!(axlist, ax)
         end
     end
@@ -233,7 +233,7 @@ function scatter_manager(
     end
 end
 
-function interctive_toposeries(interactive_scatter, single_topoplot)
+function interactive_toposeries(interactive_scatter, single_topoplot)
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end

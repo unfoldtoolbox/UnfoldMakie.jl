@@ -21,10 +21,39 @@ data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)));
 nothing #hide
 
-# # Plotting
+
+# # Number of topoplots
+# There are two ways of specfiing the number of topoplots in topplot series: 
+# 1) bin_width - specify the interval between topoplots
 
 bin_width = 80
 plot_topoplotseries(df; bin_width, positions = positions)
+
+# 2) bin_num- specify the number of topoplots
+
+plot_topoplotseries(df; bin_num = 5, positions = positions)
+
+# Categorical and contionous x-values
+# x-value could be contionous (`time` by deafult but could be anything else) or categorical (any experimental variable).
+
+f = Figure()
+df_cat = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
+df_cat.condition = repeat(["A", "B", "C", "D", "E"], size(df_cat, 1) ÷ 5)
+
+plot_topoplotseries!(
+    f[1, 1],
+    df_cat;
+    mapping = (; col = :condition),
+    axis = (; xlabel = "Conditions"),
+    positions = positions,
+)
+f
+
+#=
+To create topoplot series with categorical values:
+- Do not specify `bin_width` or `bin_num`.
+- Put categorical value in `mapping.col`.
+=#
 
 # # Additional features
 
@@ -62,17 +91,17 @@ plot_topoplotseries!(
 )
 f
 
-# ## Faceting
+# ## Multiple rows
 
 #=
-If you need to plot many topoplots, you should display them in multiple rows. 
+Use `nrows` to specify multiple rows. 
 =#
 
 f = Figure()
-df1 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+df_col = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 plot_topoplotseries!(
     f[1, 1:5],
-    df1;
+    df_col;
     bin_num = 14,
     nrows = 4,
     positions = positions,
@@ -80,33 +109,10 @@ plot_topoplotseries!(
 )
 f
 
-# ## Categorical topoplots
-
-#=
-If you decide to use categorical values instead of time intvervals for sepration of topoplots do this:
-- Do not specify `bin_width` or `bin_num`
-- Put categorical value in `mapping.col`
-=#
-
-df2 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
-df2.condition = repeat(["A", "B", "C", "D", "E"], size(df2, 1) ÷ 5)
-
-f = Figure(size = (600, 500))
-
-plot_topoplotseries!(
-    f[1, 1],
-    df2;
-    col_labels = true,
-    mapping = (; col = :condition),
-    axis = (; xlabel = "Conditions"),
-    positions = positions,
-)
-f
-
 # # Configurations of Topoplot series
 
 #=
-Also you can specify:
+Also you can:
 - Label the x-axis with `axis.xlabel`.
 - Hide electrode markers with `visual.label_scatter`.
 - Change the color map with `visual.colormap`. The default is `Reverse(:RdBu)`.
