@@ -2,7 +2,7 @@
 
 # **Circular topoplot series** is a plot type for visualizing EEG activity in relation to some continous variable arranged on a circluar line. 
 # It can fully represent channel and channel location dimensions using contour lines. It can also partially represent the varaible dimension.
-# Variable could be for instance accadic amplitude or degrees of visual angle. 
+# Variable could be for instance saccadic amplitude or degrees of visual angle. 
 # Basically, it is a series of Topoplots arranged on a circle.
 
 # # Setup

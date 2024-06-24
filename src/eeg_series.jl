@@ -36,7 +36,7 @@ end
     eeg_topoplot_series!(fig, data::DataFrame, bin_width; kwargs..)
 
 Plot a series of topoplots. 
-The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `bin_width` steps.
+The function takes the `combinefun = mean` over the `:time` column of `data` in `bin_width` steps.
 - `f` \\
     Figure object. \\
 - `data::DataFrame`\\
@@ -46,19 +46,13 @@ The function automatically takes the `combinefun = mean` over the `:time` column
     In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. \\
     In most cases, the user should specify the electrode positions with `positions = pos`.
 - `col`, `row = :time` \\
-    Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. \\
-    Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
+    Specify the field to be divided into columns and rows. The default is `col = :time` to split by the time field and `row = nothing`. \\
+    Useful to split by a condition, e.g. `...(..., col = :time, row = :condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
 - `row_labels`, `col_labels = false` \\
     Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
-    
-# Example
-
-```julia-repl
-df = DataFrame(:erp => repeat(1:63, 100), :time => repeat(1:20, 5 * 63), :label => repeat(1:63, 100)) # simulated data
-pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))] .* 0.5 .+ 0.5 # simulated electrode positions
-pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
-eeg_topoplot_series(df, 5; positions = pos)
-```
+- `combinefun::Function = mean`\\
+    Specify how the samples within `bin_width` are summarised.\\
+    Example functions: `mean`, `median`, `std`.  
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
@@ -145,11 +139,10 @@ function eeg_topoplot_series!(
         (
             colorrange = (q_min, q_max),
             interp_resolution = (128, 128),
-            contours = (levels = range(q_min, q_max; length = 7)),
+            contours = (; levels = range(q_min, q_max; length = 7)),
         ),
         topoplot_attributes,
     )
-
     # do the col/row plot
     select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, :_col])
     select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, :_row])
@@ -163,7 +156,7 @@ function eeg_topoplot_series!(
             labels = to_value(df_single)[:, label]
             # select data
             single_y = @lift($df_single[:, y])
-            scatter_manager(
+            scatter_management(
                 single_y,
                 topoplot_attributes,
                 highlight_scatter,
@@ -176,7 +169,7 @@ function eeg_topoplot_series!(
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
-            label_managment(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
+            label_management(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
             interactive_toposeries(interactive_scatter, single_topoplot)
             push!(axlist, ax)
         end
@@ -184,10 +177,10 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-    return fig, axlist
+    return fig, axlist, topoplot_attributes[:colorrange]
 end
 
-function label_managment(ax, cat_or_cont_columns, df_single, col)
+function label_management(ax, cat_or_cont_columns, df_single, col)
     if cat_or_cont_columns == "cat"
         ax.xlabel = string(to_value(df_single)[1, col])
         ax.xlabelvisible = true
@@ -209,7 +202,7 @@ function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c
     return df_single
 end
 
-function scatter_manager(
+function scatter_management(
     single_y,
     topoplot_attributes,
     highlight_scatter,
@@ -283,4 +276,43 @@ function create_axis_options(xlim_topo, ylim_topo)
         yrectzoom = false,
         limits = (xlim_topo, ylim_topo),
     )
+end
+
+"""
+    df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
+Split or combine `DataFrame` according to equally spaced time bins.
+
+Arguments:
+- `df::AbstractTable`\\
+    With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
+- `bin_width::Real = nothing`\\
+    Bin width in `:time` units;
+- `bin_num::Real = nothing`\\
+    Number of topoplots;
+- `col_y = :erp` \\
+    The column to combine over (with `fun`);
+- `fun = mean()`\\
+    Function to combine.
+- `grouping = []`\\
+    Vector of symbols or strings, columns to group by the data before aggregation. Values of `nothing` are ignored.
+
+**Return Value:** `DataFrame`.
+"""
+function df_timebin(
+    df;
+    bin_width = nothing,
+    bin_num = nothing,
+    col_y = :erp,
+    fun = mean,
+    grouping = [],
+)
+    bins = bins_estimation(df.time; bin_width, bin_num, cat_or_cont_columns = "cont")
+    df = deepcopy(df) # cut seems to change stuff inplace
+    df.time = cut(df.time, bins; extend = true)
+
+    grouping = grouping[.!isnothing.(grouping)]
+    df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
+    rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
+
+    return df_m
 end

@@ -166,6 +166,7 @@ function PlotConfig(T::Val{:topoplotseries})
             colormap = Reverse(:RdBu),
             enlarge = 1,
             label_scatter = false,
+            levels = nothing,
         ),
         mapping = (; col = (:time,), row = (nothing,)),
     )

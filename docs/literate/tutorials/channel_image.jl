@@ -1,7 +1,7 @@
 # # Channel image 
 
 # **Channel image** is a plot type for visualizing EEG activity for all channels. 
-# It can fully represent time and channel  dimensions using a heatmap. 
+# It can fully represent time and channel dimensions using a heatmap. 
 # Y-axis represents all channels, x-axis represents time, while color represents voltage. 
 
 # # Package loading
