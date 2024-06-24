@@ -23,18 +23,18 @@ nothing #hide
 
 
 # # Number of topoplots
-# There are two ways of specfiing the number of topoplots in topplot series: 
-# 1) bin_width - specify the interval between topoplots
+# There are two ways to specify the number of topoplots in a topoplot series: 
+# 1) `bin_width` - specify the interval between topoplots
 
 bin_width = 80
 plot_topoplotseries(df; bin_width, positions = positions)
 
-# 2) bin_num- specify the number of topoplots
+# 2) `bin_num` - specify the number of topoplots
 
 plot_topoplotseries(df; bin_num = 5, positions = positions)
 
-# Categorical and contionous x-values
-# x-value could be contionous (`time` by deafult but could be anything else) or categorical (any experimental variable).
+# # Categorical and contionous x-values
+# x-value could be contionous (`time` by deafult, but could be saccade amplitude, contrast) or categorical (any experimental variable).
 
 f = Figure()
 df_cat = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
@@ -57,9 +57,15 @@ To create topoplot series with categorical values:
 
 # # Additional features
 
-# ## Disabling colorbar
+# ## Adjusting contours
 
-plot_topoplotseries(df; bin_width, positions = positions, layout = (; use_colorbar = false))
+plot_topoplotseries(
+    df;
+    bin_width,
+    positions = positions,
+    visual = (; enlarge = 0.9,
+    contours = (; linewidth = 1, color = :black)),
+)
 
 # ## Aggregating functions
 # In this example `combinefun` is specified by `mean`, `median` and `std`. 

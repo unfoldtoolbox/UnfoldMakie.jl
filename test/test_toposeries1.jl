@@ -181,3 +181,13 @@ end
 @testset "eeg_matrix_to_dataframe" begin
     eeg_matrix_to_dataframe(rand(2, 2))
 end
+
+@testset "contours" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        visual = (; enlarge = 0.9,
+        contours = (; linewidth = 1, color = :black)),
+    )
+end

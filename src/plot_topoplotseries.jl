@@ -73,7 +73,6 @@ function plot_topoplotseries!(
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
-
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     cat_or_cont_columns =
