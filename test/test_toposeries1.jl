@@ -153,18 +153,15 @@ end
     )
 end
 
-#= @testset "basic eeg_topoplot_series" begin
+@testset "basic eeg_topoplot_series" begin
     df = DataFrame(
-        :erp => repeat(1:63, 100),
-        :time => repeat(1:20, 5 * 63),
-        :label => repeat(1:63, 100),
+        :erp => repeat(1:64, 100),
+        :time => repeat(1:20, 5 * 64),
+        :label => repeat(1:64, 100),
+        :_col => repeat(1:5, 20 * 64),
     ) # simulated data
-    a = (sin.(range(-2 * pi, 2 * pi, 63)))
-    b = [(1:63) ./ 63 .* a (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))]
-    pos = b .* 0.5 .+ 0.5 # simulated electrode positions
-    pos = [Point2.(pos[k, 1], pos[k, 2]) for k = 1:size(pos, 1)]
-    UnfoldMakie.eeg_topoplot_series(df; bin_width = 5, positions = pos)
-end =#
+    UnfoldMakie.eeg_topoplot_series(df; bin_width = 5, positions = positions, col = :_col)
+end
 
 @testset "toposeries with GridSubposition" begin
     f = Figure(size = (500, 500))
@@ -187,7 +184,30 @@ end
         df;
         bin_width,
         positions = positions,
-        visual = (; enlarge = 0.9,
-        contours = (; linewidth = 1, color = :black)),
+        visual = (; enlarge = 0.9, contours = (; linewidth = 1, color = :black)),
+    )
+end
+
+@testset "contours.levels" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        visual = (;
+            enlarge = 0.9,
+            contours = (; linewidth = 1, color = :black, levels = 6),
+        ),
+    )
+end
+
+@testset "contours.levels" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        visual = (;
+            enlarge = 0.9,
+            contours = (; linewidth = 1, color = :black, levels = [0, 0.9]),
+        ),
     )
 end

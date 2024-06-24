@@ -107,7 +107,7 @@ function plot_topoplotseries!(
         config_kwargs!(config; mapping = (; row = :_row, col = :_col))
     end
 
-    ftopo, axlist = eeg_topoplot_series!(
+    ftopo, axlist, colorrange = eeg_topoplot_series!(
         f,
         data;
         cat_or_cont_columns = cat_or_cont_columns,
@@ -130,26 +130,12 @@ function plot_topoplotseries!(
     if (config.colorbar.colorrange !== nothing)
         config_kwargs!(config)
     else
-        data_mean = if cat_or_cont_columns == "cont"
-            df_timebin(
-                to_value(data);
-                bin_width,
-                bin_num,
-                col_y = config.mapping.y,
-                fun = combinefun,
-                grouping = [chan_or_label, config.mapping.col, config.mapping.row],
-            )
-        else
-            to_value(data)
-        end
-        colorrange = extract_colorrange(data_mean, config.mapping.y)
         config_kwargs!(
             config,
             visual = (; colorrange = colorrange),
             colorbar = (; colorrange = colorrange),
         )
     end
-
     if !config.layout.use_colorbar
         config_kwargs!(config, layout = (; use_colorbar = false, show_legend = false))
     end
@@ -226,44 +212,4 @@ function number_of_topoplots(
         n = length(unique(df[:, mapping.col]))
     end
     return n
-end
-
-
-"""
-    df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
-Split or combine `DataFrame` according to equally spaced time bins.
-
-Arguments:
-- `df::AbstractTable`\\
-    With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `bin_width::Real = nothing`\\
-    Bin width in `:time` units;
-- `bin_num::Real = nothing`\\
-    Number of topoplots;
-- `col_y = :erp` \\
-    The column to combine over (with `fun`);
-- `fun = mean()`\\
-    Function to combine.
-- `grouping = []`\\
-    Vector of symbols or strings, columns to group the data by before aggregation. Values of `nothing` are ignored.
-
-**Return Value:** `DataFrame`.
-"""
-function df_timebin(
-    df;
-    bin_width = nothing,
-    bin_num = nothing,
-    col_y = :erp,
-    fun = mean,
-    grouping = [],
-)
-    bins = bins_estimation(df.time; bin_width, bin_num, cat_or_cont_columns = "cont")
-    df = deepcopy(df) # cut seems to change stuff inplace
-    df.time = cut(df.time, bins; extend = true)
-
-    grouping = grouping[.!isnothing.(grouping)]
-    df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
-    rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
-
-    return df_m
 end
