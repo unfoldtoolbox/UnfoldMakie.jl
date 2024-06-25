@@ -63,6 +63,7 @@ function plot_topoplotseries!(
     row_labels = true,
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
+    topoplot_axes = (;),
     kwargs...,
 )
 
@@ -121,8 +122,7 @@ function plot_topoplotseries!(
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
         combinefun = combinefun,
-        xlim_topo = config.axis.xlim_topo,
-        ylim_topo = config.axis.ylim_topo,
+        topoplot_axes = topoplot_axes,
         interactive_scatter = interactive_scatter,
         config.visual...,
         positions,

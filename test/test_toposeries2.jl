@@ -75,10 +75,26 @@ end
         df;
         nrows = 2,
         positions = positions,
-        col_labels = true,
         mapping = (; col = :condition),
     )
     f
+end
+
+@testset "topoplot axes configuration" begin # TBD
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+    plot_topoplotseries(
+        df;
+        nrows = 2,
+        positions = positions,
+        mapping = (; col = :condition),
+        axis = (; title = "axis title"),
+        topoplot_axes = (;
+            limits = ((-0.25, 1.25), (-0.25, 1.25)),
+            xlabelvisible = false,
+            title = "single topoplot title",
+        ),
+    )
 end
 
 @testset "change xlabel" begin
