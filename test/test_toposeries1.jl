@@ -5,7 +5,7 @@ df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(position
 bin_width = 80
 
 @testset "toposeries basic with bin_width" begin
-    plot_topoplotseries(df; bin_width, positions = positions)
+    plot_topoplotseries(df; bin_width = 80, positions = positions)
 end
 
 @testset "toposeries basic with bin_num" begin
@@ -34,7 +34,7 @@ end
 
 @testset "error checking: bin_width and bin_num specified" begin
     err1 = nothing
-    t() = error(plot_topoplotseries(df; bin_width, bin_num = 5, positions = positions))
+    t() = error(plot_topoplotseries(df; bin_width = 80, bin_num = 5, positions = positions))
     try
         t()
     catch err1
@@ -56,21 +56,26 @@ end
 end
 
 @testset "toposeries basic with channel names" begin
-    plot_topoplotseries(df; bin_width, positions = positions, labels = raw_ch_names)
+    plot_topoplotseries(df; bin_width = 80, positions = positions, labels = raw_ch_names)
 end # doesnt work rn
 
 @testset "toposeries with xlabel" begin
     f = Figure()
     ax = Axis(f[1, 1])
-    plot_topoplotseries!(f[1, 1], df; bin_width, positions = positions)
+    plot_topoplotseries!(f[1, 1], df; bin_width = 80, positions = positions)
     text!(ax, 0, 0, text = "Time [ms] ", align = (:center, :center), offset = (0, -120))
     hidespines!(ax) # delete unnecessary spines (lines)
     hidedecorations!(ax, label = false)
     f
 end
 
-@testset "toposeries for one time point (?)" begin
-    plot_topoplotseries(df; bin_width, positions = positions, combinefun = x -> x[end÷2])
+@testset "toposeries for one time point (what is it?)" begin
+    plot_topoplotseries(
+        df;
+        bin_width = 80,
+        positions = positions,
+        combinefun = x -> x[end÷2],
+    )
 end
 
 @testset "toposeries with differend comb functions " begin
@@ -195,7 +200,7 @@ end
         positions = positions,
         visual = (;
             enlarge = 0.9,
-            contours = (; linewidth = 1, color = :black, levels = 6),
+            contours = (; linewidth = 1, color = :black, levels = 1),
         ),
     )
 end
@@ -207,7 +212,7 @@ end
         positions = positions,
         visual = (;
             enlarge = 0.9,
-            contours = (; linewidth = 1, color = :black, levels = [0, 0.9]),
+            contours = (; linewidth = 1, color = :black, levels = [0, 0.2]),
         ),
     )
 end

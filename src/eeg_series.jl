@@ -108,16 +108,16 @@ function eeg_topoplot_series!(
     row_labels = false,
     rasterize_heatmaps = true,
     combinefun = mean,
-    xlim_topo = (-0.25, 1.25),
-    ylim_topo = (-0.25, 1.25),
+    topoplot_axes = (;),
     interactive_scatter = nothing,
     highlight_scatter = false,
     topoplot_attributes...,
 )
-    axis_options = create_axis_options(xlim_topo, ylim_topo)
+    axis_options = create_axis_options()
+    axis_options = merge(axis_options, topoplot_axes)
+
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
-
     data = _as_observable(data)
     if eltype(to_value(data)[!, col]) <: Number
         data_mean = @lift(
@@ -183,9 +183,9 @@ end
 function label_management(ax, cat_or_cont_columns, df_single, col)
     if cat_or_cont_columns == "cat"
         ax.xlabel = string(to_value(df_single)[1, col])
-        ax.xlabelvisible = true
+        #ax.xlabelvisible = true
     else
-        ax.xlabelvisible = true
+        #ax.xlabelvisible = true
         ax.xlabel = string(to_value(df_single).time[1, :][])
     end
 end
@@ -249,15 +249,16 @@ function interactive_toposeries(interactive_scatter, single_topoplot)
     end
 end
 
-function create_axis_options(xlim_topo, ylim_topo)
+function create_axis_options()
     return (
         aspect = 1,
+        title = "",
         xgridvisible = false,
         xminorgridvisible = false,
         xminorticksvisible = false,
         xticksvisible = false,
         xticklabelsvisible = false,
-        xlabelvisible = false,
+        xlabelvisible = true,
         ygridvisible = false,
         yminorgridvisible = false,
         yminorticksvisible = false,
@@ -274,7 +275,7 @@ function create_axis_options(xlim_topo, ylim_topo)
         yzoomlock = true,
         xrectzoom = false,
         yrectzoom = false,
-        limits = (xlim_topo, ylim_topo),
+        #limits = (xlim_topo, ylim_topo),
     )
 end
 
@@ -313,6 +314,5 @@ function df_timebin(
     grouping = grouping[.!isnothing.(grouping)]
     df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
     rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
-
     return df_m
 end
