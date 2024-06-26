@@ -35,7 +35,6 @@ plot_butterfly(
     topopositions_to_color = pos -> UnfoldMakie.pos_to_color_RGB(pos),
 )
 
-
 # ## HSV-Space
 
 plot_butterfly(
@@ -43,7 +42,6 @@ plot_butterfly(
     positions = positions,
     topopositions_to_color = UnfoldMakie.pos_to_color_HSV,
 )
-
 
 # ## Uniform Color
 # You can make all lines "gray", or any other arbitrary color.
@@ -55,18 +53,20 @@ plot_butterfly(
     topopositions_to_color = x -> Colors.RGB(0.5),
 )
 
-# Transparency
+# ## Transparency
 # Unlike RGB, RGBA has a fourth channel, alpha, which is responsible for transparency.
 # Here are two examples of how to manipulate it.
 
-plot_butterfly(
+f = Figure()
+plot_butterfly!(f[1, 1],
     results;
     positions = positions,
     topopositions_to_color = x -> (RGBA(UnfoldMakie.pos_to_color_RomaO(x), 1)),
 )
 
-plot_butterfly(
+plot_butterfly!(f[2, 1],
     results;
     positions = positions,
     topopositions_to_color = x -> (GrayA(UnfoldMakie.pos_to_color_RomaO(x), 0.5)),
 )
+f
