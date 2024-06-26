@@ -58,13 +58,15 @@ plot_butterfly(
 # Here are two examples of how to manipulate it.
 
 f = Figure()
-plot_butterfly!(f[1, 1],
+plot_butterfly!(
+    f[1, 1],
     results;
     positions = positions,
     topopositions_to_color = x -> (RGBA(UnfoldMakie.pos_to_color_RomaO(x), 1)),
 )
 
-plot_butterfly!(f[2, 1],
+plot_butterfly!(
+    f[2, 1],
     results;
     positions = positions,
     topopositions_to_color = x -> (GrayA(UnfoldMakie.pos_to_color_RomaO(x), 0.5)),

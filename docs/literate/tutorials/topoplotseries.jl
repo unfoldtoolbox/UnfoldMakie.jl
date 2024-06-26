@@ -63,8 +63,7 @@ plot_topoplotseries(
     df;
     bin_width,
     positions = positions,
-    visual = (; enlarge = 0.9,
-    contours = (; linewidth = 1, color = :black)),
+    visual = (; enlarge = 0.9, contours = (; linewidth = 1, color = :black)),
 )
 
 # ## Aggregating functions
