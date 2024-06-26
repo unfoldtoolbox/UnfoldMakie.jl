@@ -116,6 +116,7 @@ function eeg_topoplot_series!(
     axis_options = create_axis_options()
     axis_options = merge(axis_options, topoplot_axes)
 
+
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
     data = _as_observable(data)
@@ -139,13 +140,13 @@ function eeg_topoplot_series!(
         (
             colorrange = (q_min, q_max),
             interp_resolution = (128, 128),
-            contours = (; levels = range(q_min, q_max; length = 7)),
+            #contours = (; levels = range(q_min, q_max; length = 7)),
         ),
         topoplot_attributes,
     )
     # do the col/row plot
-    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, :_col])
-    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, :_row])
+    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, :col_coord])
+    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, :row_coord])
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -166,6 +167,8 @@ function eeg_topoplot_series!(
                 break
             end
             single_topoplot = eeg_topoplot!(ax, single_y, labels; topoplot_attributes...)
+            #@debug fieldnames(typeof(single_topoplot))
+            #@debug single_topoplot.plots[1].attributes
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
@@ -177,15 +180,14 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
+    #@debug axis_options
     return fig, axlist, topoplot_attributes[:colorrange]
 end
 
 function label_management(ax, cat_or_cont_columns, df_single, col)
     if cat_or_cont_columns == "cat"
         ax.xlabel = string(to_value(df_single)[1, col])
-        #ax.xlabelvisible = true
     else
-        #ax.xlabelvisible = true
         ax.xlabel = string(to_value(df_single).time[1, :][])
     end
 end
@@ -193,10 +195,10 @@ end
 function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
     sel = 1 .== ones(size(to_value(data_mean), 1))
     if !isnothing(col)
-        sel = sel .&& (to_value(data_mean)[:, :_col] .== select_col[c]) # subselect
+        sel = sel .&& (to_value(data_mean)[:, :col_coord] .== select_col[c]) # subselect
     end
     if !isnothing(row)
-        sel = sel .&& (to_value(data_mean)[:, :_row] .== select_row[r]) # subselect
+        sel = sel .&& (to_value(data_mean)[:, :row_coord] .== select_row[r]) # subselect
     end
     df_single = @lift($data_mean[sel, :])
     return df_single
@@ -312,7 +314,7 @@ function df_timebin(
     df.time = cut(df.time, bins; extend = true)
 
     grouping = grouping[.!isnothing.(grouping)]
-    df_m = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
-    rename!(df_m, names(df_m)[end] => col_y) # remove the fun part of the new column
-    return df_m
+    df_grouped = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
+    rename!(df_grouped, names(df_grouped)[end] => col_y) # remove the fun part of the new column
+    return df_grouped
 end

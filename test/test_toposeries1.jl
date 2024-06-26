@@ -163,9 +163,14 @@ end
         :erp => repeat(1:64, 100),
         :time => repeat(1:20, 5 * 64),
         :label => repeat(1:64, 100),
-        :_col => repeat(1:5, 20 * 64),
+        :col_coord => repeat(1:5, 20 * 64),
     ) # simulated data
-    UnfoldMakie.eeg_topoplot_series(df; bin_width = 5, positions = positions, col = :_col)
+    UnfoldMakie.eeg_topoplot_series(
+        df;
+        bin_width = 5,
+        positions = positions,
+        col = :col_coord,
+    )
 end
 
 @testset "toposeries with GridSubposition" begin
@@ -200,7 +205,7 @@ end
         positions = positions,
         visual = (;
             enlarge = 0.9,
-            contours = (; linewidth = 1, color = :black, levels = 1),
+            contours = (; linewidth = 1, color = :black, levels = 3),
         ),
     )
 end

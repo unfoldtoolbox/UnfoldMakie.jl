@@ -36,9 +36,9 @@ Multiple miniature topoplots in regular distances.
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
     `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
 - `mapping.x = :time`\\
-    Specification of x value, could be any contionous variable. 
+    Specify x-value, can be any continuous variable.
 - `mapping.layout = nothing`\\
-    When equals `:time` arrange topoplots by rows. 
+    Arranges topoplots by rows when equals `:time`. 
 
 
 $(_docstring(:topoplotseries))
@@ -88,10 +88,10 @@ function plot_topoplotseries!(
                 isequal.(unique(data[!, config.mapping.col])),
                 [data[!, config.mapping.col]],
             )
-        data, _row, _col = row_col_management(data, ix, n_topoplots, nrows, config)
+        data, row_coord, _col = row_col_management(data, ix, n_topoplots, nrows, config)
         config_kwargs!(
             config;
-            mapping = (; row = :_row, col = :_col),
+            mapping = (; row = :row_coord, col = :col_coord),
             axis = (; xlabel = string(config.mapping.col)),
         )
         config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
@@ -104,8 +104,8 @@ function plot_topoplotseries!(
         data.timecuts = cut(data.time, bins; extend = true)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        data, _row, _col = row_col_management(data, ix, n_topoplots, nrows, config)
-        config_kwargs!(config; mapping = (; row = :_row, col = :_col))
+        data, row_coord, _col = row_col_management(data, ix, n_topoplots, nrows, config)
+        config_kwargs!(config; mapping = (; row = :row_coord, col = :col_coord))
     end
 
     ftopo, axlist, colorrange = eeg_topoplot_series!(
@@ -150,26 +150,26 @@ end
 function row_col_management(data, ix, n_topoplots, nrows, config)
     if :layout ∈ keys(config.mapping)
         n_cols = Int(ceil(sqrt(n_topoplots)))
-        n_rows = Int(ceil(n_topoplots / n_cols))
+        nrow_coords = Int(ceil(n_topoplots / n_cols))
     else
-        n_rows = nrows
+        nrow_coords = nrows
         if 0 > n_topoplots / nrows
             @warn "Impossible number of rows, set to 1 row"
-            n_rows = 1
+            nrow_coords = 1
         elseif n_topoplots / nrows < 1
             @warn "Impossible number of rows, set to $(n_topoplots) rows"
         end
-        n_cols = Int(ceil(n_topoplots / n_rows))
+        n_cols = Int(ceil(n_topoplots / nrow_coords))
     end
-    _col = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-    _row = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-    data._col .= 1
-    data._row .= 1
+    col_coord = repeat(1:n_cols, outer = nrow_coords)[1:n_topoplots]
+    row_coord = repeat(1:nrow_coords, inner = n_cols)[1:n_topoplots]
+    data.col_coord .= 1
+    data.row_coord .= 1
     for topo = 1:n_topoplots
-        data._col[ix[topo]] .= _col[topo]
-        data._row[ix[topo]] .= _row[topo]
+        data.col_coord[ix[topo]] .= col_coord[topo]
+        data.row_coord[ix[topo]] .= row_coord[topo]
     end
-    return data, _row, _col
+    return data, row_coord, col_coord
 end
 
 function bins_estimation(
