@@ -88,15 +88,6 @@ function plot_topoplotseries!(
                 isequal.(unique(data[!, config.mapping.col])),
                 [data[!, config.mapping.col]],
             )
-        data, row_coord, col_coord =
-            row_col_management(data, ix, n_topoplots, nrows, config)
-        config_kwargs!(
-            config;
-            mapping = (; row = :row_coord, col = :col_coord),
-            axis = (; xlabel = string(config.mapping.col)),
-        )
-        config_kwargs!(config; kwargs...) # add the user specified once more, just if someone specifies the xlabel manually  
-    # overkll as we would only need to check the xlabel ;)
     else
         # arrangment of topoplots by rows and cols
         bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
@@ -105,11 +96,16 @@ function plot_topoplotseries!(
         data.timecuts = cut(data.time, bins; extend = true)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        data, row_coord, col_coord =
-            row_col_management(data, ix, n_topoplots, nrows, config)
-        config_kwargs!(config; mapping = (; row = :row_coord, col = :col_coord))
-    end
 
+    end
+    data = row_col_management(data, ix, n_topoplots, nrows, config)
+    config_kwargs!(
+        config;
+        mapping = (; row = :row_coord, col = :col_coord),
+        axis = (; xlabel = string(config.mapping.col)),
+    )
+    config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
+    # overkll as we would only need to check the xlabel ;)
     ftopo, axlist, colorrange = eeg_topoplot_series!(
         f,
         data;
@@ -171,7 +167,7 @@ function row_col_management(data, ix, n_topoplots, nrows, config)
         data.col_coord[ix[topo]] .= col_coord[topo]
         data.row_coord[ix[topo]] .= row_coord[topo]
     end
-    return data, row_coord, col_coord
+    return data
 end
 
 function bins_estimation(
