@@ -180,7 +180,6 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-    #@debug axis_options
     return fig, axlist, topoplot_attributes[:colorrange]
 end
 

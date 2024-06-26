@@ -88,7 +88,8 @@ function plot_topoplotseries!(
                 isequal.(unique(data[!, config.mapping.col])),
                 [data[!, config.mapping.col]],
             )
-        data, row_coord, _col = row_col_management(data, ix, n_topoplots, nrows, config)
+        data, row_coord, col_coord =
+            row_col_management(data, ix, n_topoplots, nrows, config)
         config_kwargs!(
             config;
             mapping = (; row = :row_coord, col = :col_coord),
@@ -104,7 +105,8 @@ function plot_topoplotseries!(
         data.timecuts = cut(data.time, bins; extend = true)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-        data, row_coord, _col = row_col_management(data, ix, n_topoplots, nrows, config)
+        data, row_coord, col_coord =
+            row_col_management(data, ix, n_topoplots, nrows, config)
         config_kwargs!(config; mapping = (; row = :row_coord, col = :col_coord))
     end
 
@@ -150,19 +152,19 @@ end
 function row_col_management(data, ix, n_topoplots, nrows, config)
     if :layout ∈ keys(config.mapping)
         n_cols = Int(ceil(sqrt(n_topoplots)))
-        nrow_coords = Int(ceil(n_topoplots / n_cols))
+        n_rows = Int(ceil(n_topoplots / n_cols))
     else
-        nrow_coords = nrows
+        n_rows = nrows
         if 0 > n_topoplots / nrows
             @warn "Impossible number of rows, set to 1 row"
-            nrow_coords = 1
+            n_rows = 1
         elseif n_topoplots / nrows < 1
             @warn "Impossible number of rows, set to $(n_topoplots) rows"
         end
-        n_cols = Int(ceil(n_topoplots / nrow_coords))
+        n_cols = Int(ceil(n_topoplots / n_rows))
     end
-    col_coord = repeat(1:n_cols, outer = nrow_coords)[1:n_topoplots]
-    row_coord = repeat(1:nrow_coords, inner = n_cols)[1:n_topoplots]
+    col_coord = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
+    row_coord = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
     data.col_coord .= 1
     data.row_coord .= 1
     for topo = 1:n_topoplots

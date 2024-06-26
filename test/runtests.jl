@@ -26,7 +26,7 @@ end
     include("test_topoplot.jl")
 end
 
-@testset "Topoplot series simple" begin
+@testset "Topoplot series simple" begin*
     include("test_toposeries1.jl")
 end
 
