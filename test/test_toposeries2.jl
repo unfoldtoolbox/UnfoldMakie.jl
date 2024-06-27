@@ -29,6 +29,41 @@ end
     )
 end
 
+
+@testset "error checking: bin_width and bin_num specified" begin
+    err1 = nothing
+    t() = error(plot_topoplotseries(df; bin_width = 80, bin_num = 5, positions = positions))
+    try
+        t()
+    catch err1
+    end
+    @test err1 ==
+          ErrorException("Ambigious parameters: specify only `bin_width` or `bin_num`.")
+end
+
+@testset "error checking: bin_width or bin_num with categorical columns" begin
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    err1 = nothing
+    t() = error(
+        plot_topoplotseries(
+            df;
+            bin_num = 5,
+            col_labels = true,
+            mapping = (; col = :condition),
+            positions = positions,
+        ),
+    )
+    try
+        t()
+    catch err1
+    end
+    @test err1 == ErrorException(
+        "Parameters `bin_width` or `bin_num` are only allowed with continonus `mapping.col` or `mapping.row`, while you specifed categorical.",
+    )
+end
+
 @testset "categorical columns" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
@@ -82,6 +117,7 @@ end
         ),
     )
 end
+
 
 @testset "change xlabel" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))

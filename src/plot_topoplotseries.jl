@@ -8,12 +8,11 @@ Multiple miniature topoplots in regular distances.
 - `f::Union{GridPosition, GridLayout, GridLayoutBase.GridSubposition, Figure}`\\
     `Figure`, `GridLayout`, `GridPosition`, or GridLayoutBase.GridSubposition to draw the plot.
 - `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
-    DataFrame with data or Observable DataFrame. Requires a `time` column, but could be also specified in mapping.x. 
+    DataFrame with data or Observable DataFrame. Requires a `time` column, but could be also specified in mapping.x by any continous or categorical value. 
 
 ## Keyword arguments (kwargs)
 - `bin_width::Real = nothing`\\
-    Number specifing the width of time bin.\\
-    `bin_width` is in units of the `data.time` column.\\
+    Number specifing the width of bin of continous x-value in its units.\\
 - `bin_num::Real = nothing`\\
     Number of topoplots.\\
     Either `bin_width`, or `bin_num` should be specified. Error if they are both specified\\
@@ -36,7 +35,7 @@ Multiple miniature topoplots in regular distances.
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
     `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
 - `mapping.x = :time`\\
-    Specify x-value, can be any continuous variable.
+    Specify x-value. Can be any continuous variable.
 - `mapping.layout = nothing`\\
     Arranges topoplots by rows when equals `:time`. 
 
@@ -203,8 +202,13 @@ function number_of_topoplots(
     mapping = config.mapping,
 )
     if !isnothing(bin_width) | !isnothing(bin_num)
-        time_new = cut(df[:, mapping.col], bins; extend = true)
-        n = length(unique(time_new))
+        if typeof(df[:, mapping.col]) == Vector{String}
+            error(
+                "Parameters `bin_width` or `bin_num` are only allowed with continonus `mapping.col` or `mapping.row`, while you specifed categorical.",
+            )
+        end
+        cont_new = cut(df[:, mapping.col], bins; extend = true)
+        n = length(unique(cont_new))
     else
         n = length(unique(df[:, mapping.col]))
     end
