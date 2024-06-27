@@ -60,8 +60,8 @@ To create topoplot series with categorical values:
 # ## Adjusting individual topoplots
 # By using `topoplot_axes` you can flexibly change configurations of topoplots.
 
-df_adj = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
-df_adj.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+df_adj = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:4, 1], string.(1:length(positions)))
+df_adj.condition = repeat(["A", "B", "C", "D"], size(df_adj, 1) ÷ 4)
 
 plot_topoplotseries(
     df_adj;

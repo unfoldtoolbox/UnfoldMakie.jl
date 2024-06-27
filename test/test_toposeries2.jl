@@ -88,7 +88,7 @@ end
     )
 end
 
-@testset "4 conditions in 2 rows" begin # TBD
+@testset "4 conditions in 2 rows" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
@@ -100,6 +100,17 @@ end
     )
 end
 
+#= @testset "4 condtions in rows" begin # TBD
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+
+    plot_topoplotseries(
+        df;
+        positions = positions,
+        mapping = (; row = :condition),
+    )
+end =#
+
 @testset "topoplot axes configuration" begin # TBD
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
@@ -109,9 +120,9 @@ end
         nrows = 2,
         positions = positions,
         mapping = (; col = :condition),
-        axis = (; title = "axis title"),
+        axis = (; title = "axis title", xlabel = "Conditions"),
         topoplot_axes = (;
-            limits = ((-0.25, 1.25), (-0.25, 1.25)),
+            rightspinevisible = true,
             xlabelvisible = false,
             title = "single topoplot title",
         ),
