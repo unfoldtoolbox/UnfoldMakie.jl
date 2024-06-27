@@ -76,7 +76,7 @@ function plot_topoplotseries!(
     config_kwargs!(config; kwargs...)
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-    data = (to_value(data))
+    data = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
     cat_or_cont_columns = eltype(data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
@@ -97,6 +97,7 @@ function plot_topoplotseries!(
         n_topoplots = number_of_topoplots(data; bin_width, bin_num, bins, config.mapping)
 
         data.timecuts = cut(data[!, config.mapping.col], bins; extend = true)
+        @debug first(data, 10)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
     end
@@ -173,13 +174,13 @@ function row_col_management(data, ix, n_topoplots, nrows, config)
 end
 
 function bins_estimation(
-    time;
+    continous_value;
     bin_width = nothing,
     bin_num = nothing,
     cat_or_cont_columns = "cont",
 )
-    tmin = minimum(time)
-    tmax = maximum(time)
+    c_min = minimum(continous_value)
+    c_max = maximum(continous_value)
     if (!isnothing(bin_width) && !isnothing(bin_num))
         error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
     elseif (isnothing(bin_width) && isnothing(bin_num) && cat_or_cont_columns == "cont")
@@ -188,9 +189,9 @@ function bins_estimation(
         )
     end
     if isnothing(bin_width)
-        bins = range(; start = tmin, length = bin_num + 1, stop = tmax)
+        bins = range(; start = c_min, length = bin_num + 1, stop = c_max)
     else
-        bins = range(; start = tmin, step = bin_width, stop = tmax)
+        bins = range(; start = c_min, step = bin_width, stop = c_max)
     end
     return bins
 end
@@ -202,11 +203,8 @@ function number_of_topoplots(
     bins,
     mapping = config.mapping,
 )
-    if !isnothing(bin_width)
-        time_new = cut(df.time, bins; extend = true)
-        n = length(unique(time_new))
-    elseif !isnothing(bin_num)
-        time_new = cut(df.time, bins; extend = true)
+    if !isnothing(bin_width) | !isnothing(bin_num)
+        time_new = cut(df[:, mapping.col], bins; extend = true)
         n = length(unique(time_new))
     else
         n = length(unique(df[:, mapping.col]))
