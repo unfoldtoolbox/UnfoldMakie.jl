@@ -96,10 +96,9 @@ function plot_topoplotseries!(
         )
         n_topoplots = number_of_topoplots(data; bin_width, bin_num, bins, config.mapping)
 
-        data.timecuts = cut(data[!, config.mapping.col], bins; extend = true)
-        @debug first(data, 10)
-        unique_cuts = unique(data.timecuts)
-        ix = findall.(isequal.(unique_cuts), [data.timecuts])
+        data.cont_cuts = cut(data[!, config.mapping.col], bins; extend = true)
+        unique_cuts = unique(data.cont_cuts)
+        ix = findall.(isequal.(unique_cuts), [data.cont_cuts])
     end
     data = row_col_management(data, ix, n_topoplots, nrows, config)
     config_kwargs!(

@@ -4,31 +4,32 @@ dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
-@testset "toposeries basic with bin_width" begin
+@testset "toposeries with bin_width" begin
     plot_topoplotseries(df; bin_width = 80, positions = positions)
 end
 
-@testset "toposeries basic with bin_num" begin
+@testset "toposeries with bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
-@testset "toposeries basic: checking mapping" begin
-    plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; x = df.time))
+@testset "toposeries: checking other y value" begin
+    df.cont = df.time .* 3
+    plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; col = :cont))
 end
 
 #= @testset "toposeries with Δbin deprecated" begin #fail
     plot_topoplotseries(df, Δbin; positions = positions)
 end =#
 
-@testset "toposeries basic with nrows = 2" begin
+@testset "toposeries with nrows = 2" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 2, positions = positions)
 end
 
-@testset "toposeries basic with nrows = 5" begin
+@testset "toposeries with nrows = 5" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 3, positions = positions)
 end
 
-@testset "toposeries basic with nrows = -6" begin
+@testset "toposeries with nrows = -6" begin
     plot_topoplotseries(df; bin_num = 5, nrows = -6, positions = positions)
 end
 
@@ -55,7 +56,7 @@ end
     )
 end
 
-@testset "toposeries basic with channel names" begin
+@testset "toposeries with channel names" begin
     plot_topoplotseries(df; bin_width = 80, positions = positions, labels = raw_ch_names)
 end # doesnt work rn
 
@@ -161,15 +162,17 @@ end
 @testset "basic eeg_topoplot_series" begin
     df = DataFrame(
         :erp => repeat(1:64, 100),
-        :time => repeat(1:20, 5 * 64),
+        :cont_cuts => repeat(1:20, 5 * 64),
         :label => repeat(1:64, 100),
         :col_coord => repeat(1:5, 20 * 64),
+        :row_coord => repeat(1:1, 6400),
     ) # simulated data
     UnfoldMakie.eeg_topoplot_series(
         df;
         bin_width = 5,
         positions = positions,
         col = :col_coord,
+        row = :row_coord,
     )
 end
 
