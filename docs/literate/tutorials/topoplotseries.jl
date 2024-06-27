@@ -24,12 +24,12 @@ nothing #hide
 
 # # Number of topoplots
 # There are two ways to specify the number of topoplots in a topoplot series: 
-# 1) `bin_width` - specify the interval between topoplots
+# 1. `bin_width` - specify the interval between topoplots
 
 bin_width = 80
 plot_topoplotseries(df; bin_width, positions = positions)
 
-# 2) `bin_num` - specify the number of topoplots
+# 2. `bin_num` - specify the number of topoplots
 
 plot_topoplotseries(df; bin_num = 5, positions = positions)
 
@@ -56,6 +56,25 @@ To create topoplot series with categorical values:
 =#
 
 # # Additional features
+
+# ## Adjusting individual topoplots
+# By using `topoplot_axes` you can flexibly change configurations of topoplots.
+
+df_adj = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+df_adj.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+
+plot_topoplotseries(
+    df_adj;
+    nrows = 2,
+    positions = positions,
+    mapping = (; col = :condition),
+    axis = (; title = "axis title", xlabel = "Conditions"),
+    topoplot_axes = (;
+        rightspinevisible = true,
+        xlabelvisible = false,
+        title = "single topoplot title",
+    ),
+)
 
 # ## Adjusting contours
 
