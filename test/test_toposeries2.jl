@@ -48,7 +48,7 @@ end
     plot_topoplotseries(
         df;
         positions = positions,
-        axis = (; ylabel = "Conditions"),
+        axis = (; xlabel = "Conditions"),
         mapping = (; col = :condition),
     )
 end

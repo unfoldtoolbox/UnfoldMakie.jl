@@ -42,9 +42,6 @@ The function takes the `combinefun = mean` over the `:time` column of `data` in 
 - `data::DataFrame`\\
     Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- `bin_width = :time` \\
-    In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. \\
-    In most cases, the user should specify the electrode positions with `positions = pos`.
 - `col`, `row = :time` \\
     Specify the field to be divided into columns and rows. The default is `col = :time` to split by the time field and `row = nothing`. \\
     Useful to split by a condition, e.g. `...(..., col = :time, row = :condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
@@ -98,8 +95,6 @@ function eeg_topoplot_series!(
     fig,
     data::Union{<:Observable{<:DataFrame},<:DataFrame};
     cat_or_cont_columns = "cont",
-    bin_width = nothing,
-    bin_num = nothing,
     y = :erp,
     label = :label,
     col = :time,
@@ -116,19 +111,18 @@ function eeg_topoplot_series!(
     axis_options = create_axis_options()
     axis_options = merge(axis_options, topoplot_axes)
 
-
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
     data = _as_observable(data)
+    select_col = isnothing(col) ? 1 : unique(to_value(data)[:, :col_coord])
+    select_row = isnothing(row) ? 1 : unique(to_value(data)[:, :row_coord])
     if eltype(to_value(data)[!, col]) <: Number
         data_mean = @lift(
-            df_timebin(
+            df_grouping(
                 $data;
-                bin_width = bin_width,
-                bin_num = bin_num,
                 col_y = y,
                 fun = combinefun,
-                grouping = [label, col, row],
+                grouping = [label, :col_coord, :row_coord],
             )
         )
     else
@@ -145,8 +139,6 @@ function eeg_topoplot_series!(
         topoplot_attributes,
     )
     # do the col/row plot
-    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, :col_coord])
-    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, :row_coord])
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
@@ -167,8 +159,6 @@ function eeg_topoplot_series!(
                 break
             end
             single_topoplot = eeg_topoplot!(ax, single_y, labels; topoplot_attributes...)
-            #@debug fieldnames(typeof(single_topoplot))
-            #@debug single_topoplot.plots[1].attributes
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
@@ -187,7 +177,7 @@ function label_management(ax, cat_or_cont_columns, df_single, col)
     if cat_or_cont_columns == "cat"
         ax.xlabel = string(to_value(df_single)[1, col])
     else
-        ax.xlabel = string(to_value(df_single).time[1, :][])
+        ax.xlabel = string(to_value(df_single).cont_cuts[1, :][])
     end
 end
 
@@ -281,16 +271,12 @@ function create_axis_options()
 end
 
 """
-    df_timebin(df, bin_width; col_y = :erp, fun = mean, grouping = [])
-Split or combine `DataFrame` according to equally spaced time bins.
+    df_grouping(df, bin_width; col_y = :erp, fun = mean, grouping = [])
+Group `DataFrame` according to topoplot coordinates and apply aggregation function.
 
 Arguments:
 - `df::AbstractTable`\\
-    With columns `:time` and `col_y` (default `:erp`), and all columns in `grouping`;
-- `bin_width::Real = nothing`\\
-    Bin width in `:time` units;
-- `bin_num::Real = nothing`\\
-    Number of topoplots;
+    Requires columns `:cont_cuts`, `col_y` (default `:erp`), and all columns in `grouping` (`col_coord`, `row_coord`, `label`);
 - `col_y = :erp` \\
     The column to combine over (with `fun`);
 - `fun = mean()`\\
@@ -300,20 +286,16 @@ Arguments:
 
 **Return Value:** `DataFrame`.
 """
-function df_timebin(
+function df_grouping( #rename
     df;
-    bin_width = nothing,
-    bin_num = nothing,
     col_y = :erp,
     fun = mean,
     grouping = [],
 )
-    bins = bins_estimation(df.time; bin_width, bin_num, cat_or_cont_columns = "cont")
     df = deepcopy(df) # cut seems to change stuff inplace
-    df.time = cut(df.time, bins; extend = true)
-
     grouping = grouping[.!isnothing.(grouping)]
-    df_grouped = combine(groupby(df, unique([:time, grouping...])), col_y => fun)
-    rename!(df_grouped, names(df_grouped)[end] => col_y) # remove the fun part of the new column
-    return df_grouped
+    df_grouped = groupby(df, unique([:cont_cuts, grouping...]))
+    df_combined = combine(df_grouped, col_y => fun)
+    rename!(df_combined, names(df_combined)[end] => col_y) # renames estimate_fun to estimate
+    return df_combined
 end
