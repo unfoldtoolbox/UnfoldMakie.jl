@@ -24,10 +24,13 @@ end
 end
 
 @testset "topoplot: AbstractMatrix" begin
-    plot_topoplot(zeros(1:128))
+    d = zeros(1:128)
+    p = [(rand(), rand()) for _ = 1:size(d, 1)]
+    plot_topoplot(d; positions = d)
 end
 
 @testset "topoplot: ViewArray" begin
-    d = Dict(:a => 11, :b => 12, :c => 13)
-    plot_topoplot(view(d, [:a, :c])) 
+    d = Dict(:y => (11, 12), :b => (11, 12), :c => (11, 12))
+    v = view(d, [:y, :c])
+    plot_topoplot(d; positions = rand(2))
 end
