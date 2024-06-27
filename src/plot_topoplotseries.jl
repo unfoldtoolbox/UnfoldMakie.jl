@@ -76,9 +76,8 @@ function plot_topoplotseries!(
     config_kwargs!(config; kwargs...)
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-    cat_or_cont_columns =
-        eltype(to_value(data)[!, config.mapping.col]) <: Number ? "cont" : "cat"
     data = (to_value(data))
+    cat_or_cont_columns = eltype(data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
         n_topoplots =
@@ -89,14 +88,17 @@ function plot_topoplotseries!(
                 [data[!, config.mapping.col]],
             )
     else
-        # arrangment of topoplots by rows and cols
-        bins = bins_estimation(data.time; bin_width, bin_num, cat_or_cont_columns)
+        bins = bins_estimation(
+            data[!, config.mapping.col];
+            bin_width,
+            bin_num,
+            cat_or_cont_columns,
+        )
         n_topoplots = number_of_topoplots(data; bin_width, bin_num, bins, config.mapping)
 
-        data.timecuts = cut(data.time, bins; extend = true)
+        data.timecuts = cut(data[!, config.mapping.col], bins; extend = true)
         unique_cuts = unique(data.timecuts)
         ix = findall.(isequal.(unique_cuts), [data.timecuts])
-
     end
     data = row_col_management(data, ix, n_topoplots, nrows, config)
     config_kwargs!(
