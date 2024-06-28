@@ -19,27 +19,33 @@ $(_docstring(:topoplot))
 """
 plot_topoplot(data::Union{DataFrame,Vector{Float32}}; kwargs...) =
     plot_topoplot!(Figure(), data; kwargs...)
+
+
+_topoplot_get_data(data::AbstractDataFrame,config) = @view data[:, config.mapping.y]
+_topoplot_get_data(data::AbstractVector,config) =  data
+_topoplot_get_data(data) = error("Input data need to be DataFrame or Vector")    
 function plot_topoplot!(
     f::Union{GridPosition,GridLayout,Figure},
-    data::Union{DataFrame,<:AbstractVector};
+    data_input,
     positions = nothing,
     labels = nothing,
     kwargs...,
 )
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
+    config.mapping = resolve_mappings(data, config.mapping)
 
     axis = Axis(f[1, 1]; config.axis...)
 
-    if !(data isa Vector)
-        config.mapping = resolve_mappings(data, config.mapping)
-        data = data[:, config.mapping.y]
-    end
+    # if data_input is a DataFrame, extract the column according to config.mapping.y
+    data_for_topoplot = _topoplot_get_data(data_input,config)
+
+    
 
     positions = get_topo_positions(; positions = positions, labels = labels)
-    eeg_topoplot!(axis, data, labels; positions, config.visual...)
+    eeg_topoplot!(axis, data_for_topoplot, labels; positions, config.visual...)
 
-    clims = (min(data...), max(data...))
+    clims = (min(data_for_topoplot...), max(data_for_topoplot...))
     if clims[1] ≈ clims[2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
 We disable the color bar in this figure.
