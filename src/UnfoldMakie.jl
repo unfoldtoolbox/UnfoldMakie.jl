@@ -91,5 +91,6 @@ export plot_channelimage
 export plot_channelimage!
 
 export to_positions
+export eeg_matrix_to_dataframe
 export nonnumeric # reexport from AoG
 end

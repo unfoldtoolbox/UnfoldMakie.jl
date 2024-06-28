@@ -23,10 +23,19 @@ end
     plot_topoplot(dat[:, 150, 1]; positions = positions, labels = labels)
 end
 
+@testset "topoplot: GridSubposition" begin
+    f = Figure()
+    plot_topoplot!(
+        f[1, 1][1, 1],
+        UnfoldMakie.eeg_matrix_to_dataframe(rand(10), string.(1:10));
+        positions = rand(Point2f, 10),
+    )
+end
+
 @testset "topoplot: AbstractMatrix" begin
     d = zeros(1:128)
     p = [(rand(), rand()) for _ = 1:size(d, 1)]
-    plot_topoplot(d; positions = d)
+    plot_topoplot(UnfoldMakie.eeg_matrix_to_dataframe(d); positions = d)
 end
 
 @testset "topoplot: ViewArray" begin
