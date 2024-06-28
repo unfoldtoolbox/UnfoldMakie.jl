@@ -20,7 +20,7 @@ $(_docstring(:topoplot))
 plot_topoplot(data::Union{<:AbstractDataFrame,<:AbstractVector}; kwargs...) =
     plot_topoplot!(Figure(), data; kwargs...)
 function plot_topoplot!(
-    f::Union{GridPosition,GridLayout,Figure},
+    f::Union{GridPosition,GridLayout,GridLayoutBase.GridSubposition,Figure},
     data::Union{<:AbstractDataFrame,<:AbstractVector};
     positions = nothing,
     labels = nothing,
