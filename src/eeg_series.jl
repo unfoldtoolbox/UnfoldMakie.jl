@@ -1,5 +1,3 @@
-# Note: This is copied from https://github.com/MakieOrg/TopoPlots.jl/pull/3 because they apparently cannot do a review in ~9month...
-
 """
     eeg_matrix_to_dataframe(data::Matrix, label)
 
@@ -7,6 +5,9 @@ Helper function converting a matrix (channel x times) to a tidy `DataFrame` with
 
 **Return Value:** `DataFrame`.
 """
+eeg_matrix_to_dataframe(data::Matrix) =
+    eeg_matrix_to_dataframe(data, string.(1:size(data, 1)))
+
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
     df[!, :time] .= 1:nrow(df)
