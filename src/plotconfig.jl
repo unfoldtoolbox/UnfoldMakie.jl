@@ -118,6 +118,7 @@ function PlotConfig(T::Val{:topoplot})
         ),
         visual = (;
             contours = (color = :white, linewidth = 2),
+            enlarge = 1,
             label_scatter = true,
             label_text = true,
             bounding_geometry = Circle,
