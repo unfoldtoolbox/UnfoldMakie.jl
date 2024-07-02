@@ -5,7 +5,7 @@
 # Basically, it is a series of Topoplots.
 
 # # Setup
-# ## Package loading
+# Package loading
 
 using Unfold
 using UnfoldMakie
@@ -14,7 +14,7 @@ using CairoMakie
 using TopoPlots
 using Statistics
 
-# ## Data input
+# Data input
 
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)));
@@ -22,17 +22,17 @@ nothing #hide
 
 # # Number of topoplots
 # There are two ways to specify the number of topoplots in a topoplot series: 
-# 1. `bin_width` - specify the interval between topoplots
+# `bin_width` - specify the interval between topoplots
 
 bin_width = 80
 plot_topoplotseries(df; bin_width, positions = positions)
 
-# 2. `bin_num` - specify the number of topoplots
+# `bin_num` - specify the number of topoplots
 
 plot_topoplotseries(df; bin_num = 5, positions = positions)
 
 # # Categorical and contionous x-values
-# x-value could be contionous (`time` by deafult, but could be saccade amplitude, contrast) or categorical (any experimental variable).
+# By deafult x-value is `time`, but it could be any contionous (i.g. saccade amplitude) or categorical (any experimental variable) value.
 
 f = Figure()
 df_cat = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
@@ -41,11 +41,14 @@ df_cat.condition = repeat(["A", "B", "C", "D", "E"], size(df_cat, 1) ÷ 5)
 plot_topoplotseries!(
     f[1, 1],
     df_cat;
+    nrows = 2,
     mapping = (; col = :condition),
     axis = (; xlabel = "Conditions"),
     positions = positions,
 )
 f
+
+#note # Version with conditional `mapping.row` is not yet implemented.
 
 #=
 To create topoplot series with categorical values:
@@ -117,9 +120,7 @@ f
 
 # ## Multiple rows
 
-#=
-Use `nrows` to specify multiple rows. 
-=#
+# Use `nrows` to specify multiple rows. 
 
 f = Figure()
 df_col = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
