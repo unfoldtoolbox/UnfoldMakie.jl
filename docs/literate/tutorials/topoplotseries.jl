@@ -16,11 +16,9 @@ using Statistics
 
 # ## Data input
 
-
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)));
 nothing #hide
-
 
 # # Number of topoplots
 # There are two ways to specify the number of topoplots in a topoplot series: 
@@ -77,6 +75,8 @@ plot_topoplotseries(
 )
 
 # ## Adjusting contours
+# Topographic contour is a line drawn on a topographic map to indicate an increase or decrease in voltage.
+# A contour level is an area with a specific range of voltage. By default, the number of contour levels is 6, which means that the topography plot is divided into 6 areas depending on their voltage values.
 
 plot_topoplotseries(
     df;
