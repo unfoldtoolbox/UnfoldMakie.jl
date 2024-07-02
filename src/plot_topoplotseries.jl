@@ -36,11 +36,7 @@ Multiple miniature topoplots in regular distances.
     `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
 - `topoplot_axes = (;)`\\
     Here you can flexibly change configurations of topoplots.\\
-    The list of options: aspect, title, xgridvisible, xminorgridvisible,\\
-    `xminorticksvisible`, `xticksvisible`, `xticklabelsvisible`, `xlabelvisible = true,\\
-    `ygridvisible`, `yminorgridvisible`, `yminorticksvisible`, `yticksvisible`, `yticklabelsvisible`, `ylabelvisible`,\\
-    `leftspinevisible`, `rightspinevisible`, `topspinevisible`, `bottomspinevisible`,\\
-    `xpanlock = true, `ypanlock = true, `xzoomlock = true, `yzoomlock = true, `xrectzoom`, `yrectzoom`, `limits`\\
+    To see all options just type `?Axis` in REPL.
 - `mapping.x = :time`\\
     Specify x-value. Can be any continuous variable.
 - `mapping.layout = nothing`\\
