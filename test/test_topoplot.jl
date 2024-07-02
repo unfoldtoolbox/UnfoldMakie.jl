@@ -33,13 +33,14 @@ end
 end
 
 @testset "topoplot: AbstractMatrix" begin
-    d = zeros(1:128)
-    p = [(rand(), rand()) for _ = 1:size(d, 1)]
-    plot_topoplot(UnfoldMakie.eeg_matrix_to_dataframe(d); positions = d)
+    d = rand(128)
+    #p = [(rand(), rand()) for _ = 1:size(d, 1)]
+    p = rand(Point2f, 128)
+    plot_topoplot(d; positions = p)
 end
 
 @testset "topoplot: ViewArray" begin
-    d = Dict(:y => (11, 12), :b => (11, 12), :c => (11, 12))
-    v = view(d, [:y, :c])
-    plot_topoplot(d; positions = rand(2))
+    d = DataFrame(:estimate => rand(20), :label => string.(1:20))
+
+    plot_topoplot(@view(d[1:10, :]); positions = rand(Point2f, 10))
 end
