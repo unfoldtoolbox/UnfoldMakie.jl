@@ -77,7 +77,7 @@ using CairoMakie # backend
 using Unfold, UnfoldSim # Fit / Simulation
 
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-data = reshape(data, 1, size(data)...) # fake a single channel
+data = reshape(data, 1, size(data)...) # simulate a single channel
 
 times = range(0, step = 1 / 100, length = size(data, 2))
 m = fit(UnfoldModel, @formula(0 ~ 1 + condition), evts, data, times)
