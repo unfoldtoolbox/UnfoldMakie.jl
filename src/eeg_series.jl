@@ -60,10 +60,10 @@ function eeg_topoplot_series(
 )
     return eeg_topoplot_series!(Figure(; figure...), data; kwargs...)
 end
-# allow to specify bin_width as an keyword for nicer readability
 
 #eeg_topoplot_series(data::Union{<:Observable,<:DataFrame,<:AbstractMatrix}; kwargs...) =
 #    eeg_topoplot_series(data; kwargs...)
+
 # AbstractMatrix
 function eeg_topoplot_series!(
     fig,
@@ -89,7 +89,6 @@ function eeg_topoplot_series!(
 )
     return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels); kwargs...)
 end
-
 
 function eeg_topoplot_series!(
     fig,
@@ -140,6 +139,9 @@ function eeg_topoplot_series!(
     )
     # do the col/row plot
     axlist = []
+    if interactive_scatter != nothing
+        @assert isa(interactive_scatter, Observable)
+    end
     for r = 1:length(select_row)
         for c = 1:length(select_col)
             ax = Axis(fig[:, :][r, c]; axis_options...)
@@ -149,7 +151,7 @@ function eeg_topoplot_series!(
             labels = to_value(df_single)[:, label]
             # select data
             single_y = @lift($df_single[:, y])
-            scatter_management(
+            topoplot_attributes = scatter_management(
                 single_y,
                 topoplot_attributes,
                 highlight_scatter,
@@ -163,7 +165,7 @@ function eeg_topoplot_series!(
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
             label_management(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
-            interactive_toposeries(interactive_scatter, single_topoplot)
+            interactive_toposeries(interactive_scatter, single_topoplot, r, c)
             push!(axlist, ax)
         end
     end
@@ -219,9 +221,10 @@ function scatter_management(
                 merge(topoplot_attributes, (; label_scatter = highlight_feature))
         end
     end
+    return topoplot_attributes
 end
 
-function interactive_toposeries(interactive_scatter, single_topoplot)
+function interactive_toposeries(interactive_scatter, single_topoplot, r, c)
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
