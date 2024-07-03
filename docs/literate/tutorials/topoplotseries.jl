@@ -48,7 +48,8 @@ plot_topoplotseries!(
 )
 f
 
-#note # Version with conditional `mapping.row` is not yet implemented.
+#md # !!! note "Warning"
+#md #     Version with conditional `mapping.row` is not yet implemented.
 
 #=
 To create topoplot series with categorical values:
