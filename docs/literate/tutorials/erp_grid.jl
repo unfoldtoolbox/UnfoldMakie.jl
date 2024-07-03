@@ -5,7 +5,7 @@
 # This plot type is not as popular because it is too cluttered. 
 
 # # Setup
-# ## Package loading
+# Package loading
 
 using Unfold
 using UnfoldMakie
