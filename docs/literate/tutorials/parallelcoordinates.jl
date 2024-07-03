@@ -5,14 +5,14 @@
 # Y-axis represents time points, vertical axes represent channels, while lines show voltage changes. 
 
 # # Setup
-# ## Package loading
+# Package loading
 
 using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-# ## Data generation
+# Data generation
 
 include("../../../example_data.jl")
 r1, positions = example_data();

@@ -6,7 +6,7 @@
 # Basically, it is a series of Topoplots arranged on a circle.
 
 # # Setup
-# ## Package loading
+# Package loading
 
 using UnfoldMakie
 using CairoMakie
@@ -15,7 +15,7 @@ using Random
 using DataFrames
 
 
-# ## Data generation
+# Data generation
 # Generate a `Dataframe`. We need to specify the Topoplot positions either via `position`, or via `labels`.
 data, pos = TopoPlots.example_data();
 dat = data[:, 240, 1]

@@ -4,7 +4,8 @@
 # It can fully represent time and channel dimensions using a heatmap. 
 # Y-axis represents all channels, x-axis represents time, while color represents voltage. 
 
-# # Package loading
+# # Setup
+# Package loading
 
 using Unfold
 using UnfoldMakie
