@@ -118,7 +118,7 @@ function eeg_topoplot_series!(
     select_row = isnothing(row) ? 1 : unique(to_value(data)[:, :row_coord])
     if eltype(to_value(data)[!, col]) <: Number
         data_mean = @lift(
-            df_grouping(
+            data_binning(
                 $data;
                 col_y = y,
                 fun = combinefun,
@@ -271,7 +271,7 @@ function create_axis_options()
 end
 
 """
-    df_grouping(df, bin_width; col_y = :erp, fun = mean, grouping = [])
+    data_binning(df, bin_width; col_y = :erp, fun = mean, grouping = [])
 Group `DataFrame` according to topoplot coordinates and apply aggregation function.
 
 Arguments:
@@ -286,12 +286,7 @@ Arguments:
 
 **Return Value:** `DataFrame`.
 """
-function df_grouping( #rename
-    df;
-    col_y = :erp,
-    fun = mean,
-    grouping = [],
-)
+function data_binning(df; col_y = :erp, fun = mean, grouping = [])
     df = deepcopy(df) # cut seems to change stuff inplace
     grouping = grouping[.!isnothing.(grouping)]
     df_grouped = groupby(df, unique([:cont_cuts, grouping...]))
