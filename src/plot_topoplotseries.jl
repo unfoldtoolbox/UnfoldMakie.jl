@@ -6,24 +6,25 @@ Multiple miniature topoplots in regular distances.
 ## Arguments  
 
 - `f::Union{GridPosition, GridLayout, GridLayoutBase.GridSubposition, Figure}`\\
-    `Figure`, `GridLayout`, `GridPosition`, or GridLayoutBase.GridSubposition to draw the plot.
+    `Figure`, `GridLayout`, `GridPosition`, or `GridLayoutBase.GridSubposition` to draw the plot.
 - `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
-    DataFrame with data or Observable DataFrame. Requires a `time` column, but could be also specified in mapping.x by any continous or categorical value. 
+    DataFrame with data or Observable DataFrame. DataFrame with data or observable DataFrame.\\
+    Requires a `time` column by default, but can be overridden by specifying `mapping=(; x=:my_column)` with any continuous or categorical column. 
 
 ## Keyword arguments (kwargs)
 - `bin_width::Real = nothing`\\
-    Number specifing the width of bin of continous x-value in its units.\\
+    Number specifing the width of bin of continuous x-value in its units.\\
 - `bin_num::Real = nothing`\\
     Number of topoplots.\\
     Either `bin_width`, or `bin_num` should be specified. Error if they are both specified\\
-    If `mapping.col` or `mapping.row` are categorical `bin_width` and `bin_num` should be `nothing`.
+    If `mapping.col` or `mapping.row` are categorical `bin_width` and `bin_num` stay as `nothing`.
 - `combinefun::Function = mean`\\
     Specify how the samples within `bin_width` are summarised.\\
     Example functions: `mean`, `median`, `std`. 
 - `rasterize_heatmaps::Bool = true`\\
     Force rasterization of the plot heatmap when saving in `svg` format.\\
     Except for the interpolated heatmap, all lines/points are vectors.\\
-    This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything super slow.
+    This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything very slow.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels for categorical values. 
 - `labels::Vector{String} = nothing`\\
@@ -32,16 +33,15 @@ Multiple miniature topoplots in regular distances.
     Specify channel positions. Requires the list of x and y positions for all unique electrode.
 - `interactive_scatter = nothing`\\
     Enable interactive mode.\\ 
-    If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can change observable indecies by clicking topopplot markers.\\
-    `(0, 0, 0)` corresponds to the indecies of row of topoplot layout, column of topoplot layout and channell. 
-- `topoplot_axes = (;)`\\
+    If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can update the observable tuple with the indices of the clicked topoplot markers.\\
+    `(0, 0, 0)` corresponds to the (row of topoplot layout, column of topoplot layout, electrode). 
+- `topoplot_axes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of topoplots.\\
     To see all options just type `?Axis` in REPL.
-- `mapping.x = :time`\\
-    Specify x-value. Can be any continuous variable.
-- `mapping.layout = nothing`\\
-    Arranges topoplots by rows when equals `:time`. 
-
+- `mapping = (; col = :time`, row = nothing, layout = nothing)\\
+    `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
+    `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
+    `mapping.layout - arranges topoplots by rows when equals `:time`.\\
 
 $(_docstring(:topoplotseries))
 
