@@ -4,37 +4,38 @@ dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
-@testset "toposeries basic with bin_width" begin
-    plot_topoplotseries(df; bin_width, positions = positions)
+@testset "toposeries with bin_width" begin
+    plot_topoplotseries(df; bin_width = 80, positions = positions)
 end
 
-@testset "toposeries basic with bin_num" begin
+@testset "toposeries with bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
-@testset "toposeries basic: checking mapping" begin
-    plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; x = df.time))
+@testset "toposeries: checking other y value" begin
+    df.cont = df.time .* 3
+    plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; col = :cont))
 end
 
 #= @testset "toposeries with Δbin deprecated" begin #fail
     plot_topoplotseries(df, Δbin; positions = positions)
 end =#
 
-@testset "toposeries basic with nrows specified" begin
+@testset "toposeries with nrows = 2" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 2, positions = positions)
 end
 
-@testset "toposeries basic with nrows specified" begin
+@testset "toposeries with nrows = 5" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 3, positions = positions)
 end
 
-@testset "toposeries basic with nrows specified" begin
+@testset "toposeries with nrows = -6" begin
     plot_topoplotseries(df; bin_num = 5, nrows = -6, positions = positions)
 end
 
 @testset "error checking: bin_width and bin_num specified" begin
     err1 = nothing
-    t() = error(plot_topoplotseries(df; bin_width, bin_num = 5, positions = positions))
+    t() = error(plot_topoplotseries(df; bin_width = 80, bin_num = 5, positions = positions))
     try
         t()
     catch err1
@@ -55,22 +56,27 @@ end
     )
 end
 
-@testset "toposeries basic with channel names" begin
-    plot_topoplotseries(df; bin_width, positions = positions, labels = raw_ch_names)
+@testset "toposeries with channel names" begin
+    plot_topoplotseries(df; bin_width = 80, positions = positions, labels = raw_ch_names)
 end # doesnt work rn
 
 @testset "toposeries with xlabel" begin
     f = Figure()
     ax = Axis(f[1, 1])
-    plot_topoplotseries!(f[1, 1], df; bin_width, positions = positions)
+    plot_topoplotseries!(f[1, 1], df; bin_width = 80, positions = positions)
     text!(ax, 0, 0, text = "Time [ms] ", align = (:center, :center), offset = (0, -120))
     hidespines!(ax) # delete unnecessary spines (lines)
     hidedecorations!(ax, label = false)
     f
 end
 
-@testset "toposeries for one time point (?)" begin
-    plot_topoplotseries(df; bin_width, positions = positions, combinefun = x -> x[end÷2])
+@testset "toposeries for one time point (what is it?)" begin
+    plot_topoplotseries(
+        df;
+        bin_width = 80,
+        positions = positions,
+        combinefun = x -> x[end÷2],
+    )
 end
 
 @testset "toposeries with differend comb functions " begin
@@ -153,18 +159,22 @@ end
     )
 end
 
-#= @testset "basic eeg_topoplot_series" begin
+@testset "basic eeg_topoplot_series" begin
     df = DataFrame(
-        :erp => repeat(1:63, 100),
-        :time => repeat(1:20, 5 * 63),
-        :label => repeat(1:63, 100),
+        :erp => repeat(1:64, 100),
+        :cont_cuts => repeat(1:20, 5 * 64),
+        :label => repeat(1:64, 100),
+        :col_coord => repeat(1:5, 20 * 64),
+        :row_coord => repeat(1:1, 6400),
     ) # simulated data
-    a = (sin.(range(-2 * pi, 2 * pi, 63)))
-    b = [(1:63) ./ 63 .* a (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))]
-    pos = b .* 0.5 .+ 0.5 # simulated electrode positions
-    pos = [Point2.(pos[k, 1], pos[k, 2]) for k = 1:size(pos, 1)]
-    UnfoldMakie.eeg_topoplot_series(df; bin_width = 5, positions = pos)
-end =#
+    UnfoldMakie.eeg_topoplot_series(
+        df;
+        bin_width = 5,
+        positions = positions,
+        col = :col_coord,
+        row = :row_coord,
+    )
+end
 
 @testset "toposeries with GridSubposition" begin
     f = Figure(size = (500, 500))
@@ -176,4 +186,55 @@ end =#
         combinefun = mean,
         axis = (; title = "combinefun = mean"),
     )
+end
+
+@testset "eeg_matrix_to_dataframe" begin
+    eeg_matrix_to_dataframe(rand(2, 2))
+end
+
+@testset "contours" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        visual = (; enlarge = 0.9, contours = (; linewidth = 1, color = :black)),
+    )
+end
+
+@testset "contours.levels" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        visual = (;
+            enlarge = 0.9,
+            contours = (; linewidth = 1, color = :black, levels = 3),
+        ),
+    )
+end
+
+@testset "contours.levels" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        visual = (;
+            enlarge = 0.9,
+            contours = (; linewidth = 1, color = :black, levels = [0, 0.2]),
+        ),
+    )
+end
+
+@testset "adjustable colorbar" begin
+    f = Figure()
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        bin_width = 80,
+        positions = positions,
+        colorbar = (; height = 100, width = 30),
+        axis = (; aspect = AxisAspect(1)),
+    )
+    Box(f[1, 1], color = (:red, 0.2), strokewidth = 0)
+    f
 end
