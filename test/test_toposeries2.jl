@@ -5,17 +5,14 @@ df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(position
 bin_width = 80
 
 @testset "14 topoplots, 4 rows" begin # horrific
-    f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
-    plot_topoplotseries!(
-        f[1, 1:5],
+    plot_topoplotseries(
         df;
         bin_num = 14,
         nrows = 4,
         positions = positions,
         visual = (; label_scatter = false),
     )
-    f
 end
 
 @testset "facetting by layout" begin # could be changed to nrwos = "auto"
@@ -24,79 +21,126 @@ end
         string.(1:length(positions)),
     )
 
-    f = Figure(size = (600, 500))
-    plot_topoplotseries!(
-        f[1:2, 1:2],
+    plot_topoplotseries(
         df;
         bin_width = 1,
         mapping = (; layout = :time),
         positions = positions,
     )
-    f
 end
 
-@testset "categorical columns" begin
-    f = Figure()
+
+@testset "error checking: bin_width and bin_num specified" begin
+    err1 = nothing
+    t() = error(plot_topoplotseries(df; bin_width = 80, bin_num = 5, positions = positions))
+    try
+        t()
+    catch err1
+    end
+    @test err1 ==
+          ErrorException("Ambigious parameters: specify only `bin_width` or `bin_num`.")
+end
+
+@testset "error checking: bin_width or bin_num with categorical columns" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
-    plot_topoplotseries!(
-        f[1, 1],
+    err1 = nothing
+    t() = error(
+        plot_topoplotseries(
+            df;
+            bin_num = 5,
+            col_labels = true,
+            mapping = (; col = :condition),
+            positions = positions,
+        ),
+    )
+    try
+        t()
+    catch err1
+    end
+    @test err1 == ErrorException(
+        "Parameters `bin_width` or `bin_num` are only allowed with continonus `mapping.col` or `mapping.row`, while you specifed categorical.",
+    )
+end
+
+@testset "categorical columns" begin
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+
+    plot_topoplotseries(
         df;
         col_labels = true,
         mapping = (; col = :condition),
         positions = positions,
     )
-    f
 end
 
 @testset "4 conditions" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
-    f = Figure(size = (600, 500))
-    plot_topoplotseries!(
-        f[1, 1],
+    plot_topoplotseries(
         df;
         positions = positions,
-        col_labels = true,
-        axis = (; ylabel = "Conditions"),
+        axis = (; xlabel = "Conditions"),
         mapping = (; col = :condition),
     )
-    f
 end
 
-@testset "4 conditions in 2 rows" begin # TBD
+@testset "4 conditions in 2 rows" begin
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
-    f = Figure(size = (600, 500))
-    plot_topoplotseries!(
-        f[1, 1],
+    plot_topoplotseries(
         df;
         nrows = 2,
         positions = positions,
-        col_labels = true,
-        axis = (; ylabel = "Conditions"),
         mapping = (; col = :condition),
     )
-    f
 end
 
+#= @testset "4 condtions in rows" begin # TBD
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+
+    plot_topoplotseries(
+        df;
+        positions = positions,
+        mapping = (; row = :condition),
+    )
+end =#
+
+@testset "topoplot axes configuration" begin # TBD
+    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
+
+    plot_topoplotseries(
+        df;
+        nrows = 2,
+        positions = positions,
+        mapping = (; col = :condition),
+        axis = (; title = "axis title", xlabel = "Conditions"),
+        topoplot_axes = (;
+            rightspinevisible = true,
+            xlabelvisible = false,
+            title = "single topoplot title",
+        ),
+    )
+end
+
+
 @testset "change xlabel" begin
-    f = Figure()
     df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
-    plot_topoplotseries!(
-        f[1, 1],
+    plot_topoplotseries(
         df;
         col_labels = true,
         mapping = (; col = :condition),
         axis = (; xlabel = "test"),
         positions = positions,
     )
-    f
 end
 
 # use with WGlMakie

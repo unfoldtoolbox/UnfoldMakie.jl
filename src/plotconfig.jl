@@ -144,8 +144,6 @@ function PlotConfig(T::Val{:topoplotseries})
             titlefont = :bold,
             xlabel = "Time windows [s]",
             ylabel = "",
-            xlim_topo = (-0.25, 1.25),
-            ylim_topo = (-0.25, 1.25),
             ylabelpadding = 25,
             xlabelpadding = 25,
             xpanlock = true,
@@ -167,6 +165,7 @@ function PlotConfig(T::Val{:topoplotseries})
             colormap = Reverse(:RdBu),
             enlarge = 1,
             label_scatter = false,
+            levels = nothing,
         ),
         mapping = (; col = (:time,), row = (nothing,)),
     )

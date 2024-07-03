@@ -4,7 +4,7 @@
 # It can fully represent time and experimental condition dimensions using lines.
 
 # # Setup
-# ## Package loading
+# Package loading
 
 using Unfold
 using UnfoldMakie
@@ -15,7 +15,7 @@ using UnfoldSim
 using UnfoldMakie
 include("../../../example_data.jl")
 
-# ## Data generation
+# Data generation
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
 data = reshape(data, (1, size(data)...))

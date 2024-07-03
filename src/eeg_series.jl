@@ -36,29 +36,20 @@ end
     eeg_topoplot_series!(fig, data::DataFrame, bin_width; kwargs..)
 
 Plot a series of topoplots. 
-The function automatically takes the `combinefun = mean` over the `:time` column of `data` in `bin_width` steps.
+The function takes the `combinefun = mean` over the `:time` column of `data` in `bin_width` steps.
 - `f` \\
     Figure object. \\
 - `data::DataFrame`\\
     Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- `bin_width = :time` \\
-    In `:time` units, specifying the time steps. All other keyword arguments are passed to the `EEG_TopoPlot` recipe. \\
-    In most cases, the user should specify the electrode positions with `positions = pos`.
 - `col`, `row = :time` \\
-    Specify the field to be divided into columns and rows. The default is `col=:time` to split by the time field and `row = nothing`. \\
-    Useful to split by a condition, e.g. `...(..., col=:time, row=:condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
+    Specify the field to be divided into columns and rows. The default is `col = :time` to split by the time field and `row = nothing`. \\
+    Useful to split by a condition, e.g. `...(..., col = :time, row = :condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
 - `row_labels`, `col_labels = false` \\
     Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
-    
-# Example
-
-```julia-repl
-df = DataFrame(:erp => repeat(1:63, 100), :time => repeat(1:20, 5 * 63), :label => repeat(1:63, 100)) # simulated data
-pos = [(1:63) ./ 63 .* (sin.(range(-2 * pi, 2 * pi, 63))) (1:63) ./ 63 .* cos.(range(-2 * pi, 2 * pi, 63))] .* 0.5 .+ 0.5 # simulated electrode positions
-pos = [Point2.(pos[k, 1], pos[k, 2]) for k in 1:size(pos, 1)]
-eeg_topoplot_series(df, 5; positions = pos)
-```
+- `combinefun::Function = mean`\\
+    Specify how the samples within `bin_width` are summarised.\\
+    Example functions: `mean`, `median`, `std`.  
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
@@ -99,11 +90,11 @@ function eeg_topoplot_series!(
     return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels); kwargs...)
 end
 
+
 function eeg_topoplot_series!(
     fig,
     data::Union{<:Observable{<:DataFrame},<:DataFrame};
-    bin_width = nothing,
-    bin_num = nothing,
+    cat_or_cont_columns = "cont",
     y = :erp,
     label = :label,
     col = :time,
@@ -112,26 +103,26 @@ function eeg_topoplot_series!(
     row_labels = false,
     rasterize_heatmaps = true,
     combinefun = mean,
-    xlim_topo = (-0.25, 1.25),
-    ylim_topo = (-0.25, 1.25),
+    topoplot_axes = (;),
     interactive_scatter = nothing,
     highlight_scatter = false,
     topoplot_attributes...,
 )
-    axis_options = create_axis_options(xlim_topo, ylim_topo)
+    axis_options = create_axis_options()
+    axis_options = merge(axis_options, topoplot_axes)
+
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
-
     data = _as_observable(data)
+    select_col = isnothing(col) ? 1 : unique(to_value(data)[:, :col_coord])
+    select_row = isnothing(row) ? 1 : unique(to_value(data)[:, :row_coord])
     if eltype(to_value(data)[!, col]) <: Number
         data_mean = @lift(
-            df_timebin(
+            data_binning(
                 $data;
-                bin_width = bin_width,
-                bin_num = bin_num,
                 col_y = y,
                 fun = combinefun,
-                grouping = [label, col, row],
+                grouping = [label, :col_coord, :row_coord],
             )
         )
     else
@@ -143,88 +134,73 @@ function eeg_topoplot_series!(
         (
             colorrange = (q_min, q_max),
             interp_resolution = (128, 128),
-            contours = (levels = range(q_min, q_max; length = 7)),
+            #contours = (; levels = range(q_min, q_max; length = 7)),
         ),
         topoplot_attributes,
     )
-
     # do the col/row plot
-    select_col = isnothing(col) ? 1 : unique(to_value(data_mean)[:, col])
-    select_row = isnothing(row) ? 1 : unique(to_value(data_mean)[:, row])
-
-    if interactive_scatter != nothing
-        @assert isa(interactive_scatter, Observable)
-    end
-
     axlist = []
     for r = 1:length(select_row)
         for c = 1:length(select_col)
-            ax = single_topoplot(
-                fig,
-                r,
-                c,
-                row,
-                col,
-                select_row,
-                select_col,
-                y,
-                label,
-                axis_options,
-                data_mean,
+            ax = Axis(fig[:, :][r, c]; axis_options...)
+            df_single =
+                topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+            # select labels
+            labels = to_value(df_single)[:, label]
+            # select data
+            single_y = @lift($df_single[:, y])
+            scatter_management(
+                single_y,
+                topoplot_attributes,
                 highlight_scatter,
                 interactive_scatter,
-                topoplot_attributes,
-                col_labels,
-                row_labels,
-                rasterize_heatmaps,
             )
+            if isempty(to_value(single_y))
+                break
+            end
+            single_topoplot = eeg_topoplot!(ax, single_y, labels; topoplot_attributes...)
+            if rasterize_heatmaps
+                single_topoplot.plots[1].plots[1].rasterize = true
+            end
+            label_management(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
+            interactive_toposeries(interactive_scatter, single_topoplot)
             push!(axlist, ax)
-
         end
     end
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-    return fig, axlist
+    return fig, axlist, topoplot_attributes[:colorrange]
 end
 
-function single_topoplot(
-    fig,
-    r,
-    c,
-    row,
-    col,
-    select_row,
-    select_col,
-    y,
-    label,
-    axis_options,
-    data_mean,
-    highlight_scatter,
-    interactive_scatter,
-    topoplot_attributes,
-    col_labels,
-    row_labels,
-    rasterize_heatmaps,
-)
-    ax = Axis(fig[:, :][r, c]; axis_options...)
-    # select one topoplot
-    sel = 1 .== ones(size(to_value(data_mean), 1)) # select all
+function label_management(ax, cat_or_cont_columns, df_single, col)
+    if cat_or_cont_columns == "cat"
+        ax.xlabel = string(to_value(df_single)[1, col])
+    else
+        ax.xlabel = string(to_value(df_single).cont_cuts[1, :][])
+    end
+end
+
+function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+    sel = 1 .== ones(size(to_value(data_mean), 1))
     if !isnothing(col)
-        sel = sel .&& (to_value(data_mean)[:, col] .== select_col[c]) # subselect
+        sel = sel .&& (to_value(data_mean)[:, :col_coord] .== select_col[c]) # subselect
     end
     if !isnothing(row)
-        sel = sel .&& (to_value(data_mean)[:, row] .== select_row[r]) # subselect
+        sel = sel .&& (to_value(data_mean)[:, :row_coord] .== select_row[r]) # subselect
     end
     df_single = @lift($data_mean[sel, :])
+    return df_single
+end
 
-    # select labels
-    labels = to_value(df_single)[:, label]
-    # select data
-    d_vec = @lift($df_single[:, y])
-    # plot it
+function scatter_management(
+    single_y,
+    topoplot_attributes,
+    highlight_scatter,
+    interactive_scatter,
+)
     if highlight_scatter != false || interactive_scatter != nothing
-        strokecolor = Observable(repeat([:black], length(to_value(d_vec))))
+        strokecolor = Observable(repeat([:black], length(to_value(single_y))))
         highlight_feature = (; strokecolor = strokecolor)
 
         if :label_scatter ∈ keys(topoplot_attributes)
@@ -243,33 +219,12 @@ function single_topoplot(
                 merge(topoplot_attributes, (; label_scatter = highlight_feature))
         end
     end
-    if isempty(to_value(d_vec))
-        return
-    end
-    single_topoplot = eeg_topoplot!(ax, d_vec, labels; topoplot_attributes...)
-    if rasterize_heatmaps
-        single_topoplot.plots[1].plots[1].rasterize = true
-    end
-
-    # to put column and row labels
-    if col_labels == true
-        if r == length(select_row) && col_labels
-            ax.xlabel = string(to_value(df_single)[1, col])
-            ax.xlabelvisible = true
-        end
-        if c == 1 && length(select_row) > 1 && row_labels
-            ax.ylabel = string(to_value(df_single)[1, row])
-            ax.ylabelvisible = true
-        end
-    else
-        ax.xlabelvisible = true
-        ax.xlabel = string(to_value(df_single).time[1, :][])
-    end
-    interctive_toposeries(interactive_scatter, single_topoplot)
-    return ax
 end
 
-function interctive_toposeries(interactive_scatter, single_topoplot)
+function interactive_toposeries(interactive_scatter, single_topoplot)
+    if interactive_scatter != nothing
+        @assert isa(interactive_scatter, Observable)
+    end
     if interactive_scatter != false
         on(events(single_topoplot).mousebutton) do event
             if event.button == Mouse.left && event.action == Mouse.press
@@ -285,15 +240,16 @@ function interctive_toposeries(interactive_scatter, single_topoplot)
     end
 end
 
-function create_axis_options(xlim_topo, ylim_topo)
+function create_axis_options()
     return (
         aspect = 1,
+        title = "",
         xgridvisible = false,
         xminorgridvisible = false,
         xminorticksvisible = false,
         xticksvisible = false,
         xticklabelsvisible = false,
-        xlabelvisible = false,
+        xlabelvisible = true,
         ygridvisible = false,
         yminorgridvisible = false,
         yminorticksvisible = false,
@@ -310,6 +266,31 @@ function create_axis_options(xlim_topo, ylim_topo)
         yzoomlock = true,
         xrectzoom = false,
         yrectzoom = false,
-        limits = (xlim_topo, ylim_topo),
+        #limits = (xlim_topo, ylim_topo),
     )
+end
+
+"""
+    data_binning(df, bin_width; col_y = :erp, fun = mean, grouping = [])
+Group `DataFrame` according to topoplot coordinates and apply aggregation function.
+
+Arguments:
+- `df::AbstractTable`\\
+    Requires columns `:cont_cuts`, `col_y` (default `:erp`), and all columns in `grouping` (`col_coord`, `row_coord`, `label`);
+- `col_y = :erp` \\
+    The column to combine over (with `fun`);
+- `fun = mean()`\\
+    Function to combine.
+- `grouping = []`\\
+    Vector of symbols or strings, columns to group by the data before aggregation. Values of `nothing` are ignored.
+
+**Return Value:** `DataFrame`.
+"""
+function data_binning(df; col_y = :erp, fun = mean, grouping = [])
+    df = deepcopy(df) # cut seems to change stuff inplace
+    grouping = grouping[.!isnothing.(grouping)]
+    df_grouped = groupby(df, unique([:cont_cuts, grouping...]))
+    df_combined = combine(df_grouped, col_y => fun)
+    rename!(df_combined, names(df_combined)[end] => col_y) # renames estimate_fun to estimate
+    return df_combined
 end

@@ -5,7 +5,7 @@
 # Basically, it is a series of Topoplots.
 
 # # Setup
-# ## Package loading
+# Package loading
 
 using Unfold
 using UnfoldMakie
@@ -14,23 +14,80 @@ using CairoMakie
 using TopoPlots
 using Statistics
 
-# ## Data input
-
+# Data input
 
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)));
 nothing #hide
 
-# # Plotting
+# # Number of topoplots
+# There are two ways to specify the number of topoplots in a topoplot series: 
+# `bin_width` - specify the interval between topoplots
 
 bin_width = 80
 plot_topoplotseries(df; bin_width, positions = positions)
 
+# `bin_num` - specify the number of topoplots
+
+plot_topoplotseries(df; bin_num = 5, positions = positions)
+
+# # Categorical and contionous x-values
+# By deafult x-value is `time`, but it could be any contionous (i.g. saccade amplitude) or categorical (any experimental variable) value.
+
+f = Figure()
+df_cat = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
+df_cat.condition = repeat(["A", "B", "C", "D", "E"], size(df_cat, 1) ÷ 5)
+
+plot_topoplotseries!(
+    f[1, 1],
+    df_cat;
+    nrows = 2,
+    mapping = (; col = :condition),
+    axis = (; xlabel = "Conditions"),
+    positions = positions,
+)
+f
+
+#md # !!! note "Warning"
+#md #     Version with conditional `mapping.row` is not yet implemented.
+
+#=
+To create topoplot series with categorical values:
+- Do not specify `bin_width` or `bin_num`.
+- Put categorical value in `mapping.col`.
+=#
+
 # # Additional features
 
-# ## Disabling colorbar
+# ## Adjusting individual topoplots
+# By using `topoplot_axes` you can flexibly change configurations of topoplots.
 
-plot_topoplotseries(df; bin_width, positions = positions, layout = (; use_colorbar = false))
+df_adj = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:4, 1], string.(1:length(positions)))
+df_adj.condition = repeat(["A", "B", "C", "D"], size(df_adj, 1) ÷ 4)
+
+plot_topoplotseries(
+    df_adj;
+    nrows = 2,
+    positions = positions,
+    mapping = (; col = :condition),
+    axis = (; title = "axis title", xlabel = "Conditions"),
+    topoplot_axes = (;
+        rightspinevisible = true,
+        xlabelvisible = false,
+        title = "single topoplot title",
+    ),
+)
+
+# ## Adjusting contours
+# Topographic contour is a line drawn on a topographic map to indicate an increase or decrease in voltage.
+# A contour level is an area with a specific range of voltage. By default, the number of contour levels is 6, which means that the topography plot is divided into 6 areas depending on their voltage values.
+
+plot_topoplotseries(
+    df;
+    bin_width,
+    positions = positions,
+    visual = (; enlarge = 0.9, contours = (; linewidth = 1, color = :black)),
+)
 
 # ## Aggregating functions
 # In this example `combinefun` is specified by `mean`, `median` and `std`. 
@@ -62,17 +119,15 @@ plot_topoplotseries!(
 )
 f
 
-# ## Faceting
+# ## Multiple rows
 
-#=
-If you need to plot many topoplots, you should display them in multiple rows. 
-=#
+# Use `nrows` to specify multiple rows. 
 
 f = Figure()
-df1 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+df_col = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 plot_topoplotseries!(
     f[1, 1:5],
-    df1;
+    df_col;
     bin_num = 14,
     nrows = 4,
     positions = positions,
@@ -80,33 +135,10 @@ plot_topoplotseries!(
 )
 f
 
-# ## Categorical topoplots
-
-#=
-If you decide to use categorical values instead of time intvervals for sepration of topoplots do this:
-- Do not specify `bin_width` or `bin_num`
-- Put categorical value in `mapping.col`
-=#
-
-df2 = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
-df2.condition = repeat(["A", "B", "C", "D", "E"], size(df2, 1) ÷ 5)
-
-f = Figure(size = (600, 500))
-
-plot_topoplotseries!(
-    f[1, 1],
-    df2;
-    col_labels = true,
-    mapping = (; col = :condition),
-    axis = (; xlabel = "Conditions"),
-    positions = positions,
-)
-f
-
 # # Configurations of Topoplot series
 
 #=
-Also you can specify:
+Also you can:
 - Label the x-axis with `axis.xlabel`.
 - Hide electrode markers with `visual.label_scatter`.
 - Change the color map with `visual.colormap`. The default is `Reverse(:RdBu)`.
