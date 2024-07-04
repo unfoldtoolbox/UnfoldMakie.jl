@@ -69,7 +69,6 @@ function plot_erpimage!(
     sortval_xlabel = Observable("Sorting value"),
     kwargs..., # not observables for a while ;)
 )
-    #@debug sortvalues
 
     sortvalues = _as_observable(sortvalues)
     sortindex = _as_observable(sortindex)
@@ -96,8 +95,6 @@ function plot_erpimage!(
         size(to_value(data), 2),
     ]
     ax.yticklabelsvisible = true
-    @debug size(to_value(data), 2)
-    @debug ax.yticks
     if isnothing(to_value(sortindex))
         if isnothing(to_value(sortvalues))
             sortindex = @lift(1:size($data, 2))
@@ -177,7 +174,7 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     end
     axleft = Axis(
         f[1:4, 5];
-        xlabel = sortval_xlabel,
+        title = sortval_xlabel,
         ylabelvisible = false,
         yticklabelsvisible = false,
         xautolimitmargin = (0, 0),

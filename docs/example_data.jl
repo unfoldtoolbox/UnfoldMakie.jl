@@ -134,7 +134,7 @@ function example_data(example = "TopoPlots.jl")
         evts, dat_e = UnfoldMakie.drop_missing_epochs(evts, dat_e)
         evts.Δlatency = vcat(diff(evts.latency), 0)
         dat_e = dat_e[1, :, :]
-        evts = filter(row -> row.Δlatency > 0, evts)
+        #evts = filter(row -> row.Δlatency > 0, evts)
         return dat_e, evts, times
     elseif example == "raw_ch_names"
         return [
