@@ -95,15 +95,22 @@ function plot_erpimage!(
         size(to_value(data), 2) - (size(to_value(data), 2) ÷ 4),
         size(to_value(data), 2),
     ]
-
+    ax.yticklabelsvisible = true
+    @debug size(to_value(data), 2)
+    @debug ax.yticks
     if isnothing(to_value(sortindex))
         if isnothing(to_value(sortvalues))
             sortindex = @lift(1:size($data, 2))
         else
-            sortindex = @lift(sortperm($sortvalues))
+            if length(to_value(sortvalues)) != size(to_value(data), 2)
+                error(
+                    "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
+                )
+            else
+                sortindex = @lift(sortperm($sortvalues))
+            end
         end
     end
-
     filtered_data = @lift(
         UnfoldMakie.imfilter(
             $data[:, $sortindex],
@@ -168,7 +175,6 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     if all(isnan, to_value(sortvalues))
         error("`show_sortval` can not take `sortvalues` with all NaN-values")
     end
-
     axleft = Axis(
         f[1:4, 5];
         xlabel = sortval_xlabel,
@@ -199,4 +205,5 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     )
     apply_layout_settings!(config; fig = f, ax = axleft)
     linkyaxes!(ax, axleft)
+
 end

@@ -21,7 +21,11 @@ end
 
 
 @testset "ERP image with sortindex" begin
-    plot_erpimage(times, dat_e; sortindex = evts_e.Δlatency)
+    plot_erpimage(
+        times,
+        dat_e;
+        sortindex = rand(1:length(evts_e.Δlatency), length(evts_e.Δlatency)),
+    )
 end
 
 @testset "ERP image normalized" begin
@@ -137,7 +141,7 @@ end
 end
 
 @testset "check error of all NaN sortvalues" begin
-    tmp = fill(NaN, size(dat_e, 1))
+    tmp = fill(NaN, size(dat_e, 2))
 
     err1 = nothing
     t() = error(plot_erpimage(times, dat_e; sortvalues = tmp, show_sortval = true))
@@ -148,4 +152,19 @@ end
 
     @test err1 ==
           ErrorException("`show_sortval` can not take `sortvalues` with all NaN-values")
+end
+
+@testset "check length mismatch" begin
+    tmp = fill(NaN, size(dat_e, 1))
+
+    err1 = nothing
+    t() = error(plot_erpimage(times, dat_e; sortvalues = tmp, show_sortval = true))
+    try
+        t()
+    catch err1
+    end
+
+    @test err1 == ErrorException(
+        "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
+    )
 end
