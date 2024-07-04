@@ -38,7 +38,6 @@ plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no 
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::AbstractMatrix; kwargs...) =
     plot_erpimage!(f, Observable(data); kwargs...)
 
-
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, args...; kwargs...) =
     plot_erpimage!(f, map(_as_observable, args)...; kwargs...)
 
@@ -115,65 +114,11 @@ function plot_erpimage!(
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
-        ax.xlabelvisible = false #padding of the main plot
-        ax.xticklabelsvisible = false
-
-        trace = @lift(mean($data, dims = 2)[:, 1])
-        axbottom = Axis(
-            f[5, 1:4];
-            ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
-            xlabel = "Time [s]",
-            xlabelpadding = 0,
-            xautolimitmargin = (0, 0),
-            limits = @lift((
-                minimum($times),
-                maximum($times),
-                minimum($trace),
-                maximum($trace),
-            )),
-        )
-
-        lines!(axbottom, times, trace)
-        apply_layout_settings!(config; fig = f, ax = axbottom)
-        linkxaxes!(ax, axbottom)
-        if show_sortval
-            rowgap!(f.layout, -30)
-        end
+        ei_meanplot(ax, data, config, f, times, show_sortval)
     end
-    if show_sortval
-        if isnothing(to_value(sortvalues))
-            error("`show_sortval` needs non-empty `sortvalues` argument")
-        end
-        axleft = Axis(
-            f[1:4, 5];
-            xlabel = sortval_xlabel,
-            ylabelvisible = false,
-            yticklabelsvisible = false,
-            xautolimitmargin = (0, 0),
-            yautolimitmargin = (0, 0),
-            xticks = @lift([
-                round(minimum($sortvalues), digits = 2),
-                round(maximum($sortvalues), digits = 2),
-            ]),
-            limits = @lift((
-                minimum($sortvalues),
-                maximum($sortvalues),
-                1,
-                size($sortvalues, 1),
-            )),
-        )
-        xs = @lift(1:1:size($sortvalues, 1))
-        ys = @lift(sort($sortvalues)[:, 1])
 
-        lines!(axleft, ys, xs)
-        Colorbar(
-            f[1:4, 6],
-            hm,
-            label = config.colorbar.label,
-            labelrotation = config.colorbar.labelrotation,
-        )
-        apply_layout_settings!(config; fig = f, ax = axleft)
-        linkyaxes!(ax, axleft)
+    if show_sortval
+        ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     else
         Colorbar(
             f[1:4, 5],
@@ -186,4 +131,67 @@ function plot_erpimage!(
     apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
 
+end
+
+function ei_meanplot(ax, data, config, f, times, show_sortval)
+    ax.xlabelvisible = false #padding of the main plot
+    ax.xticklabelsvisible = false
+
+    trace = @lift(mean($data, dims = 2)[:, 1])
+    axbottom = Axis(
+        f[5, 1:4];
+        ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
+        xlabel = "Time [s]",
+        xlabelpadding = 0,
+        xautolimitmargin = (0, 0),
+        limits = @lift((
+            minimum($times),
+            maximum($times),
+            minimum($trace),
+            maximum($trace),
+        )),
+    )
+
+    lines!(axbottom, times, trace)
+    apply_layout_settings!(config; fig = f, ax = axbottom)
+    linkxaxes!(ax, axbottom)
+    if show_sortval
+        rowgap!(f.layout, -30)
+    end
+end
+
+function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
+    if isnothing(to_value(sortvalues))
+        error("`show_sortval` needs non-empty `sortvalues` argument")
+    end
+    axleft = Axis(
+        f[1:4, 5];
+        xlabel = sortval_xlabel,
+        ylabelvisible = false,
+        yticklabelsvisible = false,
+        xautolimitmargin = (0, 0),
+        yautolimitmargin = (0, 0),
+        xticks = @lift([
+            round(minimum($sortvalues), digits = 2),
+            round(maximum($sortvalues), digits = 2),
+        ]),
+        limits = @lift((
+            minimum($sortvalues),
+            maximum($sortvalues),
+            1,
+            size($sortvalues, 1),
+        )),
+    )
+    xs = @lift(1:1:size($sortvalues, 1))
+    ys = @lift(sort($sortvalues)[:, 1])
+
+    lines!(axleft, ys, xs)
+    Colorbar(
+        f[1:4, 6],
+        hm,
+        label = config.colorbar.label,
+        labelrotation = config.colorbar.labelrotation,
+    )
+    apply_layout_settings!(config; fig = f, ax = axleft)
+    linkyaxes!(ax, axleft)
 end
