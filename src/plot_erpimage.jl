@@ -69,6 +69,7 @@ function plot_erpimage!(
     sortval_xlabel = Observable("Sorting value"),
     kwargs..., # not observables for a while ;)
 )
+    #@debug sortvalues
 
     sortvalues = _as_observable(sortvalues)
     sortindex = _as_observable(sortindex)
@@ -164,6 +165,10 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     if isnothing(to_value(sortvalues))
         error("`show_sortval` needs non-empty `sortvalues` argument")
     end
+    if all(isnan, to_value(sortvalues))
+        error("`show_sortval` can not take `sortvalues` with all NaN-values")
+    end
+
     axleft = Axis(
         f[1:4, 5];
         xlabel = sortval_xlabel,
