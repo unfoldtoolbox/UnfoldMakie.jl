@@ -135,3 +135,17 @@ end
 
     @test err1 == ErrorException("`show_sortval` needs non-empty `sortvalues` argument")
 end
+
+@testset "check error of all NaN sortvalues" begin
+    tmp = fill(NaN, size(dat_e, 1))
+
+    err1 = nothing
+    t() = error(plot_erpimage(times, dat_e; sortvalues = tmp, show_sortval = true))
+    try
+        t()
+    catch err1
+    end
+
+    @test err1 ==
+          ErrorException("`show_sortval` can not take `sortvalues` with all NaN-values")
+end
