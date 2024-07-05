@@ -116,6 +116,7 @@ function plot_erpimage!(
     )
 
     yvals = @lift(1:size($filtered_data, 2))
+
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
@@ -132,7 +133,7 @@ function plot_erpimage!(
             labelrotation = config.colorbar.labelrotation,
         )
     end
-
+    hidespines!(ax, :r, :t)
     apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
 end
@@ -157,6 +158,7 @@ function ei_meanplot(ax, data, config, f, ga, times, show_sortval)
         )),
     )
     rowgap!(ga, 7)
+    hidespines!(axbottom, :r, :t)
     lines!(axbottom, times, trace)
     apply_layout_settings!(config; fig = f, ax = axbottom)
 end
@@ -175,16 +177,16 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
         ylabelvisible = true,
         yticklabelsvisible = false,
         #xautolimitmargin = (-1, 1),
-        #yautolimitmargin = (0, 0),
+        #yautolimitmargin = (1, 100),
         xticks = @lift([
             round(minimum($sortvalues), digits = 2),
             round(maximum($sortvalues), digits = 2),
         ]),
         limits = @lift((
-            minimum($sortvalues) - 0.05,
-            maximum($sortvalues) + 0.05,
-            1 - 0.05,
-            size($sortvalues, 1) + 0.05, #why no effect here??
+            minimum($sortvalues) - (maximum($sortvalues) / 100 * 3),
+            maximum($sortvalues) + (maximum($sortvalues) / 100 * 3),
+            0 - (length($sortvalues) / 100 * 3),
+            length($sortvalues) + (length($sortvalues) / 100 * 3), #they should be realtive
         )),
     )
     ys = @lift(1:length($sortvalues))
@@ -192,6 +194,7 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     axempty = Axis(gb[5, 1])
     hidedecorations!(axempty)
     hidespines!(axempty)
+    hidespines!(axleft, :r, :t)
     #scatter!(axleft, xs, ys)
     lines!(axleft, xs, ys)
     Colorbar(
