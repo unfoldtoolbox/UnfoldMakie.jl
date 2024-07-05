@@ -69,7 +69,7 @@ function plot_erpimage!(
     sortval_xlabel = Observable("Sorting value"),
     kwargs..., # not observables for a while ;)
 )
-
+    ga = f[1, 1:2] = GridLayout()
     sortvalues = _as_observable(sortvalues)
     sortindex = _as_observable(sortindex)
     erpblur = _as_observable(erpblur)
@@ -85,7 +85,7 @@ function plot_erpimage!(
     )
 
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
-    ax = Axis(f[1:4, 1:4]; config.axis...)
+    ax = Axis(ga[1:4, 1:4]; config.axis...)
 
     ax.yticks = [
         1,
@@ -119,14 +119,14 @@ function plot_erpimage!(
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
-        ei_meanplot(ax, data, config, f, times, show_sortval)
+        ei_meanplot(ax, data, config, f, ga, times, show_sortval)
     end
 
     if show_sortval
         ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     else
         Colorbar(
-            f[1:4, 5],
+            ga[1:4, 5],
             hm,
             label = config.colorbar.label,
             labelrotation = config.colorbar.labelrotation,
@@ -135,16 +135,16 @@ function plot_erpimage!(
 
     apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
-
 end
 
-function ei_meanplot(ax, data, config, f, times, show_sortval)
+function ei_meanplot(ax, data, config, f, ga, times, show_sortval)
     ax.xlabelvisible = false #padding of the main plot
     ax.xticklabelsvisible = false
 
     trace = @lift(mean($data, dims = 2)[:, 1])
     axbottom = Axis(
-        f[5, 1:4];
+        ga[5, 1:4];
+        height = 100,
         ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
         xlabel = "Time [s]",
         xlabelpadding = 0,
@@ -152,17 +152,13 @@ function ei_meanplot(ax, data, config, f, times, show_sortval)
         limits = @lift((
             minimum($times),
             maximum($times),
-            minimum($trace),
-            maximum($trace),
+            minimum($trace) - 0.5,
+            maximum($trace) + 0.5,
         )),
     )
-
+    rowgap!(ga, 7)
     lines!(axbottom, times, trace)
     apply_layout_settings!(config; fig = f, ax = axbottom)
-    linkxaxes!(ax, axbottom)
-    if show_sortval
-        rowgap!(f.layout, -30)
-    end
 end
 
 function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
@@ -172,35 +168,37 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
     if all(isnan, to_value(sortvalues))
         error("`show_sortval` can not take `sortvalues` with all NaN-values")
     end
+    gb = f[1, 3] = GridLayout()
     axleft = Axis(
-        f[1:4, 5];
-        title = sortval_xlabel,
-        ylabelvisible = false,
+        gb[1:4, 1:5];
+        xlabel = sortval_xlabel,
+        ylabelvisible = true,
         yticklabelsvisible = false,
-        xautolimitmargin = (0, 0),
-        yautolimitmargin = (0, 0),
+        #xautolimitmargin = (-1, 1),
+        #yautolimitmargin = (0, 0),
         xticks = @lift([
             round(minimum($sortvalues), digits = 2),
             round(maximum($sortvalues), digits = 2),
         ]),
         limits = @lift((
-            minimum($sortvalues),
-            maximum($sortvalues),
-            1,
-            size($sortvalues, 1),
+            minimum($sortvalues) - 0.05,
+            maximum($sortvalues) + 0.05,
+            1 - 0.05,
+            size($sortvalues, 1) + 0.05, #why no effect here??
         )),
     )
-    xs = @lift(1:1:size($sortvalues, 1))
-    ys = @lift(sort($sortvalues)[:, 1])
-
-    lines!(axleft, ys, xs)
+    ys = @lift(1:length($sortvalues))
+    xs = @lift(sort($sortvalues))
+    axempty = Axis(gb[5, 1])
+    hidedecorations!(axempty)
+    hidespines!(axempty)
+    #scatter!(axleft, xs, ys)
+    lines!(axleft, xs, ys)
     Colorbar(
-        f[1:4, 6],
+        gb[1:4, 6],
         hm,
         label = config.colorbar.label,
         labelrotation = config.colorbar.labelrotation,
     )
     apply_layout_settings!(config; fig = f, ax = axleft)
-    linkyaxes!(ax, axleft)
-
 end
