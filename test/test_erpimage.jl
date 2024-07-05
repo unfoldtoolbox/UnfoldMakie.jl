@@ -77,6 +77,7 @@ end
     )
 end
 
+
 @testset "ERP image with show_sortval" begin
     dat_e, evts_e, times = example_data("sort_data")
     plot_erpimage(times, dat_e; sortvalues = evts_e.Δlatency, show_sortval = true)
