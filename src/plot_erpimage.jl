@@ -15,15 +15,15 @@ Plot an ERP image.
     Gaussian blur of the `ImageFiltering` module is used.\\
     Non-Positive values deactivate the blur.
 - `sortvalues::Vector{Int64} = false`\\
-    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia.\\ 
+    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia.\\
     `sortperm()` computes a permutation of the array's indices that puts the array in sorted order. 
 - `sortindex::Vector{Int64} = nothing`\\
     Sorting over index values.
 - `meanplot::bool = false`\\
     Add a line plot below the ERP image, showing the mean of the data.
 - `show_sortval::bool = false`\\
-    Add a plot below the ERP image, showing the distribution of the sorting data.
-- `sortval_xlabel::String = "Sorting value"`\\
+    Add a plot on the right from ERP image, showing the distribution of the sorting data.
+- `sortval_xlabel::String = "Sorting variable"`\\
     If `show_sortval = true` controls xlabel.
 - `axis.ylabel::String = "Trials"`\\
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
@@ -66,7 +66,7 @@ function plot_erpimage!(
     erpblur = Observable(10),
     meanplot = false,
     show_sortval = false,
-    sortval_xlabel = Observable("Sorting value"),
+    sortval_xlabel = Observable("Sorting variable"),
     kwargs..., # not observables for a while ;)
 )
     ga = f[1, 1:2] = GridLayout()
@@ -95,19 +95,7 @@ function plot_erpimage!(
         size(to_value(data), 2),
     ]
     ax.yticklabelsvisible = true
-    if isnothing(to_value(sortindex))
-        if isnothing(to_value(sortvalues))
-            sortindex = @lift(1:size($data, 2))
-        else
-            if length(to_value(sortvalues)) != size(to_value(data), 2)
-                error(
-                    "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
-                )
-            else
-                sortindex = @lift(sortperm($sortvalues))
-            end
-        end
-    end
+    sortindex = sortindex_managment(sortindex, sortvalues, data)
     filtered_data = @lift(
         UnfoldMakie.imfilter(
             $data[:, $sortindex],
@@ -204,4 +192,21 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
         labelrotation = config.colorbar.labelrotation,
     )
     apply_layout_settings!(config; fig = f, ax = axleft)
+end
+
+function sortindex_managment(sortindex, sortvalues, data)
+    if isnothing(to_value(sortindex))
+        if isnothing(to_value(sortvalues))
+            sortindex = @lift(1:size($data, 2))
+        else
+            if length(to_value(sortvalues)) != size(to_value(data), 2)
+                error(
+                    "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
+                )
+            else
+                sortindex = @lift(sortperm($sortvalues))
+            end
+        end
+    end
+    return sortindex
 end
