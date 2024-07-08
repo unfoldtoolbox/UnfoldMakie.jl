@@ -3,7 +3,7 @@ include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
 
 @testset "ERP plot with Results data" begin
-
+    results = coeftable(m)
     plot_erp(results; :stderror => true)
 end
 
