@@ -168,3 +168,17 @@ end
         "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
     )
 end
+
+@testset "ERP image: meanplot axis" begin
+    plot_erpimage(data; meanplot = true, meanplot_axis = (; title = "test"))
+end
+
+@testset "ERP image: sortplot axis" begin
+    plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = evts_e.Δlatency,
+        show_sortval = true,
+        sortplot_axis = (; title = "test"),
+    )
+end
