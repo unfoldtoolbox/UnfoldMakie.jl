@@ -27,6 +27,12 @@ Plot an ERP image.
     If `show_sortval = true` controls xlabel.
 - `axis.ylabel::String = "Trials"`\\
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
+- `meanplot_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of meanplot.\\
+    To see all options just type `?Axis` in REPL.
+- `sortplot_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of meanplot.\\
+    To see all options just type `?Axis` in REPL.
 
 $(_docstring(:erpimage))
 
@@ -67,6 +73,8 @@ function plot_erpimage!(
     meanplot = false,
     show_sortval = false,
     sortval_xlabel = Observable("Sorting variable"),
+    meanplot_axis = (;),
+    sortplot_axis = (;),
     kwargs..., # not observables for a while ;)
 )
     ga = f[1, 1:2] = GridLayout()
@@ -108,11 +116,11 @@ function plot_erpimage!(
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
-        ei_meanplot(ax, data, config, f, ga, times, show_sortval)
+        ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     end
 
     if show_sortval
-        ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
+        ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
     else
         Colorbar(
             ga[1:4, 5],
@@ -126,7 +134,7 @@ function plot_erpimage!(
     return f
 end
 
-function ei_meanplot(ax, data, config, f, ga, times, show_sortval)
+function ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     ax.xlabelvisible = false #padding of the main plot
     ax.xticklabelsvisible = false
 
@@ -144,6 +152,7 @@ function ei_meanplot(ax, data, config, f, ga, times, show_sortval)
             minimum($trace) - 0.5,
             maximum($trace) + 0.5,
         )),
+        meanplot_axis...,
     )
     rowgap!(ga, 7)
     hidespines!(axbottom, :r, :t)
@@ -151,7 +160,7 @@ function ei_meanplot(ax, data, config, f, ga, times, show_sortval)
     apply_layout_settings!(config; fig = f, ax = axbottom)
 end
 
-function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
+function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
     if isnothing(to_value(sortvalues))
         error("`show_sortval` needs non-empty `sortvalues` argument")
     end
@@ -176,6 +185,7 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel)
             0 - (length($sortvalues) / 100 * 3),
             length($sortvalues) + (length($sortvalues) / 100 * 3), #they should be realtive
         )),
+        sortplot_axis...,
     )
     ys = @lift(1:length($sortvalues))
     xs = @lift(sort($sortvalues))
