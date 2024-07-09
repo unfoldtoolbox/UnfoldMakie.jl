@@ -132,6 +132,21 @@ end
     plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, col = :channel))
 end
 
+
+@testset "Effect plot, faceted channels" begin #bug
+    results = coeftable(m)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+    #res_effects.channel = push!(repeat(["1", "2"], 472), "1")
+    res_effects.channel = float.(push!(repeat([1, 2], 472), 1))
+    plot_erp(
+        res_effects;
+        mapping = (; y = :yhat, group = :channel, col = :channel),
+        #mapping = (; y = :yhat, col = :channel, group = :channel, color = :channel), 
+        #categorical_color = false,
+        #categorical_group = true
+    )
+end
+
 #= @testset "ERP plot with legend and colorbar" begin
     results = coeftable(m)
     coefnames = unique(results.coefname)

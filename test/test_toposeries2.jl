@@ -149,7 +149,6 @@ end
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     df_obs = Observable(df)
-
     f = Figure()
     plot_topoplotseries!(
         f[1, 1],

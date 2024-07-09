@@ -15,18 +15,24 @@ Plot an ERP image.
     Gaussian blur of the `ImageFiltering` module is used.\\
     Non-Positive values deactivate the blur.
 - `sortvalues::Vector{Int64} = false`\\
-    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia.\\ 
+    Parameter over which plot will be sorted. Using `sortperm()` of Base Julia.\\
     `sortperm()` computes a permutation of the array's indices that puts the array in sorted order. 
 - `sortindex::Vector{Int64} = nothing`\\
     Sorting over index values.
 - `meanplot::bool = false`\\
     Add a line plot below the ERP image, showing the mean of the data.
 - `show_sortval::bool = false`\\
-    Add a plot below the ERP image, showing the distribution of the sorting data.
-- `sortval_xlabel::String = "Sorting value"`\\
+    Add a plot on the right from ERP image, showing the distribution of the sorting data.
+- `sortval_xlabel::String = "Sorting variable"`\\
     If `show_sortval = true` controls xlabel.
 - `axis.ylabel::String = "Trials"`\\
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
+- `meanplot_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of meanplot.\\
+    To see all options just type `?Axis` in REPL.
+- `sortplot_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of meanplot.\\
+    To see all options just type `?Axis` in REPL.
 
 $(_docstring(:erpimage))
 
@@ -37,7 +43,6 @@ plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no 
 # no times?
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::AbstractMatrix; kwargs...) =
     plot_erpimage!(f, Observable(data); kwargs...)
-
 
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, args...; kwargs...) =
     plot_erpimage!(f, map(_as_observable, args)...; kwargs...)
@@ -67,10 +72,12 @@ function plot_erpimage!(
     erpblur = Observable(10),
     meanplot = false,
     show_sortval = false,
-    sortval_xlabel = Observable("Sorting value"),
+    sortval_xlabel = Observable("Sorting variable"),
+    meanplot_axis = (;),
+    sortplot_axis = (;),
     kwargs..., # not observables for a while ;)
 )
-
+    ga = f[1, 1:2] = GridLayout()
     sortvalues = _as_observable(sortvalues)
     sortindex = _as_observable(sortindex)
     erpblur = _as_observable(erpblur)
@@ -86,7 +93,7 @@ function plot_erpimage!(
     )
 
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
-    ax = Axis(f[1:4, 1:4]; config.axis...)
+    ax = Axis(ga[1:4, 1:4]; config.axis...)
 
     ax.yticks = [
         1,
@@ -95,15 +102,8 @@ function plot_erpimage!(
         size(to_value(data), 2) - (size(to_value(data), 2) ÷ 4),
         size(to_value(data), 2),
     ]
-
-    if isnothing(to_value(sortindex))
-        if isnothing(to_value(sortvalues))
-            sortindex = @lift(1:size($data, 2))
-        else
-            sortindex = @lift(sortperm($sortvalues))
-        end
-    end
-
+    ax.yticklabelsvisible = true
+    sortindex = sortindex_managment(sortindex, sortvalues, data)
     filtered_data = @lift(
         UnfoldMakie.imfilter(
             $data[:, $sortindex],
@@ -112,78 +112,111 @@ function plot_erpimage!(
     )
 
     yvals = @lift(1:size($filtered_data, 2))
+
     hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
 
     if meanplot
-        ax.xlabelvisible = false #padding of the main plot
-        ax.xticklabelsvisible = false
-
-        trace = @lift(mean($data, dims = 2)[:, 1])
-        axbottom = Axis(
-            f[5, 1:4];
-            ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
-            xlabel = "Time [s]",
-            xlabelpadding = 0,
-            xautolimitmargin = (0, 0),
-            limits = @lift((
-                minimum($times),
-                maximum($times),
-                minimum($trace),
-                maximum($trace),
-            )),
-        )
-
-        lines!(axbottom, times, trace)
-        apply_layout_settings!(config; fig = f, ax = axbottom)
-        linkxaxes!(ax, axbottom)
-        if show_sortval
-            rowgap!(f.layout, -30)
-        end
+        ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     end
-    if show_sortval
-        if isnothing(to_value(sortvalues))
-            error("`show_sortval` needs non-empty `sortvalues` argument")
-        end
-        axleft = Axis(
-            f[1:4, 5];
-            xlabel = sortval_xlabel,
-            ylabelvisible = false,
-            yticklabelsvisible = false,
-            xautolimitmargin = (0, 0),
-            yautolimitmargin = (0, 0),
-            xticks = @lift([
-                round(minimum($sortvalues), digits = 2),
-                round(maximum($sortvalues), digits = 2),
-            ]),
-            limits = @lift((
-                minimum($sortvalues),
-                maximum($sortvalues),
-                1,
-                size($sortvalues, 1),
-            )),
-        )
-        xs = @lift(1:1:size($sortvalues, 1))
-        ys = @lift(sort($sortvalues)[:, 1])
 
-        lines!(axleft, ys, xs)
-        Colorbar(
-            f[1:4, 6],
-            hm,
-            label = config.colorbar.label,
-            labelrotation = config.colorbar.labelrotation,
-        )
-        apply_layout_settings!(config; fig = f, ax = axleft)
-        linkyaxes!(ax, axleft)
+    if show_sortval
+        ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
     else
         Colorbar(
-            f[1:4, 5],
+            ga[1:4, 5],
             hm,
             label = config.colorbar.label,
             labelrotation = config.colorbar.labelrotation,
         )
     end
-
+    hidespines!(ax, :r, :t)
     apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
     return f
+end
 
+function ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
+    ax.xlabelvisible = false #padding of the main plot
+    ax.xticklabelsvisible = false
+
+    trace = @lift(mean($data, dims = 2)[:, 1])
+    axbottom = Axis(
+        ga[5, 1:4];
+        height = 100,
+        ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
+        xlabel = "Time [s]",
+        xlabelpadding = 0,
+        xautolimitmargin = (0, 0),
+        limits = @lift((
+            minimum($times),
+            maximum($times),
+            minimum($trace) - 0.5,
+            maximum($trace) + 0.5,
+        )),
+        meanplot_axis...,
+    )
+    rowgap!(ga, 7)
+    hidespines!(axbottom, :r, :t)
+    lines!(axbottom, times, trace)
+    apply_layout_settings!(config; fig = f, ax = axbottom)
+end
+
+function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
+    if isnothing(to_value(sortvalues))
+        error("`show_sortval` needs non-empty `sortvalues` argument")
+    end
+    if all(isnan, to_value(sortvalues))
+        error("`show_sortval` can not take `sortvalues` with all NaN-values")
+    end
+    gb = f[1, 3] = GridLayout()
+    axleft = Axis(
+        gb[1:4, 1:5];
+        xlabel = sortval_xlabel,
+        ylabelvisible = true,
+        yticklabelsvisible = false,
+        #xautolimitmargin = (-1, 1),
+        #yautolimitmargin = (1, 100),
+        xticks = @lift([
+            round(minimum($sortvalues), digits = 2),
+            round(maximum($sortvalues), digits = 2),
+        ]),
+        limits = @lift((
+            minimum($sortvalues) - (maximum($sortvalues) / 100 * 3),
+            maximum($sortvalues) + (maximum($sortvalues) / 100 * 3),
+            0 - (length($sortvalues) / 100 * 3),
+            length($sortvalues) + (length($sortvalues) / 100 * 3), #they should be realtive
+        )),
+        sortplot_axis...,
+    )
+    ys = @lift(1:length($sortvalues))
+    xs = @lift(sort($sortvalues))
+    axempty = Axis(gb[5, 1])
+    hidedecorations!(axempty)
+    hidespines!(axempty)
+    hidespines!(axleft, :r, :t)
+    #scatter!(axleft, xs, ys)
+    lines!(axleft, xs, ys)
+    Colorbar(
+        gb[1:4, 6],
+        hm,
+        label = config.colorbar.label,
+        labelrotation = config.colorbar.labelrotation,
+    )
+    apply_layout_settings!(config; fig = f, ax = axleft)
+end
+
+function sortindex_managment(sortindex, sortvalues, data)
+    if isnothing(to_value(sortindex))
+        if isnothing(to_value(sortvalues))
+            sortindex = @lift(1:size($data, 2))
+        else
+            if length(to_value(sortvalues)) != size(to_value(data), 2)
+                error(
+                    "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
+                )
+            else
+                sortindex = @lift(sortperm($sortvalues))
+            end
+        end
+    end
+    return sortindex
 end
