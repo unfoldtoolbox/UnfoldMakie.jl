@@ -21,7 +21,11 @@ end
 
 
 @testset "ERP image with sortindex" begin
-    plot_erpimage(times, dat_e; sortindex = evts_e.Δlatency)
+    plot_erpimage(
+        times,
+        dat_e;
+        sortindex = rand(1:length(evts_e.Δlatency), length(evts_e.Δlatency)),
+    )
 end
 
 @testset "ERP image normalized" begin
@@ -134,4 +138,47 @@ end
     end
 
     @test err1 == ErrorException("`show_sortval` needs non-empty `sortvalues` argument")
+end
+
+@testset "check error of all NaN sortvalues" begin
+    tmp = fill(NaN, size(dat_e, 2))
+
+    err1 = nothing
+    t() = error(plot_erpimage(times, dat_e; sortvalues = tmp, show_sortval = true))
+    try
+        t()
+    catch err1
+    end
+
+    @test err1 ==
+          ErrorException("`show_sortval` can not take `sortvalues` with all NaN-values")
+end
+
+@testset "check length mismatch" begin
+    tmp = fill(NaN, size(dat_e, 1))
+
+    err1 = nothing
+    t() = error(plot_erpimage(times, dat_e; sortvalues = tmp, show_sortval = true))
+    try
+        t()
+    catch err1
+    end
+
+    @test err1 == ErrorException(
+        "The length of sortvalues differs from the length of data trials. This leads to incorrect sorting.",
+    )
+end
+
+@testset "ERP image: meanplot axis" begin
+    plot_erpimage(data; meanplot = true, meanplot_axis = (; title = "test"))
+end
+
+@testset "ERP image: sortplot axis" begin
+    plot_erpimage(
+        times,
+        dat_e;
+        sortvalues = evts_e.Δlatency,
+        show_sortval = true,
+        sortplot_axis = (; title = "test"),
+    )
 end

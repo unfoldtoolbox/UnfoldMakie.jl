@@ -70,6 +70,7 @@ function plot_topoplotseries!(
 )
 
     data = _as_observable(data)
+    data_cuts = data
     positions = get_topo_positions(; positions = positions, labels = labels)
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
@@ -78,31 +79,33 @@ function plot_topoplotseries!(
     config_kwargs!(config; kwargs...)
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-    data = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
-    cat_or_cont_columns = eltype(data[!, config.mapping.col]) <: Number ? "cont" : "cat"
+    data_copy = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
+    cat_or_cont_columns =
+        eltype(data_copy[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if cat_or_cont_columns == "cat"
         # overwrite Time windows [s] default if categorical
         n_topoplots =
-            number_of_topoplots(data; bin_width, bin_num, bins = 0, config.mapping)
+            number_of_topoplots(data_copy; bin_width, bin_num, bins = 0, config.mapping)
         ix =
             findall.(
-                isequal.(unique(data[!, config.mapping.col])),
-                [data[!, config.mapping.col]],
+                isequal.(unique(data_copy[!, config.mapping.col])),
+                [data_copy[!, config.mapping.col]],
             )
     else
         bins = bins_estimation(
-            data[!, config.mapping.col];
+            data_copy[!, config.mapping.col];
             bin_width,
             bin_num,
             cat_or_cont_columns,
         )
-        n_topoplots = number_of_topoplots(data; bin_width, bin_num, bins, config.mapping)
-
-        data.cont_cuts = cut(data[!, config.mapping.col], bins; extend = true)
-        unique_cuts = unique(data.cont_cuts)
-        ix = findall.(isequal.(unique_cuts), [data.cont_cuts])
+        n_topoplots =
+            number_of_topoplots(data_copy; bin_width, bin_num, bins, config.mapping)
+        to_value(data_cuts).cont_cuts =
+            cut(to_value(data_cuts)[!, config.mapping.col], bins; extend = true)
+        unique_cuts = unique(to_value(data_cuts).cont_cuts)
+        ix = findall.(isequal.(unique_cuts), [to_value(data).cont_cuts])
     end
-    data = row_col_management(data, ix, n_topoplots, nrows, config)
+    data_row = @lift row_col_management($data_cuts, ix, n_topoplots, nrows, config)
     config_kwargs!(
         config;
         mapping = (; row = :row_coord, col = :col_coord),
@@ -112,7 +115,7 @@ function plot_topoplotseries!(
     # overkll as we would only need to check the xlabel ;)
     ftopo, axlist, colorrange = eeg_topoplot_series!(
         f,
-        data;
+        data_row;
         cat_or_cont_columns = cat_or_cont_columns,
         bin_width = bin_width,
         bin_num = bin_num,
