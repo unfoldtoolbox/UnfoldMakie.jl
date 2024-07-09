@@ -22,7 +22,6 @@ mutable struct PlotConfig
     colorbar::NamedTuple
 end
 
-
 function PlotConfig()# defaults
     PlotConfig(
         (;), #figure
@@ -30,7 +29,7 @@ function PlotConfig()# defaults
         (; # layout
             show_legend = true,
             legend_position = :right,
-            xlabelFromMapping = :x,
+            xlabelFromMapping = :x, # is this still needed
             ylabelFromMapping = :y,
             use_colorbar = false,
         ),
