@@ -12,7 +12,23 @@ using ColorTypes
 
 Contains several different fields that can modify various aspects of the plot.
 """
-mutable struct PlotConfig
+
+abstract struct AbstractPlotConfig end
+
+mutable struct ERPImagePlotConfig <: AbstractPlotConfig
+    figure::NamedTuple
+    axis::NamedTuple
+    layout::NamedTuple
+    mapping::NamedTuple
+    visual::NamedTuple
+    legend::NamedTuple
+    colorbar::NamedTuple
+    
+    erp_plot::NamedTuple
+    sortval_plot::NamedTuple
+end
+
+mutable struct PlotConfig <: AbstractPlotConfig
     figure::NamedTuple
     axis::NamedTuple
     layout::NamedTuple
@@ -58,7 +74,7 @@ end
     config_kwargs!(cfg::PlotConfig; kwargs...)
 Takes named tuple of `Key => NamedTuple`  as kwargs and merges the fields with the defaults.
 """
-function config_kwargs!(cfg::PlotConfig; kwargs...)
+function config_kwargs!(cfg::T; kwargs...)where{plotconfigtype<:AbstractPlotConfig}
 
     is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
     @assert(
@@ -73,7 +89,7 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
          
         The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
     )
-    list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
+    list = fieldnames(plotconfigtype) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
 
     keyList = collect(keys(kwargs))
     :extra ∈ keyList ?
@@ -88,7 +104,11 @@ end
 
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 
-
+function PlotConfig(T::Val{:erpimageNEW})
+    cfg = ERPImagePlotConfig()
+    ...
+    return cfg
+end
 function PlotConfig(T::Val{:circtopos})
     cfg = PlotConfig(:topoplot)
 
