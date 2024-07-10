@@ -41,53 +41,6 @@ $(_docstring(:erp))
 """
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
 
-"""
-    plot_butterfly(plot_data::DataFrame; positions = nothing)
-
-Plot a Butterfly plot.
-
-## Keyword argumets (kwargs)
-- `positions::Array = []` \\
-    Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
-    To change the colors of the channel lines use the `topoposition_to_color` function.
-- `topolegend::Bool = true`\\
-    Show an inlay topoplot with corresponding electrodes. Requires `positions`.
-- `topomarkersize::Real = 10` \\
-    Change the size of the electrode markers in topoplot.
-- `topowidth::Real = 0.25` \\
-    Change the width of inlay topoplot.
-- `topoheight::Real = 0.25` \\
-    Change the height of inlay topoplot.
-- `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
-    Change the line colors.
-
-**Return Value:** `Figure` displaying Butterfly plot.
-
-$(_docstring(:butterfly))
-see also [`plot_erp`](@id erp_vis)
-"""
-plot_butterfly(plot_data::DataFrame; kwargs...) =
-    plot_butterfly!(Figure(), plot_data; kwargs...)
-
-plot_butterfly!(
-    f::Union{GridPosition,GridLayout,<:Figure},
-    plot_data::DataFrame;
-    kwargs...,
-) = plot_erp!(
-    f,
-    plot_data;
-    butterfly = true,
-    topolegend = true,
-    topomarkersize = 10,
-    topowidth = 0.25,
-    topoheight = 0.25,
-    topohalign = 0.05,
-    topovalign = 0.95,
-    topoaspect = 1,
-    topopositions_to_color = x -> pos_to_color_RomaO(x),
-    kwargs...,
-)
-
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
     plot_data::DataFrame;
@@ -97,26 +50,13 @@ function plot_erp!(
     categorical_group = true,
     stderror = false, # XXX if it exists, should be plotted
     pvalue = nothing,
-    butterfly = false,
-    topolegend = nothing,
-    topomarkersize = nothing,
-    topowidth = nothing,
-    topoheight = nothing,
-    topopositions_to_color = nothing,
-    topohalign = 0.05,
-    topovalign = 0.95,
-    topoaspect = 1,
     mapping = (;),
     kwargs...,
 )
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
-    if butterfly
-        config = PlotConfig(:butterfly)
-        config_kwargs!(config; mapping, kwargs...)
-    end
 
-    plot_data = deepcopy(plot_data) # XXX why?
+    plot_data = deepcopy(plot_data)
 
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
@@ -138,23 +78,6 @@ function plot_erp!(
         plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
         plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
         plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
-    end
-
-    # Get topocolors for butterfly
-    if (butterfly)
-        if isnothing(positions) && isnothing(labels)
-            topolegend = false
-            colors = nothing
-        else
-            all_positions = get_topo_positions(; positions = positions, labels = labels)
-            if (config.visual.colormap !== nothing)
-                colors = config.visual.colormap
-                un = length(unique(plot_data[:, config.mapping.color]))
-                colors = cgrad(config.visual.colormap, un, categorical = true)
-            else
-                colors = get_topo_color(all_positions, topopositions_to_color)
-            end
-        end
     end
     # Categorical mapping
     # convert color column into string to prevent wrong grouping
@@ -189,10 +112,10 @@ function plot_erp!(
     end
 
     # remove x / y
-    mappingOthers = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
+    mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
 
     xy_mapp =
-        AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mappingOthers...)
+        AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mapping_others...)
 
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
@@ -211,41 +134,10 @@ function plot_erp!(
     plot_equation = basic * mapp
 
     f_grid = f[1, 1]
-    # butterfly plot is drawn slightly different
-    if butterfly
-        # add topolegend
-        if (topolegend)
-            topoAxis = Axis(
-                f_grid,
-                width = Relative(topowidth),
-                height = Relative(topoheight),
-                halign = topohalign,
-                valign = topovalign,
-                aspect = topoaspect,
-            )
-            ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
-            topoplot_legend(
-                topoAxis,
-                topomarkersize,
-                plot_data[ix, config.mapping.color[1]],
-                colors,
-                all_positions,
-            )
-        end
-        if isnothing(colors)
-            drawing = draw!(f_grid, plot_equation; axis = config.axis)
-        else
-            drawing = draw!(
-                f_grid,
-                plot_equation;
-                axis = config.axis,
-                palettes = (color = colors,),
-            )
-        end
-    else
-        # draw a normal ERP lineplot      
-        drawing = draw!(f_grid, plot_equation; axis = config.axis)
-    end
+
+    # draw a normal ERP lineplot      
+    drawing = draw!(f_grid, plot_equation; axis = config.axis)
+
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
 end
