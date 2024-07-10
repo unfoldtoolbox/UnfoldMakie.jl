@@ -16,6 +16,7 @@ using UnfoldMakie
 include("../../../example_data.jl")
 
 # Data generation
+
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
 data = reshape(data, (1, size(data)...))
@@ -60,7 +61,7 @@ plot_erp(
 
 # ## P-value lines
 
-# - `pvalue` (Array, `[]`): show a pvalue (see below). 
+# - `pvalue::Array = []` - show a pvalue (see below). 
 
 # Here we manually specify p-value lines. If array is not empty, plot shows colored lines under the plot representing the p-values. 
 # Below is an example in which p-values are given:
@@ -76,7 +77,7 @@ plot_erp(results; :pvalue => pvals)
 
 # ## Error ribbons 
 
-# - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+# - `stderror`::bool = `false` - add an error ribbon, with lower and upper limits based on the `:stderror` column.
 
 # Display a colored band on the graph to indicate lower and higher estimates based on the standard error.
 # For the generalizability of your results, it is always better to include error bands.

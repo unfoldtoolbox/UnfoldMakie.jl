@@ -8,7 +8,7 @@ Multiple miniature topoplots in regular distances.
 - `f::Union{GridPosition, GridLayout, GridLayoutBase.GridSubposition, Figure}`\\
     `Figure`, `GridLayout`, `GridPosition`, or `GridLayoutBase.GridSubposition` to draw the plot.
 - `data::Union{<:Observable{<:DataFrame},DataFrame}`\\
-    DataFrame with data or Observable DataFrame. DataFrame with data or observable DataFrame.\\
+    DataFrame with data or Observable DataFrame.\\
     Requires a `time` column by default, but can be overridden by specifying `mapping=(; x=:my_column)` with any continuous or categorical column. 
 
 ## Keyword arguments (kwargs)
@@ -41,7 +41,7 @@ Multiple miniature topoplots in regular distances.
 - `mapping = (; col = :time`, row = nothing, layout = nothing)\\
     `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
     `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
-    `mapping.layout - arranges topoplots by rows when equals `:time`.\\
+    `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
 
 $(_docstring(:topoplotseries))
 
