@@ -142,7 +142,7 @@ Also you can:
 - Label the x-axis with `axis.xlabel`.
 - Hide electrode markers with `visual.label_scatter`.
 - Change the color map with `visual.colormap`. The default is `Reverse(:RdBu)`.
-- Adjust the limits of the topoplot boxes with `axis.xlim_topo` and `axis.ylim_topo`. By default both are `(-0.25, 1.25)`.
+- Adjust the limits of the topoplot boxes with `axis.xlim_topo` and `axis.ylim_topo`. By default both are `(-0.25, 0.25)`.
 - Adjust the size of the figure with `Figure(size = (x, y))`.
 - Adjust the padding between topoplot labels and axis labels using `xlabelpadding` and `ylabelpadding`.
 =#

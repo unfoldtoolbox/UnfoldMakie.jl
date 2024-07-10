@@ -205,7 +205,7 @@ function plot_erp!(
 
     # add the p-values
     if !isnothing(pvalue)
-        basic = basic + addPvalues(plot_data, pvalue, config)
+        basic = basic + add_pvalues(plot_data, pvalue, config)
     end
 
     plot_equation = basic * mapp
@@ -224,7 +224,7 @@ function plot_erp!(
                 aspect = topoaspect,
             )
             ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
-            topoplotLegend(
+            topoplot_legend(
                 topoAxis,
                 topomarkersize,
                 plot_data[ix, config.mapping.color[1]],
@@ -250,7 +250,7 @@ function plot_erp!(
     return f
 end
 
-function eegHeadMatrix(positions, center, radius)
+function eeg_head_matrix(positions, center, radius)
     oldCenter = mean(positions)
     oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
     radF = radius / oldRadius
@@ -263,10 +263,10 @@ function eegHeadMatrix(positions, center, radius)
 end
 
 # topopositions_to_color = colors?
-function topoplotLegend(axis, topomarkersize, unique_val, colors, all_positions)
+function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
     all_positions = unique(all_positions)
 
-    topoMatrix = eegHeadMatrix(all_positions, (0.5, 0.5), 0.5)
+    topoMatrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
     specialColors = ColorScheme(
@@ -293,7 +293,7 @@ function topoplotLegend(axis, topomarkersize, unique_val, colors, all_positions)
     return topoplot
 end
 
-function addPvalues(plot_data, pvalue, config)
+function add_pvalues(plot_data, pvalue, config)
     p = deepcopy(pvalue)
 
     # for now, add them to the fixed effect
