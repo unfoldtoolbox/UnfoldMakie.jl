@@ -29,7 +29,7 @@ function PlotConfig()# defaults
         (; # layout
             show_legend = true,
             legend_position = :right,
-            #use_colorbar = false,
+            use_colorbar = false, # ideally should be deleted
         ),
         (#maping
             x = (:time,),
