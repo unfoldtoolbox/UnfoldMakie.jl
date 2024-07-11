@@ -29,10 +29,8 @@ Plot an ERP plot.
     Show a p-values as a horizontal bars.\\
     Example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])`.\\
     If `coefname` is not specified, the significance lines will be black.
-
-Internal use only:
-- `butterfly::Bool = true`\\
-    A butterfly plot instead of an ERP plot. See `plot_butterfly`
+- `layout.use_colorbar = true` - enable or disable colorbar\\
+- `layout.use_legend = true` - enable or disable legend\\
 
 $(_docstring(:erp))
 
@@ -55,7 +53,7 @@ function plot_erp!(
 )
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
-
+    config_kwargs!(config; mapping, layout = (; show_legend = false))
     plot_data = deepcopy(plot_data)
 
     # resolve columns with data
@@ -133,11 +131,18 @@ function plot_erp!(
 
     plot_equation = basic * mapp
 
-    f_grid = f[1, 1]
+    f_grid = f[1, 1:4]
 
     # draw a normal ERP lineplot      
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
-
+    if config.layout.use_legend != false
+        legend!(f[:, 5], drawing; config.legend...)
+    end
+    if config.layout.use_colorbar != false
+        @debug config.layout
+        N = config.layout.use_legend === false ? 5 : 6
+        colorbar!(f[:, N], drawing; config.colorbar...)
+    end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
 end
