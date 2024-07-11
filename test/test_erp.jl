@@ -52,7 +52,7 @@ end
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
         legend = (; nbanks = 2),
-        layout = (; legend_position = :right, show_legend = false),
+        layout = (; legend_position = :right, use_colorbar = false),
         categorical_color = false,
         categorical_group = true,
     )
@@ -67,7 +67,7 @@ end
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
         legend = (; nbanks = 2),
-        layout = (; legend_position = :right, show_legend = true),
+        layout = (; legend_position = :right),
         categorical_color = false,
         categorical_group = true,
     )
@@ -95,7 +95,7 @@ end
     f
 end
 
-@testset "ERP plot with borderless legend" begin
+@testset "ERP plot with standart errors" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
@@ -109,7 +109,6 @@ end
 end
 
 @testset "ERP plot with p-values" begin
-
     results = coeftable(m)
     pvals = DataFrame(
         from = [0.1, 0.3],
@@ -125,7 +124,7 @@ end
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
 end
 
-@testset "Effect plot, faceted" begin
+@testset "Effect plot, faceted" begin #bug
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
     res_effects.channel = push!(repeat(["1", "2"], 472), "1")
@@ -147,18 +146,46 @@ end
     )
 end
 
-#= @testset "ERP plot with legend and colorbar" begin
+
+@testset "ERP plot: move legend simple" begin
     results = coeftable(m)
     coefnames = unique(results.coefname)
-
-    f = Figure(size = (1000, 400))
-    ga = f[1, 1] = GridLayout()
-
-    f2 = plot_erp!(
-        ga,
+    plot_erp(
         effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        legend = (; valign = :top, halign = :right, tellwidth = false),
+        categorical_color = false,
+    )
+end
+
+@testset "ERP plot: with colorbar and without legend" begin
+    results = coeftable(m)
+    coefnames = unique(results.coefname)
+    plot_erp(
+        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = false),
+        categorical_color = false,
+    )
+end
+
+@testset "ERP plot: without colorbar and without legend" begin
+    results = coeftable(m)
+    coefnames = unique(results.coefname)
+    plot_erp(
+        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = true, use_colorbar = false),
+        categorical_color = false,
+    )
+end
+
+@testset "ERP plot: move legend complex" begin
+    results = coeftable(m)
+    coefnames = unique(results.coefname)
+    plot_erp(
+        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        legend = (; valign = :bottom, halign = :right, tellwidth = false),
         categorical_color = false,
         axis = (
             title = "Marginal effects",
@@ -170,12 +197,21 @@ end
             xgridvisible = false,
             ygridvisible = false,
         ),
-        layout = (; showlegend = false),
+    )
+end
+
+@testset "ERP plot: move legend complex" begin
+    f = Figure()
+    results = coeftable(m)
+    results.coefname =
+        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
+    results = filter(row -> row.coefname != "continuous", results)
+    plot_erp!(
+        f[1, 1],
+        results;
+        axis = (title = "Bad example", titlegap = 12),
+        :stderror => false,
+        mapping = (; color = :coefname => "Conditions"),
     )
     f
-
-    # Workaround to separate legend and colorbar (will be fixed in a future UnfoldMakie version)
-    legend = f2.content[2].content
-    f2[:, 1] = legend
-    f
-end =#
+end
