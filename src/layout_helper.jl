@@ -24,7 +24,7 @@ function apply_layout_settings!(
                 config.layout.legend_position == :right ?
                 fig[1:plotArea[1], plotArea[2]+1] : fig[plotArea[1]+1, 1:plotArea[2]]
             if isnothing(drawing)
-                if (config.layout.use_colorbar)
+                if (config.layout.use_colorbar) #not sure this line is useful
                     if isnothing(hm)
                         Colorbar(
                             legend_position;

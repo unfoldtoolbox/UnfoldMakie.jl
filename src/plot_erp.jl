@@ -139,7 +139,6 @@ function plot_erp!(
         legend!(f[:, 5], drawing; config.legend...)
     end
     if config.layout.use_colorbar != false
-        @debug config.layout
         N = config.layout.use_legend === false ? 5 : 6
         colorbar!(f[:, N], drawing; config.colorbar...)
     end
@@ -166,7 +165,7 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
     topoMatrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
-    specialColors = ColorScheme(
+    special_colors = ColorScheme(
         vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]),
     )
 
@@ -177,9 +176,9 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
         1:length(all_positions), # go from 1:npos
         string.(1:length(all_positions));
         positions = all_positions,
-        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the specialColorsmap
+        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the special_colorsmap
         colorrange = (0, length(all_positions)), # add the 0 for the white-first color
-        colormap = specialColors,
+        colormap = special_colors,
         head = (color = :black, linewidth = 1, model = topoMatrix),
         label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
     )
