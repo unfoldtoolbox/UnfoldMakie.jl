@@ -33,7 +33,7 @@ PyMNE = "6c5003b2-cbe8-491c-a0d1-70088e6a0fd6"
 UnfoldMakiePyMNEExt = "PyMNE"
 
 [compat]
-AlgebraOfGraphics = "0.6, 0.7"
+AlgebraOfGraphics = "0.6"
 CategoricalArrays = "0.10"
 ColorSchemes = "3"
 ColorTypes = "0.11"
