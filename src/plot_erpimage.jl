@@ -86,12 +86,9 @@ function plot_erpimage!(
     if isnothing(sortindex) && !isnothing(sortvalues)
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
-    config_kwargs!(
-        config;
-        layout = (; show_legend = false, use_colorbar = false),
-        kwargs...,
-    )
+    config_kwargs!(config; kwargs...)
 
+    @debug config.layout
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(ga[1:4, 1:4]; config.axis...)
 
@@ -121,7 +118,7 @@ function plot_erpimage!(
 
     if show_sortval
         ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
-    else
+    elseif config.layout.use_colorbar != false
         Colorbar(
             ga[1:4, 5],
             hm,
@@ -195,12 +192,14 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     hidespines!(axleft, :r, :t)
     #scatter!(axleft, xs, ys)
     lines!(axleft, xs, ys)
-    Colorbar(
-        gb[1:4, 6],
-        hm,
-        label = config.colorbar.label,
-        labelrotation = config.colorbar.labelrotation,
-    )
+    if config.layout.use_colorbar != false
+        Colorbar(
+            gb[1:4, 6],
+            hm,
+            label = config.colorbar.label,
+            labelrotation = config.colorbar.labelrotation,
+        )
+    end
     apply_layout_settings!(config; fig = f, ax = axleft)
 end
 
