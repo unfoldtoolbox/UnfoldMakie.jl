@@ -122,7 +122,7 @@ end
         results,
         categorical_color = false,
         categorical_group = false,
-        pvalue = pvals,
+        significance = pvals,
         stderror = true,
     )
 
@@ -191,7 +191,7 @@ end
         results,
         categorical_color = false,
         categorical_group = false,
-        pvalue = pvals,
+        significance = pvals,
         stderror = true,
     )
 

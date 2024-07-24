@@ -89,7 +89,7 @@ end
         results;
         categorical_color = false,
         categorical_group = false,
-        pvalue = pvals,
+        significance = pvals,
         stderror = true,
     )
     f
@@ -115,7 +115,7 @@ end
         to = [0.5, 0.7],
         coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
     )
-    plot_erp(results; :pvalue => pvals)
+    plot_erp(results; :significance => pvals)
 end
 
 @testset "ERP plot with 7 channels faceted" begin

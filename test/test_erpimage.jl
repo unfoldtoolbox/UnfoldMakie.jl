@@ -19,7 +19,8 @@ end
     f = Figure(; figure_padding = 0)
     plot_erpimage!(
         f,
-        dat_e;  sortvalues = evts_e.Δlatency,
+        dat_e;
+        sortvalues = evts_e.Δlatency,
         layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
     )
 end
