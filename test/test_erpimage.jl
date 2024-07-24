@@ -15,6 +15,15 @@ end
     )
 end
 
+@testset "ERP image sorted and naked" begin
+    f = Figure(; figure_padding = 0)
+    plot_erpimage!(
+        f,
+        dat_e;  sortvalues = evts_e.Δlatency,
+        layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
+    )
+end
+
 @testset "ERP image with changing erpblur to zero" begin
     plot_erpimage(dat; erpblur = 0)
 end

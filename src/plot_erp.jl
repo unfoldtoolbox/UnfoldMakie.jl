@@ -25,7 +25,7 @@ Plot an ERP plot.
     Treat `:group` as categorical variable by default in case of numeric `:group` column. 
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
-- `pvalue::DataFrame = nothing`\\
+- `significance::DataFrame = nothing`\\
     Show a p-values as a horizontal bars.\\
     Example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])`.\\
     If `coefname` is not specified, the significance lines will be black.
@@ -47,7 +47,7 @@ function plot_erp!(
     categorical_color = true,
     categorical_group = true,
     stderror = false, # XXX if it exists, should be plotted
-    pvalue = nothing,
+    significance = nothing,
     mapping = (;),
     kwargs...,
 )
@@ -101,6 +101,7 @@ function plot_erp!(
     #@show colors
     mapp = AlgebraOfGraphics.mapping()
 
+
     if (:color ∈ keys(config.mapping))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
     end
@@ -125,15 +126,15 @@ function plot_erp!(
     basic = basic * data(plot_data)
 
     # add the p-values
-    if !isnothing(pvalue)
-        basic = basic + add_pvalues(plot_data, pvalue, config)
+    if !isnothing(significance)
+        basic = basic + add_significance(plot_data, significance, config)
     end
 
     plot_equation = basic * mapp
 
     f_grid = f[1, 1:4]
 
-    # draw a normal ERP lineplot      
+    # draw a normal ERP lineplot    
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
     if config.layout.use_legend != false
         legend!(f[:, 5], drawing; config.legend...)
@@ -189,8 +190,8 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
     return topoplot
 end
 
-function add_pvalues(plot_data, pvalue, config)
-    p = deepcopy(pvalue)
+function add_significance(plot_data, significance, config)
+    p = deepcopy(significance)
 
     # for now, add them to the fixed effect
     if "group" ∉ names(p)
