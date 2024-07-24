@@ -59,21 +59,21 @@ plot_erp(
     categorical_group = true, # separates lines, if `false` all lines will be connected
 )
 
-# ## P-value lines
+# ## Significance lines
 
-# - `pvalue::Array = []` - show a pvalue (see below). 
+# - `significance::Array = []` - show a significance (see below). 
 
 # Here we manually specify p-value lines. If array is not empty, plot shows colored lines under the plot representing the p-values. 
 # Below is an example in which p-values are given:
 
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
-pvals = DataFrame(
+significancevalues = DataFrame(
     from = [0.1, 0.3],
     to = [0.5, 0.7],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
-plot_erp(results; :pvalue => pvals)
+plot_erp(results; :significance => significancevalues)
 
 # ## Error ribbons 
 

@@ -87,8 +87,6 @@ function plot_erpimage!(
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
     config_kwargs!(config; kwargs...)
-
-    @debug config.layout
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(ga[1:4, 1:4]; config.axis...)
 
