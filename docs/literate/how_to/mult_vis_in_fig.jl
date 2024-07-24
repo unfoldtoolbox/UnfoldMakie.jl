@@ -74,7 +74,7 @@ plot_erp!(
     results,
     categorical_color = false,
     categorical_group = false,
-    pvalue = pvals,
+    significance = pvals,
     stderror = true,
 )
 
