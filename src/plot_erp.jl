@@ -97,9 +97,7 @@ function plot_erp!(
             merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end
 
-    #@show colors
     mapp = AlgebraOfGraphics.mapping()
-
 
     if (:color ∈ keys(config.mapping))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
@@ -165,8 +163,8 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
     topoMatrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
-    special_colors = ColorScheme(
-        vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]),
+    special_colors = 
+        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]),
     )
 
     xlims!(low = -0.2, high = 1.2)
@@ -204,7 +202,6 @@ function add_significance(plot_data, significance, config)
             p[!, :group] .= 1
         end
     end
-    #@show config.mapping
     if :color ∈ keys(config.mapping)
         c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
         un = unique(p[!, c])
