@@ -58,7 +58,6 @@ end
     )
 end
 
-
 @testset "Effect plot" begin
     results = coeftable(m)
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
@@ -98,7 +97,6 @@ end
 @testset "ERP plot with standart errors" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
-
 
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)
@@ -146,17 +144,6 @@ end
     )
 end
 
-
-@testset "ERP plot: move legend simple" begin
-    results = coeftable(m)
-    coefnames = unique(results.coefname)
-    plot_erp(
-        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        categorical_color = false,
-    )
-end
-
 @testset "ERP plot: with colorbar and without legend" begin
     results = coeftable(m)
     coefnames = unique(results.coefname)
@@ -179,7 +166,17 @@ end
     )
 end
 
-@testset "ERP plot: move legend complex" begin
+@testset "ERP plot: with colorbar and legend" begin
+    results = coeftable(m)
+    coefnames = unique(results.coefname)
+    plot_erp(
+        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        categorical_color = false,
+    )
+end
+
+@testset "ERP plot: move legend" begin
     results = coeftable(m)
     coefnames = unique(results.coefname)
     plot_erp(
@@ -200,7 +197,7 @@ end
     )
 end
 
-@testset "ERP plot: move legend complex" begin
+@testset "ERP plot: rename legend" begin
     f = Figure()
     results = coeftable(m)
     results.coefname =
