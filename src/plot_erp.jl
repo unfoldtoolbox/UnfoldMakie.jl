@@ -89,10 +89,9 @@ function plot_erp!(
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
-
     if (
         :col ∈ keys(config.mapping) &&
-        typeof(plot_data[:, config.mapping.col]) == Vector{Int64}
+        typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
     )
         config.mapping =
             merge(config.mapping, (; col = config.mapping.col => nonnumeric))
@@ -134,7 +133,7 @@ function plot_erp!(
 
     f_grid = f[1, 1:4]
 
-    # draw a normal ERP lineplot    
+    # draw a normal ERP lineplot  
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
     if config.layout.use_legend != false
         legend!(f[:, 5], drawing; config.legend...)

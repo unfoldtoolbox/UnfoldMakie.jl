@@ -79,6 +79,10 @@ function plot_butterfly!(
     end
     # Categorical mapping
     # convert color column into string to prevent wrong grouping
+    if (:group ∈ keys(config.mapping))
+        config.mapping =
+            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
+    end
     if (:color ∈ keys(config.mapping))
         config.mapping =
             merge(config.mapping, (; color = config.mapping.color => nonnumeric))
@@ -119,7 +123,8 @@ function plot_butterfly!(
             valign = topovalign,
             aspect = topoaspect,
         )
-        ix = unique(i -> plot_data[:, config.mapping.group][i], 1:size(plot_data, 1))
+        ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
+
         topoplot_legend(
             topoAxis,
             topomarkersize,
@@ -132,8 +137,13 @@ function plot_butterfly!(
     if isnothing(colors)
         drawing = draw!(f_grid, plot_equation; axis = config.axis)
     else
-        drawing =
-            draw!(f_grid, plot_equation; axis = config.axis, palettes = (color = colors,))
+        # @debug plot_equation
+        drawing = draw!(
+            f_grid,
+            plot_equation,
+            scales(Color = (; palette = colors));
+            axis = config.axis,
+        )
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
