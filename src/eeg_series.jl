@@ -11,7 +11,9 @@ eeg_matrix_to_dataframe(data::Matrix) =
 function eeg_matrix_to_dataframe(data, label)
     df = DataFrame(data', label)
     df[!, :time] .= 1:nrow(df)
+
     df = stack(df, Not([:time]); variable_name = :label, value_name = "estimate")
+    df.coefname = df.label
     return df
 end
 

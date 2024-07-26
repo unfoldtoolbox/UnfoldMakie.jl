@@ -12,7 +12,7 @@ Plot an ERP plot.
 - `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, Vector{Float32}}`\\
-    Data for the Line plot visualization.
+    Data for the ERP plot visualization.
 - `kwargs...`\\
     Additional styling behavior. \\
     Often used as: `plot_erp(df; mapping = (; color = :coefname, col = :conditionA))`.
@@ -20,24 +20,29 @@ Plot an ERP plot.
 ## Keyword argumets (kwargs)
 
 - `categorical_color::Bool = true`\\
-    Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
+    Treat `:color` as categorical variable in case of numeric `:color` column.
 - `categorical_group::Bool = true`\\
-    Treat `:group` as categorical variable by default in case of numeric `:group` column. 
+    Treat `:group` as categorical variable in case of numeric `:group` column. 
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `significance::DataFrame = nothing`\\
-    Show a p-values as a horizontal bars.\\
-    Example: `DataFrame(from = [0.1, 0.3], to=[0.5, 0.7], coefname=["(Intercept)", "condition:face"])`.\\
+    Show significant time periods as horizontal bars.\\
+    Example: `DataFrame(from = [0.1, 0.3], to = [0.5, 0.7], coefname = ["(Intercept)", "condition: face"])`.\\
     If `coefname` is not specified, the significance lines will be black.
-- `layout.use_colorbar = true` - enable or disable colorbar\\
-- `layout.use_legend = true` - enable or disable legend\\
+- `layout.use_colorbar = true`\\
+    Enable or disable colorbar.\\
+- `layout.use_legend = true`\\
+    Enable or disable legend.\\
 
 $(_docstring(:erp))
 
 **Return Value:** `Figure` displaying the ERP plot.
 
 """
-plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data, ; kwargs...)
+plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data; kwargs...)
+
+plot_erp(plot_data::AbstractMatrix; kwargs...) =
+    plot_erp!(Figure(), eeg_matrix_to_dataframe(plot_data); kwargs...)
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -112,7 +117,6 @@ function plot_erp!(
 
     xy_mapp =
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mapping_others...)
-
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
     if stderror
@@ -163,9 +167,9 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
     topoMatrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
-    special_colors = 
-        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]),
-    )
+    special_colors =
+        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)])
+        )
 
     xlims!(low = -0.2, high = 1.2)
     ylims!(low = -0.2, high = 1.2)
