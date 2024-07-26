@@ -2,9 +2,21 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_butterfly(plot_data::DataFrame; positions = nothing)
+    plot_butterfly(plot_data::DataFrame; kwargs...)
+    plot_butterfly(plot_data::AbstractMatrix; kwargs...)
 
 Plot a Butterfly plot.
+
+## Arguments
+
+- `f::Union{GridPosition, GridLayout, Figure}`\\
+    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
+- `data::Union{DataFrame, AbstractMatrix}`\\
+    Data for the ERP plot visualization.
+- `kwargs...`\\
+    Additional styling behavior. \\
+    Often used as: `plot_butterfly(df; visual = (; colormap = :romaO))`.
+
 
 ## Keyword argumets (kwargs)
 - `positions::Array = []` \\
@@ -29,6 +41,9 @@ see also [`plot_erp`](@id erp_vis)
 plot_butterfly(plot_data::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
+plot_butterfly(plot_data::AbstractMatrix; kwargs...) =
+    plot_butterfly!(Figure(), eeg_matrix_to_dataframe(plot_data); kwargs...)
+
 function plot_butterfly!(
     f::Union{GridPosition,GridLayout,<:Figure},
     plot_data::DataFrame;
@@ -36,8 +51,8 @@ function plot_butterfly!(
     labels = nothing,
     topolegend = true,
     topomarkersize = 10,
-    topowidth = 0.25,
-    topoheight = 0.25,
+    topowidth = 0.35,
+    topoheight = 0.35,
     topohalign = 0.05,
     topovalign = 0.95,
     topoaspect = 1,
@@ -47,7 +62,6 @@ function plot_butterfly!(
 )
     config = PlotConfig(:butterfly)
     config_kwargs!(config; mapping, kwargs...)
-
     plot_data = deepcopy(plot_data) # to avoid change of data in REPL
 
     # resolve columns with data
@@ -137,7 +151,6 @@ function plot_butterfly!(
     if isnothing(colors)
         drawing = draw!(f_grid, plot_equation; axis = config.axis)
     else
-        # @debug plot_equation
         drawing = draw!(
             f_grid,
             plot_equation,

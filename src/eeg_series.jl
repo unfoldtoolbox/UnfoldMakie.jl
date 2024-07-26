@@ -8,12 +8,14 @@ Helper function converting a matrix (channel x times) to a tidy `DataFrame` with
 eeg_matrix_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
     eeg_matrix_to_dataframe(data, string.(1:size(data, 1)))
 
-function eeg_matrix_to_dataframe(data, label)
-    df = DataFrame(data', label)
+function eeg_matrix_to_dataframe(data, label_tmp)
+    df = DataFrame(data', label_tmp)
     df[!, :time] .= 1:nrow(df)
 
-    df = stack(df, Not([:time]); variable_name = :label, value_name = "estimate")
-    df.coefname = df.label
+    df = stack(df, Not([:time]); variable_name = :label_tmp, value_name = "estimate")
+    df.color = df.label_tmp
+    df.group = df.label_tmp
+    df.channel = df.label_tmp
     return df
 end
 
