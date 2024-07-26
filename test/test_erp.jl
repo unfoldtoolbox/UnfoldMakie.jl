@@ -1,21 +1,39 @@
 using AlgebraOfGraphics: group
 include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
+results = coeftable(m)
+res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
 
-@testset "ERP plot with Results data" begin
-    results = coeftable(m)
+@testset "ERP plot: DataFrame data" begin
+    plot_erp(results)
+end
+
+@testset "ERP plot: Matrix data" begin
+    dat, positions = TopoPlots.example_data()
+    plot_erp(dat[1:2, :, 1])
+end
+
+@testset "ERP plot: stderror error" begin
     plot_erp(results; :stderror => true)
 end
 
-@testset "ERP plot, faceting by two columns" begin
+@testset "ERP plot: standart errors in GridLayout" begin
+    f = Figure(size = (1200, 1400))
+    ga = f[1, 1] = GridLayout()
+    plot_erp!(ga, results; :stderror => true)
+    f
+end
+
+@testset "ERP plot: faceting by two columns" begin
     results = coeftable(m)
     results.group = push!(repeat(["A", "B"], inner = 67), "A")
     plot_erp(results; mapping = (; col = :group))
 end
 
-@testset "ERP plot with and withour error ribbons" begin
-    f = Figure()
+@testset "ERP plot: with and withour error ribbons" begin
     results = coeftable(m)
+    f = Figure()
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
@@ -44,39 +62,10 @@ end
     #save("erp.png", f)
 end
 
-@testset "Effect plot without colorbar" begin
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-
-    plot_erp(
-        res_effects;
-        mapping = (; y = :yhat, color = :continuous, group = :continuous),
-        legend = (; nbanks = 2),
-        layout = (; legend_position = :right, use_colorbar = false),
-        categorical_color = false,
-        categorical_group = true,
-    )
-end
-
-@testset "Effect plot" begin
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-
-    plot_erp(
-        res_effects;
-        mapping = (; y = :yhat, color = :continuous, group = :continuous),
-        legend = (; nbanks = 2),
-        layout = (; legend_position = :right),
-        categorical_color = false,
-        categorical_group = true,
-    )
-end
-
-@testset "ERP plot in GridLayout" begin
+@testset "ERP plot: in GridLayout" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    results = coeftable(m)
     pvals = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],
@@ -94,20 +83,7 @@ end
     f
 end
 
-@testset "ERP plot with standart errors" begin
-    f = Figure(size = (1200, 1400))
-    ga = f[1, 1] = GridLayout()
-
-    m = example_data("UnfoldLinearModel")
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-    plot_erp!(ga, results; :stderror => true)
-
-    f
-end
-
-@testset "ERP plot with p-values" begin
-    results = coeftable(m)
+@testset "ERP plot with significance" begin
     pvals = DataFrame(
         from = [0.1, 0.3],
         to = [0.5, 0.7],
@@ -116,84 +92,18 @@ end
     plot_erp(results; :significance => pvals)
 end
 
-@testset "ERP plot with 7 channels faceted" begin
+@testset "ERP plot: 7 channels faceted" begin
     m7 = example_data("7channels")
     results7 = coeftable(m7)
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
 end
 
-@testset "Effect plot, faceted" begin #bug
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-    res_effects.channel = push!(repeat(["1", "2"], 472), "1")
-    plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, col = :channel))
-end
-
-
-@testset "Effect plot, faceted channels" begin #bug
-    results = coeftable(m)
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-    #res_effects.channel = push!(repeat(["1", "2"], 472), "1")
-    res_effects.channel = float.(push!(repeat([1, 2], 472), 1))
-    plot_erp(
-        res_effects;
-        mapping = (; y = :yhat, group = :channel, col = :channel),
-        #mapping = (; y = :yhat, col = :channel, group = :channel, color = :channel), 
-        #categorical_color = false,
-        #categorical_group = true
-    )
-end
-
-@testset "ERP plot: with colorbar and without legend" begin
-    results = coeftable(m)
-    coefnames = unique(results.coefname)
-    plot_erp(
-        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        layout = (; use_legend = false),
-        categorical_color = false,
-    )
-end
-
-@testset "ERP plot: without colorbar and without legend" begin
-    results = coeftable(m)
-    coefnames = unique(results.coefname)
-    plot_erp(
-        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        layout = (; use_legend = true, use_colorbar = false),
-        categorical_color = false,
-    )
-end
 
 @testset "ERP plot: with colorbar and legend" begin
-    results = coeftable(m)
-    coefnames = unique(results.coefname)
     plot_erp(
-        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
+        res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
         categorical_color = false,
-    )
-end
-
-@testset "ERP plot: move legend" begin
-    results = coeftable(m)
-    coefnames = unique(results.coefname)
-    plot_erp(
-        effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m);
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        legend = (; valign = :bottom, halign = :right, tellwidth = false),
-        categorical_color = false,
-        axis = (
-            title = "Marginal effects",
-            titlegap = 12,
-            xlabel = "Time [s]",
-            ylabel = "Amplitude [μV]",
-            xlabelsize = 16,
-            ylabelsize = 16,
-            xgridvisible = false,
-            ygridvisible = false,
-        ),
     )
 end
 
@@ -211,4 +121,76 @@ end
         mapping = (; color = :coefname => "Conditions"),
     )
     f
+end
+
+@testset "Effect plot" begin
+    plot_erp(
+        res_effects;
+        mapping = (; y = :yhat, color = :continuous, group = :continuous),
+        legend = (; nbanks = 2),
+        layout = (; legend_position = :right),
+        categorical_color = false,
+        categorical_group = true,
+    )
+end
+
+@testset "Effect plot: without colorbar" begin
+    plot_erp(
+        res_effects;
+        mapping = (; y = :yhat, color = :continuous, group = :continuous),
+        legend = (; nbanks = 2),
+        layout = (; legend_position = :right, use_colorbar = false),
+        categorical_color = false,
+        categorical_group = true,
+    )
+end
+
+@testset "Effect plot: faceted" begin #bug
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+    res_effects.channel = push!(repeat(["1", "2"], 472), "1")
+    plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, col = :channel))
+end
+
+@testset "Effect plot: faceted channels" begin #bug
+    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
+    res_effects.channel = push!(repeat(["1", "2"], 472), "1")
+    #res_effects.channel = float.(push!(repeat([1, 2], 472), 1))
+    plot_erp(res_effects; mapping = (; y = :yhat, group = :channel, col = :channel))
+end
+
+@testset "Effect plot: with colorbar and without legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = false),
+        categorical_color = false,
+    )
+end
+
+@testset "Effect plot: without colorbar and without legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = true, use_colorbar = false),
+        categorical_color = false,
+    )
+end
+
+@testset "Effect plot: move legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        legend = (; valign = :bottom, halign = :right, tellwidth = false),
+        categorical_color = false,
+        axis = (
+            title = "Marginal effects",
+            titlegap = 12,
+            xlabel = "Time [s]",
+            ylabel = "Amplitude [μV]",
+            xlabelsize = 16,
+            ylabelsize = 16,
+            xgridvisible = false,
+            ygridvisible = false,
+        ),
+    )
 end

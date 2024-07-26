@@ -1,5 +1,9 @@
 """
     plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{Float64}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Observable{<:AbstractMatrix}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, times::Observable{<:AbstractVector}, data::Observable{<:AbstractMatrix{<:Real}}; kwargs...)
+
+    plot_erpimage(times::AbstractVector, data::Union{<:Observable{Matrix{<:Real}}, Matrix{<:Real}}; kwargs...)
     plot_erpimage(data::Matrix{Float64}; kwargs...)
 
 Plot an ERP image.
@@ -38,17 +42,17 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
-plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no times + no figure?
+plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no times + no figure? why no data type is specified?
 
 # no times?
-plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::AbstractMatrix; kwargs...) =
+plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::AbstractMatrix; kwargs...) =
     plot_erpimage!(f, Observable(data); kwargs...)
 
-plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, args...; kwargs...) =
+plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, args...; kwargs...) =
     plot_erpimage!(f, map(_as_observable, args)...; kwargs...)
 
 plot_erpimage!(
-    f::Union{GridPosition,GridLayout,Figure},
+    f::Union{GridPosition, GridLayout, Figure},
     data::Observable{<:AbstractMatrix};
     kwargs...,
 ) = plot_erpimage!(f, @lift(1:size($data, 1)), data; kwargs...)
@@ -56,7 +60,7 @@ plot_erpimage!(
 # argument list has no figure? Add one!
 plot_erpimage(
     times::AbstractVector,
-    data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}};
+    data::Union{<:Observable{Matrix{<:Real}}, Matrix{<:Real}};
     kwargs...,
 ) = plot_erpimage!(Figure(), times, data; kwargs...)
 
@@ -64,7 +68,7 @@ _as_observable(x) = Observable(x)
 _as_observable(x::Observable) = x
 
 function plot_erpimage!(
-    f::Union{GridPosition,GridLayout,Figure},
+    f::Union{GridPosition, GridLayout, Figure},
     times::Observable{<:AbstractVector},
     data::Observable{<:AbstractMatrix{<:Real}};
     sortvalues = Observable(nothing),

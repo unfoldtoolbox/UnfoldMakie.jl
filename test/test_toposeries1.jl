@@ -146,7 +146,7 @@ end
         df;
         bin_width,
         positions = positions,
-        colorbar = (; colorrange = (-1, 1)),
+        colorbar = (; colorrange = (-3, 3)),
     )
 end
 
