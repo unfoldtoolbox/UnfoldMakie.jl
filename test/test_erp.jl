@@ -14,6 +14,11 @@ end
     plot_erp(dat[1:2, :, 1])
 end
 
+@testset "ERP plot: Array data" begin
+    dat, positions = TopoPlots.example_data()
+    plot_erp(vcat(dat[1, :, 1]'))
+end
+
 @testset "ERP plot: stderror error" begin
     plot_erp(results; :stderror => true)
 end

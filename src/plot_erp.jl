@@ -4,6 +4,7 @@ using LinearAlgebra
 """
     plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
     plot_erp(plot_data::DataFrame; kwargs...)
+    plot_erp(plot_data::Union{AbstractMatrix, AbstractVector{<:Number}; kwargs...) 
         
 Plot an ERP plot.   
 
@@ -11,7 +12,7 @@ Plot an ERP plot.
 
 - `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}`\\
+- `data::Union{Union{DataFrame, AbstractMatrix, AbstractVector{<:Number}, Vector{Float32}}`\\
     Data for the ERP plot visualization.
 - `kwargs...`\\
     Additional styling behavior. \\
@@ -41,7 +42,7 @@ $(_docstring(:erp))
 """
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data; kwargs...)
 
-plot_erp(plot_data::AbstractMatrix; kwargs...) =
+plot_erp(plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
     plot_erp!(Figure(), eeg_matrix_to_dataframe(plot_data); kwargs...)
 
 function plot_erp!(
