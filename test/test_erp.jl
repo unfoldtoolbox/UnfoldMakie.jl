@@ -4,19 +4,23 @@ m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
+dat, positions = TopoPlots.example_data()
 
 @testset "ERP plot: DataFrame data" begin
     plot_erp(results)
 end
 
 @testset "ERP plot: Matrix data" begin
-    dat, positions = TopoPlots.example_data()
-    plot_erp(dat[1:2, :, 1])
+    plot_erp(dat[1, :, 1:2])
 end
 
 @testset "ERP plot: Array data" begin
-    dat, positions = TopoPlots.example_data()
-    plot_erp(vcat(dat[1, :, 1]'))
+    plot_erp(dat[1, :, 1])
+end
+
+@testset "ERP plot: Array data with times vector" begin
+    times = range(0, step = 100, length = size(dat, 2))
+    plot_erp(times, dat[1, :, 1], axis = (; xtickformat = "{:d}"))
 end
 
 @testset "ERP plot: stderror error" begin

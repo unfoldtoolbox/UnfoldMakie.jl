@@ -139,7 +139,7 @@ gh = f[4, 2]
 
 d_topo, pos = example_data("TopoPlots.jl")
 data, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 raw_ch_names = example_data("raw_ch_names")
 
 m = example_data("UnfoldLinearModel")

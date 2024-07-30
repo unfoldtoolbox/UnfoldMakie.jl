@@ -1,7 +1,7 @@
 # simple checks
 
 dat, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
 @testset "toposeries with bin_width" begin
@@ -121,7 +121,7 @@ end
     f = Figure()
     ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")
 
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 
     bin_width = 80
     a = plot_topoplotseries!(
@@ -188,8 +188,8 @@ end
     )
 end
 
-@testset "eeg_matrix_to_dataframe" begin
-    eeg_matrix_to_dataframe(rand(2, 2))
+@testset "eeg_array_to_dataframe" begin
+    eeg_array_to_dataframe(rand(2, 2))
 end
 
 @testset "contours" begin

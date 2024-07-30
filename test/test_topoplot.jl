@@ -27,7 +27,7 @@ end
     f = Figure()
     plot_topoplot!(
         f[1, 1][1, 1],
-        UnfoldMakie.eeg_matrix_to_dataframe(rand(10), string.(1:10));
+        UnfoldMakie.eeg_array_to_dataframe(rand(10), string.(1:10));
         positions = rand(Point2f, 10),
     )
 end

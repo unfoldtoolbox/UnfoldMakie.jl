@@ -1,15 +1,26 @@
 """
-    eeg_matrix_to_dataframe(data::Matrix, label)
+    eeg_array_to_dataframe(data::Matrix, label)
 
-Helper function converting a matrix (channel x times) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label`.
+Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `color`, `group`, `channel`).
+
+Format of matricies:\\
+Use times x condition for plot\\_erp.\\
+Use channels x time for plot\\_butterfly, plot\\_topoplot.\\
 
 **Return Value:** `DataFrame`.
 """
-eeg_matrix_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
-    eeg_matrix_to_dataframe(data, string.(1:size(data, 1)))
+eeg_array_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
+    eeg_array_to_dataframe(data, string.(1:size(data, 1)))
 
-function eeg_matrix_to_dataframe(data, label_tmp)
-    df = DataFrame(data', label_tmp)
+eeg_array_to_dataframe(data::AbstractVector, label_tmp) =
+    eeg_array_to_dataframe(reshape(data, 1, :), label_tmp)
+
+function eeg_array_to_dataframe(data::AbstractMatrix, label_tmp)
+    array_to_df(data, label_tmp) = DataFrame(data', label_tmp)
+    array_to_df(data::LinearAlgebra.Adjoint{<:Number,<:AbstractVector}, label_tmp) =
+        DataFrame(collect(data)', label_tmp)
+
+    df = array_to_df(data, label_tmp)
     df[!, :time] .= 1:nrow(df)
 
     df = stack(df, Not([:time]); variable_name = :label_tmp, value_name = "estimate")
@@ -83,7 +94,7 @@ function eeg_topoplot_series(
     labels;
     kwargs...,
 )
-    return eeg_topoplot_series(eeg_matrix_to_dataframe(data, labels); kwargs...)
+    return eeg_topoplot_series(eeg_array_to_dataframe(data, labels); kwargs...)
 end
 function eeg_topoplot_series!(
     fig,
@@ -91,7 +102,7 @@ function eeg_topoplot_series!(
     labels;
     kwargs...,
 )
-    return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels); kwargs...)
+    return eeg_topoplot_series!(fig, eeg_array_to_dataframe(data, labels); kwargs...)
 end
 
 function eeg_topoplot_series!(
