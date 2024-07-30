@@ -12,7 +12,7 @@
     include("../docs/example_data.jl")
     d_topo, pos = example_data("TopoPlots.jl")
     data, positions = TopoPlots.example_data()
-    df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 
     m = example_data("UnfoldLinearModel")
     results = coeftable(m)

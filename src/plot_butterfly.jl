@@ -4,6 +4,8 @@ using LinearAlgebra
 """
     plot_butterfly(plot_data::DataFrame; kwargs...)
     plot_butterfly(plot_data::AbstractMatrix; kwargs...)
+    plot_butterfly(times::Vector, plot_data::AbstractMatrix; kwargs...)
+    plot_butterfly!(f::FigLike, plot_data::AbstractMatrix; kwargs...)
 
 Plot a Butterfly plot.
 
@@ -16,7 +18,6 @@ Plot a Butterfly plot.
 - `kwargs...`\\
     Additional styling behavior. \\
     Often used as: `plot_butterfly(df; visual = (; colormap = :romaO))`.
-
 
 ## Keyword argumets (kwargs)
 - `positions::Array = []` \\
@@ -41,8 +42,11 @@ see also [`plot_erp`](@id erp_vis)
 plot_butterfly(plot_data::DataFrame; kwargs...) =
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
-plot_butterfly(plot_data::AbstractMatrix; kwargs...) =
-    plot_butterfly!(Figure(), eeg_matrix_to_dataframe(plot_data); kwargs...)
+plot_butterfly(plot_data::AbstractMatrix; kwargs...) = plot_butterfly(
+    eeg_array_to_dataframe(plot_data);
+    axis = (; xlabel = "Time [samples]"),
+    kwargs...,
+)
 
 function plot_butterfly!(
     f::Union{GridPosition,GridLayout,<:Figure},

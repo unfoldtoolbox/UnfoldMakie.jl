@@ -4,7 +4,7 @@ using LinearAlgebra
 """
     plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
     plot_erp(plot_data::DataFrame; kwargs...)
-    plot_erp(plot_data::Union{AbstractMatrix, AbstractVector{<:Number}; kwargs...) 
+    plot_erp(plot_data::Union{<:AbstractMatrix, <:AbstractVector}; kwargs...) 
         
 Plot an ERP plot.   
 
@@ -42,8 +42,18 @@ $(_docstring(:erp))
 """
 plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data; kwargs...)
 
-plot_erp(plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
-    plot_erp!(Figure(), eeg_matrix_to_dataframe(plot_data); kwargs...)
+plot_erp(plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) = plot_erp(
+    eeg_array_to_dataframe(plot_data');
+    axis = (; xlabel = "Time [samples]"),
+    kwargs...,
+)
+
+plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
+    plot_erp(
+        eeg_array_to_dataframe(plot_data');
+        axis = (; xticks = times),
+        kwargs...,
+    )
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -99,8 +109,7 @@ function plot_erp!(
         :col ∈ keys(config.mapping) &&
         typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
     )
-        config.mapping =
-            merge(config.mapping, (; col = config.mapping.col => nonnumeric))
+        config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end
 
     mapp = AlgebraOfGraphics.mapping()
@@ -154,10 +163,22 @@ function eeg_head_matrix(positions, center, radius)
     oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
     radF = radius / oldRadius
     return Makie.Mat4f(
-        radF, 0, 0, 0, 0,
-        radF, 0, 0, 0, 0, 1, 0,
+        radF,
+        0,
+        0,
+        0,
+        0,
+        radF,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
         center[1] - oldCenter[1] * radF,
-        center[2] - oldCenter[2] * radF, 0, 1,
+        center[2] - oldCenter[2] * radF,
+        0,
+        1,
     )
 end
 
@@ -169,8 +190,7 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
 
     un = unique(unique_val)
     special_colors =
-        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)])
-        )
+        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]))
 
     xlims!(low = -0.2, high = 1.2)
     ylims!(low = -0.2, high = 1.2)
