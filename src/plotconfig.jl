@@ -231,7 +231,12 @@ function PlotConfig(T::Val{:erp})
             valign = :center,
             framevisible = false,
         ),
-        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14, xtickformat = "{:.1f}"),
+        axis = (
+            xlabel = "Time [s]",
+            ylabel = "Voltage [µV]",
+            yticklabelsize = 14,
+            xtickformat = "{:.1f}",
+        ),
         colorbar = (; label = "", flipaxis = true, labelrotation = -π / 2),
     )
 

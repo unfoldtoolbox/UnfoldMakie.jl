@@ -11,7 +11,7 @@ dat, positions = TopoPlots.example_data()
 end
 
 @testset "ERP plot: Matrix data" begin
-    plot_erp(dat[1, :, 1:2])
+    plot_erp(dat[1, :, 1:2]')
 end
 
 @testset "ERP plot: Array data" begin

@@ -1,32 +1,35 @@
 """
-    eeg_array_to_dataframe(data::Matrix, label)
+    eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
+    eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
+    eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
 
-Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `color`, `group`, `channel`).
+Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
 
-Format of matricies:\\
-Use times x condition for plot\\_erp.\\
-Use channels x time for plot\\_butterfly, plot\\_topoplot.\\
+Format of Arrays:\\
+- times x condition for plot\\_erp.\\
+- channels x time for plot\\_butterfly, plot\\_topoplotseries.\\
+- channels for plot\\_topoplot.\\
 
 **Return Value:** `DataFrame`.
 """
 eeg_array_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
     eeg_array_to_dataframe(data, string.(1:size(data, 1)))
 
-eeg_array_to_dataframe(data::AbstractVector, label_tmp) =
-    eeg_array_to_dataframe(reshape(data, 1, :), label_tmp)
+eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector) =
+    eeg_array_to_dataframe(reshape(data, 1, :), label_aliases)
 
-function eeg_array_to_dataframe(data::AbstractMatrix, label_tmp)
-    array_to_df(data, label_tmp) = DataFrame(data', label_tmp)
-    array_to_df(data::LinearAlgebra.Adjoint{<:Number,<:AbstractVector}, label_tmp) =
-        DataFrame(collect(data)', label_tmp)
+function eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
+    array_to_df(data, label_aliases) = DataFrame(data', label_aliases)
+    array_to_df(data::LinearAlgebra.Adjoint{<:Number,<:AbstractVector}, label_aliases) =
+        DataFrame(collect(data)', label_aliases)
 
-    df = array_to_df(data, label_tmp)
+    df = array_to_df(data, label_aliases)
     df[!, :time] .= 1:nrow(df)
 
-    df = stack(df, Not([:time]); variable_name = :label_tmp, value_name = "estimate")
-    df.color = df.label_tmp
-    df.group = df.label_tmp
-    df.channel = df.label_tmp
+    df = stack(df, Not([:time]); variable_name = :label_aliases, value_name = "estimate")
+    df.color = df.label_aliases
+    df.group = df.label_aliases
+    df.channel = df.label_aliases
     return df
 end
 

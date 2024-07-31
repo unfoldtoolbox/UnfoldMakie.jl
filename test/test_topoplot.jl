@@ -25,16 +25,17 @@ end
 
 @testset "topoplot: GridSubposition" begin
     f = Figure()
+    data_for_topoplot =  UnfoldMakie.eeg_array_to_dataframe(rand(10)')
     plot_topoplot!(
         f[1, 1][1, 1],
-        UnfoldMakie.eeg_array_to_dataframe(rand(10), string.(1:10));
-        positions = rand(Point2f, 10),
+        data_for_topoplot;
+        positions = rand(Point2f, 10), labels = string.(1:10),
     )
+    f
 end
 
 @testset "topoplot: AbstractMatrix" begin
     d = rand(128)
-    #p = [(rand(), rand()) for _ = 1:size(d, 1)]
     p = rand(Point2f, 128)
     plot_topoplot(d; positions = p)
 end
