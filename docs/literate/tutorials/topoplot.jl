@@ -57,8 +57,8 @@ Note that only one of `positions` or `labels` needs to be set to draw a topoplot
 
 # The default columns of mapping could be seen usign this code:
 
-cfgDefault = UnfoldMakie.PlotConfig()
-cfgDefault.mapping.y
+configs_default = UnfoldMakie.PlotConfig()
+configs_default.mapping.y
 
 # # Labelling
 #=
