@@ -3,8 +3,8 @@ using TopoPlots
 using LinearAlgebra
 """
     plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
-    plot_erp(plot_data::DataFrame; kwargs...)
-    plot_erp(plot_data::Union{<:AbstractMatrix, <:AbstractVector}; kwargs...) 
+    plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...)
+    plot_erp(plot_data::Union{DataFrame, <:AbstractMatrix, <:AbstractVector}; kwargs...) 
         
 Plot an ERP plot.   
 
