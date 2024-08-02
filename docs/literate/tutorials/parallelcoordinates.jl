@@ -1,8 +1,9 @@
 # # Parallel Coordinates
 
 # **Parallel Coordinates Plot** (PCP) is a plot type used to visualize EEG activity for some channels. 
-# It can fully represent state and channel dimensions using lines. It can also partially represent time or trials
-# Y-axis represents time points, vertical axes represent channels, while lines show voltage changes. 
+# It can fully represent condition and channel dimensions using lines. It can also partially represent time and trials
+# Each vertical axis represent voltage level for a channel.
+# Each line represent a trial, color represent a condition. 
 
 # # Setup
 # Package loading
@@ -59,7 +60,7 @@ f
 # ## Color schemes
 
 # Use only categorical with high contrast between adjacent colors. 
-# More: https://docs.makie.org/stable/explanations/colors/index.html
+# More: [change colormap](https://docs.makie.org/stable/explanations/colors/index.html).
 
 f = Figure()
 plot_parallelcoordinates(

@@ -42,7 +42,6 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
-
 plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
 plot_erpimage(
     times::AbstractVector,
