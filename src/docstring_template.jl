@@ -29,7 +29,7 @@ function _docstring(cfg_symb::Symbol)
     )
     cbarstring =
         (cfg_symb == :erp || cfg_symb == :butterfly) ?
-        "[`AlgebraOfGraphics.colorbar!`](@ref)" :
+        "[`AlgebraOfGraphics.colorbar!`](https://aog.makie.org/dev/API/functions/#AlgebraOfGraphics.colorbar!)" :
         "[`Makie.Colorbar`](https://docs.makie.org/stable/reference/blocks/colorbar/)"
     link = Dict(
         :figure => "use `kwargs...` of [`Makie.Figure`](https://docs.makie.org/stable/explanations/figure/)",

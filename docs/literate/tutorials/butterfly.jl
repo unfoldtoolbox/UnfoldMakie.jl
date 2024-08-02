@@ -58,7 +58,7 @@ plot_butterfly(
 
 # # Changing the colors of channels
 
-# Please check [this page](@id pos2color).
+# Please check [this page](@ref pos2color).
 
 # You want to highlight a specific channel or channels. 
 # Specify channels first:
