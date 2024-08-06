@@ -132,23 +132,12 @@ end
     f
 end
 
-@testset "Effect plot" begin
+@testset "Effect plot" begin #where is legend here??
     plot_erp(
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
         legend = (; nbanks = 2),
         layout = (; legend_position = :right),
-        categorical_color = false,
-        categorical_group = true,
-    )
-end
-
-@testset "Effect plot: without colorbar" begin
-    plot_erp(
-        res_effects;
-        mapping = (; y = :yhat, color = :continuous, group = :continuous),
-        legend = (; nbanks = 2),
-        layout = (; legend_position = :right, use_colorbar = false),
         categorical_color = false,
         categorical_group = true,
     )
@@ -167,20 +156,47 @@ end
     plot_erp(res_effects; mapping = (; y = :yhat, group = :channel, col = :channel))
 end
 
-@testset "Effect plot: with colorbar and without legend" begin
+@testset "Effect plot: no colorbar and legend" begin
     plot_erp(
         res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        layout = (; use_legend = false),
+        layout = (; show_legend = true, use_legend = false, use_colorbar = false),
         categorical_color = false,
     )
 end
 
-@testset "Effect plot: without colorbar and without legend" begin
+@testset "Effect plot: no colorbar" begin
     plot_erp(
         res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
         layout = (; use_legend = true, use_colorbar = false),
+        categorical_color = false,
+    )
+end
+
+@testset "Effect plot: no legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = false, use_colorbar = true),
+        categorical_color = false,
+    )
+end
+
+@testset "Effect plot: no colorbar and no legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = false, use_colorbar = false),
+        categorical_color = false,
+    )
+end
+
+@testset "Effect plot: yes colorbar and yes legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = true, use_colorbar = true),
         categorical_color = false,
     )
 end

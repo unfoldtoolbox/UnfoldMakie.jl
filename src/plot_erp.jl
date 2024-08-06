@@ -69,7 +69,6 @@ function plot_erp!(
 )
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
-    config_kwargs!(config; mapping, layout = (; show_legend = false))
     plot_data = deepcopy(plot_data)
 
     # resolve columns with data
@@ -147,12 +146,15 @@ function plot_erp!(
 
     # draw a normal ERP lineplot  
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
-    if config.layout.use_legend != false
-        legend!(f[:, 5], drawing; config.legend...)
-    end
-    if config.layout.use_colorbar != false
-        N = config.layout.use_legend === false ? 5 : 6
-        colorbar!(f[:, N], drawing; config.colorbar...)
+    if config.layout.show_legend == true
+        config_kwargs!(config; mapping, layout = (; show_legend = false))
+        if config.layout.use_legend == true
+            legend!(f[:, 5], drawing; config.legend...)
+        end
+        if config.layout.use_colorbar == true
+            N = config.layout.use_legend == false ? 5 : 6
+            colorbar!(f[:, N], drawing; config.colorbar...)
+        end
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f

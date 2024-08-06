@@ -55,7 +55,7 @@ plot_erpimage!(
     layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
 )
 #=
-Some plots hide features by defaul. This could be reverted by setting the variables to `nothing`
+Some plots hide features by default. This could be reverted by setting the variables to `nothing`
 =#
 
 data, positions = TopoPlots.example_data()
