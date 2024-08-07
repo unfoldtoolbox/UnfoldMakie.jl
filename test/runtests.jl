@@ -34,7 +34,7 @@ end
     include("test_toposeries1.jl")
 end
 
- @testset "Topoplot series advanced" begin
+@testset "Topoplot series advanced" begin
     include("test_toposeries2.jl")
 end
 
