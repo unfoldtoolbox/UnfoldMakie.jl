@@ -186,7 +186,7 @@ end
 function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
     all_positions = unique(all_positions)
 
-    topoMatrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
+    topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
     special_colors =
@@ -202,7 +202,7 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
         interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the special_colorsmap
         colorrange = (0, length(all_positions)), # add the 0 for the white-first color
         colormap = special_colors,
-        head = (color = :black, linewidth = 1, model = topoMatrix),
+        head = (color = :black, linewidth = 1, model = topo_matrix),
         label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
     )
 
