@@ -51,11 +51,7 @@ plot_erp(plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
 )
 
 plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
-    plot_erp(
-        eeg_array_to_dataframe(plot_data');
-        axis = (; xticks = times),
-        kwargs...,
-    )
+    plot_erp(eeg_array_to_dataframe(plot_data'); axis = (; xticks = times), kwargs...)
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
