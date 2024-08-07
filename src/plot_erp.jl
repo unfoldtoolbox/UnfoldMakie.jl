@@ -34,6 +34,8 @@ Plot an ERP plot.
     Enable or disable colorbar.\\
 - `layout.use_legend = true`\\
     Enable or disable legend.\\
+- `layout.show_legend = true`\\
+    Enable or disable legend and colorbar.\\
 
 $(_docstring(:erp))
 
