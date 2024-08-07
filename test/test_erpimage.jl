@@ -1,18 +1,37 @@
 include("../docs/example_data.jl")
 
-data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
+dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 dat_e, evts_e, times = example_data("sort_data")
 @testset "ERP image basic" begin
-    plot_erpimage(data;)
+    plot_erpimage(dat;)
+end
+
+@testset "ERP image naked" begin
+    f = Figure(; figure_padding = 0)
+    plot_erpimage!(
+        f,
+        dat;
+        layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
+    )
+end
+
+@testset "ERP image sorted and naked" begin
+    f = Figure(; figure_padding = 0)
+    plot_erpimage!(
+        f,
+        dat_e;
+        sortvalues = evts_e.Δlatency,
+        layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
+    )
 end
 
 @testset "ERP image with changing erpblur to zero" begin
-    plot_erpimage(data; erpblur = 0)
+    plot_erpimage(dat; erpblur = 0)
 end
 
 @testset "ERP image with GridPosition" begin
     f = Figure()
-    plot_erpimage!(f[1, 1], data)
+    plot_erpimage!(f[1, 1], dat)
 end
 
 @testset "ERP image with sortvalues" begin
@@ -64,7 +83,7 @@ end
 end
 
 @testset "ERP image with mean plot" begin
-    plot_erpimage(data; meanplot = true)
+    plot_erpimage(dat; meanplot = true)
 end
 
 @testset "ERP image with meanplot and show_sortval" begin
@@ -83,20 +102,20 @@ end
 end
 
 @testset "ERP image with Observables" begin
-    obs = Observable(data)
+    obs = Observable(dat)
     f = plot_erpimage(obs)
-    obs[] = rand(size(to_value(data))...)
+    obs[] = rand(size(to_value(dat))...)
 end
 
 @testset "ERP image with Observables and sort_val" begin
-    obs = Observable(data)
+    obs = Observable(dat)
     sort_val = Observable(evts_e.Δlatency)
     f = plot_erpimage(times, dat_e; sortvalues = sort_val, show_sortval = true)
     sort_val[] = rand(Int, size(to_value(evts_e.Δlatency))...)
 end
 
 @testset "ERP image with Observables and title as Observable" begin
-    obs = Observable(data)
+    obs = Observable(dat)
     chan_i = Observable(1)
     sort_val = Observable(evts_e.Δlatency)
     str = @lift("ERP image: channel " * string($chan_i))
@@ -170,7 +189,7 @@ end
 end
 
 @testset "ERP image: meanplot axis" begin
-    plot_erpimage(data; meanplot = true, meanplot_axis = (; title = "test"))
+    plot_erpimage(dat; meanplot = true, meanplot_axis = (; title = "test"))
 end
 
 @testset "ERP image: sortplot axis" begin

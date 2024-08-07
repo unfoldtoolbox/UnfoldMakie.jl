@@ -1,17 +1,35 @@
 """
-    eeg_matrix_to_dataframe(data::Matrix, label)
+    eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
+    eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
+    eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
 
-Helper function converting a matrix (channel x times) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label`.
+Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
+
+Format of Arrays:\\
+- times x condition for plot\\_erp.\\
+- channels x time for plot\\_butterfly, plot\\_topoplotseries.\\
+- channels for plot\\_topoplot.\\
 
 **Return Value:** `DataFrame`.
 """
-eeg_matrix_to_dataframe(data::Matrix) =
-    eeg_matrix_to_dataframe(data, string.(1:size(data, 1)))
+eeg_array_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
+    eeg_array_to_dataframe(data, string.(1:size(data, 1)))
 
-function eeg_matrix_to_dataframe(data, label)
-    df = DataFrame(data', label)
+eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector) =
+    eeg_array_to_dataframe(reshape(data, 1, :), label_aliases)
+
+function eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
+    array_to_df(data, label_aliases) = DataFrame(data', label_aliases)
+    array_to_df(data::LinearAlgebra.Adjoint{<:Number,<:AbstractVector}, label_aliases) =
+        DataFrame(collect(data)', label_aliases)
+
+    df = array_to_df(data, label_aliases)
     df[!, :time] .= 1:nrow(df)
-    df = stack(df, Not([:time]); variable_name = :label, value_name = "estimate")
+
+    df = stack(df, Not([:time]); variable_name = :label_aliases, value_name = "estimate")
+    df.color = df.label_aliases
+    df.group = df.label_aliases
+    df.channel = df.label_aliases
     return df
 end
 
@@ -79,7 +97,7 @@ function eeg_topoplot_series(
     labels;
     kwargs...,
 )
-    return eeg_topoplot_series(eeg_matrix_to_dataframe(data, labels); kwargs...)
+    return eeg_topoplot_series(eeg_array_to_dataframe(data, labels); kwargs...)
 end
 function eeg_topoplot_series!(
     fig,
@@ -87,7 +105,7 @@ function eeg_topoplot_series!(
     labels;
     kwargs...,
 )
-    return eeg_topoplot_series!(fig, eeg_matrix_to_dataframe(data, labels); kwargs...)
+    return eeg_topoplot_series!(fig, eeg_array_to_dataframe(data, labels); kwargs...)
 end
 
 function eeg_topoplot_series!(

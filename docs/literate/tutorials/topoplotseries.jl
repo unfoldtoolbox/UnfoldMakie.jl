@@ -17,7 +17,7 @@ using Statistics
 # Data input
 
 data, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)));
+df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)));
 nothing #hide
 
 # # Number of topoplots
@@ -35,7 +35,7 @@ plot_topoplotseries(df; bin_num = 5, positions = positions)
 # By deafult x-value is `time`, but it could be any contionous (i.g. saccade amplitude) or categorical (any experimental variable) value.
 
 f = Figure()
-df_cat = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
+df_cat = UnfoldMakie.eeg_array_to_dataframe(data[:, 1:5, 1], string.(1:length(positions)))
 df_cat.condition = repeat(["A", "B", "C", "D", "E"], size(df_cat, 1) ÷ 5)
 
 plot_topoplotseries!(
@@ -62,7 +62,7 @@ To create topoplot series with categorical values:
 # ## Adjusting individual topoplots
 # By using `topoplot_axes` you can flexibly change configurations of topoplots.
 
-df_adj = UnfoldMakie.eeg_matrix_to_dataframe(data[:, 1:4, 1], string.(1:length(positions)))
+df_adj = UnfoldMakie.eeg_array_to_dataframe(data[:, 1:4, 1], string.(1:length(positions)))
 df_adj.condition = repeat(["A", "B", "C", "D"], size(df_adj, 1) ÷ 4)
 
 plot_topoplotseries(
@@ -124,7 +124,7 @@ f
 # Use `nrows` to specify multiple rows. 
 
 f = Figure()
-df_col = UnfoldMakie.eeg_matrix_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+df_col = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 plot_topoplotseries!(
     f[1, 1:5],
     df_col;
@@ -142,7 +142,7 @@ Also you can:
 - Label the x-axis with `axis.xlabel`.
 - Hide electrode markers with `visual.label_scatter`.
 - Change the color map with `visual.colormap`. The default is `Reverse(:RdBu)`.
-- Adjust the limits of the topoplot boxes with `axis.xlim_topo` and `axis.ylim_topo`. By default both are `(-0.25, 1.25)`.
+- Adjust the limits of the topoplot boxes with `axis.xlim_topo` and `axis.ylim_topo`. By default both are `(-0.25, 0.25)`.
 - Adjust the size of the figure with `Figure(size = (x, y))`.
 - Adjust the padding between topoplot labels and axis labels using `xlabelpadding` and `ylabelpadding`.
 =#

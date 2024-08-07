@@ -16,6 +16,7 @@ using UnfoldMakie
 include("../../../example_data.jl")
 
 # Data generation
+
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
 data = reshape(data, (1, size(data)...))
@@ -58,25 +59,25 @@ plot_erp(
     categorical_group = true, # separates lines, if `false` all lines will be connected
 )
 
-# ## P-value lines
+# ## Significance lines
 
-# - `pvalue` (Array, `[]`): show a pvalue (see below). 
+# - `significance::Array = []` - show a significance (see below). 
 
 # Here we manually specify p-value lines. If array is not empty, plot shows colored lines under the plot representing the p-values. 
 # Below is an example in which p-values are given:
 
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
-pvals = DataFrame(
+significancevalues = DataFrame(
     from = [0.1, 0.3],
     to = [0.5, 0.7],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
-plot_erp(results; :pvalue => pvals)
+plot_erp(results; :significance => significancevalues)
 
 # ## Error ribbons 
 
-# - `stderror` (bool, `false`): add an error ribbon, with lower and upper limits based on the `:stderror` column.
+# - `stderror`::bool = `false` - add an error ribbon, with lower and upper limits based on the `:stderror` column.
 
 # Display a colored band on the graph to indicate lower and higher estimates based on the standard error.
 # For the generalizability of your results, it is always better to include error bands.

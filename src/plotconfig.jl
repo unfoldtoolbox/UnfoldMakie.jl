@@ -29,9 +29,7 @@ function PlotConfig()# defaults
         (; # layout
             show_legend = true,
             legend_position = :right,
-            xlabelFromMapping = :x, # is this still needed
-            ylabelFromMapping = :y,
-            use_colorbar = false,
+            use_colorbar = false, # ideally should be deleted
         ),
         (#maping
             x = (:time,),
@@ -209,13 +207,15 @@ function PlotConfig(T::Val{:butterfly})
     )
     return cfg
 end
+
 function PlotConfig(T::Val{:erp})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
         mapping = (; color = (:color, :coefname, nothing)),
         layout = (;
-            show_legend = true,
+            use_colorbar = true,
+            use_legend = true,
             hidespines = (:r, :t),
             hidedecorations = (Dict(
                 :label => false,
@@ -225,8 +225,19 @@ function PlotConfig(T::Val{:erp})
                 :ticklabels => false,
             )),
         ),
-        legend = (; framevisible = false),
-        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
+        legend = (;
+            tellwidth = false,
+            halign = :right,
+            valign = :center,
+            framevisible = false,
+        ),
+        axis = (
+            xlabel = "Time [s]",
+            ylabel = "Voltage [µV]",
+            yticklabelsize = 14,
+            xtickformat = "{:.1f}",
+        ),
+        colorbar = (; label = "", flipaxis = true, labelrotation = -π / 2),
     )
 
     return cfg

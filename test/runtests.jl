@@ -10,6 +10,10 @@ end
     include("test_erp.jl")
 end
 
+@testset "ERP plot: effects" begin
+    include("test_erp_effects.jl")
+end
+
 @testset "Butterfly" begin
     include("test_butterfly.jl")
 end
