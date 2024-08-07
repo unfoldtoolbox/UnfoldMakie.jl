@@ -1,5 +1,9 @@
 """
     plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{Float64}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Observable{<:AbstractMatrix}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, times::Observable{<:AbstractVector}, data::Observable{<:AbstractMatrix{<:Real}}; kwargs...)
+
+    plot_erpimage(times::AbstractVector, data::Union{<:Observable{Matrix{<:Real}}, Matrix{<:Real}}; kwargs...)
     plot_erpimage(data::Matrix{Float64}; kwargs...)
 
 Plot an ERP image.
@@ -38,11 +42,13 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
-plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...) # no times + no figure?
+plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
+plot_erpimage(
+    times::AbstractVector,
+    data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}};
+    kwargs...,
+) = plot_erpimage!(Figure(), times, data; kwargs...)
 
-# no times?
-plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, data::AbstractMatrix; kwargs...) =
-    plot_erpimage!(f, Observable(data); kwargs...)
 
 plot_erpimage!(f::Union{GridPosition,GridLayout,Figure}, args...; kwargs...) =
     plot_erpimage!(f, map(_as_observable, args)...; kwargs...)
@@ -53,12 +59,6 @@ plot_erpimage!(
     kwargs...,
 ) = plot_erpimage!(f, @lift(1:size($data, 1)), data; kwargs...)
 
-# argument list has no figure? Add one!
-plot_erpimage(
-    times::AbstractVector,
-    data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}};
-    kwargs...,
-) = plot_erpimage!(Figure(), times, data; kwargs...)
 
 _as_observable(x) = Observable(x)
 _as_observable(x::Observable) = x
@@ -86,12 +86,7 @@ function plot_erpimage!(
     if isnothing(sortindex) && !isnothing(sortvalues)
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
-    config_kwargs!(
-        config;
-        layout = (; show_legend = false, use_colorbar = false),
-        kwargs...,
-    )
-
+    config_kwargs!(config; kwargs...)
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(ga[1:4, 1:4]; config.axis...)
 
@@ -121,7 +116,7 @@ function plot_erpimage!(
 
     if show_sortval
         ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
-    else
+    elseif config.layout.use_colorbar != false
         Colorbar(
             ga[1:4, 5],
             hm,
@@ -195,12 +190,14 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     hidespines!(axleft, :r, :t)
     #scatter!(axleft, xs, ys)
     lines!(axleft, xs, ys)
-    Colorbar(
-        gb[1:4, 6],
-        hm,
-        label = config.colorbar.label,
-        labelrotation = config.colorbar.labelrotation,
-    )
+    if config.layout.use_colorbar != false
+        Colorbar(
+            gb[1:4, 6],
+            hm,
+            label = config.colorbar.label,
+            labelrotation = config.colorbar.labelrotation,
+        )
+    end
     apply_layout_settings!(config; fig = f, ax = axleft)
 end
 

@@ -1,11 +1,11 @@
 # advanced features: facetting and interactivity
 
 dat, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
 @testset "14 topoplots, 4 rows" begin # horrific
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     plot_topoplotseries(
         df;
         bin_num = 14,
@@ -16,7 +16,7 @@ bin_width = 80
 end
 
 @testset "facetting by layout" begin # could be changed to nrwos = "auto"
-    df = UnfoldMakie.eeg_matrix_to_dataframe(
+    df = UnfoldMakie.eeg_array_to_dataframe(
         dat[:, 200:1:206, 1],
         string.(1:length(positions)),
     )
@@ -42,7 +42,7 @@ end
 end
 
 @testset "error checking: bin_width or bin_num with categorical columns" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     err1 = nothing
@@ -65,7 +65,7 @@ end
 end
 
 @testset "categorical columns" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     plot_topoplotseries(
@@ -77,7 +77,7 @@ end
 end
 
 @testset "4 conditions" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
     plot_topoplotseries(
@@ -89,7 +89,7 @@ end
 end
 
 @testset "4 conditions in 2 rows" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
     plot_topoplotseries(
@@ -101,7 +101,7 @@ end
 end
 
 #= @testset "4 condtions in rows" begin # TBD
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
     plot_topoplotseries(
@@ -112,7 +112,7 @@ end
 end =#
 
 @testset "topoplot axes configuration" begin # TBD
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
     plot_topoplotseries(
@@ -131,7 +131,7 @@ end
 
 
 @testset "change xlabel" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     plot_topoplotseries(
@@ -145,7 +145,7 @@ end
 
 # use with WGlMakie
 @testset "interactive data" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     df_obs = Observable(df)
@@ -164,7 +164,7 @@ end
 end
 
 @testset "interactive scatter markers" begin
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
     obs_tuple = Observable((0, 0, 0))

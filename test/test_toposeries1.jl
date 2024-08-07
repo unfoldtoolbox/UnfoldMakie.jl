@@ -1,14 +1,14 @@
 # simple checks
 
 dat, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
-@testset "toposeries with bin_width" begin
+@testset "toposeries: bin_width" begin
     plot_topoplotseries(df; bin_width = 80, positions = positions)
 end
 
-@testset "toposeries with bin_num" begin
+@testset "toposeries: bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
@@ -17,19 +17,19 @@ end
     plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; col = :cont))
 end
 
-#= @testset "toposeries with Δbin deprecated" begin #fail
+#= @testset "toposeries: Δbin deprecated" begin #fail
     plot_topoplotseries(df, Δbin; positions = positions)
 end =#
 
-@testset "toposeries with nrows = 2" begin
+@testset "toposeries: nrows = 2" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 2, positions = positions)
 end
 
-@testset "toposeries with nrows = 5" begin
+@testset "toposeries: nrows = 5" begin
     plot_topoplotseries(df; bin_num = 5, nrows = 3, positions = positions)
 end
 
-@testset "toposeries with nrows = -6" begin
+@testset "toposeries: nrows = -6" begin
     plot_topoplotseries(df; bin_num = 5, nrows = -6, positions = positions)
 end
 
@@ -56,11 +56,11 @@ end
     )
 end
 
-@testset "toposeries with channel names" begin
+@testset "toposeries: channel names" begin
     plot_topoplotseries(df; bin_width = 80, positions = positions, labels = raw_ch_names)
 end # doesnt work rn
 
-@testset "toposeries with xlabel" begin
+@testset "toposeries: xlabel" begin
     f = Figure()
     ax = Axis(f[1, 1])
     plot_topoplotseries!(f[1, 1], df; bin_width = 80, positions = positions)
@@ -70,7 +70,7 @@ end # doesnt work rn
     f
 end
 
-@testset "toposeries for one time point (what is it?)" begin
+@testset "toposeries: one time point (what is it?)" begin
     plot_topoplotseries(
         df;
         bin_width = 80,
@@ -79,7 +79,7 @@ end
     )
 end
 
-@testset "toposeries with differend comb functions " begin
+@testset "toposeries: differend comb functions" begin
     f = Figure(size = (500, 500))
     plot_topoplotseries!(
         f[1, 1],
@@ -108,7 +108,7 @@ end
     f
 end
 
-@testset "toposeries without colorbar" begin
+@testset "toposeries: no colorbar" begin
     plot_topoplotseries(
         df;
         bin_width,
@@ -117,11 +117,10 @@ end
     )
 end
 
-@testset "GridPosition with a title" begin
+@testset "toposeries: GridPosition with a title" begin
     f = Figure()
     ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")
-
-    df = UnfoldMakie.eeg_matrix_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 
     bin_width = 80
     a = plot_topoplotseries!(
@@ -137,20 +136,20 @@ end
     f
 end
 
-@testset "toposeries with specified xlabel" begin
+@testset "toposeries: specified xlabel" begin
     plot_topoplotseries(df; bin_width, positions = positions, axis = (; xlabel = "test"))
 end
 
-@testset "toposeries with adjustable colorrange" begin
+@testset "toposeries: adjustable colorrange" begin
     plot_topoplotseries(
         df;
         bin_width,
         positions = positions,
-        colorbar = (; colorrange = (-1, 1)),
+        colorbar = (; colorrange = (-3, 3)),
     )
 end
 
-@testset "toposeries with adjusted ylim_topo" begin
+@testset "toposeries: adjusted ylim_topo" begin
     plot_topoplotseries(
         df;
         bin_width,
@@ -176,7 +175,7 @@ end
     )
 end
 
-@testset "toposeries with GridSubposition" begin
+@testset "toposeries: GridSubposition" begin
     f = Figure(size = (500, 500))
     plot_topoplotseries!(
         f[2, 1][1, 1],
@@ -188,8 +187,8 @@ end
     )
 end
 
-@testset "eeg_matrix_to_dataframe" begin
-    eeg_matrix_to_dataframe(rand(2, 2))
+@testset "eeg_array_to_dataframe" begin
+    eeg_array_to_dataframe(rand(2, 2))
 end
 
 @testset "contours" begin

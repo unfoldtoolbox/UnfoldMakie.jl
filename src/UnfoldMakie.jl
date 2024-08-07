@@ -53,6 +53,7 @@ include("eeg_series.jl")
 include("plot_topoplotseries.jl")
 
 include("plot_erp.jl")
+include("plot_butterfly.jl")
 include("plot_designmatrix.jl")
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
@@ -91,7 +92,7 @@ export plot_channelimage
 export plot_channelimage!
 
 export to_positions
-export eeg_matrix_to_dataframe
+export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG
 end

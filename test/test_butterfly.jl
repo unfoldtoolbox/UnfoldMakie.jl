@@ -2,17 +2,25 @@
 include("../docs/example_data.jl")
 df, pos = example_data("TopoPlots.jl")
 
-@testset "butterfly default" begin
-    plot_butterfly(df; positions = pos, visual = (; transparency = true))
+@testset "butterfly: DataFrame as data input" begin
+    plot_butterfly(df; positions = pos)
     #save("dev/UnfoldMakie/default_butterfly.png", f)
 end
 
-@testset "butterfly default with GridLayout" begin
+@testset "butterfly: Matrix as data input" begin
+    tmp = DataFrame(channel = df.channel, estimate = df.estimate)
+    grouped = groupby(tmp, :channel)
+    mat = Matrix(reduce(hcat, [group.estimate for group in grouped])')
+    plot_butterfly(mat; positions = pos)
+end
+
+
+@testset "butterfly: GridLayout" begin
     f = Figure()
     plot_butterfly!(f[1, 1], df; positions = pos)
 end
 
-@testset "butterfly basic" begin
+@testset "butterfly: witout topolegend" begin
     plot_butterfly(
         df;
         positions = pos,
@@ -22,7 +30,7 @@ end
     #save("dev/UnfoldMakie/basic_butterfly.png", f)
 end
 
-@testset "butterfly with change of topomarkersize" begin
+@testset "butterfly: change of topomarkersize" begin
     plot_butterfly(
         df;
         positions = pos,
@@ -32,7 +40,7 @@ end
     )
 end
 
-@testset "add h and vlines in a Figure" begin
+@testset "butterfly: add h and vlines in a Figure" begin
     f = Figure()
     plot_butterfly!(f, df; positions = pos)
     hlines!(0, color = :gray, linewidth = 1)
@@ -40,7 +48,7 @@ end
     f
 end
 
-@testset "add h- and vlines in GridPosition" begin
+@testset "butterfly: add h- and vlines in GridPosition" begin
     f = Figure()
     ax = Axis(f[1:2, 1:5], aspect = DataAspect(), title = "Just a title")
     plot_butterfly!(f[1:2, 1:5], df; positions = pos)
@@ -51,13 +59,12 @@ end
     f
 end
 
-@testset "butterfly withiout decorations" begin
+@testset "butterfly: no decorations" begin
     f = Figure()
     plot_butterfly!(
         f[1, 1],
         df;
         positions = pos,
-        topomarkersize = 10,
         topoheight = 0.4,
         topowidth = 0.4,
         layout = (;
@@ -91,7 +98,7 @@ end
 end
 
 # would be nice these colors to be colowheeled
-@testset "butterfly changing color to veridis" begin
+@testset "butterfly: changing color to veridis" begin
     plot_butterfly(
         df;
         positions = pos,
@@ -99,17 +106,17 @@ end
     )
 end
 
-@testset "butterfly changing color to romaO" begin
+@testset "butterfly: changing color to romaO" begin
     plot_butterfly(df; positions = pos, visual = (; colormap = :romaO))
 end
-@testset "butterfly changing color to gray" begin
+@testset "butterfly: changing color to gray" begin
     plot_butterfly(
         df;
         positions = pos,
         visual = (; colormap = [:gray]), # choose Makie colorscheme
     )
 end
-@testset "butterfly changing color to HSV" begin
+@testset "butterfly: changing color to HSV" begin
     plot_butterfly(
         df;
         positions = pos,
@@ -118,7 +125,7 @@ end
 end
 
 # Channel highlighted
-@testset "butterfly with single color highlighted channel" begin
+@testset "butterfly: with single color highlighted channel" begin
     f = pos -> UnfoldMakie.pos_to_color_RGB(pos)
     f =
         p ->
@@ -127,17 +134,17 @@ end
 end
 
 # colors should be black and red
-@testset "butterfly with single color highlighted channel - 2" begin
+@testset "butterfly: with single color highlighted channel - 2" begin
     df.highlight = in.(df.channel, Ref(10))
     plot_butterfly(df; positions = pos, mapping = (; color = :highlight))
 end
 
-@testset "butterfly with two color highlighted channel" begin
+@testset "butterfly: with two color highlighted channel" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
     plot_butterfly(df; positions = pos, mapping = (; color = :highlight))
 end
 
-@testset "butterfly with two color highlighted channels and specified colormap" begin
+@testset "butterfly: with two color highlighted channels and specified colormap" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
     plot_butterfly(
         df;
@@ -147,7 +154,7 @@ end
     )
 end
 
-@testset "butterfly with faceting of highlighted channels" begin
+@testset "butterfly: with faceting of highlighted channels" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
     df.highlight = replace(df.highlight, true => "channels 10, 12", false => "all channels")
     plot_butterfly(
@@ -163,7 +170,7 @@ end
 
 #TO DO
 # not working
-#= @testset "butterfly with two size highlighted channels" begin
+#= @testset "butterfly: with two size highlighted channels" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
     plot_butterfly(df; positions = pos, mapping = (; linesize = :highlight))
 end =#
