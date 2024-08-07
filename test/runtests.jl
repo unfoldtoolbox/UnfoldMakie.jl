@@ -10,6 +10,10 @@ end
     include("test_erp.jl")
 end
 
+@testset "ERP plot: effects" begin
+    include("test_erp_effects.jl")
+end
+
 @testset "Butterfly" begin
     include("test_butterfly.jl")
 end
@@ -30,7 +34,7 @@ end
     include("test_toposeries1.jl")
 end
 
-@testset "Topoplot series advanced" begin
+ @testset "Topoplot series advanced" begin
     include("test_toposeries2.jl")
 end
 
