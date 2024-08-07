@@ -23,4 +23,4 @@ UnfoldSim = "ed8ae6d2-84d3-44c6-ab46-0baf21700804"
 XML2_jll = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
 
 [compat]
-AlgebraOfGraphics = "0.6, 0.7, 0.8"
+AlgebraOfGraphics = "0.7, 0.8"
