@@ -47,7 +47,7 @@ $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.
 """
-plot_topoplotseries(data::DataFrame; kwargs...) =
+plot_topoplotseries(data::Union{<:Observable{<:DataFrame},DataFrame}; kwargs...) =
     plot_topoplotseries!(Figure(), data; kwargs...)
 
 #@deprecate plot_topoplotseries(data::DataFrame, Δbin; kwargs...)  plot_topoplotseries(data::DataFrame; bin_width, kwargs...) 
