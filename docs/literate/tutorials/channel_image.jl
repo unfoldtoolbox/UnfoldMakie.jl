@@ -25,7 +25,7 @@ raw_ch_names = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7", "P9", "PO7",
     "C4", "C6", "P4", "P8", "P10", "PO8", "PO4", "O2"]
 
 
-plot_channelimage(data, pos, raw_ch_names;)
+plot_channelimage(data[1:30, :], pos, raw_ch_names;)
 
 # # Configurations for Channel image
 
