@@ -39,10 +39,11 @@ Plot a Butterfly plot.
 $(_docstring(:butterfly))
 see also [`plot_erp`](@ref erp_vis)
 """
-plot_butterfly(plot_data::DataFrame; kwargs...) =
+plot_butterfly(plot_data::Union{<:AbstractDataFrame,AbstractMatrix}; kwargs...) =
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
-plot_butterfly(plot_data::AbstractMatrix; kwargs...) = plot_butterfly(
+plot_butterfly(fig,plot_data::AbstractMatrix; kwargs...) = plot_butterfly!(
+    fig,
     eeg_array_to_dataframe(plot_data);
     axis = (; xlabel = "Time [samples]"),
     kwargs...,
