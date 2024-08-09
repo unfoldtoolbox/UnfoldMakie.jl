@@ -9,7 +9,8 @@ Plot a Channel image
 - `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, AbstractMatrix}`\\
-    DataFrame or Matrix with data.
+    DataFrame or Matrix with data.\\
+    Data should has a format of 1 row - 1 channel. 
 - `positions::Vector{Point{2,Float32}}`\\
     A vector with EEG layout coordinates.
 - `ch_names::Vector{String}`\\
