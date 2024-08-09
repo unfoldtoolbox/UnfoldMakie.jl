@@ -1,13 +1,14 @@
 """
-    plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
-    plot_erpgrid(data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
+    plot_erpgrid(data::Union{Matrix{<:Real}, DataFrame}, pos::Vector; kwargs...)
+    plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Union{Matrix{<:Real}, DataFrame}, pos::Vector; kwargs...)
 
 Plot an ERP image.
 ## Arguments
 - `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Matrix{<:Real}`\\
-    Data for the plot visualization.
+- `data::Union{Matrix{<:Real}, DataFrame}`\\
+    Data for the plot visualization.\\
+    Data should has a format of 1 row - 1 channel. 
 - `pos::Vector{Point{2,Float}}` \\
     Electrode positions.
         
@@ -21,19 +22,23 @@ $(_docstring(:erpgrid))
 
 **Return Value:** `Figure` displaying ERP grid.
 """
-plot_erpgrid(data::Matrix{<:Real}, pos; kwargs...) =
+plot_erpgrid(data::Union{Matrix{<:Real},DataFrame}, pos; kwargs...) =
     plot_erpgrid!(Figure(), data, pos; kwargs...)
 
 function plot_erpgrid!(
     f::Union{GridPosition,GridLayout,Figure},
-    data::Matrix{<:Real},
-    pos;
+    data::Union{Matrix{<:Real},DataFrame},
+    pos::Vector;
     drawlabels = false,
     times = -1:size(data, 2)-2, #arbitrary strat just for fun
     kwargs...,
 )
     config = PlotConfig(:erpgrid)
     config_kwargs!(config; kwargs...)
+
+    if typeof(data) == DataFrame #maybe better would be put it into signature
+        data = Matrix(data)
+    end
 
     chan_num = size(data, 1)
     data = data[1:chan_num, :]
@@ -47,7 +52,7 @@ function plot_erpgrid!(
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
 
     for (ix, p) in enumerate(eachcol(pos))
-        x = p[1] #- 0.1
+        x = p[1] #- 0.1 #some padding needed
         y = p[2] #- 0.1
         # todo: 0.1 should go into plot config
         ax = Axis(

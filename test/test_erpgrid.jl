@@ -1,12 +1,20 @@
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 
+df, pos2 = example_data("TopoPlots.jl")
+
 @testset "basic erpgrid: one plot is out of the border" begin
-    plot_erpgrid(data[1:3, 1:20], pos)
+    plot_erpgrid(data[1:3, :], pos)
 end
 
 @testset "basic erpgrid" begin
-    plot_erpgrid(data[1:6, 1:20], pos)
+    plot_erpgrid(data[1:6, :], pos)
+end
+
+@testset "erpgrid: Data input with DataFrame" begin
+    df2 = unstack(df[:, [:estimate, :time, :channel]], :channel, :time, :estimate)
+    select!(df2, Not(:channel))
+    plot_erpgrid(df2, pos)
 end
 
 @testset "erpgrid with GridPosition" begin
