@@ -14,7 +14,6 @@ end
     plot_butterfly(mat; positions = pos)
 end
 
-
 @testset "butterfly: GridLayout" begin
     f = Figure()
     plot_butterfly!(f[1, 1], df; positions = pos)
