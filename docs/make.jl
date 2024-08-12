@@ -48,7 +48,7 @@ makedocs(;
             "ERP grid" => "generated/tutorials/erp_grid.md",
             "ERP image" => "generated/tutorials/erpimage.md",
             "Channel image" => "generated/tutorials/channel_image.md",
-            "Parallel plot" => "generated/tutorials/parallelcoordinates.md",
+            "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
             "Design matrix" => "generated/tutorials/designmatrix.md",
             "Circular topoplots" => "generated/tutorials/circ_topo.md",
         ],

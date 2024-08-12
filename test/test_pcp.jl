@@ -1,15 +1,34 @@
-include("../docs/example_data.jl")
+include("../docs/example_data.jl") # we need more specified example data
 results_plot, positions = example_data()
-@testset "PCP with Figure, 64 channels, 1 condition" begin
+@testset "PCP: data input DataFrame" begin
+    plot_parallelcoordinates(results_plot)
+end
+
+@testset "PCP: data input Matrix" begin
+    tmp = DataFrame(channel = results_plot.channel, estimate = results_plot.estimate)
+    grouped = groupby(tmp, :channel)
+    mat = Matrix(reduce(hcat, [group.estimate for group in grouped])')
+    plot_parallelcoordinates(mat)
+end
+
+@testset "PCP: Figure, 64 channels, 1 condition" begin
     plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
 end
 
-@testset "PCP with Figure, 5 channels (filtered), 1 condition" begin
+@testset "PCP: Figure, 64 channels, 1 condition, bigger size" begin
+    plot_parallelcoordinates(
+        Figure(size = (1200, 800)),
+        results_plot;
+        mapping = (color = :coefname, y = :estimate),
+    )
+end
+
+@testset "PCP: Figure, 5 channels (filtered), 1 condition" begin
     results_plot2 = filter(row -> row.channel <= 5, results_plot) # select channels
     plot_parallelcoordinates(results_plot2; mapping = (color = :coefname, y = :estimate))
 end
 
-@testset "PCP with Figure, 5 channels (subsetted), 1 condition" begin
+@testset "PCP: Figure, 5 channels (subsetted), 1 condition" begin
     plot_parallelcoordinates(
         subset(results_plot, :channel => x -> x .<= 5);
         mapping = (; color = :coefname),
@@ -37,7 +56,7 @@ end
     f
 end
 
-@testset "PCP with GridPosition" begin
+@testset "PCP: GridPosition" begin
     f = Figure()
     plot_parallelcoordinates(
         f[1, 1],
@@ -47,7 +66,7 @@ end
     f
 end
 
-@testset "PCP with 3 conditions and 5 channels" begin
+@testset "PCP: 3 conditions and 5 channels" begin
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
     plot_parallelcoordinates(
         uf_5chan;
