@@ -40,7 +40,7 @@ end
 
 @testset "ERP grid" begin
     include("test_erpgrid.jl")
-end 
+end
 
 @testset "Parallel coordinates plot" begin
     include("test_pcp.jl")
