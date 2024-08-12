@@ -80,7 +80,7 @@ plot_erp!(
 
 plot_designmatrix!(f[2, 3], designmatrix(uf))
 
-plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
+plot_topoplot!(f[3, 1], data[:, 150, 1], positions)
 plot_topoplotseries!(
     f[4, 1:3],
     d_topo;
@@ -162,7 +162,7 @@ plot_butterfly!(
 )
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
-plot_topoplot!(gc, data[:, 340, 1]; positions = positions, axis = (; xlabel = "[340 ms]"))
+plot_topoplot!(gc, data[:, 340, 1], positions; axis = (; xlabel = "[340 ms]"))
 
 plot_topoplotseries!(
     gd,
