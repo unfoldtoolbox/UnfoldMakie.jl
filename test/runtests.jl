@@ -38,6 +38,10 @@ end
     include("test_toposeries2.jl")
 end
 
+@testset "ERP grid" begin
+    include("test_erpgrid.jl")
+end 
+
 @testset "Parallel coordinates plot" begin
     include("test_pcp.jl")
 end
