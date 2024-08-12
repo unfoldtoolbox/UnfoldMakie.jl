@@ -17,7 +17,7 @@ function apply_layout_settings!(
 
     if (config.layout.show_legend)
         if isnothing(fig)
-            @error "Legend needs figure parameter"
+            @error "Legend needs `Figure` parameter"
         else
             # set f[] position depending on legend_position
             legend_position =

@@ -291,7 +291,7 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
-        axis = (; ylabel = "Time", title = ""),
+        axis = (; xlabel = "Channels", ylabel = "Time", title = ""),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
     )

@@ -1,14 +1,17 @@
 
 """
-    plot_parallelcoordinates(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame; kwargs)
+    plot_parallelcoordinates(data::Union{DataFrame, AbstractMatrix}; kwargs...)
+    plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, data::Union{DataFrame, AbstractMatrix}; kwargs)
+    
 
-Plot a PCP (parallel coordinates plot).
-
+Plot a PCP (parallel coordinates plot).\\
+Dimensions: conditions, channels, time, trials. 
+ 
 ## Arguments:
 
 - `f::Union{GridPosition, GridLayout, Figure}`
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Union{DataFrame, Vector{Float32}}`\\
+- `data::Union{DataFrame, AbstractMatrix}`\\
     Data for the plot visualization.
 
 ## Keyword argumets (kwargs)
@@ -41,18 +44,21 @@ $(_docstring(:paracoord))
 
 **Return Value:** `Figure` displaying the Parallel coordinates plot.
 """
-plot_parallelcoordinates(data::DataFrame; kwargs...) =
+plot_parallelcoordinates(data::Union{DataFrame,AbstractMatrix}; kwargs...) =
     plot_parallelcoordinates(Figure(), data; kwargs...)
 
 function plot_parallelcoordinates(
     f,
-    data::DataFrame;
+    data::Union{DataFrame,AbstractMatrix};
     ax_ticklabels = :outmost,
     ax_labels = nothing,
     normalize = nothing,
     bend = false,
     kwargs...,
 )
+    if typeof(data) == Matrix{Float64}
+        data = eeg_array_to_dataframe(data)
+    end
     config = PlotConfig(:paracoord)
     UnfoldMakie.config_kwargs!(config; kwargs...)
 
@@ -132,7 +138,7 @@ function parallelcoordinates(
     alpha = 0.3,
     bend = false,
 )
-    @assert size(data, 2) > 1 "currently more than one line has to be plotted for parallel plot to work"
+    @assert size(data, 2) > 1 "Currently, for parallel plotting to work, more than one line must be plotted"
     if isa(color, AbstractVector)
         @assert size(data, 2) == length(color)
     end
@@ -185,7 +191,7 @@ function parallelcoordinates(
             color_ix = [findfirst(un_c .== c) for c in color]
             #@assert length(un_c) == 1 "Only single color found, please don't specify color, "
             if length(un_c) == 1
-                @warn "The only a single unique value found in the specified color vector"
+                @warn "Only single unique value found in the specified color vector"
                 color = cgrad(colormap, 2)[color_ix]
             else
                 color = cgrad(colormap, length(un_c))[color_ix]
@@ -219,7 +225,6 @@ function parallelcoordinates(
     hidespines!(ax)
     hidedecorations!(ax)
 
-
     # get some defaults - necessary for LinkAxis
     def = Makie.default_attribute_values(Axis, nothing)
     axesOptions = (;
@@ -233,7 +238,6 @@ function parallelcoordinates(
         ticklabelalign = (:right, :center),
         minorticks = def[:yminorticks],
     )
-
 
     # generate the overlay parallel axes
     axlist = Makie.LineAxis[]
@@ -359,6 +363,5 @@ function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
         ticklabels[1] = "~" * ticklabels[1]
         ticklabels[end] = "~" * ticklabels[end]
     end
-    #@debug tickvalues,ticklabels
     return tickvalues, ticklabels
 end

@@ -1,9 +1,10 @@
 # # Parallel Coordinates
 
 # **Parallel Coordinates Plot** (PCP) is a plot type used to visualize EEG activity for some channels. 
-# It can fully represent condition and channel dimensions using lines. It can also partially represent time and trials
-# Each vertical axis represent voltage level for a channel.
-# Each line represent a trial, color represent a condition. 
+# It can fully represent condition and channel dimensions using lines. It can also partially represent time and trials.
+
+# Each vertical axis represents a voltage level for a channel.
+# Each line represents a trial, each colour represents a condition. 
 
 # # Setup
 # Package loading
@@ -28,6 +29,7 @@ nothing #hide
 plot_parallelcoordinates(
     subset(results_plot, :channel => x -> x .<= 5);
     mapping = (; color = :coefname),
+    ax_labels = ["FP1", "F3", "F7", "FC3", "C3"],
 )
 
 # # Additional features
@@ -36,9 +38,9 @@ plot_parallelcoordinates(
 
 #=
 On the first image, there is no normalization and the extremes of all axes are the same and equal to the max and min values across all chanells. 
-On the second image, there is a `minmax normalization``, so each axis has its own extremes based on the min and max of the data.
+On the second image, there is a `minmax normalization`, so each axis has its own extremes based on the min and max of the data.
 
-Typically, parallelplots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.
+Typically, parallel plots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.
 =#
 
 f = Figure()
