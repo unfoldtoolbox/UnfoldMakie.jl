@@ -2,10 +2,9 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_butterfly(plot_data::DataFrame; kwargs...)
-    plot_butterfly(plot_data::AbstractMatrix; kwargs...)
-    plot_butterfly(times::Vector, plot_data::AbstractMatrix; kwargs...)
-    plot_butterfly!(f::Union{GridPosition, GridLayout, Figure}, plot_data::AbstractMatrix; kwargs...)
+    plot_butterfly(plot_data::Union{DataFrame, AbstractMatrix}; kwargs...)
+    plot_butterfly(times::Vector, plot_data::Union{DataFrame, AbstractMatrix}; kwargs...)
+    plot_butterfly!(f::Union{GridPosition, GridLayout, Figure}, plot_data::Union{DataFrame, AbstractMatrix}; kwargs...)
 
 Plot a Butterfly plot.
 
