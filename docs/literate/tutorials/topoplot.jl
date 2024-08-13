@@ -29,9 +29,9 @@ dat, positions = TopoPlots.example_data()
 # # Plot Topoplots
 
 # Here we select a time point in 340 msec and the mean estimate. 
-plot_topoplot(data[:, 340, 1], positions)
+plot_topoplot(dat[:, 340, 1], positions)
 
-df = DataFrame(:estimate => data[:, 340, 1])
+df = DataFrame(:estimate => dat[:, 340, 1])
 plot_topoplot(df, positions)
 
 
