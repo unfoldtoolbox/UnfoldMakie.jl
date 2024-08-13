@@ -56,7 +56,7 @@ function plot_parallelcoordinates(
     bend = false,
     kwargs...,
 )
-    if typeof(data) == Matrix{Float64}
+    if isa(data, AbstractMatrix{<:Real})
         data = eeg_array_to_dataframe(data)
     end
     config = PlotConfig(:paracoord)

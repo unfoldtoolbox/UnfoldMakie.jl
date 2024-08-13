@@ -5,7 +5,7 @@ using LinearAlgebra
     plot_butterfly(plot_data::DataFrame; kwargs...)
     plot_butterfly(plot_data::AbstractMatrix; kwargs...)
     plot_butterfly(times::Vector, plot_data::AbstractMatrix; kwargs...)
-    plot_butterfly!(f::FigLike, plot_data::AbstractMatrix; kwargs...)
+    plot_butterfly!(f::Union{GridPosition, GridLayout, Figure}, plot_data::AbstractMatrix; kwargs...)
 
 Plot a Butterfly plot.
 
@@ -62,7 +62,7 @@ function plot_butterfly!(
     config = PlotConfig(:butterfly)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data) # to avoid change of data in REPL
-    if isa(plot_data, Matrix{Float64})
+    if isa(plot_data, AbstractMatrix{<:Real})
         plot_data = eeg_array_to_dataframe(plot_data)
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
