@@ -1,5 +1,5 @@
 """
-    plot_channelimage!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{<:Real}, positions::Vector{Point{2,Float32}}, ch_names::Vector{String}; kwargs...)
+    plot_channelimage!(f::Union{GridPosition, GridLayout, Figure}, data::Union{DataFrame,AbstractMatrix}, positions::Vector{Point{2,Float32}}, ch_names::Vector{String}; kwargs...)
     plot_channelimage(data::Union{DataFrame, AbstractMatrix}, positions::Vector{Point{2,Float32}}, ch_names::Vector{String}; kwargs...)
         
 Plot a Channel image

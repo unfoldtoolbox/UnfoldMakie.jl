@@ -1,6 +1,6 @@
 """
-    plot_topoplot!(f::Union{GridPosition, GridLayout, Figure}, data, positions::Vector; labels = nothing, kwargs...)
-    plot_topoplot(data, position::Vector; labels = nothing, kwargs...)
+    plot_topoplot!(f::Union{GridPosition, GridLayout, Figure}, data::Union{<:AbstractDataFrame,<:AbstractVector}, positions::Vector; labels = nothing, kwargs...)
+    plot_topoplot(data::Union{<:AbstractDataFrame,<:AbstractVector}, position::Vector; labels = nothing, kwargs...)
 
 Plot a topoplot.
 ## Arguments

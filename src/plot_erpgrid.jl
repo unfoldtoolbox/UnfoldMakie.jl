@@ -29,7 +29,7 @@ plot_erpgrid(
     positions::Vector,
     ch_names::Vector{String};
     kwargs...,
-) = plot_erpgrid!(Figure(), data, positions, ch_names::Vector{String}; kwargs...)
+) = plot_erpgrid!(Figure(), data, positions, ch_names; kwargs...)
 
 plot_erpgrid!(
     f::Union{GridPosition,GridLayout,Figure},
