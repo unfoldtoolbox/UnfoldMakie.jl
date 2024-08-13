@@ -2,7 +2,7 @@ dat, positions = TopoPlots.example_data()
 data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 
 @testset "topoplot: basic" begin
-    plot_topoplot(dat[:, 50, 1], pos)
+    plot_topoplot(dat[:, 50, 1], positions)
 end
 
 @testset "topoplot: data input as DataFrame" begin
