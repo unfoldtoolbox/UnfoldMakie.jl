@@ -2,10 +2,9 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
-    plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...)
-    plot_erp(plot_data::Union{DataFrame, <:AbstractMatrix, <:AbstractVector}; kwargs...) 
-        
+    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::Union{DataFrame, AbstractMatrix, AbstractVector{<:Number}}; kwargs...)
+    plot_erp(times, plot_data::Union{DataFrame, AbstractMatrix, AbstractVector{<:Number}}; kwargs...)
+
 Plot an ERP plot.   
 
 ## Arguments
@@ -42,20 +41,19 @@ $(_docstring(:erp))
 **Return Value:** `Figure` displaying the ERP plot.
 
 """
-plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data; kwargs...)
+plot_erp(plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
+    plot_erp!(Figure(), plot_data; kwargs...)
 
-plot_erp(plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) = plot_erp(
-    eeg_array_to_dataframe(plot_data');
-    axis = (; xlabel = "Time [samples]"),
+plot_erp(
+    times,
+    plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     kwargs...,
-)
-
-plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
-    plot_erp(eeg_array_to_dataframe(plot_data'); axis = (; xticks = times), kwargs...)
+) =
+    plot_erp(plot_data; axis = (; xticks = times), kwargs...)
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
-    plot_data::DataFrame;
+    plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     positions = nothing,
     labels = nothing,
     categorical_color = true,
@@ -68,6 +66,10 @@ function plot_erp!(
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data)
+    if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
+        plot_data = eeg_array_to_dataframe(plot_data')
+        config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
+    end
 
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
