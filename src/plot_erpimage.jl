@@ -1,5 +1,5 @@
 """
-    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{Float64}; kwargs...)
+    plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::AbstractMatrix{Float64}; kwargs...)
     plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, data::Observable{<:AbstractMatrix}; kwargs...)
     plot_erpimage!(f::Union{GridPosition, GridLayout, Figure}, times::Observable{<:AbstractVector}, data::Observable{<:AbstractMatrix{<:Real}}; kwargs...)
 
@@ -43,9 +43,10 @@ $(_docstring(:erpimage))
 **Return Value:** `Figure` displaying the ERP image. 
 """
 plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
+
 plot_erpimage(
     times::AbstractVector,
-    data::Union{<:Observable{Matrix{<:Real}},Matrix{<:Real}};
+    data::Union{<:Observable{Matrix{<:Real}}, AbstractMatrix{<:Real}};
     kwargs...,
 ) = plot_erpimage!(Figure(), times, data; kwargs...)
 
@@ -58,7 +59,6 @@ plot_erpimage!(
     data::Observable{<:AbstractMatrix};
     kwargs...,
 ) = plot_erpimage!(f, @lift(1:size($data, 1)), data; kwargs...)
-
 
 _as_observable(x) = Observable(x)
 _as_observable(x::Observable) = x
