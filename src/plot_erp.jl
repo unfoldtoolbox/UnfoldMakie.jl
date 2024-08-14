@@ -17,7 +17,7 @@ Plot an ERP plot.
     Additional styling behavior. \\
     Often used as: `plot_erp(df; mapping = (; color = :coefname, col = :conditionA))`.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 
 - `categorical_color::Bool = true`\\
     Treat `:color` as categorical variable in case of numeric `:color` column.

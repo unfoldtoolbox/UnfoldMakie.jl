@@ -14,7 +14,7 @@ Plot an ERP image.
 - `ch_names::Vector{String}`\\
     Vector with channel names.
         
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
     Draw channels labels over each waveform. 
 - `times::Vector = 1:size(data, 2)`\\

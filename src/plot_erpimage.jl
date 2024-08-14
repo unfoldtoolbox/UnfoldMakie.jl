@@ -13,7 +13,7 @@ Plot an ERP image.
 - `data::Union{DataFrame, Vector{Float32}}`\\
     Data for the plot visualization.
         
-## Keyword argumets (kwargs) 
+## Keyword arguments (kwargs) 
 - `erpblur::Number = 10`\\
     Number indicating how much blur is applied to the image. \\
     Gaussian blur of the `ImageFiltering` module is used.\\

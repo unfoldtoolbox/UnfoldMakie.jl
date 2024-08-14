@@ -18,7 +18,7 @@ Plot a Butterfly plot.
     Additional styling behavior. \\
     Often used as: `plot_butterfly(df; visual = (; colormap = :romaO))`.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
