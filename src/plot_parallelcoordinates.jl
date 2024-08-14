@@ -14,7 +14,7 @@ Dimensions: conditions, channels, time, trials.
 - `data::Union{DataFrame, AbstractMatrix}`\\
     Data for the plot visualization.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `normalize::Symbol = nothing`\\
     If `:minmax`, normalize each axis to their respective min-max range.
 - `ax_labels::Vector{String} = nothing`\\
