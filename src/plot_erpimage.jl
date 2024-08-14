@@ -46,7 +46,7 @@ plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
 
 plot_erpimage(
     times::AbstractVector,
-    data::Union{<:Observable{Matrix{<:Real}}, AbstractMatrix{<:Real}};
+    data::Union{<:Observable{Matrix{<:Real}},AbstractMatrix{<:Real}};
     kwargs...,
 ) = plot_erpimage!(Figure(), times, data; kwargs...)
 
