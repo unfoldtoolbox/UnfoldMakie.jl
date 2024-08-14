@@ -50,8 +50,6 @@ $(_docstring(:topoplotseries))
 plot_topoplotseries(data::Union{<:Observable{<:DataFrame},DataFrame}; kwargs...) =
     plot_topoplotseries!(Figure(), data; kwargs...)
 
-#@deprecate plot_topoplotseries(data::DataFrame, Δbin; kwargs...)  plot_topoplotseries(data::DataFrame; bin_width, kwargs...) 
-
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
     data::Union{<:Observable{<:DataFrame},DataFrame};
