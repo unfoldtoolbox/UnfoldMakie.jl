@@ -11,6 +11,8 @@ include("../../../example_data.jl")
 data, pos = example_data("TopoPlots.jl")
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 
+# # Hiding
+
 #=
 First, you can specify the axis settings with `axis = (; ...)`. 
 
@@ -54,6 +56,10 @@ plot_erpimage!(
     dat;
     layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
 )
+
+
+# # Showing
+
 #=
 Some plots hide features by default. This could be reverted by setting the variables to `nothing`
 =#
