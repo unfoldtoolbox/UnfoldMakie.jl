@@ -96,13 +96,13 @@ end
 @testset "Effect plot: xlabelvisible is not working" begin
     eff_same = effects(Dict(:condition => ["car", "face"], :duration => 200), m)
     plot_erp(
-    res_effects2;
+        res_effects2;
         mapping = (; col = :eventname),#, color = :condition), why it doesn't work???
-        axis = (; titlevisible = false,
-                    xlabelvisible = false,
-                    ylabelvisible = false,
-                    yticklabelsvisible = false)
+        axis = (;
+            titlevisible = false,
+            xlabelvisible = false,
+            ylabelvisible = false,
+            yticklabelsvisible = false,
+        ),
     )
 end
-using DataStructures
-counter(eff_same.condition)
