@@ -69,7 +69,6 @@ function plot_erp!(
         plot_data = eeg_array_to_dataframe(plot_data')
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
-
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
     #remove mapping values with `nothing`
@@ -143,7 +142,7 @@ function plot_erp!(
 
     f_grid = f[1, 1:4]
 
-    # draw a normal ERP lineplot  
+    # draw a standart ERP lineplot 
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
