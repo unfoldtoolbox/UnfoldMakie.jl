@@ -42,6 +42,8 @@ Multiple miniature topoplots in regular distances.
     `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
     `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
     `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
+- `visual.colorrange::2-element Vector{Int64}`, `colorbar.colorrange::2-element Vector{Int64}`\\
+    First is resposnible for colorrange in topoplots, second - in colorbars. Ideally they should be the same. 
 
 $(_docstring(:topoplotseries))
 
