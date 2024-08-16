@@ -74,6 +74,16 @@ end
     )
 end
 
+
+@testset "Effect plot: should be no gap instead of legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, group = :continuous),
+        categorical_color = false,
+    )
+end
+
+
 @testset "Effect plot: move legend" begin
     plot_erp(
         res_effects2;
