@@ -81,7 +81,7 @@ plot_topoplotseries(
 # ## Adjusting column gaps 
 # Using `colgap` in `with_theme` helps to adjust column gaps.
 
-with_theme(colgap = 50) do 
+with_theme(colgap = 50) do
     plot_topoplotseries(df, bin_num = 5; positions = positions)
 end
 
