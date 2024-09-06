@@ -89,8 +89,13 @@ end
 
 begin
     f = Figure()
-    plot_topoplotseries!(f[1, 1], df, bin_num = 5; positions = positions,
-        topoplot_axes = (; limits = (-0.05, 1.05, -0.1, 1.05)))
+    plot_topoplotseries!(
+        f[1, 1],
+        df,
+        bin_num = 5;
+        positions = positions,
+        topoplot_axes = (; limits = (-0.05, 1.05, -0.1, 1.05)),
+    )
     f
 end
 
