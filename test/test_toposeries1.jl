@@ -252,3 +252,21 @@ end
     df.time = df.time .+ 0.5555
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
+
+@testset "toposeries: colgap" begin
+    with_theme(colgap = 50) do
+        plot_topoplotseries(df, bin_num = 5; positions = positions)
+    end
+end
+
+@testset "toposeries: colgap for subsets" begin
+    f = Figure()
+    plot_topoplotseries!(
+        f[1, 1],
+        df,
+        bin_num = 5;
+        positions = positions,
+        topoplot_axes = (; limits = (-0.05, 1.05, -0.1, 1.05)),
+    )
+    f
+end
