@@ -96,5 +96,3 @@ f
 # ```@docs
 # plot_topoplot
 # ```
-
- 
