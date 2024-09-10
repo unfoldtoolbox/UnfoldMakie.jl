@@ -17,10 +17,8 @@ $(_docstring(:topoplot))
 
 **Return Value:** `Figure` displaying the Topoplot.
 """
-plot_topoplot(
-    data::Union{<:AbstractDataFrame,<:AbstractVector};
-    kwargs...,
-) = plot_topoplot!(Figure(), data; kwargs...)
+plot_topoplot(data::Union{<:AbstractDataFrame,<:AbstractVector}; kwargs...) =
+    plot_topoplot!(Figure(), data; kwargs...)
 
 function plot_topoplot!(
     f::Union{GridPosition,GridLayout,GridLayoutBase.GridSubposition,Figure},
