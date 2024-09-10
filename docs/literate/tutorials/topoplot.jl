@@ -74,7 +74,7 @@ labs4 = ["O1", "F2", "F3", "P4"]
 plot_topoplot!(
     f[1, 1],
     dat[1:4, 340, 1];
-    positions = positions[1:4];
+    positions = positions[1:4],
     visual = (; label_scatter = false),
     labels = labs4,
     axis = (; title = "no channel scatter"),
@@ -83,7 +83,7 @@ plot_topoplot!(
 plot_topoplot!(
     f[1, 2],
     dat[1:4, 340, 1];
-    positions = positions[1:4];
+    positions = positions[1:4],
     visual = (; label_text = true, label_scatter = (markersize = 15, strokewidth = 2)),
     labels = labs4,
     axis = (; title = "channel scatter with text"),
