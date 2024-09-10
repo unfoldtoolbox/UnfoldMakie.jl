@@ -10,7 +10,6 @@ res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5),
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
         legend = (; nbanks = 2),
-        layout = (; legend_position = :right),
         categorical_color = false,
         categorical_group = true,
     )

@@ -116,6 +116,15 @@ end
     )
 end
 
+#= @testset "ERP plot: with colorbar and legend 2" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, group = :continuous),
+        categorical_color = false,
+        categorical_group = false,
+    )
+end =#
+
 @testset "ERP plot: rename legend" begin
     f = Figure()
     results = coeftable(m)

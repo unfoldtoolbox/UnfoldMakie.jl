@@ -66,8 +66,8 @@ Some plots hide features by default. This could be reverted by setting the varia
 
 data, positions = TopoPlots.example_data()
 plot_topoplot(
-    data[:, 340, 1],
-    positions;
+    data[:, 340, 1];
+    positions = positions,
     layout = (; hidespines = nothing, hidedecorations = nothing),
 )
 

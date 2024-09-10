@@ -53,8 +53,7 @@ plot_erp(results)
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
-    legend = (; nbanks = 2),
-    layout = (; show_legend = true, legend_position = :right),
+    layout = (; show_legend = false),
     categorical_color = false, # perceives color (here: continuous) as contionus 
     categorical_group = true, # separates lines, if `false` all lines will be connected
 )
