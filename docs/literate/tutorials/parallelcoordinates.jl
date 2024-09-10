@@ -160,7 +160,6 @@ plot_parallelcoordinates(
     f[1, 1],
     uf_5chan;
     mapping = (; color = :coefname),
-    layout = (; legend_position = :right),
     visual = (; alpha = 0.1),
     axis = (; title = "alpha = 0.1"),
 )
@@ -168,7 +167,6 @@ plot_parallelcoordinates(
     f[2, 1],
     uf_5chan,
     mapping = (; color = :coefname),
-    layout = (; legend_position = :right),
     visual = (; alpha = 0.9),
     axis = (; title = "alpha = 0.9"),
 )

@@ -32,7 +32,7 @@ dat, positions = TopoPlots.example_data()
 plot_topoplot(dat[:, 340, 1], positions)
 
 df = DataFrame(:estimate => dat[:, 340, 1])
-plot_topoplot(df, positions)
+plot_topoplot(df; positions = positions)
 
 
 # ## Setting sensor positions
