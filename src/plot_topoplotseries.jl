@@ -1,6 +1,6 @@
 """
-    plot_topoplotseries(f::Union{GridPosition, GridLayout, Figure}, data::DataFrame; kwargs...)
-    plot_topoplotseries!(data::DataFrame; kwargs...)
+    plot_topoplotseries(f::Union{GridPosition, GridLayout, Figure}, data::Union{<:Observable{<:DataFrame},DataFrame}; kwargs...)
+    plot_topoplotseries!(data::Union{<:Observable{<:DataFrame},DataFrame}; kwargs...)
         
 Multiple miniature topoplots in regular distances. 
 ## Arguments  
@@ -42,6 +42,8 @@ Multiple miniature topoplots in regular distances.
     `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
     `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
     `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
+- `visual.colorrange::2-element Vector{Int64}`, `colorbar.colorrange::2-element Vector{Int64}`\\
+    First is resposnible for colorrange in topoplots, second - in colorbars. Ideally they should be the same. 
 
 $(_docstring(:topoplotseries))
 
@@ -49,8 +51,6 @@ $(_docstring(:topoplotseries))
 """
 plot_topoplotseries(data::Union{<:Observable{<:DataFrame},DataFrame}; kwargs...) =
     plot_topoplotseries!(Figure(), data; kwargs...)
-
-#@deprecate plot_topoplotseries(data::DataFrame, Δbin; kwargs...)  plot_topoplotseries(data::DataFrame; bin_width, kwargs...) 
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},

@@ -16,7 +16,7 @@ using DataFrames
 
 # Data loading
 
-data, positions = TopoPlots.example_data()
+dat, positions = TopoPlots.example_data()
 
 # The size of `data` is 64×400×3. This means:
 # - 64 channels;
@@ -29,9 +29,9 @@ data, positions = TopoPlots.example_data()
 # # Plot Topoplots
 
 # Here we select a time point in 340 msec and the mean estimate. 
-plot_topoplot(data[:, 340, 1]; positions = positions)
+plot_topoplot(dat[1:4, 340, 1]; positions = positions[1:4])
 
-df = DataFrame(:estimate => data[:, 340, 1])
+df = DataFrame(:estimate => dat[:, 340, 1])
 plot_topoplot(df; positions = positions)
 
 
@@ -73,7 +73,8 @@ f = Figure(size = (500, 500))
 labs4 = ["O1", "F2", "F3", "P4"]
 plot_topoplot!(
     f[1, 1],
-    data[1:4, 340, 1];
+    dat[1:4, 340, 1];
+    positions = positions[1:4],
     visual = (; label_scatter = false),
     labels = labs4,
     axis = (; title = "no channel scatter"),
@@ -81,7 +82,8 @@ plot_topoplot!(
 
 plot_topoplot!(
     f[1, 2],
-    data[1:4, 340, 1];
+    dat[1:4, 340, 1];
+    positions = positions[1:4],
     visual = (; label_text = true, label_scatter = (markersize = 15, strokewidth = 2)),
     labels = labs4,
     axis = (; title = "channel scatter with text"),

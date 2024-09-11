@@ -2,10 +2,9 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::DataFrame; kwargs...)
-    plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...)
-    plot_erp(plot_data::Union{DataFrame, <:AbstractMatrix, <:AbstractVector}; kwargs...) 
-        
+    plot_erp!(f::Union{GridPosition, GridLayout, Figure}, plot_data::Union{DataFrame, AbstractMatrix, AbstractVector{<:Number}}; kwargs...)
+    plot_erp(times, plot_data::Union{DataFrame, AbstractMatrix, AbstractVector{<:Number}}; kwargs...)
+
 Plot an ERP plot.   
 
 ## Arguments
@@ -18,7 +17,7 @@ Plot an ERP plot.
     Additional styling behavior. \\
     Often used as: `plot_erp(df; mapping = (; color = :coefname, col = :conditionA))`.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 
 - `categorical_color::Bool = true`\\
     Treat `:color` as categorical variable in case of numeric `:color` column.
@@ -42,20 +41,18 @@ $(_docstring(:erp))
 **Return Value:** `Figure` displaying the ERP plot.
 
 """
-plot_erp(plot_data::DataFrame; kwargs...) = plot_erp!(Figure(), plot_data; kwargs...)
+plot_erp(plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
+    plot_erp!(Figure(), plot_data; kwargs...)
 
-plot_erp(plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) = plot_erp(
-    eeg_array_to_dataframe(plot_data');
-    axis = (; xlabel = "Time [samples]"),
+plot_erp(
+    times,
+    plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     kwargs...,
-)
-
-plot_erp(times, plot_data::Union{AbstractMatrix,AbstractVector{<:Number}}; kwargs...) =
-    plot_erp(eeg_array_to_dataframe(plot_data'); axis = (; xticks = times), kwargs...)
+) = plot_erp(plot_data; axis = (; xticks = times), kwargs...)
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
-    plot_data::DataFrame;
+    plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     positions = nothing,
     labels = nothing,
     categorical_color = true,
@@ -68,7 +65,10 @@ function plot_erp!(
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data)
-
+    if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
+        plot_data = eeg_array_to_dataframe(plot_data')
+        config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
+    end
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
     #remove mapping values with `nothing`
@@ -142,7 +142,7 @@ function plot_erp!(
 
     f_grid = f[1, 1:4]
 
-    # draw a normal ERP lineplot  
+    # draw a standart ERP lineplot 
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
@@ -186,7 +186,7 @@ end
 function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
     all_positions = unique(all_positions)
 
-    topoMatrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
+    topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
     un = unique(unique_val)
     special_colors =
@@ -202,7 +202,7 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
         interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the special_colorsmap
         colorrange = (0, length(all_positions)), # add the 0 for the white-first color
         colormap = special_colors,
-        head = (color = :black, linewidth = 1, model = topoMatrix),
+        head = (color = :black, linewidth = 1, model = topo_matrix),
         label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
     )
 

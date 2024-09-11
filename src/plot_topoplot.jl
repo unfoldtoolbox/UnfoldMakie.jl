@@ -1,6 +1,6 @@
 """
-    plot_topoplot!(f::Union{GridPosition, GridLayout, Figure}, data, ; positions = nothing, labels = nothing, kwargs...)
-    plot_topoplot(data; positions = nothing, labels = nothing, kwargs...)
+    plot_topoplot!(f::Union{GridPosition, GridLayout, Figure}, data::Union{<:AbstractDataFrame,<:AbstractVector}; positions::Vector, labels = nothing, kwargs...)
+    plot_topoplot(data::Union{<:AbstractDataFrame,<:AbstractVector}; position::Vector, labels = nothing, kwargs...)
 
 Plot a topoplot.
 ## Arguments
@@ -8,7 +8,7 @@ Plot a topoplot.
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, Vector{Float32}}` \\
     Data for the plot visualization.
-- `positions::Vector{Point{2, Float32}} = nothing`\\
+- `positions::Vector{Point{2, Float32}}`\\
     Positions used if `data` is not a `DataFrame`. Positions are generated from `labels` if `positions = nothing`.
 - `labels::Vector{String} = nothing`\\
     Labels used if `data` is not a DataFrame.
@@ -19,11 +19,12 @@ $(_docstring(:topoplot))
 """
 plot_topoplot(data::Union{<:AbstractDataFrame,<:AbstractVector}; kwargs...) =
     plot_topoplot!(Figure(), data; kwargs...)
+
 function plot_topoplot!(
     f::Union{GridPosition,GridLayout,GridLayoutBase.GridSubposition,Figure},
     data::Union{<:AbstractDataFrame,<:AbstractVector};
-    positions = nothing,
     labels = nothing,
+    positions = nothing,
     kwargs...,
 )
     config = PlotConfig(:topoplot)
@@ -36,6 +37,9 @@ function plot_topoplot!(
         data = data[:, config.mapping.y]
     end
 
+    if isnothing(positions) && !isnothing(labels)
+        positions = TopoPlots.labels2positions(labels)
+    end
     positions = get_topo_positions(; positions = positions, labels = labels)
     eeg_topoplot!(axis, data, labels; positions, config.visual...)
 

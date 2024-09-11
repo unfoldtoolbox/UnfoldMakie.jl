@@ -1,7 +1,28 @@
 dat, positions = TopoPlots.example_data()
+data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 
-@testset "topoplot basic" begin
-    plot_topoplot(dat[:, 50, 1]; positions = positions, axis = (; title = "topoplot"))
+@testset "topoplot: basic" begin
+    plot_topoplot(dat[:, 50, 1]; positions)
+end
+
+@testset "topoplot: data input as DataFrame" begin
+    plot_topoplot(
+        data_for_topoplot;
+        positions = positions[1:10],
+        axis = (; title = "Topoplot"),
+    )
+end
+
+@testset "topoplot: data input as AbstractVector" begin
+    d = rand(128)
+    p = rand(Point2f, 128)
+    plot_topoplot(d; positions = p)
+end
+
+@testset "topoplot: data input as SubDataFrame" begin
+    d = DataFrame(:estimate => rand(20), :label => string.(1:20))
+    d1 = @view(d[1:10, :])
+    plot_topoplot(d1; positions = rand(Point2f, 10))
 end
 
 @testset "topoplot: no legend" begin
@@ -20,12 +41,11 @@ end
 
 @testset "topoplot: labels" begin
     labels = ["s$i" for i = 1:size(dat[:, 150, 1], 1)]
-    plot_topoplot(dat[:, 150, 1]; positions = positions, labels = labels)
+    plot_topoplot(dat[:, 150, 1], positions = positions; labels = labels)
 end
 
 @testset "topoplot: GridSubposition" begin
     f = Figure()
-    data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
     plot_topoplot!(
         f[1, 1][1, 1],
         data_for_topoplot;
@@ -35,14 +55,6 @@ end
     f
 end
 
-@testset "topoplot: AbstractMatrix" begin
-    d = rand(128)
-    p = rand(Point2f, 128)
-    plot_topoplot(d; positions = p)
-end
-
-@testset "topoplot: ViewArray" begin
-    d = DataFrame(:estimate => rand(20), :label => string.(1:20))
-
-    plot_topoplot(@view(d[1:10, :]); positions = rand(Point2f, 10))
+@testset "topoplot: positions through labels" begin
+    plot_topoplot(dat[1:19, 50, 1]; labels = TopoPlots.CHANNELS_10_20)
 end

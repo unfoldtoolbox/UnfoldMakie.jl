@@ -78,6 +78,27 @@ plot_topoplotseries(
     ),
 )
 
+# ## Adjusting column gaps 
+# Using `colgap` in `with_theme` helps to adjust column gaps.
+
+with_theme(colgap = 5) do
+    plot_topoplotseries(df, bin_num = 5; positions = positions)
+end
+
+# However it doesn't work with subsets. Here you need to use `topoplot_axes.limits`.
+
+begin
+    f = Figure()
+    plot_topoplotseries!(
+        f[1, 1],
+        df,
+        bin_num = 5;
+        positions = positions,
+        topoplot_axes = (; limits = (-0.05, 1.05, -0.1, 1.05)),
+    )
+    f
+end
+
 # ## Adjusting contours
 # Topographic contour is a line drawn on a topographic map to indicate an increase or decrease in voltage.
 # A contour level is an area with a specific range of voltage. By default, the number of contour levels is 6, which means that the topography plot is divided into 6 areas depending on their voltage values.

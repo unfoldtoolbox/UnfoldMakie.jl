@@ -2,10 +2,9 @@ using DataFrames
 using TopoPlots
 using LinearAlgebra
 """
-    plot_butterfly(plot_data::DataFrame; kwargs...)
-    plot_butterfly(plot_data::AbstractMatrix; kwargs...)
-    plot_butterfly(times::Vector, plot_data::AbstractMatrix; kwargs...)
-    plot_butterfly!(f::FigLike, plot_data::AbstractMatrix; kwargs...)
+    plot_butterfly(plot_data::Union{DataFrame, AbstractMatrix}; kwargs...)
+    plot_butterfly(times::Vector, plot_data::Union{DataFrame, AbstractMatrix}; kwargs...)
+    plot_butterfly!(f::Union{GridPosition, GridLayout, Figure}, plot_data::Union{DataFrame, AbstractMatrix}; kwargs...)
 
 Plot a Butterfly plot.
 
@@ -19,7 +18,7 @@ Plot a Butterfly plot.
     Additional styling behavior. \\
     Often used as: `plot_butterfly(df; visual = (; colormap = :romaO))`.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
@@ -39,18 +38,12 @@ Plot a Butterfly plot.
 $(_docstring(:butterfly))
 see also [`plot_erp`](@ref erp_vis)
 """
-plot_butterfly(plot_data::DataFrame; kwargs...) =
+plot_butterfly(plot_data::Union{<:AbstractDataFrame,AbstractMatrix}; kwargs...) =
     plot_butterfly!(Figure(), plot_data; kwargs...)
-
-plot_butterfly(plot_data::AbstractMatrix; kwargs...) = plot_butterfly(
-    eeg_array_to_dataframe(plot_data);
-    axis = (; xlabel = "Time [samples]"),
-    kwargs...,
-)
 
 function plot_butterfly!(
     f::Union{GridPosition,GridLayout,<:Figure},
-    plot_data::DataFrame;
+    plot_data::Union{<:AbstractDataFrame,AbstractMatrix};
     positions = nothing,
     labels = nothing,
     topolegend = true,
@@ -64,12 +57,17 @@ function plot_butterfly!(
     mapping = (;),
     kwargs...,
 )
+
     config = PlotConfig(:butterfly)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data) # to avoid change of data in REPL
-
+    if isa(plot_data, AbstractMatrix{<:Real})
+        plot_data = eeg_array_to_dataframe(plot_data)
+        config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
+    end
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
