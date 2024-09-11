@@ -69,7 +69,7 @@
 
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
-    plot_channelimage!(gg, data[:, :, 1], positions[1:30], raw_ch_names;)
+    plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], raw_ch_names;)
     r1, positions = example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
@@ -126,7 +126,7 @@ end
         stderror = true,
     )
 
-    plot_butterfly!(f[1, 2], d_topo; positions = positions)
+    plot_butterfly!(f[1, 2], d_topo, positions = positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions = positions)
     plot_topoplotseries!(
         f[2, 2],
@@ -141,12 +141,7 @@ end
     times = -0.099609375:0.001953125:1.0
     plot_erpimage!(f[3, 2], times, d_singletrial)
 
-    plot_parallelcoordinates(
-        f[4, 2],
-        uf_5chan;
-        mapping = (; color = :coefname),
-        layout = (; legend_position = :right),
-    )
+    plot_parallelcoordinates(f[4, 2], uf_5chan; mapping = (; color = :coefname))
 
     for (label, layout) in zip(
         ["A", "B", "C", "D", "E", "F", "G", "H"],
@@ -214,16 +209,10 @@ end
         categorical_color = false,
         categorical_group = true,
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
-        legend = (; nbanks = 2),
-        layout = (; show_legend = true, legend_position = :right),
+        layout = (; show_legend = true),
     )
 
-    plot_parallelcoordinates(
-        f[3, 2:3],
-        uf_5chan;
-        mapping = (; color = :coefname),
-        layout = (; legend_position = :right),
-    )
+    plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))
 
     plot_erpimage!(f[1, 4:5], times, d_singletrial)
     plot_circular_topoplots!(

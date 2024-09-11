@@ -197,7 +197,8 @@ function label_management(ax, cat_or_cont_columns, df_single, col)
     if cat_or_cont_columns == "cat"
         ax.xlabel = string(to_value(df_single)[1, col])
     else
-        ax.xlabel = string(to_value(df_single).cont_cuts[1, :][])
+        tmp_labels = to_value(df_single).cont_cuts[1, :][]
+        ax.xlabel = string(tmp_labels)
     end
 end
 
@@ -312,6 +313,6 @@ function data_binning(df; col_y = :erp, fun = mean, grouping = [])
     grouping = grouping[.!isnothing.(grouping)]
     df_grouped = groupby(df, unique([:cont_cuts, grouping...]))
     df_combined = combine(df_grouped, col_y => fun)
-    rename!(df_combined, names(df_combined)[end] => col_y) # renames estimate_fun to estimate
+    rename!(df_combined, names(df_combined)[end] => col_y) # renames estimate_fun to estimate    
     return df_combined
 end

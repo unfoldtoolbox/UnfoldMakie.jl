@@ -10,7 +10,7 @@ Plot a designmatrix.
 - `data::Unfold.DesignMatrix`\\
     Data for the plot visualization.
 
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `standardize_data::Bool = true`\\
     Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
 - `sort_data::Bool = true`\\

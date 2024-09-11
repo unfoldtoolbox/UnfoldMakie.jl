@@ -149,6 +149,16 @@ end
     )
 end
 
+@testset "toposeries: visual.colorrange and colorbar.colorrange" begin
+    plot_topoplotseries(
+        df;
+        bin_width,
+        positions = positions,
+        colorbar = (; colorrange = (-1, 1)),
+        visual = (; colorrange = (-1, 1)),
+    )
+end
+
 @testset "toposeries: adjusted ylim_topo" begin
     plot_topoplotseries(
         df;
@@ -224,7 +234,7 @@ end
     )
 end
 
-@testset "adjustable colorbar" begin
+@testset "adjustable colorbar" begin #need to be elaborated
     f = Figure()
     plot_topoplotseries!(
         f[1, 1],
@@ -234,6 +244,29 @@ end
         colorbar = (; height = 100, width = 30),
         axis = (; aspect = AxisAspect(1)),
     )
-    Box(f[1, 1], color = (:red, 0.2), strokewidth = 0)
+    #Box(f[1, 1], color = (:red, 0.2), strokewidth = 0)
+    f
+end
+
+@testset "toposeries: precision" begin
+    df.time = df.time .+ 0.5555
+    plot_topoplotseries(df; bin_num = 5, positions = positions)
+end
+
+@testset "toposeries: colgap" begin
+    with_theme(colgap = 50) do
+        plot_topoplotseries(df, bin_num = 5; positions = positions)
+    end
+end
+
+@testset "toposeries: colgap for subsets" begin
+    f = Figure()
+    plot_topoplotseries!(
+        f[1, 1],
+        df,
+        bin_num = 5;
+        positions = positions,
+        topoplot_axes = (; limits = (-0.05, 1.05, -0.1, 1.05)),
+    )
     f
 end

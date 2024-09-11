@@ -1,3 +1,4 @@
+using Unfold: eventnames
 using AlgebraOfGraphics: group
 include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
@@ -9,7 +10,6 @@ res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5),
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous),
         legend = (; nbanks = 2),
-        layout = (; legend_position = :right),
         categorical_color = false,
         categorical_group = true,
     )
@@ -73,6 +73,16 @@ end
     )
 end
 
+
+@testset "Effect plot: should be no gap instead of legend" begin
+    plot_erp(
+        res_effects2;
+        mapping = (; color = :continuous, group = :continuous),
+        categorical_color = false,
+    )
+end
+
+
 @testset "Effect plot: move legend" begin
     plot_erp(
         res_effects2;
@@ -88,6 +98,20 @@ end
             ylabelsize = 16,
             xgridvisible = false,
             ygridvisible = false,
+        ),
+    )
+end
+
+@testset "Effect plot: xlabelvisible is not working" begin
+    eff_same = effects(Dict(:condition => ["car", "face"], :duration => 200), m)
+    plot_erp(
+        res_effects2;
+        mapping = (; col = :eventname),#, color = :condition), why it doesn't work???
+        axis = (;
+            titlevisible = false,
+            xlabelvisible = false,
+            ylabelvisible = false,
+            yticklabelsvisible = false,
         ),
     )
 end

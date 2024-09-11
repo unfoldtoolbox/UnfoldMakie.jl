@@ -1,17 +1,20 @@
 """
-    plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
-    plot_erpgrid(data::Matrix{<:Real}, pos::Vector{Point{2,Float}}; kwargs...)
+    plot_erpgrid(data::Union{Matrix{<:Real}, DataFrame}, positions::Vector; kwargs...)
+    plot_erpgrid!(f::Union{GridPosition, GridLayout, Figure}, data::Union{Matrix{<:Real}, DataFrame}, positions::Vector, ch_names::Vector{String}; kwargs...)
 
 Plot an ERP image.
 ## Arguments
 - `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
-- `data::Matrix{<:Real}`\\
-    Data for the plot visualization.
-- `pos::Vector{Point{2,Float}}` \\
+- `data::Union{Matrix{<:Real}, DataFrame}`\\
+    Data for the plot visualization.\\
+    Data should has a format of 1 row - 1 channel. 
+- `positions::Vector{Point{2,Float}}` \\
     Electrode positions.
+- `ch_names::Vector{String}`\\
+    Vector with channel names.
         
-## Keyword argumets (kwargs)
+## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
     Draw channels labels over each waveform. 
 - `times::Vector = 1:size(data, 2)`\\
@@ -21,42 +24,64 @@ $(_docstring(:erpgrid))
 
 **Return Value:** `Figure` displaying ERP grid.
 """
-plot_erpgrid(data::Matrix{<:Real}, pos; kwargs...) =
-    plot_erpgrid!(Figure(), data, pos; kwargs...)
+plot_erpgrid(
+    data::Union{Matrix{<:Real},DataFrame},
+    positions::Vector,
+    ch_names::Vector{String};
+    kwargs...,
+) = plot_erpgrid!(Figure(), data, positions, ch_names; kwargs...)
+
+plot_erpgrid!(
+    f::Union{GridPosition,GridLayout,Figure},
+    data::Union{Matrix{<:Real},DataFrame},
+    positions;
+    kwargs...,
+) = plot_erpgrid!(f, data, positions, string.(1:length(positions)); kwargs...)
+
+plot_erpgrid(data::Union{Matrix{<:Real},DataFrame}, positions; kwargs...) =
+    plot_erpgrid!(Figure(), data, positions, string.(1:length(positions)); kwargs...)
 
 function plot_erpgrid!(
     f::Union{GridPosition,GridLayout,Figure},
-    data::Matrix{<:Real},
-    pos;
+    data::Union{Matrix{<:Real},DataFrame},
+    positions::Vector,
+    ch_names::Vector{String};
     drawlabels = false,
-    times = -1:size(data, 2)-2, #arbitrary strat just for fun
+    times = -1:size(data, 2)-2, #arbitrary
     kwargs...,
 )
     config = PlotConfig(:erpgrid)
     config_kwargs!(config; kwargs...)
 
-    chan_num = size(data, 1)
-    data = data[1:chan_num, :]
-    pos = hcat([[p[1], p[2]] for p in pos]...)
-
-    pos = pos[:, 1:chan_num]
-    minmaxrange = (maximum(pos, dims = 2) - minimum(pos, dims = 2))
-    pos = (pos .- mean(pos, dims = 2)) ./ minmaxrange .+ 0.5
+    if typeof(data) == DataFrame #maybe better would be put it into signature?
+        data = Matrix(data)
+    end
+    if length(positions) != length(ch_names)
+        error(
+            "Length of positions and channel names are not equal: $(length(positions)) and $(length(ch_names))",
+        )
+    end
+    if size(data, 1) != length(positions)
+        error(
+            "Number of data rows and positions length are not equal: $(size(data, 1)) and $(length(positions))",
+        )
+    end
+    positions = hcat([[p[1], p[2]] for p in positions]...)
+    minmaxrange = (maximum(positions, dims = 2) - minimum(positions, dims = 2)) #should be different for x and y
+    positions = (positions .- mean(positions, dims = 2)) ./ minmaxrange .+ 0.5
 
     axlist = []
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
-
-    for (ix, p) in enumerate(eachcol(pos))
-        x = p[1] #- 0.1
-        y = p[2] #- 0.1
-        # todo: 0.1 should go into plot config
+    for (ix, p) in enumerate(eachcol(positions))
+        x = p[1]
+        y = p[2]
         ax = Axis(
             f[1, 1],
             width = Relative(0.2),
             height = Relative(0.2),
             halign = x,
             valign = y,
-        )# title = raw_ch_names[1:30])
+        )
         if drawlabels
             text!(
                 ax,
@@ -64,7 +89,7 @@ function plot_erpgrid!(
                 1,
                 color = :gray,
                 fontsize = 12,
-                text = string.(ix),
+                text = ch_names[ix],
                 align = (:left, :top),
                 space = :relative,
             )
@@ -103,9 +128,5 @@ function plot_erpgrid!(
         rotation = π / 2,
         fontsize = 12,
     )
-    # testing
-    #ax0 = Axis(f[1, 1], backgroundcolor=:green)#
-    #hidespines!(ax0)
-    #hidedecorations!(ax0)
     f
 end

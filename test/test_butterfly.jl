@@ -2,22 +2,27 @@
 include("../docs/example_data.jl")
 df, pos = example_data("TopoPlots.jl")
 
+tmp = DataFrame(channel = df.channel, estimate = df.estimate)
+grouped = groupby(tmp, :channel)
+mat = Matrix(reduce(hcat, [group.estimate for group in grouped])')
+
 @testset "butterfly: DataFrame as data input" begin
     plot_butterfly(df; positions = pos)
     #save("dev/UnfoldMakie/default_butterfly.png", f)
 end
 
 @testset "butterfly: Matrix as data input" begin
-    tmp = DataFrame(channel = df.channel, estimate = df.estimate)
-    grouped = groupby(tmp, :channel)
-    mat = Matrix(reduce(hcat, [group.estimate for group in grouped])')
     plot_butterfly(mat; positions = pos)
 end
 
-
-@testset "butterfly: GridLayout" begin
+@testset "butterfly: GridLayout for DataFrame" begin
     f = Figure()
     plot_butterfly!(f[1, 1], df; positions = pos)
+end
+
+@testset "butterfly: GridLayout for Matrix" begin
+    f = Figure()
+    plot_butterfly!(f[1, 1], mat; positions = pos)
 end
 
 @testset "butterfly: witout topolegend" begin
@@ -87,7 +92,6 @@ end
         topopositions_to_color = UnfoldMakie.pos_to_color_HSV,
     )
 end
-
 
 @testset "changing color from ROMA to RGB" begin
     plot_butterfly(
