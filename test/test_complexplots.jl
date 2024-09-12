@@ -117,14 +117,7 @@ end
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(
-        f[1, 1],
-        results,
-        categorical_color = false,
-        categorical_group = false,
-        significance = pvals,
-        stderror = true,
-    )
+    plot_erp!(f[1, 1], results, significance = pvals, stderror = true)
 
     plot_butterfly!(f[1, 2], d_topo, positions = positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions = positions)
@@ -181,14 +174,7 @@ end
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(
-        f[2, 1:2],
-        results,
-        categorical_color = false,
-        categorical_group = false,
-        significance = pvals,
-        stderror = true,
-    )
+    plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
 
     plot_designmatrix!(f[2, 3], designmatrix(uf))
 
@@ -206,9 +192,7 @@ end
     plot_erp!(
         f[2, 4:5],
         res_effects;
-        categorical_color = false,
-        categorical_group = true,
-        mapping = (; y = :yhat, color = :continuous, group = :continuous),
+        mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
         layout = (; show_legend = true),
     )
 
