@@ -69,12 +69,7 @@ pvals = DataFrame(
     to = [0.2, 0.5], # if coefname not specified, line should be black
     coefname = ["(Intercept)", "category: face"],
 )
-plot_erp!(
-    f[2, 1:2],
-    results,
-    significance = pvals,
-    stderror = true,
-)
+plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
 
 plot_designmatrix!(f[2, 3], designmatrix(uf))
 
@@ -92,7 +87,6 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 plot_erp!(
     f[2, 4:5],
     res_effects;
-    categorical_group = true,
     mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
     legend = (; nbanks = 2),
     layout = (; show_legend = true, legend_position = :right),
