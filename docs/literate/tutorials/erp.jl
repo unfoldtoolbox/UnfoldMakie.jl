@@ -54,8 +54,6 @@ plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
     layout = (; show_legend = false),
-    categorical_color = false, # perceives color (here: continuous) as contionus 
-    categorical_group = true, # separates lines, if `false` all lines will be connected
 )
 
 # ## Significance lines
