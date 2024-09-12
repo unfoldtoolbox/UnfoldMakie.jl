@@ -5,62 +5,48 @@ m = example_data("UnfoldLinearModel")
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
 
-@testset "Effect plot" begin #where is legend here??
-    plot_erp(
-        res_effects;
-        mapping = (; y = :yhat, color = :continuous, group = :continuous),
-        legend = (; nbanks = 2),
-        categorical_color = false,
-        categorical_group = true,
-    )
+@testset "Effect plot" begin
+    plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, group = :continuous))
 end
 
-@testset "Effect plot: faceted" begin #bug
+@testset "Effect plot: faceted" begin
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
     res_effects.channel = push!(repeat(["1", "2"], 472), "1")
-    plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, col = :channel))
+    plot_erp(
+        res_effects;
+        mapping = (; y = :yhat, color = :continuous => nonnumeric, col = :channel),
+        legend = (; nbanks = 2),
+    )
 end
 
 @testset "Effect plot: faceted channels" begin #bug
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
     res_effects.channel = push!(repeat(["1", "2"], 472), "1")
-    #res_effects.channel = float.(push!(repeat([1, 2], 472), 1))
-    plot_erp(res_effects; mapping = (; y = :yhat, group = :channel, col = :channel))
-end
-
-@testset "Effect plot: no colorbar and legend" begin
     plot_erp(
-        res_effects2;
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        layout = (; show_legend = true, use_legend = false, use_colorbar = false),
-        categorical_color = false,
+        res_effects;
+        mapping = (;
+            y = :yhat,
+            color = :continuous => nonnumeric,
+            group = :channel,
+            col = :channel => nonnumeric,
+        ),
+        legend = (; nbanks = 2),
     )
 end
 
-@testset "Effect plot: no colorbar" begin
+@testset "Effect plot: no colorbar and yes legend" begin
     plot_erp(
         res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
         layout = (; use_legend = true, use_colorbar = false),
-        categorical_color = false,
     )
 end
 
-@testset "Effect plot: no legend" begin
+@testset "Effect plot: yes colorbar and no legend" begin
     plot_erp(
         res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
         layout = (; use_legend = false, use_colorbar = true),
-        categorical_color = false,
-    )
-end
-
-@testset "Effect plot: no colorbar and no legend" begin
-    plot_erp(
-        res_effects2;
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        layout = (; use_legend = false, use_colorbar = false),
-        categorical_color = false,
     )
 end
 
@@ -69,26 +55,22 @@ end
         res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
         layout = (; use_legend = true, use_colorbar = true),
-        categorical_color = false,
     )
 end
 
-
-@testset "Effect plot: should be no gap instead of legend" begin
+@testset "Effect plot: no colorbar and no legend" begin
     plot_erp(
         res_effects2;
-        mapping = (; color = :continuous, group = :continuous),
-        categorical_color = false,
+        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
+        layout = (; use_legend = false, use_colorbar = false),
     )
 end
-
 
 @testset "Effect plot: move legend" begin
     plot_erp(
         res_effects2;
         mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        legend = (; valign = :bottom, halign = :right, tellwidth = false),
-        categorical_color = false,
+        legend = (; valign = :bottom, halign = :right),
         axis = (
             title = "Marginal effects",
             titlegap = 12,
@@ -104,14 +86,18 @@ end
 
 @testset "Effect plot: xlabelvisible is not working" begin
     eff_same = effects(Dict(:condition => ["car", "face"], :duration => 200), m)
+
+    plot_erp(results; axis = (; xlabelvisible = false, xticklabelsvisible = false))
     plot_erp(
-        res_effects2;
-        mapping = (; col = :eventname),#, color = :condition), why it doesn't work???
+        eff_same;
+        mapping = (; col = :condition, color = :time),
         axis = (;
+            xlabel = "test",
             titlevisible = false,
             xlabelvisible = false,
             ylabelvisible = false,
             yticklabelsvisible = false,
+            xticklabelsvisible = false,
         ),
     )
 end

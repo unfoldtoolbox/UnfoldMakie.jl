@@ -18,6 +18,14 @@ end
     plot_erp(dat[1, :, 1])
 end
 
+@testset "ERP plot: rename xlabel" begin
+    plot_erp(results; axis = (; xlabel = "test"))
+end
+
+@testset "ERP plot: xlabelvisible" begin
+    plot_erp(results; axis = (; xlabelvisible = false, xticklabelsvisible = false))
+end
+
 @testset "ERP plot: Array data with times vector" begin
     times = range(0, step = 100, length = size(dat, 2))
     plot_erp(times, dat[1, :, 1], axis = (; xtickformat = "{:d}"))
@@ -42,14 +50,15 @@ end
 
 @testset "ERP plot: with and withour error ribbons" begin
     results = coeftable(m)
-    f = Figure()
     results.coefname =
-        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
+    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
+
+    f = Figure()
     plot_erp!(
         f[1, 1],
         results;
-        axis = (title = "Bad example", titlegap = 12),
+        axis = (; title = "Bad example", titlegap = 12),
         :stderror => false,
         mapping = (; color = :coefname => "Conditions"),
     )
@@ -81,14 +90,7 @@ end
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(
-        ga,
-        results;
-        categorical_color = false,
-        categorical_group = false,
-        significance = pvals,
-        stderror = true,
-    )
+    plot_erp!(ga, results; significance = pvals, stderror = true)
     f
 end
 
@@ -107,24 +109,6 @@ end
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
 end
 
-
-@testset "ERP plot: with colorbar and legend" begin
-    plot_erp(
-        res_effects2;
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        categorical_color = false,
-    )
-end
-
-#= @testset "ERP plot: with colorbar and legend 2" begin
-    plot_erp(
-        res_effects2;
-        mapping = (; color = :continuous, group = :continuous),
-        categorical_color = false,
-        categorical_group = false,
-    )
-end =#
-
 @testset "ERP plot: rename legend" begin
     f = Figure()
     results = coeftable(m)
@@ -132,7 +116,7 @@ end =#
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
     plot_erp!(
-        f[1, 1],
+        f,
         results;
         axis = (title = "Bad example", titlegap = 12),
         :stderror => false,

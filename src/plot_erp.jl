@@ -55,13 +55,16 @@ function plot_erp!(
     plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     positions = nothing,
     labels = nothing,
-    categorical_color = true,
-    categorical_group = true,
+    categorical_color = nothing,
+    categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
     mapping = (;),
     kwargs...,
 )
+    if !(isnothing(categorical_color) && isnothing(categorical_group))
+        @warn "categorical_color and categorical_group have been deprecated. To switch to categorical colors, please use `mapping(...,color=:mycolorcolum=>nonnumeric)`. `group` is now automatically cast to nonnumeric."
+    end
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data)
@@ -90,34 +93,24 @@ function plot_erp!(
         plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
         plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
     end
-    # Categorical mapping
-    # convert color column into string to prevent wrong grouping
-    if categorical_color && (:color ∈ keys(config.mapping))
-        config.mapping =
-            merge(config.mapping, (; color = config.mapping.color => nonnumeric))
-    end
 
-    # converts group column into string
-    if categorical_group && (:group ∈ keys(config.mapping))
-        config.mapping =
-            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
-    end
+    # automatically convert col & group to nonnumeric
     if (
-        :col ∈ keys(config.mapping) &&
+        :col ∈ keys(config.mapping) && !isa(config.mapping.col, Pair) &&
         typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
     )
         config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end
 
+    if (
+        :group ∈ keys(config.mapping) && !isa(config.mapping.group, Pair) &&
+        typeof(plot_data[:, config.mapping.group]) <: AbstractVector{<:Number}
+    )
+        config.mapping =
+            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
+    end
+
     mapp = AlgebraOfGraphics.mapping()
-
-    if (:color ∈ keys(config.mapping))
-        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
-    end
-
-    if (:group ∈ keys(config.mapping))
-        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.group)
-    end
 
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
@@ -140,18 +133,16 @@ function plot_erp!(
 
     plot_equation = basic * mapp
 
-    f_grid = f[1, 1:4]
-
-    # draw a standart ERP lineplot 
+    f_grid = f[1, 1] = GridLayout()
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
+
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true
-            legend!(f[:, 5], drawing; config.legend...)
+            legend!(f_grid[:, end+1], drawing; config.legend...)
         end
         if config.layout.use_colorbar == true
-            N = config.layout.use_legend == false ? 5 : 6
-            colorbar!(f[:, N], drawing; config.colorbar...)
+            colorbar!(f_grid[:, end+1], drawing; config.colorbar...)
         end
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
