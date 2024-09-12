@@ -72,8 +72,6 @@ pvals = DataFrame(
 plot_erp!(
     f[2, 1:2],
     results,
-    categorical_color = false,
-    categorical_group = false,
     significance = pvals,
     stderror = true,
 )
@@ -94,9 +92,8 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 plot_erp!(
     f[2, 4:5],
     res_effects;
-    categorical_color = false,
     categorical_group = true,
-    mapping = (; y = :yhat, color = :continuous, group = :continuous),
+    mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
     legend = (; nbanks = 2),
     layout = (; show_legend = true, legend_position = :right),
 )
