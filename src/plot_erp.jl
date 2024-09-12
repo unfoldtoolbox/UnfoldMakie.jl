@@ -19,10 +19,6 @@ Plot an ERP plot.
 
 ## Keyword arguments (kwargs)
 
-- `categorical_color::Bool = true`\\
-    Treat `:color` as categorical variable in case of numeric `:color` column.
-- `categorical_group::Bool = true`\\
-    Treat `:group` as categorical variable in case of numeric `:group` column. 
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `significance::DataFrame = nothing`\\
