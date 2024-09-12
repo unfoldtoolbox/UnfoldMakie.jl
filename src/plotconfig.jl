@@ -226,7 +226,6 @@ function PlotConfig(T::Val{:erp})
             )),
         ),
         legend = (;
-            tellwidth = false,
             halign = :right,
             valign = :center,
             framevisible = false,
