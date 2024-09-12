@@ -100,7 +100,8 @@ function plot_erp!(
     end
 
     if (
-        :group ∈ keys(config.mapping) && !isa(config.mapping.group, Pair) &&
+        :group ∈ keys(config.mapping) &&
+        !isa(config.mapping.group, Pair) &&
         typeof(plot_data[:, config.mapping.group]) <: AbstractVector{<:Number}
     )
         config.mapping =
