@@ -92,14 +92,16 @@ function plot_erp!(
 
     # automatically convert col & group to nonnumeric
     if (
-        :col ∈ keys(config.mapping) && !isa(config.mapping.col, Pair) &&
+        :col ∈ keys(config.mapping) &&
+        !isa(config.mapping.col, Pair) &&
         typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
     )
         config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end
 
     if (
-        :group ∈ keys(config.mapping) && !isa(config.mapping.group, Pair) &&
+        :group ∈ keys(config.mapping) &&
+        !isa(config.mapping.group, Pair) &&
         typeof(plot_data[:, config.mapping.group]) <: AbstractVector{<:Number}
     )
         config.mapping =
