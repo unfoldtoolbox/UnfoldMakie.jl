@@ -225,11 +225,7 @@ function PlotConfig(T::Val{:erp})
                 :ticklabels => false,
             )),
         ),
-        legend = (;
-            halign = :right,
-            valign = :center,
-            framevisible = false,
-        ),
+        legend = (; halign = :right, valign = :center, framevisible = false),
         axis = (
             xlabel = "Time [s]",
             ylabel = "Voltage [µV]",
