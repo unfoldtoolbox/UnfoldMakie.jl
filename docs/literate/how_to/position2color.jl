@@ -2,6 +2,7 @@
 
 # You want to change the colors of the lines and markers on the inserted topoplot.
 # To do that you need to change the color scheme (aka color map) of the butterfly plot. 
+# You can find th elist of colormaps for Makie [here](https://docs.makie.org/v0.21/explanations/colors). 
 
 # # Setup
 
@@ -28,6 +29,7 @@ We can change the color scale by specifying a function that maps from an `(x, y)
 While `RGB` & `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
 Also you can specify a uniform color.
 =#
+#
 
 plot_butterfly(
     results;
