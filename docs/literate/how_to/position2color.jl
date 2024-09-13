@@ -20,12 +20,12 @@ plot_butterfly(results; positions = positions)
 # # Color schemes
 # ## MNE style
 
-#= 
-We can change the color scale by specifying a function that maps from an `(x, y)` tuple to a color. UnfoldMakie currently provides three different color scales: 
-- `pos2colorRGB` (same as MNE-Python), 
-- `pos2colorHSV` (HSV color space), 
-- `pos2colorRomaO`. 
-=#
+# We can change the color scale by specifying a function that maps from an `(x, y)` tuple to a color. 
+# `UnfoldMakie` currently provides three different color scales: 
+# - `pos2colorRGB` (same as MNE-Python), 
+# - `pos2colorHSV` (HSV color space), 
+# - `pos2colorRomaO`. 
+
 # While `RGB` & `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
 # Also you can specify a uniform color.
 
