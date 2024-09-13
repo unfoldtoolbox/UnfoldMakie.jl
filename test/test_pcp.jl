@@ -16,6 +16,14 @@ end
     plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
 end
 
+@testset "PCP: show_legend = false" begin
+    plot_parallelcoordinates(
+        results_plot;
+        mapping = (color = :coefname, y = :estimate),
+        layout = (; show_legend = false),
+    )
+end
+
 @testset "PCP: Figure, 64 channels, 1 condition, bigger size" begin
     plot_parallelcoordinates(
         Figure(size = (1200, 800)),

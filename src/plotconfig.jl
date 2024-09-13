@@ -41,6 +41,8 @@ function PlotConfig()# defaults
             orientation = :vertical,
             tellwidth = true,
             tellheight = false,
+            halign = :right,
+            valign = :center,
         ),
         (;#colorbar
             vertical = true,
@@ -236,7 +238,7 @@ function PlotConfig(T::Val{:erp})
                 :ticklabels => false,
             )),
         ),
-        legend = (; halign = :right, valign = :center, framevisible = false),
+        legend = (; framevisible = false),
         axis = (
             xlabel = "Time [s]",
             ylabel = "Voltage [µV]",
@@ -300,7 +302,7 @@ function PlotConfig(T::Val{:paracoord})
         axis = (; xlabel = "Channels", ylabel = "Time", title = ""),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
-        layout = (; legend_position = :right),
+        layout = (; show_legend = true),
     )
     return cfg
 end

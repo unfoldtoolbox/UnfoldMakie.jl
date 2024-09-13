@@ -100,7 +100,7 @@ function plot_parallelcoordinates(
     end
     UnfoldMakie.config_kwargs!(config; visual = (; color = c))
 
-    f, ax, axlist, hlines = parallelcoordinates(
+    f1, ax, axlist, hlines = parallelcoordinates(
         f,
         d5;
         normalize = normalize,
@@ -118,7 +118,10 @@ function plot_parallelcoordinates(
         fontsize = 20,
         font = :bold,
     )
-    apply_layout_settings!(config; fig = f, ax = ax)
+    if config.layout.show_legend
+        Legend(f[1, 2], ax, config.legend.title; config.legend...)
+    end
+    apply_layout_settings!(config; fig = f1, ax = ax)
 
     return isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :
            Makie.AxisPlot([ax, axlist], hlines[1])
