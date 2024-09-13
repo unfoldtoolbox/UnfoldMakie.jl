@@ -8,7 +8,6 @@ Plot a PCP (parallel coordinates plot).\\
 Dimensions: conditions, channels, time, trials. 
  
 ## Arguments:
-
 - `f::Union{GridPosition, GridLayout, Figure}`
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, AbstractMatrix}`\\

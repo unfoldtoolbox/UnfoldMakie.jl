@@ -2,7 +2,7 @@ using BSplineKit, Unfold
 m = example_data("UnfoldLinearModelwithSpline")
 
 @testset "Spline plot:  basic" begin
-    plot_spline_config(m)
+    plot_splines(m)
 end
 
 #= rng = MersenneTwister(2) # make repeatable

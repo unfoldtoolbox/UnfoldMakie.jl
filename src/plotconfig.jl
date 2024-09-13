@@ -28,7 +28,6 @@ function PlotConfig()# defaults
         (;), # axis
         (; # layout
             show_legend = true,
-            legend_position = :right,
             use_colorbar = false, # ideally should be deleted
         ),
         (#maping
@@ -183,6 +182,18 @@ function PlotConfig(T::Val{:designmat})
     return cfg
 end
 
+function PlotConfig(T::Val{:splines})
+    cfg = PlotConfig()
+    config_kwargs!(
+        cfg;
+        layout = (;),
+        axis = (; xlabel = "Range", ylabel = "Density"),
+        visual = (; colormap = Makie.wong_colors()),
+        legend = (; title = "Splines", framevisible = false),
+    )
+    return cfg
+end
+
 function PlotConfig(T::Val{:butterfly})
     cfg = PlotConfig(:erp)
     config_kwargs!(
@@ -289,6 +300,7 @@ function PlotConfig(T::Val{:paracoord})
         axis = (; xlabel = "Channels", ylabel = "Time", title = ""),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
+        layout = (; legend_position = :right),
     )
     return cfg
 end
