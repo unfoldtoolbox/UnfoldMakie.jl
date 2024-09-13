@@ -110,7 +110,6 @@ end
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 
-
     pvals = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],

@@ -165,7 +165,6 @@ function parallelcoordinates(
         minlist = minimum(plotdata)
         maxlist = maximum(plotdata)
     end
-    #    @debug plotdata
     # edge bending / bundling
 
     if !bend
@@ -345,7 +344,6 @@ Used to inject extrema ticks and round them if necessary.
 struct PCPTicks end
 
 function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
-    #@debug "get_ticks custom",vmin,vmax
     tickvalues = Makie.get_tickvalues(Makie.WilkinsonTicks(5), scale, vmin, vmax)
 
     ticklabels_without = Makie.get_ticklabels(formatter, tickvalues)
