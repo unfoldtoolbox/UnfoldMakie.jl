@@ -125,7 +125,7 @@ function plot_erpimage!(
         )
     end
     hidespines!(ax, :r, :t)
-    apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plotArea = (4, 1))
+    apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plot_area = (4, 1))
     return f
 end
 
