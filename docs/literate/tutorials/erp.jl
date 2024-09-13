@@ -66,8 +66,8 @@ plot_erp(
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 significancevalues = DataFrame(
-    from = [0.1, 0.3],
-    to = [0.5, 0.7],
+    from = [0.01, 0.2],
+    to = [0.3, 0.4],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
 plot_erp(results; :significance => significancevalues)
