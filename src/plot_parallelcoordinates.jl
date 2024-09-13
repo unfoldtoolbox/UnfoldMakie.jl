@@ -174,7 +174,7 @@ function parallelcoordinates(
         x_plotdata = range(1, x_pos[end], step = 0.05)
         plotdata_int = Array{Float64}(undef, length(x_plotdata), size(plotdata, 2))
         for k = 1:size(plotdata, 2)
-            itp = interpolate(plotdata[:, k], BSpline(Cubic(Interpolations.Line(OnGrid()))))
+            itp = Interpolations.interpolate(plotdata[:, k], BSpline(Cubic(Interpolations.Line(OnGrid()))))
             plotdata_int[:, k] = itp.(x_plotdata)
         end
     end
