@@ -54,6 +54,10 @@ end
     include("test_dm.jl")
 end
 
+@testset "Spline plots" begin
+    include("test_splines.jl")
+end
+
 @testset "Complex plots" begin
     include("test_complexplots.jl")
 end

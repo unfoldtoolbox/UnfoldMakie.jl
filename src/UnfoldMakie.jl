@@ -55,6 +55,7 @@ include("plot_topoplotseries.jl")
 include("plot_erp.jl")
 include("plot_butterfly.jl")
 include("plot_designmatrix.jl")
+include("plot_spline_config.jl")
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")
@@ -71,6 +72,8 @@ export PlotConfig
 
 export plot_designmatrix
 export plot_designmatrix!
+export plot_spline_config
+export plot_spline_config!
 export plot_erp
 export plot_erp!
 export plot_erpimage

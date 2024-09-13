@@ -59,7 +59,9 @@ function plot_erp!(
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
-        @warn "categorical_color and categorical_group have been deprecated. To switch to categorical colors, please use `mapping(...,color=:mycolorcolum=>nonnumeric)`. `group` is now automatically cast to nonnumeric."
+        @warn "categorical_color and categorical_group have been deprecated.
+        To switch to categorical colors, please use `mapping(..., color = :mycolorcolum => nonnumeric)`.
+        `group` is now automatically cast to nonnumeric."
     end
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
