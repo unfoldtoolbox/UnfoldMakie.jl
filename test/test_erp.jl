@@ -1,10 +1,15 @@
+using Unfold: stderror
 using AlgebraOfGraphics: group
 include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
+
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
 dat, positions = TopoPlots.example_data()
+
+m7 = example_data("7channels")
+results7 = coeftable(m7)
 
 @testset "ERP plot: DataFrame data" begin
     plot_erp(results)
@@ -32,13 +37,13 @@ end
 end
 
 @testset "ERP plot: stderror error" begin
-    plot_erp(results; :stderror => true)
+    plot_erp(results; stderror = true)
 end
 
 @testset "ERP plot: standart errors in GridLayout" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
-    plot_erp!(ga, results; :stderror => true)
+    plot_erp!(ga, results; stderror = true)
     f
 end
 
@@ -46,6 +51,12 @@ end
     results = coeftable(m)
     results.group = push!(repeat(["A", "B"], inner = 67), "A")
     plot_erp(results; mapping = (; col = :group))
+end
+
+@testset "ERP plot: faceting by two columns with stderror" begin
+    results = coeftable(m)
+    results.group = push!(repeat(["A", "B"], inner = 67), "A")
+    plot_erp(results; mapping = (; col = :group), stderror = true)
 end
 
 @testset "ERP plot: with and withour error ribbons" begin
@@ -59,14 +70,14 @@ end
         f[1, 1],
         results;
         axis = (; title = "Bad example", titlegap = 12),
-        :stderror => false,
+        stderror = false,
         mapping = (; color = :coefname => "Conditions"),
     )
     plot_erp!(
         f[2, 1],
         results;
         axis = (title = "Good example", titlegap = 12),
-        :stderror => true,
+        stderror = true,
         mapping = (; color = :coefname => "Conditions"),
     )
 
@@ -104,8 +115,6 @@ end
 end
 
 @testset "ERP plot: 7 channels faceted" begin
-    m7 = example_data("7channels")
-    results7 = coeftable(m7)
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
 end
 
@@ -119,7 +128,6 @@ end
         f,
         results;
         axis = (title = "Bad example", titlegap = 12),
-        :stderror => false,
         mapping = (; color = :coefname => "Conditions"),
     )
     f
