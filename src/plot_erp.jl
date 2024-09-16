@@ -122,7 +122,7 @@ function plot_erp!(
         end
     end haven't solved it yet =#
 
-    #mapping for stderrors 
+    # mapping for stderrors 
     if (:color ∈ keys(config.mapping))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
     end
@@ -135,7 +135,7 @@ function plot_erp!(
     if (:row ∈ keys(config.mapping))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.row)
     end
-    if (:row ∈ keys(config.layout))
+    if (:layout ∈ keys(config.layout))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.layout)
     end
 
