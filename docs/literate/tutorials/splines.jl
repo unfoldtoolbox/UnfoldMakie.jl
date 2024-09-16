@@ -11,8 +11,8 @@ using BSplineKit, DataFrames
 
 include("../../../example_data.jl")
 df, pos = example_data("TopoPlots.jl")
-m1 = example_data("UnfoldLinearModelwith1Spline")
-m2 = example_data("UnfoldLinearModelwith2Splines")
+m1 = example_data("UnfoldLinearModelwith1Spline");
+m2 = example_data("UnfoldLinearModelwith2Splines");
 
 
 # Spline plot with one spline term
