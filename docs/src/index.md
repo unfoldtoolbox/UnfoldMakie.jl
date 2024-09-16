@@ -8,7 +8,7 @@ This is the documentation of the UnfoldMakie.jl package for the Julia programmin
 
 ## Highlights of UnfoldMakie.jl
 
-- **10 plot functions for displaying ERPs.**
+- **11 plot functions for displaying ERPs.**
 Each plot emphasizes certain dimensions while collapsing others.
 - **Fast plotting**
 Plot one figure with 20 topoplots in 1 second? No problemo!
