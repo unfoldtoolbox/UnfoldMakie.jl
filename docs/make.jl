@@ -50,6 +50,7 @@ makedocs(;
             "Channel image" => "generated/tutorials/channel_image.md",
             "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
             "Design matrix" => "generated/tutorials/designmatrix.md",
+            "Spline plot" => "generated/tutorials/splines.md",
             "Circular topoplots" => "generated/tutorials/circ_topo.md",
         ],
         "How To" => [
