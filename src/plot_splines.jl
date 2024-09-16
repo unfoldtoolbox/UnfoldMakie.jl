@@ -64,7 +64,12 @@ function plot_splines(f::Union{GridPosition,GridLayout,Figure}, m::UnfoldModel; 
             linestyle = :dash,
         )
         #scatter!(spline_term.breakpoints, [0,0,0,0,0,0,0,0]; markersize = 10, strokecolor = :tomato, strokewidth = 3)
-        a2 = Axis(ga[2, subplot_id]; xlabel = string(spline_term.term.sym), xautolimitmargin = (0, 0), config.axis...)
+        a2 = Axis(
+            ga[2, subplot_id];
+            xlabel = string(spline_term.term.sym),
+            xautolimitmargin = (0, 0),
+            config.axis...,
+        )
         density!(
             Unfold.events(designmatrix(m))[1][:, spline_term.term.sym];
             color = :transparent,
