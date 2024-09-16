@@ -6,7 +6,7 @@
 # Package and data loading
 
 using Unfold, UnfoldMakie
-using BSplineKit
+using BSplineKit, DataFrames
 
 
 include("../../../example_data.jl")
