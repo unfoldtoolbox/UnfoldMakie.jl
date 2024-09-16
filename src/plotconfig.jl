@@ -189,8 +189,8 @@ function PlotConfig(T::Val{:splines})
     config_kwargs!(
         cfg;
         layout = (;),
-        axis = (; xlabel = "Range", ylabel = "Density"),
-        visual = (; colormap = Makie.wong_colors()),
+        axis = (; xlabel = "Range", ylabel = "Density value"),
+        visual = (; colormap = :viridis),
         legend = (; title = "Splines", framevisible = false),
     )
     return cfg

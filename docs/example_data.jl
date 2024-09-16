@@ -33,7 +33,23 @@ function example_data(example = "TopoPlots.jl")
             data;
             solver = se_solver,
         )
-    elseif example == "UnfoldLinearModelwithSpline"
+    elseif example == "UnfoldLinearModelwith1Spline"
+        # load and generate a simulated Unfold Design
+        data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+        data = reshape(data, (1, size(data)...))
+        evts.continuous2 .=
+            log10.(6 .+ rand(MersenneTwister(1), length(evts.continuous))) .^ 2
+        f = @formula 0 ~ 1 + condition + spl(continuous, 4)
+        # generate ModelStruct
+        se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
+        return fit(
+            UnfoldModel,
+            [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
+            evts,
+            data;
+            solver = se_solver,
+        )
+    elseif example == "UnfoldLinearModelwith2Splines"
         # load and generate a simulated Unfold Design
         data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
         data = reshape(data, (1, size(data)...))
@@ -49,7 +65,6 @@ function example_data(example = "TopoPlots.jl")
             data;
             solver = se_solver,
         )
-
     elseif example == "UnfoldLinearModelMultiChannel"
         # load and generate a simulated Unfold Design
         cAll = DataFrame()
