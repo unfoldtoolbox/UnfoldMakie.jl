@@ -115,7 +115,14 @@ function plot_erp!(
     end
 
     mapp = AlgebraOfGraphics.mapping()
+    #= for i in [:color, :group, :col]
+        if (i ∈ keys(config.mapping))
+            tmp = getindex(config.mapping, i)
+            mapp = mapp * AlgebraOfGraphics.mapping(; tmp )
+        end
+    end haven't solved it yet =#
 
+    #mapping for stderrors 
     if (:color ∈ keys(config.mapping))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
     end
@@ -125,9 +132,16 @@ function plot_erp!(
     if (:col ∈ keys(config.mapping))
         mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.col)
     end
+    if (:row ∈ keys(config.mapping))
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.row)
+    end
+    if (:row ∈ keys(config.layout))
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.layout)
+    end
 
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
+
     xy_mapp =
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mapping_others...)
     basic = visual(Lines; config.visual...) * xy_mapp
