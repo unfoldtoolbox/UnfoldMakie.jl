@@ -28,3 +28,5 @@ ax = Axis(Figure()[1, 1])
 [lines!(ax, basisSet[:, k]) for k = 1:size(basisSet, 2)]
 current_figure()
  =#
+
+knots(BSplineBasis(BSplineOrder(1), [0.6055842565094224, 0.7141858385002271]))
