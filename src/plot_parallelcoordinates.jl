@@ -193,14 +193,12 @@ function parallelcoordinates(
             # categorical colors
             un_c = unique(color)
             color_ix = [findfirst(un_c .== c) for c in color]
-            #@assert length(un_c) == 1 "Only single color found, please don't specify color, "
             if length(un_c) == 1
-                @warn "Only single unique value found in the specified color vector"
-                color = cgrad(colormap, 2)[color_ix]
+                @warn "Only single unique value found in the specified color vector."
+                color = cgrad(colormap, 2)[color_ix] # color gradient
             else
                 color = cgrad(colormap, length(un_c))[color_ix]
             end
-            #crange = [1,length(unique(color))]
         else
             # continuous color
             crange = [minimum(color), maximum(color)]
@@ -210,7 +208,6 @@ function parallelcoordinates(
     # plot the lines - this way it will be easy to curve them too
     hlines = []
     for (ix, r) in enumerate(eachcol(plotdata_int))
-
         h = lines!(
             ax,
             x_plotdata,

@@ -55,7 +55,7 @@ function example_data(example = "TopoPlots.jl")
         data = reshape(data, (1, size(data)...))
         evts.continuous2 .=
             log10.(6 .+ rand(MersenneTwister(1), length(evts.continuous))) .^ 2
-        f = @formula 0 ~ 1 + condition + spl(continuous, 4) + spl(continuous2, 4)
+        f = @formula 0 ~ 1 + condition + spl(continuous, 4) + spl(continuous2, 6)
         # generate ModelStruct
         se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
         return fit(

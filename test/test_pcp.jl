@@ -211,22 +211,3 @@ end
     )
     f
 end
-
-begin
-    f = Figure()
-    plot_parallelcoordinates(
-        f[1, 1],
-        subset(results_plot, :channel => x -> x .< 10);
-        mapping = (; color = :coefname),
-        axis = (; title = "normalize = nothing"),
-    )
-    plot_parallelcoordinates(
-        f[2, 1],
-        subset(results_plot, :channel => x -> x .< 10);
-        mapping = (; color = :coefname),
-        normalize = :minmax,
-        axis = (; title = "normalize = :minmax"),
-    )
-    f
-
-end
