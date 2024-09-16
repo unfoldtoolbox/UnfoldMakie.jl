@@ -85,11 +85,8 @@ function plot_erp!(
         plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
     end
 
-    # check if stderror values exist and create new columns with high and low band
-    if "stderror" ∈ names(plot_data) && stderror
-        plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
-        plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
-        plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
+    if "group" ∈ names(plot_data)
+        plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
     end
 
     # automatically convert col & group to nonnumeric
@@ -110,15 +107,32 @@ function plot_erp!(
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
     end
 
+    # check if stderror values exist and create new columns with high and low band
+    if "stderror" ∈ names(plot_data) && stderror
+        plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
+        plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
+        plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
+    end
+
     mapp = AlgebraOfGraphics.mapping()
+
+    if (:color ∈ keys(config.mapping))
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
+    end
+    if (:group ∈ keys(config.mapping))
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.group)
+    end
+    if (:col ∈ keys(config.mapping))
+        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.col)
+    end
 
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
-
     xy_mapp =
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mapping_others...)
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
+
     if stderror
         m_se = AlgebraOfGraphics.mapping(config.mapping.x, :se_low, :se_high)
         basic = basic + visual(Band, alpha = 0.5) * m_se
