@@ -13,7 +13,7 @@ using CairoMakie
 using DataFramesMeta
 using UnfoldSim
 using UnfoldMakie
-include("../../../example_data.jl")
+include("../../../example_data.jl");
 
 # Data generation
 

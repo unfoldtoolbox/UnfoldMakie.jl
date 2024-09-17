@@ -4,7 +4,7 @@
 using UnfoldMakie
 using CairoMakie
 using TopoPlots
-using PyMNE
+using PyMNE;
 
 # # Get positions from MNE
 
