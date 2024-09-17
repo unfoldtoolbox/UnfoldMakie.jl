@@ -148,15 +148,25 @@ end
     )
     eff = effects(Dict(:continuous => 75:20:300), m)
 
-    sorting = ["face", "car"]
-    sorting = ["car", "face"]
+    sorting1 = ["face", "car"] # check 
+    sorting2 = ["car", "face"]
 
-    plot_erp(
+    f = Figure()
+    plot_erp!(f[1, 1],
         eff;
         mapping = (;
-            col = :eventname => sorter(sorting),
+            col = :eventname => sorter(sorting1),
             color = :continuous,
             group = :continuous,
         ),
     )
+    plot_erp!(f[2, 1],
+        eff;
+        mapping = (;
+            col = :eventname => sorter(sorting2),
+            color = :continuous,
+            group = :continuous,
+        ),
+    )
+    f
 end
