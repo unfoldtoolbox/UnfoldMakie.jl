@@ -152,7 +152,8 @@ end
     sorting2 = ["car", "face"]
 
     f = Figure()
-    plot_erp!(f[1, 1],
+    plot_erp!(
+        f[1, 1],
         eff;
         mapping = (;
             col = :eventname => sorter(sorting1),
@@ -160,7 +161,8 @@ end
             group = :continuous,
         ),
     )
-    plot_erp!(f[2, 1],
+    plot_erp!(
+        f[2, 1],
         eff;
         mapping = (;
             col = :eventname => sorter(sorting2),

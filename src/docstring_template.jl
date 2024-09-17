@@ -14,6 +14,7 @@ function _docstring(cfg_symb::Symbol)
         :circtopos => `Topoplot.eeg_topoplot`,
         :topoplot => `Topoplot.eeg_topoplot`,
         :topoplotseries => `Topoplot.eeg_topoplot`,
+        :splines => `Makie.series`,
     )
     visuallink2 = Dict(
         :erp => "https://docs.makie.org/stable/reference/plots/lines/",
@@ -26,6 +27,7 @@ function _docstring(cfg_symb::Symbol)
         :circtopos => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplot => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplotseries => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
+        :splines => "https://docs.makie.org/stable/reference/plots/series",
     )
     cbarstring =
         (cfg_symb == :erp || cfg_symb == :butterfly) ?
