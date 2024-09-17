@@ -11,7 +11,7 @@ using CairoMakie
 # Data
 
 include("../../../example_data.jl")
-uf = example_data("UnfoldLinearModel")
+uf = example_data("UnfoldLinearModel");
 
 # # Plot Designmatrices
 
