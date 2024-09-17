@@ -13,6 +13,7 @@ Dashed lines shows spline knots.
 - `m::UnfoldModel`\\
     UnfoldModel with splines.
 
+$(_docstring(:splines))
 **Return Value:** `Figure` with splines and their density for basis functions.
 """
 plot_splines(m::UnfoldModel; kwargs...) = plot_splines(Figure(), m; kwargs...)
