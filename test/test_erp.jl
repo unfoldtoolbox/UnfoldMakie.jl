@@ -132,3 +132,31 @@ end
     )
     f
 end
+
+@testset "ERP plot: Facet sorting" begin
+    data, evts = UnfoldSim.predef_eeg()
+
+    m = fit(
+        UnfoldModel,
+        [
+            "car" => (@formula(0 ~ 1 + continuous), firbasis((-0.1, 1), 100)),
+            "face" => (@formula(0 ~ 1 + continuous), firbasis((-0.1, 1), 100)),
+        ],
+        evts,
+        data;
+        eventcolumn = :condition,
+    )
+    eff = effects(Dict(:continuous => 75:20:300), m)
+
+    sorting = ["face", "car"]
+    sorting = ["car", "face"]
+
+    plot_erp(
+        eff;
+        mapping = (;
+            col = :eventname => sorter(sorting),
+            color = :continuous,
+            group = :continuous,
+        ),
+    )
+end
