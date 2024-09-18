@@ -21,6 +21,9 @@ Dashed lines indicate spline knots.
 - `density_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of density subplots.\\
     To see all options just type `?Axis` in REPL.
+- `superlabel_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the Label on the top of the plot.\\
+    To see all options just type `?Label` in REPL.
 $(_docstring(:splines))
 
 **Return Value:** `Figure` with splines and their density for basis functions.
@@ -37,6 +40,7 @@ function plot_splines(
         ylabelvisible = true,
     ),
     density_axis = (; xautolimitmargin = (0, 0), ylabel = "Density value"),
+    superlabel_axis = (; (fontsize = 20), padding = (0, 0, 40, 0)),
     kwargs...,
 )
     config = PlotConfig(:splines)
@@ -84,7 +88,6 @@ function plot_splines(
         linkxaxes!(a1, a2)
         subplot_id = subplot_id + 1
     end
-    supertitle =
-        Label(ga[1, 1:end, Top()], spl_title, (fontsize = 20), padding = (0, 0, 40, 0))
+    Label(ga[1, 1:end, Top()], spl_title; superlabel_axis...)
     f
 end
