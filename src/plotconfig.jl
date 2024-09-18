@@ -305,7 +305,7 @@ end
 
 """
     config_kwargs!(cfg::PlotConfig; kwargs...)
-Takes named tuple of `Key => NamedTuple` as kwargs and merges the fields with the defaults.
+Takes NamedTuple of `Key => NamedTuple` as kwargs and merges the fields with the defaults.
 """
 function config_kwargs!(cfg::PlotConfig; kwargs...)
 
