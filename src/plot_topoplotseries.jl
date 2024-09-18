@@ -45,6 +45,9 @@ Multiple miniature topoplots in regular distances.
 - `visual.colorrange::2-element Vector{Int64}`, `colorbar.colorrange::2-element Vector{Int64}`\\
     First is resposnible for colorrange in topoplots, second - in colorbars. Ideally they should be the same. 
 
+
+Code description:
+- 
 $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.
@@ -83,7 +86,7 @@ function plot_topoplotseries!(
     cat_or_cont_columns =
         eltype(data_copy[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if cat_or_cont_columns == "cat"
-        # overwrite Time windows [s] default if categorical
+        # overwrite 'Time windows [s]' default if categorical
         n_topoplots =
             number_of_topoplots(data_copy; bin_width, bin_num, bins = 0, config.mapping)
         ix =
@@ -132,15 +135,11 @@ function plot_topoplotseries!(
         config.visual...,
         positions,
     )
-    if (config.colorbar.colorrange !== nothing)
-        config_kwargs!(config)
-    else
-        config_kwargs!(
-            config,
-            visual = (; colorrange = colorrange),
-            colorbar = (; colorrange = colorrange),
-        )
-    end
+    config_kwargs!(
+        config,
+        visual = (; colorrange = colorrange),
+        colorbar = (; colorrange = colorrange),
+    )
     if !config.layout.use_colorbar
         config_kwargs!(config, layout = (; use_colorbar = false, show_legend = false))
     end
