@@ -3,10 +3,11 @@ using BSplineKit, Unfold
     plot_splines(m::UnfoldModel; kwargs...)
     plot_splines!(f::Union{GridPosition, GridLayout, Figure}, m::UnfoldModel; kwargs...)
 
-Visualization of spline terms in an UnfoldModel. Per spline-term generates two subplots: 1) the spline basis function. 2) density of the underlying covariate. \\
+Visualization of spline terms in an UnfoldModel. Two subplots are generated for each spline term:\\
+1) the basis function of the spline. 2) the density of the underlying covariate.\\
 
-Multiple spline terms are arranged over columns.
-Dashed lines shows spline knots.
+Multiple spline terms are arranged across columns.
+Dashed lines indicate spline knots.
 
 ## Arguments:
 
@@ -14,13 +15,30 @@ Dashed lines shows spline knots.
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `m::UnfoldModel`\\
     UnfoldModel with splines.
+- `spline_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of spline subplots.\\
+    To see all options just type `?Axis` in REPL.
+- `density_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of density subplots.\\
+    To see all options just type `?Axis` in REPL.
 $(_docstring(:splines))
 
 **Return Value:** `Figure` with splines and their density for basis functions.
 """
 plot_splines(m::UnfoldModel; kwargs...) = plot_splines(Figure(), m; kwargs...)
 
-function plot_splines(f::Union{GridPosition,GridLayout,Figure}, m::UnfoldModel; kwargs...)
+function plot_splines(
+    f::Union{GridPosition,GridLayout,Figure},
+    m::UnfoldModel;
+    spline_axis = (;
+        ylabel = "Spline value",
+        xlabelvisible = false,
+        xticklabelsvisible = false,
+        ylabelvisible = true,
+    ),
+    density_axis = (; xautolimitmargin = (0, 0), ylabel = "Density value"),
+    kwargs...,
+)
     config = PlotConfig(:splines)
     config_kwargs!(config; kwargs...)
     ga = f[1, 1] = GridLayout()
@@ -34,8 +52,6 @@ function plot_splines(f::Union{GridPosition,GridLayout,Figure}, m::UnfoldModel; 
     spline_terms = [terms[i] for i in spl_ix]
     subplot_id = 1
     for spline_term in spline_terms
-        #basises = BSplineBasis(BSplineOrder(i.order), i.breakpoints)
-        #knots = BSplineKit.knots(basises)
         x_range = range(
             spline_term.breakpoints[1],
             stop = spline_term.breakpoints[end],
@@ -43,36 +59,27 @@ function plot_splines(f::Union{GridPosition,GridLayout,Figure}, m::UnfoldModel; 
         )
         basis_set = splFunction(x_range, spline_term)
 
-        ylabel_first = "Spline value"
         if subplot_id > 1
-            config_kwargs!(config; axis = (; ylabelvisible = false))
-            ylabel_first = ""
+            spline_axis = (;
+                ylabel = "Spline value",
+                xlabelvisible = false,
+                xticklabelsvisible = false,
+                ylabelvisible = false,
+            )
         end
-        a1 = Axis(
-            ga[1, subplot_id];
-            title = string(spline_term),
-            ylabel = ylabel_first,
-            xlabelvisible = false,
-            xticklabelsvisible = false,
-        )
+        a1 = Axis(ga[1, subplot_id]; title = string(spline_term), spline_axis...)
         series!(
             x_range,
             basis_set',
             color = resample_cmap(config.visual.colormap, size(basis_set')[1]),
-        ) #contionus colormap used
+        ) # continuous color map used
         vlines!(
             spline_term.breakpoints;
             ymin = extrema(basis_set')[1],
             ymax = extrema(basis_set')[2],
             linestyle = :dash,
         )
-        #scatter!(spline_term.breakpoints, [0,0,0,0,0,0,0,0]; markersize = 10, strokecolor = :tomato, strokewidth = 3)
-        a2 = Axis(
-            ga[2, subplot_id];
-            xlabel = string(spline_term.term.sym),
-            xautolimitmargin = (0, 0),
-            config.axis...,
-        )
+        a2 = Axis(ga[2, subplot_id]; xlabel = string(spline_term.term.sym), density_axis...)
         density!(
             Unfold.events(designmatrix(m))[1][:, spline_term.term.sym];
             color = :transparent,
@@ -82,31 +89,7 @@ function plot_splines(f::Union{GridPosition,GridLayout,Figure}, m::UnfoldModel; 
         linkxaxes!(a1, a2)
         subplot_id = subplot_id + 1
     end
-
     supertitle =
-        Label(ga[1, 1:end, Top()], spl_title, fontsize = 20, padding = (0, 0, 40, 0))
+        Label(ga[1, 1:end, Top()], spl_title, (fontsize = 20), padding = (0, 0, 40, 0))
     f
 end
-
-#=   crange = [1, 2] # default
-    if isnothing(color)
-        color = 1
-    elseif isa(color, AbstractVector)
-        if isa(color[1], String)
-            # categorical colors
-            un_c = unique(color)
-            color_ix = [findfirst(un_c .== c) for c in color]
-            #@assert length(un_c) == 1 "Only single color found, please don't specify color, "
-            if length(un_c) == 1
-                @warn "Only single unique value found in the specified color vector"
-                color = cgrad(config.visual.colormap, 2)[color_ix]
-            else
-                color = cgrad(config.visual.colormap, length(un_c))[color_ix]
-            end
-            #crange = [1,length(unique(color))]
-        else
-            # continuous color
-            crange = [minimum(color), maximum(color)]
-        end
-    end
- =#

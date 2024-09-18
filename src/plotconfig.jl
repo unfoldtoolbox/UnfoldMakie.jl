@@ -189,7 +189,7 @@ function PlotConfig(T::Val{:splines})
     config_kwargs!(
         cfg;
         layout = (;),
-        axis = (; ylabel = "Density value"),
+        axis = (;),
         visual = (; colormap = :viridis),
         legend = (; title = "Splines", framevisible = false),
     )
