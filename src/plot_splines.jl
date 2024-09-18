@@ -40,7 +40,7 @@ function plot_splines(
 )
     config = PlotConfig(:splines)
     config_kwargs!(config; kwargs...)
-    spline_axis, density_axis, superlabel_axis =
+    spline_axis, density_axis, superlabel_config =
         supportive_axes_management(spline_kwargs, density_kwargs, superlabel_kwargs)
 
     ga = f[1, 1] = GridLayout()
@@ -87,7 +87,7 @@ function plot_splines(
         linkxaxes!(a1, a2)
         subplot_id = subplot_id + 1
     end
-    Label(ga[1, 1:end, Top()], spl_title; superlabel_axis...)
+    Label(ga[1, 1:end, Top()], spl_title; superlabel_config...)
     f
 end
 
@@ -99,10 +99,10 @@ function supportive_axes_management(spline_kwargs, density_kwargs, superlabel_kw
         ylabelvisible = true,
     )
     density_axis = (; xautolimitmargin = (0, 0), ylabel = "Density value")
-    superlabel_axis = (; fontsize = 20, padding = (0, 0, 40, 0))
+    superlabel_config = (; fontsize = 20, padding = (0, 0, 40, 0))
 
     spline_axis = update_axis!(spline_axis; spline_kwargs...)
     density_axis = update_axis!(density_axis; density_kwargs...)
-    superlabel_axis = update_axis!(superlabel_axis; superlabel_kwargs...)
-    return spline_axis, density_axis, superlabel_axis
+    superlabel_config = update_axis!(superlabel_config; superlabel_kwargs...)
+    return spline_axis, density_axis, superlabel_config
 end
