@@ -1,6 +1,19 @@
 using BSplineKit, Unfold
+m0 = example_data("UnfoldLinearModel")
 m1 = example_data("UnfoldLinearModelwith1Spline")
 m2 = example_data("UnfoldLinearModelwith2Splines")
+
+@testset "Spline plot: no splines" begin
+    err1 = nothing
+    t() = error(plot_splines(m0))
+    try
+        t()
+    catch err1
+    end
+    @test err1 == AssertionError(
+        "No spline term is found in UnfoldModel. Did you forget to provide spline a formula?",
+    )
+end
 
 @testset "Spline plot: basic" begin
     plot_splines(m1)

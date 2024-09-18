@@ -41,7 +41,7 @@ function plot_splines(
     config = PlotConfig(:splines)
     config_kwargs!(config; kwargs...)
     spline_axis, density_axis, superlabel_axis =
-        supportive_axis_managment(spline_kwargs, density_kwargs, superlabel_kwargs)
+        supportive_axes_management(spline_kwargs, density_kwargs, superlabel_kwargs)
 
     ga = f[1, 1] = GridLayout()
 
@@ -50,6 +50,7 @@ function plot_splines(
 
     splFunction = Base.get_extension(Unfold, :UnfoldBSplineKitExt).splFunction
     spl_ix = findall(isa.(terms, Unfold.AbstractSplineTerm))
+    @assert !isempty(spl_ix) "No spline term is found in UnfoldModel. Did you forget to provide spline a formula?"
 
     spline_terms = [terms[i] for i in spl_ix]
     subplot_id = 1
@@ -90,7 +91,7 @@ function plot_splines(
     f
 end
 
-function supportive_axis_managment(spline_kwargs, density_kwargs, superlabel_kwargs)
+function supportive_axes_management(spline_kwargs, density_kwargs, superlabel_kwargs)
     spline_axis = (;
         ylabel = "Spline value",
         xlabelvisible = false,
