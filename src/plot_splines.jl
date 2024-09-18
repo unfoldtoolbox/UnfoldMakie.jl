@@ -4,7 +4,7 @@ using BSplineKit, Unfold
     plot_splines!(f::Union{GridPosition, GridLayout, Figure}, m::UnfoldModel; kwargs...)
 
 Visualization of spline terms in an UnfoldModel. Two subplots are generated for each spline term:\\
-1) the basis function of the spline. 2) the density of the underlying covariate.\\
+1) the basis function of the spline; 2) the density of the underlying covariate.\\
 
 Multiple spline terms are arranged across columns.
 Dashed lines indicate spline knots.
@@ -15,13 +15,13 @@ Dashed lines indicate spline knots.
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `m::UnfoldModel`\\
     UnfoldModel with splines.
-- `spline_axis::NamedTuple = (;)`\\
+- `spline_kwargs::NamedTuple = (;)`\\
     Here you can flexibly change configurations of spline subplots.\\
     To see all options just type `?Axis` in REPL.
-- `density_axis::NamedTuple = (;)`\\
+- `density_kwargs::NamedTuple = (;)`\\
     Here you can flexibly change configurations of density subplots.\\
     To see all options just type `?Axis` in REPL.
-- `superlabel_axis::NamedTuple = (;)`\\
+- `superlabel_kwargs::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the Label on the top of the plot.\\
     To see all options just type `?Label` in REPL.
 $(_docstring(:splines))
@@ -33,18 +33,16 @@ plot_splines(m::UnfoldModel; kwargs...) = plot_splines(Figure(), m; kwargs...)
 function plot_splines(
     f::Union{GridPosition,GridLayout,Figure},
     m::UnfoldModel;
-    spline_axis = (;
-        ylabel = "Spline value",
-        xlabelvisible = false,
-        xticklabelsvisible = false,
-        ylabelvisible = true,
-    ),
-    density_axis = (; xautolimitmargin = (0, 0), ylabel = "Density value"),
-    superlabel_axis = (; (fontsize = 20), padding = (0, 0, 40, 0)),
+    spline_kwargs = (;),
+    density_kwargs = (;),
+    superlabel_kwargs = (;),
     kwargs...,
 )
     config = PlotConfig(:splines)
     config_kwargs!(config; kwargs...)
+    spline_axis, density_axis, superlabel_axis =
+        supportive_axis_managment(spline_kwargs, density_kwargs, superlabel_kwargs)
+
     ga = f[1, 1] = GridLayout()
 
     terms = Unfold.formulas(m)[1].rhs.terms
@@ -64,7 +62,7 @@ function plot_splines(
         basis_set = splFunction(x_range, spline_term)
 
         if subplot_id > 1
-            update_axis!(spline_axis; ylabelvisible = false)
+            spline_axis = update_axis!(spline_axis; ylabelvisible = false)
         end
         a1 = Axis(ga[1, subplot_id]; title = string(spline_term), spline_axis...)
         series!(
@@ -90,4 +88,20 @@ function plot_splines(
     end
     Label(ga[1, 1:end, Top()], spl_title; superlabel_axis...)
     f
+end
+
+function supportive_axis_managment(spline_kwargs, density_kwargs, superlabel_kwargs)
+    spline_axis = (;
+        ylabel = "Spline value",
+        xlabelvisible = false,
+        xticklabelsvisible = false,
+        ylabelvisible = true,
+    )
+    density_axis = (; xautolimitmargin = (0, 0), ylabel = "Density value")
+    superlabel_axis = (; fontsize = 20, padding = (0, 0, 40, 0))
+
+    spline_axis = update_axis!(spline_axis; spline_kwargs...)
+    density_axis = update_axis!(density_axis; density_kwargs...)
+    superlabel_axis = update_axis!(superlabel_axis; superlabel_kwargs...)
+    return spline_axis, density_axis, superlabel_axis
 end
