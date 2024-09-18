@@ -3,7 +3,9 @@ using BSplineKit, Unfold
     plot_splines(m::UnfoldModel; kwargs...)
     plot_splines!(f::Union{GridPosition, GridLayout, Figure}, m::UnfoldModel; kwargs...)
 
-Shows two subfigures. First, baseses of splines. Second, density of splines.\\
+Visualization of spline terms in an UnfoldModel. Per spline-term generates two subplots: 1) the spline basis function. 2) density of the underlying covariate. \\
+
+Multiple spline terms are arranged over columns.
 Dashed lines shows spline knots.
 
 ## Arguments:
