@@ -60,12 +60,7 @@ function plot_splines(
         basis_set = splFunction(x_range, spline_term)
 
         if subplot_id > 1
-            spline_axis = (;
-                ylabel = "Spline value",
-                xlabelvisible = false,
-                xticklabelsvisible = false,
-                ylabelvisible = false,
-            )
+            update_axis!(spline_axis; ylabelvisible = false)
         end
         a1 = Axis(ga[1, subplot_id]; title = string(spline_term), spline_axis...)
         series!(

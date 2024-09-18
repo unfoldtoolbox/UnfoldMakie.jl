@@ -52,38 +52,6 @@ function PlotConfig()# defaults
     )
 end
 
-"""
-    config_kwargs!(cfg::PlotConfig; kwargs...)
-Takes named tuple of `Key => NamedTuple`  as kwargs and merges the fields with the defaults.
-"""
-function config_kwargs!(cfg::PlotConfig; kwargs...)
-
-    is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
-    @assert(
-        all(is_namedtuple),
-        """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
-
-        Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
-
-        plot_example(...; layout = (; use_colorbar = true))
-
-        plot_example(...; layout = (use_colorbar = true))
-         
-        The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
-    )
-    list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
-
-    keyList = collect(keys(kwargs))
-    :extra ∈ keyList ?
-    @warn(
-        "Extra is deprecated in 0.4, and extra keyword arguments must be used directly as keyword arguments."
-    ) : ""
-    applyTo = keyList[in.(keyList, Ref(list))]
-    for k ∈ applyTo
-        setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
-    end
-end
-
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
 
 
@@ -333,4 +301,44 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
         mapping_dict[k] = isa(v, Tuple) ? get_available(k, v) : v
     end
     return (; mapping_dict...)
+end
+
+"""
+    config_kwargs!(cfg::PlotConfig; kwargs...)
+Takes named tuple of `Key => NamedTuple` as kwargs and merges the fields with the defaults.
+"""
+function config_kwargs!(cfg::PlotConfig; kwargs...)
+
+    is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
+    @assert(
+        all(is_namedtuple),
+        """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
+
+        Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
+
+        plot_example(...; layout = (; use_colorbar = true))
+
+        plot_example(...; layout = (use_colorbar = true))
+         
+        The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
+    )
+    field_list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
+    key_list = collect(keys(kwargs))
+    :extra ∈ key_list ?
+    @warn(
+        "Extra is deprecated in 0.4, and extra keyword arguments must be used directly as keyword arguments."
+    ) : ""
+    apply_to = key_list[in.(key_list, Ref(field_list))]
+    for k ∈ apply_to
+        setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
+    end
+end
+
+"""
+    update_axis(support_axis::NamedTuple; kwargs...)
+Update values of `NamedTuple{key = value}`\\
+Used for supportive axes to make users be able to flexibly change them.
+"""
+function update_axis!(support_axis::NamedTuple; kwargs...)
+    return (; support_axis..., kwargs...)
 end
