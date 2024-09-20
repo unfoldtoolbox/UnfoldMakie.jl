@@ -42,7 +42,7 @@ Multiple miniature topoplots in regular distances.
     `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
     `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
     `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
-- `visual..colorrange::2-element Vector{Int64}`\\
+- `visual.colorrange::2-element Vector{Int64}`\\
     Resposnible for colorrange in topoplots and in colorbar.
 
 

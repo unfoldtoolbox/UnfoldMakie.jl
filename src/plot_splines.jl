@@ -1,4 +1,5 @@
 using BSplineKit, Unfold
+
 """
     plot_splines(m::UnfoldModel; kwargs...)
     plot_splines!(f::Union{GridPosition, GridLayout, Figure}, m::UnfoldModel; kwargs...)
@@ -7,7 +8,7 @@ Visualization of spline terms in an UnfoldModel. Two subplots are generated for 
 1) the basis function of the spline; 2) the density of the underlying covariate.\\
 
 Multiple spline terms are arranged across columns.
-Dashed lines indicate spline knots.
+Dashed lines indicate spline knots. 
 
 ## Arguments:
 
@@ -17,13 +18,17 @@ Dashed lines indicate spline knots.
     UnfoldModel with splines.
 - `spline_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of spline subplots.\\
-    To see all options just type `?Axis` in REPL.
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(indiv_docstrings(:spline_default))    
 - `density_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of density subplots.\\
-    To see all options just type `?Axis` in REPL.
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(indiv_docstrings(:density_default))
 - `superlabel_config::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the Label on the top of the plot.\\
-    To see all options just type `?Label` in REPL.
+    To see all options just type `?Label` in REPL.\\
+    Defaults: $(indiv_docstrings(:superlabel_default))
+
 $(_docstring(:splines))
 
 **Return Value:** `Figure` with splines and their density for basis functions.
@@ -93,17 +98,9 @@ function plot_splines(
 end
 
 function supportive_axes_management(spline_axis, density_axis, superlabel_config)
-    spline_default = (;
-        ylabel = "Spline value",
-        xlabelvisible = false,
-        xticklabelsvisible = false,
-        ylabelvisible = true,
-    )
-    density_default = (; xautolimitmargin = (0, 0), ylabel = "Density value")
-    superlabel_default = (; fontsize = 20, padding = (0, 0, 40, 0))
-
-    spline_axis = update_axis(spline_default; spline_axis...)
-    density_axis = update_axis(density_default; density_axis...)
-    superlabel_config = update_axis(superlabel_default; superlabel_config...)
+    spline_axis = update_axis(indiv_docstrings(:spline_default); spline_axis...)
+    density_axis = update_axis(indiv_docstrings(:density_default); density_axis...)
+    superlabel_config =
+        update_axis(indiv_docstrings(:superlabel_default); superlabel_config...)
     return spline_axis, density_axis, superlabel_config
 end
