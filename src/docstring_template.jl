@@ -84,5 +84,15 @@ function indiv_docstrings(cfg_symb::Symbol)
             valign = 0.95,
             aspect = 1,
         )
+        # plot_erpimage
+    elseif cfg_symb == :meanplot_default
+        return (;
+            height = 100,
+            xlabel = "Time [s]",
+            xlabelpadding = 0,
+            xautolimitmargin = (0, 0),
+        )
+    elseif cfg_symb == :sortplot_default
+        return (; ylabelvisible = true, yticklabelsvisible = false)
     end
 end

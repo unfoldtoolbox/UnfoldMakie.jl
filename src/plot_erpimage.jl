@@ -33,10 +33,12 @@ Plot an ERP image.
     If `sortvalues = true` the default text will change to "Sorted trials", but it could be changed to any values specified manually.
 - `meanplot_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of meanplot.\\
-    To see all options just type `?Axis` in REPL.
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(indiv_docstrings(:meanplot_default))
 - `sortplot_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of meanplot.\\
-    To see all options just type `?Axis` in REPL.
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(indiv_docstrings(:sortplot_default))
 
 $(_docstring(:erpimage))
 
@@ -134,13 +136,11 @@ function ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     ax.xticklabelsvisible = false
 
     trace = @lift(mean($data, dims = 2)[:, 1])
+    meanplot_axis = update_axis(indiv_docstrings(:meanplot_default); meanplot_axis...)
+
     axbottom = Axis(
         ga[5, 1:4];
-        height = 100,
         ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
-        xlabel = "Time [s]",
-        xlabelpadding = 0,
-        xautolimitmargin = (0, 0),
         limits = @lift((
             minimum($times),
             maximum($times),
@@ -163,11 +163,10 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
         error("`show_sortval` can not take `sortvalues` with all NaN-values")
     end
     gb = f[1, 3] = GridLayout()
+    sortplot_axis = update_axis(indiv_docstrings(:sortplot_default); sortplot_axis...)
     axleft = Axis(
         gb[1:4, 1:5];
         xlabel = sortval_xlabel,
-        ylabelvisible = true,
-        yticklabelsvisible = false,
         #xautolimitmargin = (-1, 1),
         #yautolimitmargin = (1, 100),
         xticks = @lift([
@@ -188,7 +187,6 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     hidedecorations!(axempty)
     hidespines!(axempty)
     hidespines!(axleft, :r, :t)
-    #scatter!(axleft, xs, ys)
     lines!(axleft, xs, ys)
     if config.layout.use_colorbar != false
         Colorbar(
