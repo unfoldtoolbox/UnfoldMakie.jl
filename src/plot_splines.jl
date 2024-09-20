@@ -50,7 +50,7 @@ function plot_splines(
 
     splFunction = Base.get_extension(Unfold, :UnfoldBSplineKitExt).splFunction
     spl_ix = findall(isa.(terms, Unfold.AbstractSplineTerm))
-    @assert !isempty(spl_ix) "No spline term is found in UnfoldModel. Did you forget to provide spline a formula?"
+    @assert !isempty(spl_ix) "No spline term is found in UnfoldModel. Does your UnfoldModel really have a `spl(...)` or other `AbstractSplineTerm`?"
 
     spline_terms = [terms[i] for i in spl_ix]
     subplot_id = 1
