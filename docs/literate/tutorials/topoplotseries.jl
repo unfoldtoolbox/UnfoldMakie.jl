@@ -25,11 +25,21 @@ nothing #hide
 # `bin_width` - specify the interval between topoplots
 
 bin_width = 80
-plot_topoplotseries(df; bin_width, positions = positions)
+plot_topoplotseries(
+    df;
+    bin_width,
+    positions = positions,
+    axis = (; xlabel = "Time windows [s]"),
+)
 
 # `bin_num` - specify the number of topoplots
 
-plot_topoplotseries(df; bin_num = 5, positions = positions)
+plot_topoplotseries(
+    df;
+    bin_num = 5,
+    positions = positions,
+    axis = (; xlabel = "Time windows [s]"),
+)
 
 # # Categorical and contionous x-values
 # By deafult x-value is `time`, but it could be any contionous (i.g. saccade amplitude) or categorical (any experimental variable) value.

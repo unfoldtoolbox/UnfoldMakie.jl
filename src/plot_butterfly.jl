@@ -36,7 +36,8 @@ Plot a Butterfly plot.
 - `topo_axis.height::Real = 0.25` \\
     Change the height of inlay topoplot.
 - `mapping = (;)`\\
-    For highlighting specific channels.
+    For highlighting specific channels.\\
+    Example: `mapping = (; color = :highlight))`, where `:highlight` is variable with appopriate mapping.
 
 **Return Value:** `Figure` displaying Butterfly plot.
 

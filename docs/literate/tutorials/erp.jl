@@ -108,7 +108,7 @@ text!(0.98, 0.2, text = "* Confidence\nintervals", align = (:right, :top))
 f
 
 # There are two ways to implement it.
-# First is using `:stderror = true' after `;`.
+# First is using `:stderror = true` after `;`.
 
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
