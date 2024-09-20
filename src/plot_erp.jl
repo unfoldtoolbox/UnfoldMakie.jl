@@ -157,30 +157,6 @@ function plot_erp!(
     return f
 end
 
-function eeg_head_matrix(positions, center, radius)
-    oldCenter = mean(positions)
-    oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
-    radF = radius / oldRadius
-    return Makie.Mat4f(
-        radF,
-        0,
-        0,
-        0,
-        0,
-        radF,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        center[1] - oldCenter[1] * radF,
-        center[2] - oldCenter[2] * radF,
-        0,
-        1,
-    )
-end
-
 function add_significance(plot_data, significance, config)
     p = deepcopy(significance)
 
