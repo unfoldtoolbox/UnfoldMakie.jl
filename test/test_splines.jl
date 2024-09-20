@@ -11,7 +11,7 @@ m2 = example_data("UnfoldLinearModelwith2Splines")
     catch err1
     end
     @test err1 == AssertionError(
-        "No spline term is found in UnfoldModel. Did you forget to provide spline a formula?",
+        "No spline term is found in UnfoldModel. Does your UnfoldModel really have a `spl(...)` or other `AbstractSplineTerm`?",
     )
 end
 
