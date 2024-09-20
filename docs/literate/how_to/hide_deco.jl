@@ -41,7 +41,6 @@ plot_butterfly!(
     positions = pos,
     topomarkersize = 10,
     topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
-    opoheight = 0.4,
     axis = (; title = "Without decorations"),
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),
 )
