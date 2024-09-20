@@ -42,7 +42,9 @@ function plot_topoplot!(
     end
     positions = get_topo_positions(; positions = positions, labels = labels)
     eeg_topoplot!(axis, data, labels; positions, config.visual...)
-
+    if config.layout.use_colorbar == true
+        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
+    end
     clims = (min(data...), max(data...))
     if clims[1] ≈ clims[2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
