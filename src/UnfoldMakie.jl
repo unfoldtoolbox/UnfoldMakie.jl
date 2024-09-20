@@ -99,6 +99,4 @@ export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG
 
-export config_kwargs!
-export update_axis!
 end
