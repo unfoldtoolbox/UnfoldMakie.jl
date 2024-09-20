@@ -25,7 +25,7 @@ end
     plot_butterfly!(f[1, 1], mat; positions = pos)
 end
 
-@testset "butterfly: witout topolegend" begin
+@testset "butterfly: without topolegend" begin
     plot_butterfly(
         df;
         positions = pos,
@@ -39,9 +39,8 @@ end
     plot_butterfly(
         df;
         positions = pos,
-        topomarkersize = 10,
-        topoheight = 0.4,
-        topowidth = 0.4,
+        topomarkersize = 70,
+        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
     )
 end
 
@@ -70,8 +69,7 @@ end
         f[1, 1],
         df;
         positions = pos,
-        topoheight = 0.4,
-        topowidth = 0.4,
+        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
         layout = (;
             hidedecorations = (:label => true, :ticks => true, :ticklabels => true)
         ),
