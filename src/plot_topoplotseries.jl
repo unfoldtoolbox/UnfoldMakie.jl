@@ -80,6 +80,7 @@ function plot_topoplotseries!(
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
+
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     data_copy = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
@@ -135,12 +136,6 @@ function plot_topoplotseries!(
         config.visual...,
         positions,
     )
-    config_kwargs!(
-        config,
-        visual = (; colorrange = colorrange),
-        colorbar = (; colorrange = colorrange),
-    )
-
     config_kwargs!(
         config,
         visual = (; colorrange = colorrange),
