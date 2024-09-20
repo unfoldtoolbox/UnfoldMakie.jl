@@ -61,12 +61,28 @@ function _docstring(cfg_symb::Symbol)
         $(out)
         """
 end
-#= 
-""" 
-    $(TYPEDSIGNATURES)
-$(_docstring(:erp))
 
-"""
-function plot_new()
-    return "b"
-end =#
+function indiv_docstrings(cfg_symb::Symbol)
+    # plot__splines
+    if cfg_symb == :spline_default
+        return (;
+            ylabel = "Spline value",
+            xlabelvisible = false,
+            xticklabelsvisible = false,
+            ylabelvisible = true,
+        )
+    elseif cfg_symb == :density_default
+        return (; xautolimitmargin = (0, 0), ylabel = "Density value")
+    elseif cfg_symb == :superlabel_default
+        return (; fontsize = 20, padding = (0, 0, 40, 0))
+        # plot_butterfly
+    elseif cfg_symb == :topo_default
+        return (;
+            width = Relative(0.35),
+            height = Relative(0.35),
+            halign = 0.05,
+            valign = 0.95,
+            aspect = 1,
+        )
+    end
+end
