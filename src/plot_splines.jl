@@ -15,13 +15,13 @@ Dashed lines indicate spline knots.
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `m::UnfoldModel`\\
     UnfoldModel with splines.
-- `spline_kwargs::NamedTuple = (;)`\\
+- `spline_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of spline subplots.\\
     To see all options just type `?Axis` in REPL.
-- `density_kwargs::NamedTuple = (;)`\\
+- `density_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of density subplots.\\
     To see all options just type `?Axis` in REPL.
-- `superlabel_kwargs::NamedTuple = (;)`\\
+- `superlabel_config::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the Label on the top of the plot.\\
     To see all options just type `?Label` in REPL.
 $(_docstring(:splines))
@@ -33,15 +33,15 @@ plot_splines(m::UnfoldModel; kwargs...) = plot_splines(Figure(), m; kwargs...)
 function plot_splines(
     f::Union{GridPosition,GridLayout,Figure},
     m::UnfoldModel;
-    spline_kwargs = (;),
-    density_kwargs = (;),
-    superlabel_kwargs = (;),
+    spline_axis = (;),
+    density_axis = (;),
+    superlabel_config = (;),
     kwargs...,
 )
     config = PlotConfig(:splines)
     config_kwargs!(config; kwargs...)
     spline_axis, density_axis, superlabel_config =
-        supportive_axes_management(spline_kwargs, density_kwargs, superlabel_kwargs)
+        supportive_axes_management(spline_axis, density_axis, superlabel_config)
 
     ga = f[1, 1] = GridLayout()
 
@@ -63,7 +63,8 @@ function plot_splines(
         basis_set = splFunction(x_range, spline_term)
 
         if subplot_id > 1
-            spline_axis = update_axis!(spline_axis; ylabelvisible = false)
+            spline_axis = update_axis(spline_axis; ylabelvisible = false)
+            density_axis = update_axis(density_axis; ylabelvisible = false)
         end
         a1 = Axis(ga[1, subplot_id]; title = string(spline_term), spline_axis...)
         series!(
@@ -91,18 +92,18 @@ function plot_splines(
     f
 end
 
-function supportive_axes_management(spline_kwargs, density_kwargs, superlabel_kwargs)
-    spline_axis = (;
+function supportive_axes_management(spline_axis, density_axis, superlabel_config)
+    spline_default = (;
         ylabel = "Spline value",
         xlabelvisible = false,
         xticklabelsvisible = false,
         ylabelvisible = true,
     )
-    density_axis = (; xautolimitmargin = (0, 0), ylabel = "Density value")
-    superlabel_config = (; fontsize = 20, padding = (0, 0, 40, 0))
+    density_default = (; xautolimitmargin = (0, 0), ylabel = "Density value")
+    superlabel_default = (; fontsize = 20, padding = (0, 0, 40, 0))
 
-    spline_axis = update_axis!(spline_axis; spline_kwargs...)
-    density_axis = update_axis!(density_axis; density_kwargs...)
-    superlabel_config = update_axis!(superlabel_config; superlabel_kwargs...)
+    spline_axis = update_axis(spline_default; spline_axis...)
+    density_axis = update_axis(density_default; density_axis...)
+    superlabel_config = update_axis(superlabel_default; superlabel_config...)
     return spline_axis, density_axis, superlabel_config
 end
