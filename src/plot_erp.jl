@@ -143,7 +143,6 @@ function plot_erp!(
 
     f_grid = f[1, 1] = GridLayout()
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
-
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true
