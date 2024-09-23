@@ -53,7 +53,7 @@ function plot_butterfly!(
     topomarkersize = 10,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
     topo_axis = (;),
-    mapping = (;), # WTf??
+    mapping = (;),
     kwargs...,
 )
 
