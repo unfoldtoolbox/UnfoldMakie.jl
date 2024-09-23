@@ -55,7 +55,7 @@ function _docstring(cfg_symb::Symbol)
 
     return """## Shared plot configuration options
         The shared plot options can be used as follows: `type = (; key = value, ...))`.\\
-        For example, `plot_x(...; layout = (; show_legend = true, legend_position = :right))`.\\
+        For example, `plot_x(...; colorbar = (; vertical = true, label = "Test"))`.\\
         Multiple defaults will be cycled until match.
 
         Placing `;` is important!

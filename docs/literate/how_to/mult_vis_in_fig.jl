@@ -89,14 +89,12 @@ plot_erp!(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
     legend = (; nbanks = 2),
-    layout = (; show_legend = true, legend_position = :right),
 )
 
 plot_parallelcoordinates(
     f[3, 2:3],
     uf_5chan;
     mapping = (; color = :coefname),
-    layout = (; legend_position = :right),
 )
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)

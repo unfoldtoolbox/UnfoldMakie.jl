@@ -56,7 +56,7 @@ plot_erp(results, mapping = (; color = :coefname => "Conditions"))
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
-    layout = (; show_legend = false),
+    layout = (; use_colorbar = false),
 )
 
 # ## Significance lines
