@@ -94,5 +94,14 @@ function indiv_docstrings(cfg_symb::Symbol)
         )
     elseif cfg_symb == :sortplot_default
         return (; ylabelvisible = true, yticklabelsvisible = false)
+        # plot_erpgrid
+    elseif cfg_symb == :hlines_grid_default
+        return (; color = :gray, linewidth = 0.5)
+    elseif cfg_symb == :vlines_grid_default
+        return (; color = :gray, linewidth = 0.5, ymin = 0.2, ymax = 0.8)
+    elseif cfg_symb == :lines_grid_default
+        return (; color = :deepskyblue3)
+    elseif cfg_symb == :labels_grid_default
+        return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
     end
 end

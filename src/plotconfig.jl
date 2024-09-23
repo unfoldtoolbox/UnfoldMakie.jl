@@ -231,6 +231,7 @@ function PlotConfig(T::Val{:erpgrid})
             ylabel = "Voltage [µV]",
             xlim = [-0.04, 1],
             ylim = [-0.04, 1],
+            fontsize = 12,
         ),
     )
     return cfg
