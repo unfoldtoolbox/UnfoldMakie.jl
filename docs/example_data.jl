@@ -6,57 +6,34 @@ using Random
 """
     example_data(String) 
 
-Creates example data. Currently, 7 datasets are available.
-- `TopoPlots.jl` (default) - tidy DataFrame from `TopoPlots.jl` with 2 conditions, 64 channels and 800 ms time range. 
-- `UnfoldLinearModel`
-- `UnfoldLinearModelMultiChannel`
-- `UnfoldLinearModelContinuousTime`
-- `7channels`
-- `UnfoldTimeExpanded`
-- `sort_data` - includes DataFrame EEG recordings `dat` and `evts` with event variables occured during experiment. `evts` could be used for sorting EEG data in ERP image. 
+Creates example data or model. Currently, 3 datasets and 6 models are available.
+
+Datasets:
+- `TopoPlots.jl` (default) - 2 DataFrames from `TopoPlots.jl`:\\
+    - DataFrame with estimate, time, 64 channels, topopositions, sterror and pvalue and 800 ms time range.\\
+    - Posiions for 64 electrodes.
+- `UnfoldLinearModelMultiChannel` - DataFrame with 5 channels, 3 coefnames, sterror, time and estimate.
+- `sort_data` - 2 DataFrames: 
+    - `dat` for EEG recordings  and `evts` with event variables occured during experiment.\\
+    - `evts` could be used for sorting EEG data in ERP image. 
+
+Models:
+- `UnfoldLinearModel` - Model with formula `1 + condition + continuous`.
+- `UnfoldLinearModelContinuousTime` - Model with formula `timeexpand(1 + condition + continuous)` for times [0.0, 0.01 ... 0.5].
+- `UnfoldLinearModelwith1Spline` - Model with formula `1 + condition + spl(continuous, 4)`.
+- `UnfoldLinearModelwith2Splines` - Model with formula ` 1 + condition + spl(continuous, 4) + spl(continuous2, 6)`.
+- `7channels` - Model with formula `timeexpand(1 + condA)` for times [-0.1, -0.09 ... 0.5].
+- `UnfoldTimeExpanded` - Model with formula `timeexpand(1 + condition + continuous)` for times [-0.4, -0.39 ... 0.8].
+
 **Return Value:** `DataFrame`.
 """
 function example_data(example = "TopoPlots.jl")
-
     if example == "UnfoldLinearModel"
-
         # load and generate a simulated Unfold Design
         data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
         data = reshape(data, (1, size(data)...))
         f = @formula 0 ~ 1 + condition + continuous
-        # generate ModelStruct
-        se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-        return fit(
-            UnfoldModel,
-            [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
-            evts,
-            data;
-            solver = se_solver,
-        )
-    elseif example == "UnfoldLinearModelwith1Spline"
-        # load and generate a simulated Unfold Design
-        data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-        data = reshape(data, (1, size(data)...))
-        evts.continuous2 .=
-            log10.(6 .+ rand(MersenneTwister(1), length(evts.continuous))) .^ 2
-        f = @formula 0 ~ 1 + condition + spl(continuous, 4)
-        # generate ModelStruct
-        se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-        return fit(
-            UnfoldModel,
-            [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
-            evts,
-            data;
-            solver = se_solver,
-        )
-    elseif example == "UnfoldLinearModelwith2Splines"
-        # load and generate a simulated Unfold Design
-        data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-        data = reshape(data, (1, size(data)...))
-        evts.continuous2 .=
-            log10.(6 .+ rand(MersenneTwister(1), length(evts.continuous))) .^ 2
-        f = @formula 0 ~ 1 + condition + spl(continuous, 4) + spl(continuous2, 6)
-        # generate ModelStruct
+        # generate ModelStruct 
         se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
         return fit(
             UnfoldModel,
@@ -105,6 +82,38 @@ function example_data(example = "TopoPlots.jl")
         basis = firbasis([0, 0.5], 100)
         # generate ModelStruct
         return fit(UnfoldModel, [Any => (f, basis)], evts, data)
+    elseif example == "UnfoldLinearModelwith1Spline"
+        # load and generate a simulated Unfold Design
+        data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+        data = reshape(data, (1, size(data)...))
+        evts.continuous2 .=
+            log10.(6 .+ rand(MersenneTwister(1), length(evts.continuous))) .^ 2
+        f = @formula 0 ~ 1 + condition + spl(continuous, 4)
+        # generate ModelStruct
+        se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
+        return fit(
+            UnfoldModel,
+            [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
+            evts,
+            data;
+            solver = se_solver,
+        )
+    elseif example == "UnfoldLinearModelwith2Splines"
+        # load and generate a simulated Unfold Design
+        data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+        data = reshape(data, (1, size(data)...))
+        evts.continuous2 .=
+            log10.(6 .+ rand(MersenneTwister(1), length(evts.continuous))) .^ 2
+        f = @formula 0 ~ 1 + condition + spl(continuous, 4) + spl(continuous2, 6)
+        # generate ModelStruct
+        se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
+        return fit(
+            UnfoldModel,
+            [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
+            evts,
+            data;
+            solver = se_solver,
+        )
     elseif example == "7channels"
         design =
             SingleSubjectDesign(conditions = Dict(:condA => ["levelA", "levelB"])) |>
@@ -122,7 +131,6 @@ function example_data(example = "TopoPlots.jl")
         f = @formula 0 ~ 1 + condA
         bf_dict = [Any => (f, basisfunction)]
         return fit(UnfoldModel, bf_dict, evnts, df)
-
     elseif example == "UnfoldTimeExpanded"
         df, evts = UnfoldSim.predef_eeg()
         f = @formula 0 ~ 1 + condition + continuous
