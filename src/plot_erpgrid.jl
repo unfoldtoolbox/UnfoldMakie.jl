@@ -28,8 +28,7 @@ Plot an ERP image.
 - `labels_grid_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the labels axis.\\
     To see all options just type `?text` in REPL.\\
-    Defaults: $(indiv_docstrings(:lables_grid_default))
-    
+    Defaults: $(indiv_docstrings(:labels_grid_default))
         
 ## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
