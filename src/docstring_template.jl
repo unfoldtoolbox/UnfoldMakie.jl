@@ -63,7 +63,7 @@ function _docstring(cfg_symb::Symbol)
 end
 
 function indiv_docstrings(cfg_symb::Symbol)
-    # plot__splines
+    # plot_splines
     if cfg_symb == :spline_default
         return (;
             ylabel = "Spline value",
