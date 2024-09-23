@@ -19,15 +19,15 @@ Dashed lines indicate spline knots.
 - `spline_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of spline subplots.\\
     To see all options just type `?Axis` in REPL.\\
-    Defaults: $(indiv_docstrings(:spline_default))    
+    Defaults: $(supportive_defaults(:spline_default))    
 - `density_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of density subplots.\\
     To see all options just type `?Axis` in REPL.\\
-    Defaults: $(indiv_docstrings(:density_default))
+    Defaults: $(supportive_defaults(:density_default))
 - `superlabel_config::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the Label on the top of the plot.\\
     To see all options just type `?Label` in REPL.\\
-    Defaults: $(indiv_docstrings(:superlabel_default))
+    Defaults: $(supportive_defaults(:superlabel_default))
 
 $(_docstring(:splines))
 
@@ -98,9 +98,9 @@ function plot_splines(
 end
 
 function supportive_axes_management(spline_axis, density_axis, superlabel_config)
-    spline_axis = update_axis(indiv_docstrings(:spline_default); spline_axis...)
-    density_axis = update_axis(indiv_docstrings(:density_default); density_axis...)
+    spline_axis = update_axis(supportive_defaults(:spline_default); spline_axis...)
+    density_axis = update_axis(supportive_defaults(:density_default); density_axis...)
     superlabel_config =
-        update_axis(indiv_docstrings(:superlabel_default); superlabel_config...)
+        update_axis(supportive_defaults(:superlabel_default); superlabel_config...)
     return spline_axis, density_axis, superlabel_config
 end

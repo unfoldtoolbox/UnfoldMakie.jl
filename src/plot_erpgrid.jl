@@ -14,21 +14,21 @@ Plot an ERP image.
 - `ch_names::Vector{String}`\\
     Vector with channel names.
 - `hlines_grid_axis::NamedTuple = (;)`\\
-    Here you can flexibly change configurations of the hline axis.\\
+    Here you can flexibly change configurations of the hlines on all subaxes.\\
     To see all options just type `?hlines` in REPL.\\
-    Defaults: $(indiv_docstrings(:hlines_grid_default))
+    Defaults: $(supportive_defaults(:hlines_grid_default))
 - `vlines_grid_axis::NamedTuple = (;)`\\
-    Here you can flexibly change configurations of the vline axis.\\
+    Here you can flexibly change configurations of the vlines on all subaxes.\\
     To see all options just type `?vlines` in REPL.\\
-    Defaults: $(indiv_docstrings(:vlines_grid_default))
+    Defaults: $(supportive_defaults(:vlines_grid_default))
 - `lines_grid_axis::NamedTuple = (;)`\\
-    Here you can flexibly change configurations of the lines axis.\\
+    Here you can flexibly change configurations of the lines on all subaxes.\\
     To see all options just type `?lines` in REPL.\\
-    Defaults: $(indiv_docstrings(:lines_grid_default))
+    Defaults: $(supportive_defaults(:lines_grid_default))
 - `labels_grid_axis::NamedTuple = (;)`\\
-    Here you can flexibly change configurations of the labels axis.\\
+    Here you can flexibly change configurations of the labels on all subaxes.\\
     To see all options just type `?text` in REPL.\\
-    Defaults: $(indiv_docstrings(:labels_grid_default))
+    Defaults: $(supportive_defaults(:labels_grid_default))
         
 ## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
@@ -93,7 +93,7 @@ function plot_erpgrid!(
     axlist = []
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
     labels_grid_axis =
-        update_axis(indiv_docstrings(:labels_grid_default); labels_grid_axis...)
+        update_axis(supportive_defaults(:labels_grid_default); labels_grid_axis...)
     for (ix, p) in enumerate(eachcol(positions))
         x = p[1]
         y = p[2]
@@ -112,10 +112,10 @@ function plot_erpgrid!(
         push!(axlist, ax)
     end
     hlines_grid_axis =
-        update_axis(indiv_docstrings(:hlines_grid_default); hlines_grid_axis...)
+        update_axis(supportive_defaults(:hlines_grid_default); hlines_grid_axis...)
     vlines_grid_axis =
-        update_axis(indiv_docstrings(:vlines_grid_default); vlines_grid_axis...)
-    lines_grid_axis = update_axis(indiv_docstrings(:lines_grid_default); lines_grid_axis...)
+        update_axis(supportive_defaults(:vlines_grid_default); vlines_grid_axis...)
+    lines_grid_axis = update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
 
     hlines!.(axlist, Ref([0.0]); hlines_grid_axis...)
     vlines!.(axlist, Ref([0.0]); vlines_grid_axis...)

@@ -66,37 +66,3 @@ end
 @testset "topoplot: positions through labels" begin
     plot_topoplot(dat[1:19, 50, 1]; labels = TopoPlots.CHANNELS_10_20)
 end
-
-
-begin
-    function topoplot_indicator!(f, ix)
-        x = zeros(128)
-        x[ix] = 1
-        clist = [:gray, :darkred][Int.(x .+ 1)]
-        ax =
-            f[1, 1] = Axis(
-                f,
-                width = Relative(0.4),
-                height = Relative(0.4),
-                halign = 1.2,
-                valign = 1,
-                aspect = 1,
-            )
-
-        UnfoldMakie.TopoPlots.eeg_topoplot!(
-            ax,
-            x;
-            positions = pos,
-            enlarge = 0.9,
-            label_scatter = (;
-                color = clist,
-                markersize = ((x .+ 0.25) .* 40) ./ 5,
-                strokewidth = 0,
-            ),
-            interpolation = UnfoldMakie.TopoPlots.NullInterpolator(),
-        )
-        hidespines!(ax)
-        hidedecorations!(ax)
-    end
-
-end

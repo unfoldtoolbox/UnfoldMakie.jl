@@ -334,12 +334,4 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
     end
 end
 
-"""
-    update_axis!(support_axis::NamedTuple; kwargs...)
-Update values of `NamedTuple{key = value}`.\\
-Used for supportive axes to make users be able to flexibly change them.
-"""
-function update_axis(support_axis::NamedTuple; kwargs...)
-    support_axis = (; support_axis..., kwargs...)
-    return support_axis
-end
+
