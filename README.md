@@ -19,7 +19,7 @@
 A toolbox for  visualizations of EEG/ERP data and Unfold.jl models.
 Based on the [Unfold](https://github.com/unfoldtoolbox/unfold.jl/) and [Makie](https://makie.juliaplots.org/stable/), it grants users high performance, and highly customizable plots.
 
-We currently support: 
+We currently support 9 general ERP plots: 
 <img  src="https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/8plots3/docs/src/assets/complex_plot.png" width="300" align="right">
 - ![icon_erpplot_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/22c8472d-df78-46d7-afe8-e1e4e7b04313)
 ERP plots
@@ -37,9 +37,11 @@ ERP images
 Channel images
 - ![icon_parallel_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/dab097c3-bcd6-4405-a44b-71cbe3e5fac9)
 Parallel coordinates
-- Design matrices
 - Circular topoplots
 
+And 2 Unfold-specific plots:
+- Design matrices
+- Splines plot
 
 ## Install
 
