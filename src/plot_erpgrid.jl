@@ -115,7 +115,8 @@ function plot_erpgrid!(
         update_axis(supportive_defaults(:hlines_grid_default); hlines_grid_axis...)
     vlines_grid_axis =
         update_axis(supportive_defaults(:vlines_grid_default); vlines_grid_axis...)
-    lines_grid_axis = update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
+    lines_grid_axis =
+        update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
 
     hlines!.(axlist, Ref([0.0]); hlines_grid_axis...)
     vlines!.(axlist, Ref([0.0]); vlines_grid_axis...)

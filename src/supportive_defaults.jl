@@ -9,7 +9,7 @@ For developers: to make them updateable in the function, use `update_axis`.
 **Return value:** `NamedConfig`.
 """
 function supportive_defaults(cfg_symb::Symbol)
-        # plot_splines
+    # plot_splines
     if cfg_symb == :spline_default
         return (;
             ylabel = "Spline value",

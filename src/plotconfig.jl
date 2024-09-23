@@ -333,5 +333,3 @@ function config_kwargs!(cfg::PlotConfig; kwargs...)
         setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
     end
 end
-
-
