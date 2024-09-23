@@ -83,10 +83,9 @@ function plot_circular_topoplots!(
     # setting the colorbar to the bottom right of the box.
     # Relative values got determined by checking what subjectively looks best 
     Colorbar(
-        f[1, 2],
-        colormap = config.colorbar.colormap,
+        f[1, 2];
         colorrange = (min, max),
-        label = config.colorbar.label,
+        config.colorbar...,
         height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
     )
     plot_topo_plots!(
@@ -102,7 +101,6 @@ function plot_circular_topoplots!(
     )
 
     apply_layout_settings!(config; ax = ax)
-
     # set the scene's background color according to config
     #set_theme!(Theme(backgroundcolor = config.axisData.backgroundcolor))
     return f

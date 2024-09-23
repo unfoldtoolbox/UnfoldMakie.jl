@@ -7,7 +7,7 @@ using BSplineKit, Unfold
 Visualization of spline terms in an UnfoldModel. Two subplots are generated for each spline term:\\
 1) the basis function of the spline; 2) the density of the underlying covariate.\\
 
-Multiple spline terms are arranged across columns.
+Multiple spline terms are arranged across columns.\\
 Dashed lines indicate spline knots.
 
 ## Arguments:
