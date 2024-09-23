@@ -91,6 +91,9 @@ plot_topoplot!(
 )
 f
 
+# # Highlighting channels
+plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
+
 # # Configurations of Topoplot
 
 # ```@docs
