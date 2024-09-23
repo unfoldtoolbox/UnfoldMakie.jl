@@ -28,7 +28,7 @@ function PlotConfig()# defaults
         (;), # axis
         (; # layout
             show_legend = true,
-            use_colorbar = true, # ideally should be deleted
+            use_colorbar = true,
         ),
         (#maping
             x = (:time,),
