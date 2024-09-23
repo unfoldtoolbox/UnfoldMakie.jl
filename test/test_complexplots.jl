@@ -191,7 +191,6 @@ end
         f[2, 4:5],
         res_effects;
         mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
-        layout = (; show_legend = true),
     )
 
     plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))

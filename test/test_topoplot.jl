@@ -26,7 +26,7 @@ end
 end
 
 @testset "topoplot: no legend" begin
-    plot_topoplot(dat[:, 50, 1]; positions = positions, layout = (; show_legend = false))
+    plot_topoplot(dat[:, 50, 1]; positions = positions, layout = (; use_colorbar = false))
 end
 
 @testset "topoplot: xlabel" begin

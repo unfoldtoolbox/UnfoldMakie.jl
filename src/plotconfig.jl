@@ -27,7 +27,6 @@ function PlotConfig()# defaults
         (;), #figure
         (;), # axis
         (; # layout
-            show_legend = true,
             use_colorbar = true,
         ),
         (#maping
@@ -82,7 +81,6 @@ function PlotConfig(T::Val{:topoplot})
     config_kwargs!(
         cfg;
         layout = (
-            show_legend = true,
             use_colorbar = true,
             hidespines = (),
             hidedecorations = (Dict(:label => false)),
@@ -252,7 +250,7 @@ function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (; use_colorbar = true, show_legend = false),
+        layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]"),
         axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
