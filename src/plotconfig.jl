@@ -27,6 +27,7 @@ function PlotConfig()# defaults
         (;), #figure
         (;), # axis
         (; # layout
+            show_legend = true,
             use_colorbar = true,
         ),
         (#maping
