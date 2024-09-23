@@ -48,6 +48,7 @@ function PlotConfig()# defaults
             vertical = true,
             tellwidth = true,
             tellheight = false,
+            labelrotation = -π / 2,
         ),
     )
 end
@@ -61,7 +62,11 @@ function PlotConfig(T::Val{:circtopos})
     config_kwargs!(
         cfg;
         layout = (; show_legend = false),
-        colorbar = (; label = "Voltage [µV]", colormap = Reverse(:RdBu)),
+        colorbar = (;
+            labelrotation = -π / 2,
+            label = "Voltage [µV]",
+            colormap = Reverse(:RdBu),
+        ),
         mapping = (;),
         axis = (;
             label = ""
@@ -95,7 +100,7 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, label = "Voltage [µV]"),
         axis = (; xlabel = "", aspect = DataAspect()),
     )
     return cfg
@@ -120,12 +125,7 @@ function PlotConfig(T::Val{:topoplotseries})
             yrectzoom = false,
         ),
         layout = (; use_colorbar = true),
-        colorbar = (;
-            flipaxis = true,
-            labelrotation = -π / 2,
-            label = "Voltage [µV]",
-            colorrange = nothing,
-        ),
+        colorbar = (; flipaxis = true, label = "Voltage [µV]", colorrange = nothing),
         visual = (;
             label_text = false, # true doesnt work again
             colormap = Reverse(:RdBu),
@@ -147,7 +147,7 @@ function PlotConfig(T::Val{:designmat})
             ylabel = "Trials",
             xticklabelrotation = round(pi / 8, digits = 2),
         ),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = ""),
+        colorbar = (; flipaxis = true, label = ""),
     )
     return cfg
 end
@@ -213,7 +213,7 @@ function PlotConfig(T::Val{:erp})
             yticklabelsize = 14,
             xtickformat = "{:.1f}",
         ),
-        colorbar = (; label = "", flipaxis = true, labelrotation = -π / 2),
+        colorbar = (; label = "", flipaxis = true),
     )
 
     return cfg
@@ -241,7 +241,7 @@ function PlotConfig(T::Val{:channelimage})
     config_kwargs!(
         cfg;
         #layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
+        colorbar = (; label = "Voltage [µV]"),
         axis = (xlabel = "Time [s]", ylabel = "Channels", yticklabelsize = 14),
         visual = (; colormap = Reverse("RdBu")), #cork
     )
@@ -252,7 +252,7 @@ function PlotConfig(T::Val{:erpimage})
     config_kwargs!(
         cfg;
         layout = (; use_colorbar = true, show_legend = false),
-        colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
+        colorbar = (; label = "Voltage [µV]"),
         axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
