@@ -48,6 +48,7 @@ end
 
 include("plotconfig.jl")
 include("docstring_template.jl")
+include("supportive_defaults.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")
