@@ -6,7 +6,7 @@ Default configurations for the supporting axis. Similar to PlotConfig, but these
 Such supporting axes allow users to flexibly see defaults in docstrings and manipulate them using corresponding axes.
     
 For developers: to make them updateable in the function, use `update_axis`.
-**Return value:** `NamedConfig`.
+**Return value:** `NamedTuple`.
 """
 function supportive_defaults(cfg_symb::Symbol)
     # plot_splines
