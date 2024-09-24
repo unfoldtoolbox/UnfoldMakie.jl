@@ -1,10 +1,11 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
 authors = ["Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner", "Furkan Lokman", "Benedikt Ehinger"]
-version = "0.5.7"
+version = "0.5.8"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
+BSplineKit = "093aae92-e908-43d7-9660-e50ee39d5a0a"
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 ColorTypes = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
@@ -34,6 +35,7 @@ UnfoldMakiePyMNEExt = "PyMNE"
 
 [compat]
 AlgebraOfGraphics = "0.7, 0.8"
+BSplineKit = "0.16, 0.17"
 CategoricalArrays = "0.10"
 ColorSchemes = "3"
 ColorTypes = "0.11"

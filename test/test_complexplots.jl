@@ -34,8 +34,7 @@
         d_topo;
         positions = pos,
         topomarkersize = 10,
-        topoheight = 0.4,
-        topowidth = 0.4,
+        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
@@ -110,21 +109,13 @@ end
     uf_5chan = example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 
-
     pvals = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(
-        f[1, 1],
-        results,
-        categorical_color = false,
-        categorical_group = false,
-        significance = pvals,
-        stderror = true,
-    )
+    plot_erp!(f[1, 1], results, significance = pvals, stderror = true)
 
     plot_butterfly!(f[1, 2], d_topo, positions = positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions = positions)
@@ -181,14 +172,7 @@ end
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(
-        f[2, 1:2],
-        results,
-        categorical_color = false,
-        categorical_group = false,
-        significance = pvals,
-        stderror = true,
-    )
+    plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
 
     plot_designmatrix!(f[2, 3], designmatrix(uf))
 
@@ -206,10 +190,7 @@ end
     plot_erp!(
         f[2, 4:5],
         res_effects;
-        categorical_color = false,
-        categorical_group = true,
-        mapping = (; y = :yhat, color = :continuous, group = :continuous),
-        layout = (; show_legend = true),
+        mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
     )
 
     plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))

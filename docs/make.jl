@@ -40,7 +40,7 @@ makedocs(;
             "Plot types" => "generated/intro/plot_types.md",
             "Code principles" => "generated/intro/code_principles.md",
         ],
-        "Visualization Types" => [
+        "ERP Visualizations" => [
             "ERP plot" => "generated/tutorials/erp.md",
             "Butterfly plot" => "generated/tutorials/butterfly.md",
             "Topoplot" => "generated/tutorials/topoplot.md",
@@ -49,8 +49,11 @@ makedocs(;
             "ERP image" => "generated/tutorials/erpimage.md",
             "Channel image" => "generated/tutorials/channel_image.md",
             "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
-            "Design matrix" => "generated/tutorials/designmatrix.md",
             "Circular topoplots" => "generated/tutorials/circ_topo.md",
+        ],
+        "Unfold-specific Visualisations" => [
+            "Design matrix" => "generated/tutorials/designmatrix.md",
+            "Spline plot" => "generated/tutorials/splines.md",
         ],
         "How To" => [
             "Change colormap of Butterfly plot" => "generated/how_to/position2color.md",

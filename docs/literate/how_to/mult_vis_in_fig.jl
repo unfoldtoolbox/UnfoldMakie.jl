@@ -69,14 +69,7 @@ pvals = DataFrame(
     to = [0.2, 0.5], # if coefname not specified, line should be black
     coefname = ["(Intercept)", "category: face"],
 )
-plot_erp!(
-    f[2, 1:2],
-    results,
-    categorical_color = false,
-    categorical_group = false,
-    significance = pvals,
-    stderror = true,
-)
+plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
 
 plot_designmatrix!(f[2, 3], designmatrix(uf))
 
@@ -94,18 +87,14 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 plot_erp!(
     f[2, 4:5],
     res_effects;
-    categorical_color = false,
-    categorical_group = true,
-    mapping = (; y = :yhat, color = :continuous, group = :continuous),
+    mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
     legend = (; nbanks = 2),
-    layout = (; show_legend = true, legend_position = :right),
 )
 
 plot_parallelcoordinates(
     f[3, 2:3],
     uf_5chan;
     mapping = (; color = :coefname),
-    layout = (; legend_position = :right),
 )
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
@@ -157,8 +146,7 @@ plot_butterfly!(
     d_topo;
     positions = pos,
     topomarkersize = 10,
-    topoheight = 0.4,
-    topowidth = 0.4,
+    topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
 )
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)

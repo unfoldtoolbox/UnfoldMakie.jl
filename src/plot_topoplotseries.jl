@@ -42,9 +42,12 @@ Multiple miniature topoplots in regular distances.
     `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
     `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
     `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
-- `visual.colorrange::2-element Vector{Int64}`, `colorbar.colorrange::2-element Vector{Int64}`\\
-    First is resposnible for colorrange in topoplots, second - in colorbars. Ideally they should be the same. 
+- `visual.colorrange::2-element Vector{Int64}`\\
+    Resposnible for colorrange in topoplots and in colorbar.
 
+
+Code description:
+- 
 $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.
@@ -77,13 +80,14 @@ function plot_topoplotseries!(
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
+
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     data_copy = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
     cat_or_cont_columns =
         eltype(data_copy[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if cat_or_cont_columns == "cat"
-        # overwrite Time windows [s] default if categorical
+        # overwrite 'Time windows [s]' default if categorical
         n_topoplots =
             number_of_topoplots(data_copy; bin_width, bin_num, bins = 0, config.mapping)
         ix =
@@ -132,22 +136,19 @@ function plot_topoplotseries!(
         config.visual...,
         positions,
     )
-    if (config.colorbar.colorrange !== nothing)
-        config_kwargs!(config)
-    else
-        config_kwargs!(
-            config,
-            visual = (; colorrange = colorrange),
-            colorbar = (; colorrange = colorrange),
-        )
-    end
-    if !config.layout.use_colorbar
-        config_kwargs!(config, layout = (; use_colorbar = false, show_legend = false))
-    end
+    config_kwargs!(
+        config,
+        visual = (; colorrange = colorrange),
+        colorbar = (; colorrange = colorrange),
+    )
+
     ax = Axis(
         f[1, 1];
         (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)...,
     )
+    if config.layout.use_colorbar == true
+        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
+    end
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
 end

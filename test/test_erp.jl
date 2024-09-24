@@ -1,10 +1,15 @@
+using Unfold: stderror
 using AlgebraOfGraphics: group
 include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
+
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
 dat, positions = TopoPlots.example_data()
+
+m7 = example_data("7channels")
+results7 = coeftable(m7)
 
 @testset "ERP plot: DataFrame data" begin
     plot_erp(results)
@@ -18,19 +23,27 @@ end
     plot_erp(dat[1, :, 1])
 end
 
+@testset "ERP plot: rename xlabel" begin
+    plot_erp(results; axis = (; xlabel = "test"))
+end
+
+@testset "ERP plot: xlabelvisible" begin
+    plot_erp(results; axis = (; xlabelvisible = false, xticklabelsvisible = false))
+end
+
 @testset "ERP plot: Array data with times vector" begin
     times = range(0, step = 100, length = size(dat, 2))
     plot_erp(times, dat[1, :, 1], axis = (; xtickformat = "{:d}"))
 end
 
 @testset "ERP plot: stderror error" begin
-    plot_erp(results; :stderror => true)
+    plot_erp(results; stderror = true)
 end
 
 @testset "ERP plot: standart errors in GridLayout" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
-    plot_erp!(ga, results; :stderror => true)
+    plot_erp!(ga, results; stderror = true)
     f
 end
 
@@ -40,24 +53,31 @@ end
     plot_erp(results; mapping = (; col = :group))
 end
 
+@testset "ERP plot: faceting by two columns with stderror" begin
+    results = coeftable(m)
+    results.group = push!(repeat(["A", "B"], inner = 67), "A")
+    plot_erp(results; mapping = (; col = :group), stderror = true)
+end
+
 @testset "ERP plot: with and withour error ribbons" begin
     results = coeftable(m)
-    f = Figure()
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
+
+    f = Figure()
     plot_erp!(
         f[1, 1],
         results;
-        axis = (title = "Bad example", titlegap = 12),
-        :stderror => false,
+        axis = (; title = "Bad example", titlegap = 12),
+        stderror = false,
         mapping = (; color = :coefname => "Conditions"),
     )
     plot_erp!(
         f[2, 1],
         results;
         axis = (title = "Good example", titlegap = 12),
-        :stderror => true,
+        stderror = true,
         mapping = (; color = :coefname => "Conditions"),
     )
 
@@ -81,49 +101,22 @@ end
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(
-        ga,
-        results;
-        categorical_color = false,
-        categorical_group = false,
-        significance = pvals,
-        stderror = true,
-    )
+    plot_erp!(ga, results; significance = pvals, stderror = true)
     f
 end
 
 @testset "ERP plot with significance" begin
     pvals = DataFrame(
-        from = [0.1, 0.3],
-        to = [0.5, 0.7],
+        from = [0.01, 0.2],
+        to = [0.3, 0.4],
         coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
     )
     plot_erp(results; :significance => pvals)
 end
 
 @testset "ERP plot: 7 channels faceted" begin
-    m7 = example_data("7channels")
-    results7 = coeftable(m7)
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
 end
-
-
-@testset "ERP plot: with colorbar and legend" begin
-    plot_erp(
-        res_effects2;
-        mapping = (; color = :continuous, linestyle = :condition, group = :continuous),
-        categorical_color = false,
-    )
-end
-
-#= @testset "ERP plot: with colorbar and legend 2" begin
-    plot_erp(
-        res_effects2;
-        mapping = (; color = :continuous, group = :continuous),
-        categorical_color = false,
-        categorical_group = false,
-    )
-end =#
 
 @testset "ERP plot: rename legend" begin
     f = Figure()
@@ -132,11 +125,50 @@ end =#
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
     results = filter(row -> row.coefname != "continuous", results)
     plot_erp!(
-        f[1, 1],
+        f,
         results;
         axis = (title = "Bad example", titlegap = 12),
-        :stderror => false,
         mapping = (; color = :coefname => "Conditions"),
+    )
+    f
+end
+
+@testset "ERP plot: Facet sorting" begin
+    data, evts = UnfoldSim.predef_eeg()
+
+    m = fit(
+        UnfoldModel,
+        [
+            "car" => (@formula(0 ~ 1 + continuous), firbasis((-0.1, 1), 100)),
+            "face" => (@formula(0 ~ 1 + continuous), firbasis((-0.1, 1), 100)),
+        ],
+        evts,
+        data;
+        eventcolumn = :condition,
+    )
+    eff = effects(Dict(:continuous => 75:20:300), m)
+
+    sorting1 = ["face", "car"] # check 
+    sorting2 = ["car", "face"]
+
+    f = Figure()
+    plot_erp!(
+        f[1, 1],
+        eff;
+        mapping = (;
+            col = :eventname => sorter(sorting1),
+            color = :continuous,
+            group = :continuous,
+        ),
+    )
+    plot_erp!(
+        f[2, 1],
+        eff;
+        mapping = (;
+            col = :eventname => sorter(sorting2),
+            color = :continuous,
+            group = :continuous,
+        ),
     )
     f
 end

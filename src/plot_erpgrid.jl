@@ -13,6 +13,22 @@ Plot an ERP image.
     Electrode positions.
 - `ch_names::Vector{String}`\\
     Vector with channel names.
+- `hlines_grid_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the hlines on all subaxes.\\
+    To see all options just type `?hlines` in REPL.\\
+    Defaults: $(supportive_defaults(:hlines_grid_default))
+- `vlines_grid_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the vlines on all subaxes.\\
+    To see all options just type `?vlines` in REPL.\\
+    Defaults: $(supportive_defaults(:vlines_grid_default))
+- `lines_grid_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the lines on all subaxes.\\
+    To see all options just type `?lines` in REPL.\\
+    Defaults: $(supportive_defaults(:lines_grid_default))
+- `labels_grid_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the labels on all subaxes.\\
+    To see all options just type `?text` in REPL.\\
+    Defaults: $(supportive_defaults(:labels_grid_default))
         
 ## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
@@ -48,6 +64,10 @@ function plot_erpgrid!(
     ch_names::Vector{String};
     drawlabels = false,
     times = -1:size(data, 2)-2, #arbitrary
+    labels_grid_axis = (;),
+    hlines_grid_axis = (;),
+    vlines_grid_axis = (;),
+    lines_grid_axis = (;),
     kwargs...,
 )
     config = PlotConfig(:erpgrid)
@@ -72,6 +92,8 @@ function plot_erpgrid!(
 
     axlist = []
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
+    labels_grid_axis =
+        update_axis(supportive_defaults(:labels_grid_default); labels_grid_axis...)
     for (ix, p) in enumerate(eachcol(positions))
         x = p[1]
         y = p[2]
@@ -83,29 +105,26 @@ function plot_erpgrid!(
             valign = y,
         )
         if drawlabels
-            text!(
-                ax,
-                rel_zeropoint + 0.1,
-                1,
-                color = :gray,
-                fontsize = 12,
-                text = ch_names[ix],
-                align = (:left, :top),
-                space = :relative,
-            )
+            text!(ax, rel_zeropoint + 0.1, 1; text = ch_names[ix], labels_grid_axis...)
         end
         # todo: add label if not nothing
 
         push!(axlist, ax)
     end
-    # todo: make optional + be able to specify the linewidth + color
-    hlines!.(axlist, Ref([0.0]), color = :gray, linewidth = 0.5)
-    vlines!.(axlist, Ref([0.0]), color = :gray, linewidth = 0.5)
+    hlines_grid_axis =
+        update_axis(supportive_defaults(:hlines_grid_default); hlines_grid_axis...)
+    vlines_grid_axis =
+        update_axis(supportive_defaults(:vlines_grid_default); vlines_grid_axis...)
+    lines_grid_axis =
+        update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
+
+    hlines!.(axlist, Ref([0.0]); hlines_grid_axis...)
+    vlines!.(axlist, Ref([0.0]); vlines_grid_axis...)
 
     times = isnothing(times) ? (1:size(data, 2)) : times
 
     # todo: add customizable kwargs
-    h = lines!.(axlist, Ref(times), eachrow(data))
+    h = lines!.(axlist, Ref(times), eachrow(data); lines_grid_axis...)
 
     linkaxes!(axlist...)
     hidedecorations!.(axlist)
@@ -119,14 +138,20 @@ function plot_erpgrid!(
     xstart = [Point2f(0), Point2f(0)]
     xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
     arrows!(xstart, xdir, arrowsize = 10)
-    text!(0.02, 0, text = config.axis.xlabel, align = (:left, :top), fontsize = 12)
+    text!(
+        0.02,
+        0,
+        text = config.axis.xlabel,
+        fontsize = config.axis.fontsize,
+        align = (:left, :top),
+    )
     text!(
         -0.008,
         0.01,
         text = config.axis.ylabel,
+        fontsize = config.axis.fontsize,
         align = (:left, :baseline),
         rotation = π / 2,
-        fontsize = 12,
     )
     f
 end

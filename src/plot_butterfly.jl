@@ -26,12 +26,15 @@ Plot a Butterfly plot.
     Show an inlay topoplot with corresponding electrodes. Requires `positions`.
 - `topomarkersize::Real = 10` \\
     Change the size of the electrode markers in topoplot.
-- `topowidth::Real = 0.25` \\
-    Change the width of inlay topoplot.
-- `topoheight::Real = 0.25` \\
-    Change the height of inlay topoplot.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
     Change the line colors.
+- `topo_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot axis.\\
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_default))
+- `mapping = (;)`\\
+    For highlighting specific channels.\\
+    Example: `mapping = (; color = :highlight))`, where `:highlight` is variable with appopriate mapping.
 
 **Return Value:** `Figure` displaying Butterfly plot.
 
@@ -48,12 +51,8 @@ function plot_butterfly!(
     labels = nothing,
     topolegend = true,
     topomarkersize = 10,
-    topowidth = 0.35,
-    topoheight = 0.35,
-    topohalign = 0.05,
-    topovalign = 0.95,
-    topoaspect = 1,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
+    topo_axis = (;),
     mapping = (;),
     kwargs...,
 )
@@ -93,6 +92,7 @@ function plot_butterfly!(
             colors = get_topo_color(all_positions, topopositions_to_color)
         end
     end
+
     # Categorical mapping
     # convert color column into string to prevent wrong grouping
     if (:group ∈ keys(config.mapping))
@@ -111,15 +111,12 @@ function plot_butterfly!(
     end
 
     mapp = AlgebraOfGraphics.mapping()
-
-    if (:color ∈ keys(config.mapping))
-        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
+    for i in [:color, :group]
+        if (i ∈ keys(config.mapping))
+            tmp = getindex(config.mapping, i)
+            mapp = mapp * AlgebraOfGraphics.mapping(; i => tmp)
+        end
     end
-
-    if (:group ∈ keys(config.mapping))
-        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.group)
-    end
-
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
     xy_mapp =
@@ -131,25 +128,17 @@ function plot_butterfly!(
     f_grid = f[1, 1]
 
     if (topolegend)
-        topoAxis = Axis(
-            f_grid,
-            width = Relative(topowidth),
-            height = Relative(topoheight),
-            halign = topohalign,
-            valign = topovalign,
-            aspect = topoaspect,
-        )
+        topo_axis = update_axis(supportive_defaults(:topo_default); topo_axis...)
         ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
 
         topoplot_legend(
-            topoAxis,
+            Axis(f_grid; topo_axis...),
             topomarkersize,
             plot_data[ix, config.mapping.color[1]],
             colors,
             all_positions,
         )
     end
-
     if isnothing(colors)
         drawing = draw!(f_grid, plot_equation; axis = config.axis)
     else
@@ -162,4 +151,57 @@ function plot_butterfly!(
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
+end
+
+
+# topopositions_to_color = colors?
+function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
+    all_positions = unique(all_positions)
+    topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
+
+    un = unique(unique_val)
+    special_colors =
+        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]))
+
+    xlims!(low = -0.2, high = 1.2)
+    ylims!(low = -0.2, high = 1.2)
+
+    topoplot = eeg_topoplot!(
+        axis,
+        1:length(all_positions), # go from 1:npos
+        string.(1:length(all_positions));
+        positions = all_positions,
+        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the special_colorsmap
+        colorrange = (0, length(all_positions)), # add the 0 for the white-first color
+        colormap = special_colors,
+        head = (color = :black, linewidth = 1, model = topo_matrix),
+        label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
+    )
+    hidespines!(axis)
+    hidedecorations!(axis)
+    return topoplot
+end
+
+function eeg_head_matrix(positions, center, radius)
+    oldCenter = mean(positions)
+    oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
+    radF = radius / oldRadius
+    return Makie.Mat4f(
+        radF,
+        0,
+        0,
+        0,
+        0,
+        radF,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        center[1] - oldCenter[1] * radF,
+        center[2] - oldCenter[2] * radF,
+        0,
+        1,
+    )
 end

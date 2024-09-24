@@ -13,7 +13,7 @@ using CairoMakie
 using DataFramesMeta
 using UnfoldSim
 using UnfoldMakie
-include("../../../example_data.jl")
+include("../../../example_data.jl");
 
 # Data generation
 
@@ -36,6 +36,9 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 # ## Figure plotting
 plot_erp(results)
 
+# To change legend title use `mapping.color`:
+plot_erp(results, mapping = (; color = :coefname => "Conditions"))
+
 # # Additional features
 
 # ## Effect plot
@@ -53,9 +56,7 @@ plot_erp(results)
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
-    layout = (; show_legend = false),
-    categorical_color = false, # perceives color (here: continuous) as contionus 
-    categorical_group = true, # separates lines, if `false` all lines will be connected
+    layout = (; use_colorbar = false),
 )
 
 # ## Significance lines
@@ -68,8 +69,8 @@ plot_erp(
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
 significancevalues = DataFrame(
-    from = [0.1, 0.3],
-    to = [0.5, 0.7],
+    from = [0.01, 0.2],
+    to = [0.3, 0.4],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
 plot_erp(results; :significance => significancevalues)
@@ -110,7 +111,7 @@ text!(0.98, 0.2, text = "* Confidence\nintervals", align = (:right, :top))
 f
 
 # There are two ways to implement it.
-# First is using `:stderror = true' after `;`.
+# First is using `:stderror = true` after `;`.
 
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15

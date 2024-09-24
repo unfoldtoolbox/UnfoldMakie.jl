@@ -25,8 +25,16 @@ end
     plot_topoplot(d1; positions = rand(Point2f, 10))
 end
 
+@testset "topoplot: highliht an electrode" begin
+    plot_topoplot(dat[:, 50, 1]; positions, high_chan = 2)
+end
+
+@testset "topoplot: highliht several electrodes" begin
+    plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
+end
+
 @testset "topoplot: no legend" begin
-    plot_topoplot(dat[:, 50, 1]; positions = positions, layout = (; show_legend = false))
+    plot_topoplot(dat[:, 50, 1]; positions = positions, layout = (; use_colorbar = false))
 end
 
 @testset "topoplot: xlabel" begin

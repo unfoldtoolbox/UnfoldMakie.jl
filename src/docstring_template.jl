@@ -14,6 +14,7 @@ function _docstring(cfg_symb::Symbol)
         :circtopos => `Topoplot.eeg_topoplot`,
         :topoplot => `Topoplot.eeg_topoplot`,
         :topoplotseries => `Topoplot.eeg_topoplot`,
+        :splines => `Makie.series`,
     )
     visuallink2 = Dict(
         :erp => "https://docs.makie.org/stable/reference/plots/lines/",
@@ -26,6 +27,7 @@ function _docstring(cfg_symb::Symbol)
         :circtopos => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplot => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
         :topoplotseries => "https://makieorg.github.io/TopoPlots.jl/stable/eeg/",
+        :splines => "https://docs.makie.org/stable/reference/plots/series",
     )
     cbarstring =
         (cfg_symb == :erp || cfg_symb == :butterfly) ?
@@ -35,8 +37,10 @@ function _docstring(cfg_symb::Symbol)
         :figure => "use `kwargs...` of [`Makie.Figure`](https://docs.makie.org/stable/explanations/figure/)",
         :axis => "use `kwargs...` of  [`Makie.Axis`](https://docs.makie.org/stable/reference/blocks/axis/)",
         :legend => "use `kwargs...` of  [`Makie.Legend`](https://docs.makie.org/stable/reference/blocks/legend/)",
-        :colorbar => "use `kwargs...` of  $cbarstring",
+        :layout => "check this [page](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/generated/how_to/hide_deco/)",
+        :mapping => "use any mapping from [`AlgebraOfGraphics`](https://aog.makie.org/stable/layers/mapping/)",
         :visual => "use `kwargs...` of [$(visuallink[cfg_symb])]($(visuallink2[cfg_symb]))",
+        :colorbar => "use `kwargs...` of  $cbarstring",
     )
     for k = 1:length(fn)
         namedtpl = string(Base.getfield(cfg, fn[k]))
@@ -51,7 +55,7 @@ function _docstring(cfg_symb::Symbol)
 
     return """## Shared plot configuration options
         The shared plot options can be used as follows: `type = (; key = value, ...))`.\\
-        For example, `plot_x(...; layout = (; show_legend = true, legend_position = :right))`.\\
+        For example, `plot_x(...; colorbar = (; vertical = true, label = "Test"))`.\\
         Multiple defaults will be cycled until match.
 
         Placing `;` is important!
@@ -59,12 +63,3 @@ function _docstring(cfg_symb::Symbol)
         $(out)
         """
 end
-#= 
-""" 
-    $(TYPEDSIGNATURES)
-$(_docstring(:erp))
-
-"""
-function plot_new()
-    return "b"
-end =#

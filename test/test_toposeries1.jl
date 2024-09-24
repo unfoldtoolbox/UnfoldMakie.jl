@@ -12,6 +12,10 @@ end
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
+@testset "toposeries: bin_num" begin
+    plot_topoplotseries(df; bin_num = 5, positions = positions, axis = (; xlabel = "test"))
+end
+
 @testset "toposeries: checking other y value" begin
     df.cont = df.time .* 3
     plot_topoplotseries(df; bin_num = 5, positions = positions, mapping = (; col = :cont))
@@ -145,7 +149,7 @@ end
         df;
         bin_width,
         positions = positions,
-        colorbar = (; colorrange = (-3, 3)),
+        visual = (; colorrange = (-3, 3)),
     )
 end
 
