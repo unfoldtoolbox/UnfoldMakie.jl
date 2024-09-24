@@ -25,6 +25,35 @@ end
     plot_erpgrid(data[1:6, :], pos[1:6], raw_ch_names[1:6]; drawlabels = true)
 end
 
+@testset "erpgrid: customizable labels" begin
+    plot_erpgrid(
+        data[1:6, :],
+        pos[1:6],
+        raw_ch_names[1:6];
+        drawlabels = true,
+        labels_grid_axis = (; color = :red),
+    )
+end
+
+@testset "erpgrid: customizable vlines and hlines" begin
+    plot_erpgrid(
+        data[1:6, :],
+        pos[1:6],
+        raw_ch_names[1:6];
+        hlines_grid_axis = (; color = :red),
+        vlines_grid_axis = (; color = :green),
+    )
+end
+
+@testset "erpgrid: customizable lines" begin
+    plot_erpgrid(
+        data[1:6, :],
+        pos[1:6],
+        raw_ch_names[1:6];
+        lines_grid_axis = (; color = :red),
+    )
+end
+
 @testset "erpgrid: GridPosition" begin
     f = Figure()
     plot_erpgrid!(f[1, 1], data, pos)

@@ -1,5 +1,6 @@
 include("../docs/example_data.jl") # we need more specified example data
 results_plot, positions = example_data()
+
 @testset "PCP: data input DataFrame" begin
     plot_parallelcoordinates(results_plot)
 end
@@ -13,6 +14,14 @@ end
 
 @testset "PCP: Figure, 64 channels, 1 condition" begin
     plot_parallelcoordinates(results_plot; mapping = (color = :coefname, y = :estimate))
+end
+
+@testset "PCP: show_legend = false" begin
+    plot_parallelcoordinates(
+        results_plot;
+        mapping = (color = :coefname, y = :estimate),
+        layout = (; show_legend = false),
+    )
 end
 
 @testset "PCP: Figure, 64 channels, 1 condition, bigger size" begin
@@ -71,7 +80,7 @@ end
     plot_parallelcoordinates(
         uf_5chan;
         mapping = (; color = :coefname),
-        layout = (; legend_position = :right),
+        legend = (; valign = :center),
     )
 end
 
@@ -170,7 +179,6 @@ end
         f[1, 1],
         uf_5chan;
         mapping = (; color = :coefname),
-        layout = (; legend_position = :right),
         visual = (; alpha = 0.1),
         axis = (; title = "alpha = 0.1"),
     )
@@ -178,7 +186,6 @@ end
         f[2, 1],
         uf_5chan,
         mapping = (; color = :coefname),
-        layout = (; legend_position = :right),
         visual = (; alpha = 0.9),
         axis = (; title = "alpha = 0.9"),
     )
@@ -201,23 +208,4 @@ end
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
     )
     f
-end
-
-begin
-    f = Figure()
-    plot_parallelcoordinates(
-        f[1, 1],
-        subset(results_plot, :channel => x -> x .< 10);
-        mapping = (; color = :coefname),
-        axis = (; title = "normalize = nothing"),
-    )
-    plot_parallelcoordinates(
-        f[2, 1],
-        subset(results_plot, :channel => x -> x .< 10);
-        mapping = (; color = :coefname),
-        normalize = :minmax,
-        axis = (; title = "normalize = :minmax"),
-    )
-    f
-
 end

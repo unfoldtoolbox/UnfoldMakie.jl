@@ -1,5 +1,6 @@
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
+BSplineKit = "093aae92-e908-43d7-9660-e50ee39d5a0a"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
@@ -24,3 +25,4 @@ XML2_jll = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
 
 [compat]
 AlgebraOfGraphics = "0.7, 0.8"
+BSplineKit = "0.16, 0.17"

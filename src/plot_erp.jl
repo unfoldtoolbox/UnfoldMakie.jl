@@ -19,10 +19,6 @@ Plot an ERP plot.
 
 ## Keyword arguments (kwargs)
 
-- `categorical_color::Bool = true`\\
-    Treat `:color` as categorical variable in case of numeric `:color` column.
-- `categorical_group::Bool = true`\\
-    Treat `:group` as categorical variable in case of numeric `:group` column. 
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `significance::DataFrame = nothing`\\
@@ -55,13 +51,18 @@ function plot_erp!(
     plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     positions = nothing,
     labels = nothing,
-    categorical_color = true,
-    categorical_group = true,
+    categorical_color = nothing,
+    categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
     mapping = (;),
     kwargs...,
 )
+    if !(isnothing(categorical_color) && isnothing(categorical_group))
+        @warn "categorical_color and categorical_group have been deprecated.
+        To switch to categorical colors, please use `mapping(..., color = :mycolorcolum => nonnumeric)`.
+        `group` is now automatically cast to nonnumeric."
+    end
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data)
@@ -84,41 +85,40 @@ function plot_erp!(
         plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
     end
 
+    # automatically convert col & group to nonnumeric
+    if (
+        :col ∈ keys(config.mapping) &&
+        !isa(config.mapping.col, Pair) &&
+        typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
+    )
+        config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
+    end
+
+    if (
+        :group ∈ keys(config.mapping) &&
+        !isa(config.mapping.group, Pair) &&
+        typeof(plot_data[:, config.mapping.group]) <: AbstractVector{<:Number}
+    )
+        config.mapping =
+            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
+    end
+
     # check if stderror values exist and create new columns with high and low band
     if "stderror" ∈ names(plot_data) && stderror
         plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
         plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
         plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
     end
-    # Categorical mapping
-    # convert color column into string to prevent wrong grouping
-    if categorical_color && (:color ∈ keys(config.mapping))
-        config.mapping =
-            merge(config.mapping, (; color = config.mapping.color => nonnumeric))
-    end
-
-    # converts group column into string
-    if categorical_group && (:group ∈ keys(config.mapping))
-        config.mapping =
-            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
-    end
-    if (
-        :col ∈ keys(config.mapping) &&
-        typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
-    )
-        config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
-    end
 
     mapp = AlgebraOfGraphics.mapping()
 
-    if (:color ∈ keys(config.mapping))
-        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.color)
+    # mapping for stderrors 
+    for i in [:color, :group, :col, :row, :layout]
+        if (i ∈ keys(config.mapping))
+            tmp = getindex(config.mapping, i)
+            mapp = mapp * AlgebraOfGraphics.mapping(; i => tmp)
+        end
     end
-
-    if (:group ∈ keys(config.mapping))
-        mapp = mapp * AlgebraOfGraphics.mapping(; config.mapping.group)
-    end
-
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
 
@@ -126,6 +126,7 @@ function plot_erp!(
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mapping_others...)
     basic = visual(Lines; config.visual...) * xy_mapp
     # add band of sdterrors
+
     if stderror
         m_se = AlgebraOfGraphics.mapping(config.mapping.x, :se_low, :se_high)
         basic = basic + visual(Band, alpha = 0.5) * m_se
@@ -140,76 +141,19 @@ function plot_erp!(
 
     plot_equation = basic * mapp
 
-    f_grid = f[1, 1:4]
-
-    # draw a standart ERP lineplot 
+    f_grid = f[1, 1] = GridLayout()
     drawing = draw!(f_grid, plot_equation; axis = config.axis)
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true
-            legend!(f[:, 5], drawing; config.legend...)
+            legend!(f_grid[:, end+1], drawing; config.legend...)
         end
         if config.layout.use_colorbar == true
-            N = config.layout.use_legend == false ? 5 : 6
-            colorbar!(f[:, N], drawing; config.colorbar...)
+            colorbar!(f_grid[:, end+1], drawing; config.colorbar...)
         end
     end
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
-end
-
-function eeg_head_matrix(positions, center, radius)
-    oldCenter = mean(positions)
-    oldRadius, _ = findmax(x -> norm(x .- oldCenter), positions)
-    radF = radius / oldRadius
-    return Makie.Mat4f(
-        radF,
-        0,
-        0,
-        0,
-        0,
-        radF,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        center[1] - oldCenter[1] * radF,
-        center[2] - oldCenter[2] * radF,
-        0,
-        1,
-    )
-end
-
-# topopositions_to_color = colors?
-function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
-    all_positions = unique(all_positions)
-
-    topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
-
-    un = unique(unique_val)
-    special_colors =
-        ColorScheme(vcat(RGB(1, 1, 1.0), colors[map(x -> findfirst(x .== un), unique_val)]))
-
-    xlims!(low = -0.2, high = 1.2)
-    ylims!(low = -0.2, high = 1.2)
-    topoplot = eeg_topoplot!(
-        axis,
-        1:length(all_positions), # go from 1:npos
-        string.(1:length(all_positions));
-        positions = all_positions,
-        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the special_colorsmap
-        colorrange = (0, length(all_positions)), # add the 0 for the white-first color
-        colormap = special_colors,
-        head = (color = :black, linewidth = 1, model = topo_matrix),
-        label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
-    )
-
-    hidedecorations!(current_axis())
-    hidespines!(current_axis())
-
-    return topoplot
 end
 
 function add_significance(plot_data, significance, config)

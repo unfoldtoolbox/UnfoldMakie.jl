@@ -48,6 +48,7 @@ end
 
 include("plotconfig.jl")
 include("docstring_template.jl")
+include("supportive_defaults.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")
@@ -55,6 +56,7 @@ include("plot_topoplotseries.jl")
 include("plot_erp.jl")
 include("plot_butterfly.jl")
 include("plot_designmatrix.jl")
+include("plot_splines.jl")
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")
@@ -71,6 +73,8 @@ export PlotConfig
 
 export plot_designmatrix
 export plot_designmatrix!
+export plot_splines
+export plot_splines!
 export plot_erp
 export plot_erp!
 export plot_erpimage
@@ -95,4 +99,5 @@ export to_positions
 export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG
+
 end

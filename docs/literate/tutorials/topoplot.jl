@@ -16,7 +16,7 @@ using DataFrames
 
 # Data loading
 
-dat, positions = TopoPlots.example_data()
+dat, positions = TopoPlots.example_data();
 
 # The size of `data` is 64×400×3. This means:
 # - 64 channels;
@@ -90,6 +90,9 @@ plot_topoplot!(
     mapping = (; labels = labs4),
 )
 f
+
+# # Highlighting channels
+plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
 
 # # Configurations of Topoplot
 

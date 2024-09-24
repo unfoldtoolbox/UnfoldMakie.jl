@@ -29,7 +29,6 @@ end
     )
 end
 
-
 @testset "error checking: bin_width and bin_num specified" begin
     err1 = nothing
     t() = error(plot_topoplotseries(df; bin_width = 80, bin_num = 5, positions = positions))
@@ -99,17 +98,19 @@ end
         mapping = (; col = :condition),
     )
 end
-
-#= @testset "4 condtions in rows" begin # TBD
+#=
+@testset "4 condtions in rows" begin # TBD
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B", "C", "D"], size(df, 1) ÷ 4)
 
     plot_topoplotseries(
         df;
+        bin_num = 3,
         positions = positions,
         mapping = (; row = :condition),
     )
-end =#
+end
+=#
 
 @testset "topoplot axes configuration" begin # TBD
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:4, 1], string.(1:length(positions)))
@@ -128,7 +129,6 @@ end =#
         ),
     )
 end
-
 
 @testset "change xlabel" begin
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
@@ -177,3 +177,10 @@ end
         interactive_scatter = obs_tuple,
     )
 end
+#=
+@testset "interactive data in eeg_array_to_dataframe" begin
+    data_obs3 = Observable(UnfoldMakie.eeg_array_to_dataframe(rand(10, 20)))
+    plot_topoplotseries!(Figure(), data_obs3; bin_num = 5, positions = rand(Point2f, 10))
+    data_obs3[] = UnfoldMakie.eeg_array_to_dataframe(rand(10, 20))
+end
+=#

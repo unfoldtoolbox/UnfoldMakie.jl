@@ -28,8 +28,7 @@ function PlotConfig()# defaults
         (;), # axis
         (; # layout
             show_legend = true,
-            legend_position = :right,
-            use_colorbar = false, # ideally should be deleted
+            use_colorbar = true,
         ),
         (#maping
             x = (:time,),
@@ -42,45 +41,16 @@ function PlotConfig()# defaults
             orientation = :vertical,
             tellwidth = true,
             tellheight = false,
+            halign = :right,
+            valign = :center,
         ),
         (;#colorbar
             vertical = true,
             tellwidth = true,
             tellheight = false,
+            labelrotation = -π / 2,
         ),
     )
-end
-
-"""
-    config_kwargs!(cfg::PlotConfig; kwargs...)
-Takes named tuple of `Key => NamedTuple`  as kwargs and merges the fields with the defaults.
-"""
-function config_kwargs!(cfg::PlotConfig; kwargs...)
-
-    is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
-    @assert(
-        all(is_namedtuple),
-        """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
-
-        Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
-
-        plot_example(...; layout = (; use_colorbar = true))
-
-        plot_example(...; layout = (use_colorbar = true))
-         
-        The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
-    )
-    list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
-
-    keyList = collect(keys(kwargs))
-    :extra ∈ keyList ?
-    @warn(
-        "Extra is deprecated in 0.4, and extra keyword arguments must be used directly as keyword arguments."
-    ) : ""
-    applyTo = keyList[in.(keyList, Ref(list))]
-    for k ∈ applyTo
-        setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
-    end
 end
 
 PlotConfig(T::Symbol) = PlotConfig(Val{T}())
@@ -92,7 +62,11 @@ function PlotConfig(T::Val{:circtopos})
     config_kwargs!(
         cfg;
         layout = (; show_legend = false),
-        colorbar = (; label = "Voltage [µV]", colormap = Reverse(:RdBu)),
+        colorbar = (;
+            labelrotation = -π / 2,
+            label = "Voltage [µV]",
+            colormap = Reverse(:RdBu),
+        ),
         mapping = (;),
         axis = (;
             label = ""
@@ -108,7 +82,6 @@ function PlotConfig(T::Val{:topoplot})
     config_kwargs!(
         cfg;
         layout = (
-            show_legend = true,
             use_colorbar = true,
             hidespines = (),
             hidedecorations = (Dict(:label => false)),
@@ -126,7 +99,7 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, label = "Voltage [µV]"),
         axis = (; xlabel = "", aspect = DataAspect()),
     )
     return cfg
@@ -151,12 +124,7 @@ function PlotConfig(T::Val{:topoplotseries})
             yrectzoom = false,
         ),
         layout = (; use_colorbar = true),
-        colorbar = (;
-            flipaxis = true,
-            labelrotation = -π / 2,
-            label = "Voltage [µV]",
-            colorrange = nothing,
-        ),
+        colorbar = (; flipaxis = true, label = "Voltage [µV]", colorrange = nothing),
         visual = (;
             label_text = false, # true doesnt work again
             colormap = Reverse(:RdBu),
@@ -178,7 +146,19 @@ function PlotConfig(T::Val{:designmat})
             ylabel = "Trials",
             xticklabelrotation = round(pi / 8, digits = 2),
         ),
-        colorbar = (; flipaxis = true, labelrotation = -π / 2, label = ""),
+        colorbar = (; flipaxis = true, label = ""),
+    )
+    return cfg
+end
+
+function PlotConfig(T::Val{:splines})
+    cfg = PlotConfig()
+    config_kwargs!(
+        cfg;
+        layout = (;),
+        axis = (;),
+        visual = (; colormap = :viridis),
+        legend = (; title = "Splines", framevisible = false),
     )
     return cfg
 end
@@ -225,19 +205,14 @@ function PlotConfig(T::Val{:erp})
                 :ticklabels => false,
             )),
         ),
-        legend = (;
-            tellwidth = false,
-            halign = :right,
-            valign = :center,
-            framevisible = false,
-        ),
+        legend = (; framevisible = false),
         axis = (
             xlabel = "Time [s]",
             ylabel = "Voltage [µV]",
             yticklabelsize = 14,
             xtickformat = "{:.1f}",
         ),
-        colorbar = (; label = "", flipaxis = true, labelrotation = -π / 2),
+        colorbar = (; label = "", flipaxis = true),
     )
 
     return cfg
@@ -255,6 +230,7 @@ function PlotConfig(T::Val{:erpgrid})
             ylabel = "Voltage [µV]",
             xlim = [-0.04, 1],
             ylim = [-0.04, 1],
+            fontsize = 12,
         ),
     )
     return cfg
@@ -265,7 +241,7 @@ function PlotConfig(T::Val{:channelimage})
     config_kwargs!(
         cfg;
         #layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
+        colorbar = (; label = "Voltage [µV]"),
         axis = (xlabel = "Time [s]", ylabel = "Channels", yticklabelsize = 14),
         visual = (; colormap = Reverse("RdBu")), #cork
     )
@@ -275,8 +251,8 @@ function PlotConfig(T::Val{:erpimage})
     cfg = PlotConfig()
     config_kwargs!(
         cfg;
-        layout = (; use_colorbar = true, show_legend = false),
-        colorbar = (; label = "Voltage [µV]", labelrotation = -π / 2),
+        layout = (; use_colorbar = true),
+        colorbar = (; label = "Voltage [µV]"),
         axis = (xlabel = "Time [s]", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
@@ -294,6 +270,7 @@ function PlotConfig(T::Val{:paracoord})
         axis = (; xlabel = "Channels", ylabel = "Time", title = ""),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
+        layout = (; show_legend = true),
     )
     return cfg
 end
@@ -324,4 +301,35 @@ function resolve_mappings(plot_data, mapping_data) # check mapping_data in PlotC
         mapping_dict[k] = isa(v, Tuple) ? get_available(k, v) : v
     end
     return (; mapping_dict...)
+end
+
+"""
+    config_kwargs!(cfg::PlotConfig; kwargs...)
+Takes NamedTuple of `Key => NamedTuple` as kwargs and merges the fields with the defaults.
+"""
+function config_kwargs!(cfg::PlotConfig; kwargs...)
+
+    is_namedtuple = [isa(t, NamedTuple) for t in values(kwargs)]
+    @assert(
+        all(is_namedtuple),
+        """ Keyword argument specification (kwargs...). Specified config groups must be from `NamedTuple`, but $(keys(kwargs)[.!is_namedtuple]) was not.
+
+        Maybe you forgot the semicolon (;) at the beginning of your specification? Compare these strings:
+
+        plot_example(...; layout = (; use_colorbar = true))
+
+        plot_example(...; layout = (use_colorbar = true))
+         
+        The first is correct and creates a `NamedTuple` as needed. The second is incorrect and its call is ignored."""
+    )
+    field_list = fieldnames(PlotConfig) #[:layout, :visual, :mapping, :legend, :colorbar, :axis]
+    key_list = collect(keys(kwargs))
+    :extra ∈ key_list ?
+    @warn(
+        "Extra is deprecated in 0.4, and extra keyword arguments must be used directly as keyword arguments."
+    ) : ""
+    apply_to = key_list[in.(key_list, Ref(field_list))]
+    for k ∈ apply_to
+        setfield!(cfg, k, merge(getfield(cfg, k), kwargs[k]))
+    end
 end

@@ -8,7 +8,6 @@ Plot a PCP (parallel coordinates plot).\\
 Dimensions: conditions, channels, time, trials. 
  
 ## Arguments:
-
 - `f::Union{GridPosition, GridLayout, Figure}`
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, AbstractMatrix}`\\
@@ -101,7 +100,7 @@ function plot_parallelcoordinates(
     end
     UnfoldMakie.config_kwargs!(config; visual = (; color = c))
 
-    f, ax, axlist, hlines = parallelcoordinates(
+    f1, ax, axlist, hlines = parallelcoordinates(
         f,
         d5;
         normalize = normalize,
@@ -119,7 +118,10 @@ function plot_parallelcoordinates(
         fontsize = 20,
         font = :bold,
     )
-    apply_layout_settings!(config; fig = f, ax = ax)
+    if config.layout.show_legend
+        Legend(f[1, 2], ax, config.legend.title; config.legend...)
+    end
+    apply_layout_settings!(config; fig = f1, ax = ax)
 
     return isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :
            Makie.AxisPlot([ax, axlist], hlines[1])
@@ -165,7 +167,6 @@ function parallelcoordinates(
         minlist = minimum(plotdata)
         maxlist = maximum(plotdata)
     end
-    #    @debug plotdata
     # edge bending / bundling
 
     if !bend
@@ -175,7 +176,10 @@ function parallelcoordinates(
         x_plotdata = range(1, x_pos[end], step = 0.05)
         plotdata_int = Array{Float64}(undef, length(x_plotdata), size(plotdata, 2))
         for k = 1:size(plotdata, 2)
-            itp = interpolate(plotdata[:, k], BSpline(Cubic(Interpolations.Line(OnGrid()))))
+            itp = Interpolations.interpolate(
+                plotdata[:, k],
+                BSpline(Cubic(Interpolations.Line(OnGrid()))),
+            )
             plotdata_int[:, k] = itp.(x_plotdata)
         end
     end
@@ -189,14 +193,12 @@ function parallelcoordinates(
             # categorical colors
             un_c = unique(color)
             color_ix = [findfirst(un_c .== c) for c in color]
-            #@assert length(un_c) == 1 "Only single color found, please don't specify color, "
             if length(un_c) == 1
-                @warn "Only single unique value found in the specified color vector"
-                color = cgrad(colormap, 2)[color_ix]
+                @warn "Only single unique value found in the specified color vector."
+                color = cgrad(colormap, 2)[color_ix] # color gradient
             else
                 color = cgrad(colormap, length(un_c))[color_ix]
             end
-            #crange = [1,length(unique(color))]
         else
             # continuous color
             crange = [minimum(color), maximum(color)]
@@ -206,7 +208,6 @@ function parallelcoordinates(
     # plot the lines - this way it will be easy to curve them too
     hlines = []
     for (ix, r) in enumerate(eachcol(plotdata_int))
-
         h = lines!(
             ax,
             x_plotdata,
@@ -345,7 +346,6 @@ Used to inject extrema ticks and round them if necessary.
 struct PCPTicks end
 
 function Makie.get_ticks(ticks::PCPTicks, scale, formatter, vmin, vmax)
-    #@debug "get_ticks custom",vmin,vmax
     tickvalues = Makie.get_tickvalues(Makie.WilkinsonTicks(5), scale, vmin, vmax)
 
     ticklabels_without = Makie.get_ticklabels(formatter, tickvalues)
