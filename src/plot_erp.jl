@@ -142,7 +142,29 @@ function plot_erp!(
     plot_equation = basic * mapp
 
     f_grid = f[1, 1] = GridLayout()
-    drawing = draw!(f_grid, plot_equation; axis = config.axis)
+
+    color_mapper =
+        isa(config.mapping.color, Symbol) ? config.mapping.color : config.mapping.color[1]
+    color_type = isa(config.mapping.color, Symbol) ? "nonnumeric" : config.mapping.color[2]
+    un = length(unique(plot_data[:, color_mapper]))
+    colors = cgrad(config.visual.colormap, un, categorical = true)
+
+    if !isa(plot_data[:, color_mapper][1], String) && color_type != nonnumeric
+        drawing = draw!(
+            f_grid,
+            plot_equation,
+            scales(Color = (; colormap = colors)); # for contionous
+            axis = config.axis,
+        )
+    else
+        drawing = draw!(
+            f_grid,
+            plot_equation,
+            scales(Color = (; palette = colors)); # for categorical
+            axis = config.axis,
+        )
+
+    end
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true

@@ -58,7 +58,7 @@ function plot_topoplot!(
             config.visual...,
             label_scatter = (;
                 color = clist,
-                markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustabel for users
+                markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustabel fo((()*(_ygd 789 cr=-)))
             ),
         )
     else
