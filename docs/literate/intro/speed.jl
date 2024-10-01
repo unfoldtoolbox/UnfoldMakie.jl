@@ -49,4 +49,4 @@ info = PyMNE.create_info(PyList(ch_names), ch_types = "eeg", sfreq = 1)
 info.set_montage(easycap_montage)
 simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
-@time simulated_epochs.plot_topomap(1:0)
+@time simulated_epochs.plot_topomap(1:20)
