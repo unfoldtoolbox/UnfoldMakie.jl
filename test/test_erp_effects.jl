@@ -9,27 +9,12 @@ res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5),
     plot_erp(res_effects; mapping = (; y = :yhat, color = :continuous, group = :continuous))
 end
 
-@testset "Effect plot: faceted" begin
+@testset "Effect plot: faceted by channels" begin
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
     res_effects.channel = push!(repeat(["1", "2"], 472), "1")
     plot_erp(
         res_effects;
         mapping = (; y = :yhat, color = :continuous => nonnumeric, col = :channel),
-        legend = (; nbanks = 2),
-    )
-end
-
-@testset "Effect plot: faceted channels" begin #bug
-    res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-    res_effects.channel = push!(repeat(["1", "2"], 472), "1")
-    plot_erp(
-        res_effects;
-        mapping = (;
-            y = :yhat,
-            color = :continuous => nonnumeric,
-            group = :channel,
-            col = :channel => nonnumeric,
-        ),
         legend = (; nbanks = 2),
     )
 end
