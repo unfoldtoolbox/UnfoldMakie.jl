@@ -9,11 +9,12 @@ using BenchmarkTools
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 
-# Topoplots
+# # Topoplots
 
+# UnfoldMakie.jl
 @benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)
 
-#
+# MNE
 posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])')
 pypos = Py(posmat).to_numpy()
 pydat = Py(dat[:, 320, 1])
@@ -32,7 +33,8 @@ pydat = Py(dat[:, 320, 1])
     f.show()
 end
 
-# Topoplot series
+# #Topoplot series
+# UnfoldMakie.jl
 @benchmark begin
     plot_topoplotseries(
         df;
@@ -42,7 +44,7 @@ end
     )
 end
 
-#
+# MNE
 easycap_montage = PyMNE.channels.make_standard_montage("standard_1020")
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
 info = PyMNE.create_info(PyList(ch_names), ch_types = "eeg", sfreq = 1)
