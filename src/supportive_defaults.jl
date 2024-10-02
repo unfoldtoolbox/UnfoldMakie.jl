@@ -21,7 +21,7 @@ function supportive_defaults(cfg_symb::Symbol)
         return (; xautolimitmargin = (0, 0), ylabel = "Density value")
     elseif cfg_symb == :superlabel_default
         return (; fontsize = 20, padding = (0, 0, 40, 0))
-        # plot_butterfly and plot_topoplot
+        # plot_butterfly
     elseif cfg_symb == :topo_default
         return (;
             width = Relative(0.35),
@@ -49,8 +49,9 @@ function supportive_defaults(cfg_symb::Symbol)
         return (; color = :deepskyblue3)
     elseif cfg_symb == :labels_grid_default
         return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
-    elseif cfg_symb == :topo_interpolation_default
-        return (; interpolation = CloughTocher())
+        # plot_topoplot and plot_topoplotseries
+    elseif cfg_symb == :topo_attributes_default
+        return (; interp_resolution = (128, 128), interpolation = CloughTocher())
     end
 end
 
