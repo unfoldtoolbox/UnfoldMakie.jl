@@ -44,7 +44,10 @@ Multiple miniature topoplots in regular distances.
     `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
 - `visual.colorrange::2-element Vector{Int64}`\\
     Resposnible for colorrange in topoplots and in colorbar.
-
+- `topo_attributes::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot interoplation.\\
+    To see all options just type `?Topoplot.topoplot` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_attributes_default))
 
 Code description:
 - 
@@ -69,6 +72,7 @@ function plot_topoplotseries!(
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
     topoplot_axes = (;),
+    topo_attributes = (;),
     kwargs...,
 )
 
@@ -80,6 +84,11 @@ function plot_topoplotseries!(
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
+    topo_attributes = update_axis(
+        supportive_defaults(:topo_attributes_default);
+        topo_attributes...,
+        config.visual...,
+    )
 
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
@@ -121,8 +130,6 @@ function plot_topoplotseries!(
         f,
         data_row;
         cat_or_cont_columns = cat_or_cont_columns,
-        bin_width = bin_width,
-        bin_num = bin_num,
         y = config.mapping.y,
         label = chan_or_label,
         col = config.mapping.col,
@@ -133,7 +140,7 @@ function plot_topoplotseries!(
         combinefun = combinefun,
         topoplot_axes = topoplot_axes,
         interactive_scatter = interactive_scatter,
-        config.visual...,
+        topo_attributes = topo_attributes,
         positions,
     )
     config_kwargs!(

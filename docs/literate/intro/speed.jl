@@ -51,6 +51,15 @@ end
     )
 end
 
+# UnfoldMakie.jl with DelaunayMesh
+@benchmark begin
+    plot_topoplotseries(
+        df;
+        bin_num = 2,
+        positions = positions,
+        topo_attributes = (; interpolation = DelaunayMesh()),
+    )
+end
 # MNE
 easycap_montage = PyMNE.channels.make_standard_montage("standard_1020")
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
