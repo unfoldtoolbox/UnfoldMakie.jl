@@ -66,3 +66,11 @@ end
 @testset "topoplot: positions through labels" begin
     plot_topoplot(dat[1:19, 50, 1]; labels = TopoPlots.CHANNELS_10_20)
 end
+
+@testset "topoplot: change interpolation" begin
+    plot_topoplot(
+        dat[:, 320, 1];
+        positions = positions,
+        topo_interpolation = (; interpolation = DelaunayMesh()),
+    )
+end
