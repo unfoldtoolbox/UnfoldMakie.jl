@@ -55,7 +55,7 @@ end
 @benchmark begin
     plot_topoplotseries(
         df;
-        bin_num = 2,
+        bin_num = 20,
         positions = positions,
         topo_attributes = (; interpolation = DelaunayMesh()),
     )
