@@ -14,6 +14,13 @@ df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions
 # UnfoldMakie.jl
 @benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)
 
+# UnfoldMakie.jl with DelaunayMesh
+@benchmark plot_topoplot(
+    dat[:, 320, 1];
+    positions = positions,
+    topo_interpolation = (; interpolation = DelaunayMesh()),
+)
+
 # MNE
 posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])')
 pypos = Py(posmat).to_numpy()
@@ -33,7 +40,7 @@ pydat = Py(dat[:, 320, 1])
     f.show()
 end
 
-# #Topoplot series
+# # Topoplot series
 # UnfoldMakie.jl
 @benchmark begin
     plot_topoplotseries(
