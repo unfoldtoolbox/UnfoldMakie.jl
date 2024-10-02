@@ -37,6 +37,8 @@ end
     eeg_topoplot_series(data::DataFrame,
         f,
         data::DataFrame;
+        bin_width = nothing,
+        bin_num = nothing,
         y = :erp,
         label = :label,
         col = :time,
@@ -58,6 +60,12 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
 - `data::DataFrame`\\
     Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
     If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
+- `bin_width::Real = nothing`\\
+    Number specifing the width of bin of continuous x-value in its units.\\
+- `bin_num::Real = nothing`\\
+    Number of topoplots.\\
+    Either `bin_width`, or `bin_num` should be specified. Error if they are both specified\\
+    If `mapping.col` or `mapping.row` are categorical `bin_width` and `bin_num` stay as `nothing`.
 - `col`, `row = :time` \\
     Specify the field to be divided into columns and rows. The default is `col = :time` to split by the time field and `row = nothing`. \\
     Useful to split by a condition, e.g. `...(..., col = :time, row = :condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
@@ -113,6 +121,8 @@ end
 function eeg_topoplot_series!(
     fig,
     data::Union{<:Observable{<:DataFrame},<:DataFrame};
+    bin_width = nothing,
+    bin_num = nothing,
     cat_or_cont_columns = "cont",
     y = :erp,
     label = :label,
@@ -125,7 +135,7 @@ function eeg_topoplot_series!(
     topoplot_axes = (;),
     interactive_scatter = nothing,
     highlight_scatter = false,
-    topo_attributes,
+    topo_attributes = (;),
     positions,
 )
     axis_options = create_axis_options()
