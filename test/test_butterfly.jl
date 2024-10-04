@@ -44,6 +44,14 @@ end
     )
 end
 
+@testset "butterfly: change of interpolation" begin
+    plot_butterfly(
+        df;
+        positions = pos,
+        topo_interpolation = (; interpolation = DelaunayMesh()),
+    )
+end
+
 @testset "butterfly: add h and vlines in a Figure" begin
     f = Figure()
     plot_butterfly!(f, df; positions = pos)

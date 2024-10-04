@@ -71,6 +71,6 @@ end
     plot_topoplot(
         dat[:, 320, 1];
         positions = positions,
-        topo_interpolation = (; interpolation = DelaunayMesh()),
+        topo_attributes = (; interpolation = DelaunayMesh()),
     )
 end
