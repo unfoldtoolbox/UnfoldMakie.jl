@@ -156,12 +156,7 @@ function plot_erp!(
     else
         scales_tmp = scales(Color = (; palette = config.visual.color)) # for categorical
     end
-    drawing = draw!(
-        f_grid,
-        plot_equation,
-        scales_tmp;
-        axis = config.axis,
-    )
+    drawing = draw!(f_grid, plot_equation, scales_tmp; axis = config.axis)
 
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
