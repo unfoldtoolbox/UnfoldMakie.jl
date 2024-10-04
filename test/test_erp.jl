@@ -12,7 +12,7 @@ m7 = example_data("7channels")
 results7 = coeftable(m7)
 
 @testset "ERP plot: DataFrame data" begin
-    plot_erp(results; visual = (; colormap = [:black, :red, :blue]))
+    plot_erp(results)
 end
 
 @testset "ERP plot: Matrix data" begin
