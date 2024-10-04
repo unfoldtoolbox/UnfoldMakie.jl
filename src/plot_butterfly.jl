@@ -154,7 +154,7 @@ function plot_butterfly!(
 end
 
 
-# topopositions_to_color = colors?
+# should we make this adjustable?
 function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
     all_positions = unique(all_positions)
     topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
