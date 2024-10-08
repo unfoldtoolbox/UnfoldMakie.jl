@@ -6,26 +6,26 @@ using DataFrames
 
 include(&quot;../../../example_data.jl&quot;)
 data, pos = example_data(&quot;TopoPlots.jl&quot;)
-dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([4.2712625455265645 7.954483703374392 … 9.42658917420729 9.755460192414578; -8.610315607951078 10.150060071817553 … 15.323002453034018 2.5548199857439267; … ; 5.292496314157995 -9.566035060598375 … 12.632439689758051 10.78508070530059; 8.603972913054081 -8.778191645772125 … 19.094802513781147 13.921258812415825], <span class="sgr1">2000×3 DataFrame
+dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([7.12373084717791 -14.643167664038257 … 8.770271520309837 4.669510193385215; -0.9585287421702547 -12.68184440485485 … 5.23123205493583 -3.3335410378671755; … ; -2.6268562502899666 -10.051459715119043 … 2.676949521564918 -17.07646482218065; 2.400191991285271 -1.743384615374093 … 10.213367335129892 -11.11547223244284], <span class="sgr1">2000×3 DataFrame
   Row │ continuous  condition  latency
       │<span class="sgr90"> Float64     String     Int64
 ──────┼────────────────────────────────
-    1 │   5.0       car             64
-    2 │  -2.77778   car            131
-    3 │   1.66667   car            183
-    4 │  -1.66667   face           233
-    5 │   3.88889   car            284
-    6 │  -3.88889   car            354
-    7 │   3.88889   face           418
-    8 │   0.555556  car            469
+    1 │   2.77778   car             62
+    2 │  -5.0       face           132
+    3 │  -1.66667   car            196
+    4 │  -5.0       car            249
+    5 │   5.0       car            303
+    6 │  -0.555556  car            366
+    7 │  -2.77778   car            432
+    8 │  -2.77778   face           483
   ⋮   │     ⋮           ⋮         ⋮
- 1994 │   2.77778   car         119868
- 1995 │   2.77778   face        119938
- 1996 │  -3.88889   face        119988
- 1997 │   0.555556  face        120056
- 1998 │  -5.0       car         120125
- 1999 │  -0.555556  car         120190
- 2000 │  -5.0       face        120252
+ 1994 │   3.88889   car         119798
+ 1995 │   0.555556  car         119856
+ 1996 │   0.555556  face        119925
+ 1997 │  -3.88889   face        119978
+ 1998 │  -3.88889   car         120030
+ 1999 │  -0.555556  face        120096
+ 2000 │  -1.66667   face        120154
 </span><span class="sgr36">                      1985 rows omitted)</span></span></code></pre><h1 id="Hiding"><a class="docs-heading-anchor" href="#Hiding">Hiding</a><a id="Hiding-1"></a><a class="docs-heading-anchor-permalink" href="#Hiding" title="Permalink"></a></h1><p>First, you can specify the axis settings with <code>axis = (; ...)</code>.</p><p><code>Makie.Axis</code> provides multiple variables for different aspects of the plot. This means that removing all decorations is only possible by setting many variables each time.</p><p>Second, <code>Makie</code> does provide methods like <code>hidespines!</code> and <code>hidedecorations!</code>. Unforunately, user may lose access to a plot after it is drawn in.</p><p>Third, <code>hidespines!</code> and <code>hidedecorations!</code> can be called by setting variables with <code>layout = (; hidespines = (), hidedecorations = ())</code>.</p><p>You still will able to specify it flexibly: <code>hidespines = (:r, :t)</code> will remove the top and right borders.</p><pre><code class="language-julia hljs">f = Figure()
 plot_butterfly!(
     f[1, 1],
@@ -49,9 +49,9 @@ plot_erpimage!(
     f,
     dat;
     layout = (; hidespines = (), hidedecorations = (), use_colorbar = false),
-)</code></pre><img src="4f352b9c.png" alt="Example block output"/><h1 id="Showing"><a class="docs-heading-anchor" href="#Showing">Showing</a><a id="Showing-1"></a><a class="docs-heading-anchor-permalink" href="#Showing" title="Permalink"></a></h1><p>Some plots hide features by default. This could be reverted by setting the variables to <code>nothing</code></p><pre><code class="language-julia hljs">data, positions = TopoPlots.example_data()
+)</code></pre><img src="6d02c554.png" alt="Example block output"/><h1 id="Showing"><a class="docs-heading-anchor" href="#Showing">Showing</a><a id="Showing-1"></a><a class="docs-heading-anchor-permalink" href="#Showing" title="Permalink"></a></h1><p>Some plots hide features by default. This could be reverted by setting the variables to <code>nothing</code></p><pre><code class="language-julia hljs">data, positions = TopoPlots.example_data()
 plot_topoplot(
     data[:, 340, 1];
     positions = positions,
     layout = (; hidespines = nothing, hidedecorations = nothing),
-)</code></pre><img src="c93dd58b.png" alt="Example block output"/><p>For more information on the input of these functions refer to the <a href="https://makie.juliaplots.org/v0.15.2/examples/layoutables/axis/#hiding_axis_spines_and_decorations">Makie dokumentation on Axis.</a></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../position2color/">« Change colormap of Butterfly plot</a><a class="docs-footer-nextpage" href="../mult_vis_in_fig/">Include multiple figures in one »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Tuesday 24 September 2024 15:25">Tuesday 24 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+)</code></pre><img src="c93dd58b.png" alt="Example block output"/><p>For more information on the input of these functions refer to the <a href="https://makie.juliaplots.org/v0.15.2/examples/layoutables/axis/#hiding_axis_spines_and_decorations">Makie dokumentation on Axis.</a></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../position2color/">« Change colormap of Butterfly plot</a><a class="docs-footer-nextpage" href="../mult_vis_in_fig/">Include multiple figures in one »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Tuesday 8 October 2024 11:28">Tuesday 8 October 2024</span>. Using Julia version 1.11.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
