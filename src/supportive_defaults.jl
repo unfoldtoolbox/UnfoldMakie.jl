@@ -22,7 +22,7 @@ function supportive_defaults(cfg_symb::Symbol)
     elseif cfg_symb == :superlabel_default
         return (; fontsize = 20, padding = (0, 0, 40, 0))
         # plot_butterfly
-    elseif cfg_symb == :topo_default_butterfly
+    elseif cfg_symb == :topo_default_single
         return (;
             width = Relative(0.35),
             height = Relative(0.35),

@@ -29,7 +29,7 @@ Plot a Butterfly plot.
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_default_butterfly))
+    Defaults: $(supportive_defaults(:topo_default_single))
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
@@ -130,7 +130,7 @@ function plot_butterfly!(
     f_grid = f[1, 1]
 
     if (topolegend)
-        topo_axis = update_axis(supportive_defaults(:topo_default_butterfly); topo_axis...)
+        topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
         topo_attributes = update_axis(
             supportive_defaults(:topo_attributes_default_butterfly);
             topo_attributes...,
