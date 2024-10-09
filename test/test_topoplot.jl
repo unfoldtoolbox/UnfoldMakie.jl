@@ -76,9 +76,5 @@ end
 end
 
 @testset "topoplot: change aspect" begin
-    plot_topoplot(
-        dat[:, 320, 1];
-        positions = positions,
-        topo_axis = (; aspect = (1, 2, 1)),
-    )
+    plot_topoplot(dat[:, 320, 1]; positions = positions, topo_axis = (; aspect = (1, 2, 1)))
 end
