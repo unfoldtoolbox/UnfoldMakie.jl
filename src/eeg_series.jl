@@ -74,6 +74,10 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
 - `combinefun::Function = mean`\\
     Specify how the samples are summarised.\\
     Example functions: `mean`, `median`, `std`.  
+- `topo_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot axis.\\
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_default_series))
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
@@ -88,9 +92,6 @@ function eeg_topoplot_series(
 )
     return eeg_topoplot_series!(Figure(; figure...), data; kwargs...)
 end
-
-#eeg_topoplot_series(data::Union{<:Observable,<:DataFrame,<:AbstractMatrix}; kwargs...) =
-#    eeg_topoplot_series(data; kwargs...)
 
 # AbstractMatrix
 function eeg_topoplot_series!(
@@ -132,14 +133,13 @@ function eeg_topoplot_series!(
     row_labels = false,
     rasterize_heatmaps = true,
     combinefun = mean,
-    topoplot_axes = (;),
     interactive_scatter = nothing,
     highlight_scatter = false,
+    topo_axis = (;),
     topo_attributes = (;),
     positions,
 )
-    axis_options = create_axis_options()
-    axis_options = merge(axis_options, topoplot_axes)
+    topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
 
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
@@ -167,30 +167,37 @@ function eeg_topoplot_series!(
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
+    # @debug axis_options
     for r = 1:length(select_row)
         for c = 1:length(select_col)
-            ax = Axis(fig[:, :][r, c]; axis_options...)
             df_single =
                 topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
+            single_y = @lift($df_single[:, y])
+            if isempty(to_value(single_y))
+                break
+            end
+
+            ax = Axis(     #here we loose 60 seconds
+                fig[:, :][r, c];
+                topo_axis...,
+                xlabel = label_management(cat_or_cont_columns, df_single, col),
+            )
             # select labels
             labels = to_value(df_single)[:, label]
             # select data
-            single_y = @lift($df_single[:, y])
+
             topo_attributes = scatter_management(
                 single_y,
                 topo_attributes,
                 highlight_scatter,
                 interactive_scatter,
             )
-            if isempty(to_value(single_y))
-                break
-            end
+
             single_topoplot =
                 eeg_topoplot!(ax, single_y, labels; positions, topo_attributes...)
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
-            label_management(ax, cat_or_cont_columns, df_single, col) # to put column and row labels
             interactive_toposeries(interactive_scatter, single_topoplot, r, c)
             push!(axlist, ax)
         end
@@ -201,13 +208,13 @@ function eeg_topoplot_series!(
     return fig, axlist, topo_attributes[:colorrange]
 end
 
-function label_management(ax, cat_or_cont_columns, df_single, col)
+function label_management(cat_or_cont_columns, df_single, col) #here we loose 30 seconds
     if cat_or_cont_columns == "cat"
-        ax.xlabel = string(to_value(df_single)[1, col])
+        tmp_labels = string(to_value(df_single)[1, col])
     else
-        tmp_labels = to_value(df_single).cont_cuts[1, :][]
-        ax.xlabel = string(tmp_labels)
+        tmp_labels = string(to_value(df_single).cont_cuts[1, :][])
     end
+    return tmp_labels
 end
 
 function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
@@ -260,36 +267,6 @@ function interactive_toposeries(interactive_scatter, single_topoplot, r, c)
             end
         end
     end
-end
-
-function create_axis_options()
-    return (
-        aspect = 1,
-        title = "",
-        xgridvisible = false,
-        xminorgridvisible = false,
-        xminorticksvisible = false,
-        xticksvisible = false,
-        xticklabelsvisible = false,
-        xlabelvisible = true,
-        ygridvisible = false,
-        yminorgridvisible = false,
-        yminorticksvisible = false,
-        yticksvisible = false,
-        yticklabelsvisible = false,
-        ylabelvisible = false,
-        leftspinevisible = false,
-        rightspinevisible = false,
-        topspinevisible = false,
-        bottomspinevisible = false,
-        xpanlock = true,
-        ypanlock = true,
-        xzoomlock = true,
-        yzoomlock = true,
-        xrectzoom = false,
-        yrectzoom = false,
-        #limits = (xlim_topo, ylim_topo),
-    )
 end
 
 """

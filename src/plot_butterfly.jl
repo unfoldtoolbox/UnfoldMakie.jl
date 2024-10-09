@@ -24,14 +24,16 @@ Plot a Butterfly plot.
     To change the colors of the channel lines use the `topoposition_to_color` function.
 - `topolegend::Bool = true`\\
     Show an inlay topoplot with corresponding electrodes. Requires `positions`.
-- `topomarkersize::Real = 10` \\
-    Change the size of the electrode markers in topoplot.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
     Change the line colors.
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_default))
+    Defaults: $(supportive_defaults(:topo_default_butterfly))
+- `topo_attributes::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot interoplation.\\
+    To see all options just type `?Topoplot.topoplot` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_attributes_default_butterfly))
 - `mapping = (;)`\\
     For highlighting specific channels.\\
     Example: `mapping = (; color = :highlight))`, where `:highlight` is variable with appopriate mapping.
@@ -50,9 +52,9 @@ function plot_butterfly!(
     positions = nothing,
     labels = nothing,
     topolegend = true,
-    topomarkersize = 10,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
     topo_axis = (;),
+    topo_attributes = (;),
     mapping = (;),
     kwargs...,
 )
@@ -128,15 +130,19 @@ function plot_butterfly!(
     f_grid = f[1, 1]
 
     if (topolegend)
-        topo_axis = update_axis(supportive_defaults(:topo_default); topo_axis...)
+        topo_axis = update_axis(supportive_defaults(:topo_default_butterfly); topo_axis...)
+        topo_attributes = update_axis(
+            supportive_defaults(:topo_attributes_default_butterfly);
+            topo_attributes...,
+        )
         ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))
 
         topoplot_legend(
             Axis(f_grid; topo_axis...),
-            topomarkersize,
             plot_data[ix, config.mapping.color[1]],
             colors,
             all_positions,
+            topo_attributes,
         )
     end
     if isnothing(colors)
@@ -155,7 +161,7 @@ end
 
 
 # should we make this adjustable?
-function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions)
+function topoplot_legend(axis, unique_val, colors, all_positions, topo_attributes)
     all_positions = unique(all_positions)
     topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
 
@@ -171,11 +177,10 @@ function topoplot_legend(axis, topomarkersize, unique_val, colors, all_positions
         1:length(all_positions), # go from 1:npos
         string.(1:length(all_positions));
         positions = all_positions,
-        interpolation = NullInterpolator(), # inteprolator that returns only 0, which is put to white in the special_colorsmap
         colorrange = (0, length(all_positions)), # add the 0 for the white-first color
         colormap = special_colors,
-        head = (color = :black, linewidth = 1, model = topo_matrix),
-        label_scatter = (markersize = topomarkersize, strokewidth = 0.5),
+        head = (model = topo_matrix),
+        topo_attributes...,
     )
     hidespines!(axis)
     hidedecorations!(axis)

@@ -35,11 +35,11 @@ end
     #save("dev/UnfoldMakie/basic_butterfly.png", f)
 end
 
-@testset "butterfly: change of topomarkersize" begin
+@testset "butterfly: change of markersize" begin
     plot_butterfly(
         df;
         positions = pos,
-        topomarkersize = 70,
+        topo_attributes = (; label_scatter = (; markersize = 70)),
         topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
     )
 end
@@ -48,7 +48,7 @@ end
     plot_butterfly(
         df;
         positions = pos,
-        topo_interpolation = (; interpolation = DelaunayMesh()),
+        topo_attributes = (; interpolation = DelaunayMesh()),
     )
 end
 
@@ -177,6 +177,7 @@ end
         ),
     )
 end
+
 
 #TO DO
 # not working

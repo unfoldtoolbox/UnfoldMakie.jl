@@ -35,7 +35,7 @@ Multiple miniature topoplots in regular distances.
     Enable interactive mode.\\
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can update the observable tuple with the indices of the clicked topoplot markers.\\
     `(0, 0, 0)` corresponds to the (row of topoplot layout, column of topoplot layout, electrode). 
-- `topoplot_axes::NamedTuple = (;)`\\
+- `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of topoplots.\\
     To see all options just type `?Axis` in REPL.
 - `mapping = (; col = :time`, row = nothing, layout = nothing)\\
@@ -71,7 +71,7 @@ function plot_topoplotseries!(
     row_labels = true,
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
-    topoplot_axes = (;),
+    topo_axis = (;),
     topo_attributes = (;),
     kwargs...,
 )
@@ -138,8 +138,8 @@ function plot_topoplotseries!(
         row_labels = row_labels,
         rasterize_heatmaps = rasterize_heatmaps,
         combinefun = combinefun,
-        topoplot_axes = topoplot_axes,
         interactive_scatter = interactive_scatter,
+        topo_axis = topo_axis,
         topo_attributes = topo_attributes,
         positions,
     )
