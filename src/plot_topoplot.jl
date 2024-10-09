@@ -69,7 +69,15 @@ function plot_topoplot!(
             ),
         )
     end
-    eeg_topoplot!(axis, data, labels; positions, config.visual..., topo_attributes..., topo_axis...)
+    eeg_topoplot!(
+        axis,
+        data,
+        labels;
+        positions,
+        config.visual...,
+        topo_attributes...,
+        topo_axis...,
+    )
 
     if config.layout.use_colorbar == true
         Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
