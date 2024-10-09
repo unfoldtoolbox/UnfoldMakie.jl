@@ -74,3 +74,11 @@ end
         topo_attributes = (; interpolation = DelaunayMesh()),
     )
 end
+
+@testset "topoplot: change aspect" begin
+    plot_topoplot(
+        dat[:, 320, 1];
+        positions = positions,
+        topo_axis = (; aspect = (1, 2, 1)),
+    )
+end

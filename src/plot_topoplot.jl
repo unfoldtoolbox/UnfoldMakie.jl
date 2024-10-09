@@ -15,6 +15,10 @@ Plot a topoplot.
     Labels used if `data` is not a DataFrame.
 -  `high_chan = nothing` - channnel(s) to highlight by color.
 -  `high_color = :darkgreen` - color for highlighting. 
+- `topo_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot axis.\\
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_default_single))
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
@@ -34,6 +38,7 @@ function plot_topoplot!(
     high_chan = nothing,
     high_color = :darkgreen,
     topo_attributes = (;),
+    topo_axis = (;),
     kwargs...,
 )
     config = PlotConfig(:topoplot)
@@ -56,15 +61,15 @@ function plot_topoplot!(
         x = zeros(length(positions))
         isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
         clist = [:gray, high_color][Int.(x .+ 1)] #color for highlighting
-        topo_attributes = update_axis(
-            supportive_defaults(:topo_default);
+        topo_axis = update_axis(
+            supportive_defaults(:topo_default_single);
             label_scatter = (;
                 color = clist,
                 markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustable
             ),
         )
     end
-    eeg_topoplot!(axis, data, labels; positions, config.visual..., topo_attributes...)
+    eeg_topoplot!(axis, data, labels; positions, config.visual..., topo_attributes..., topo_axis...)
 
     if config.layout.use_colorbar == true
         Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
