@@ -36,12 +36,12 @@ plot_butterfly(df)
 
 plot_butterfly(df; positions = pos)
 
-# You want to change size of topomarkers and size of topoplot:
+# You want to change size of topoplot markers and size of topoplot:
 
 plot_butterfly(
     df;
     positions = pos,
-    topomarkersize = 10,
+    topo_attributes = (; label_scatter = (; markersize = 30)),
     topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
 )
 
