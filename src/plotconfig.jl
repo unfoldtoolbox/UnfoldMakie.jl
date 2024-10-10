@@ -213,6 +213,7 @@ function PlotConfig(T::Val{:erp})
             xtickformat = "{:.1f}",
         ),
         colorbar = (; label = "", flipaxis = true),
+        visual = (; colormap = :roma, color = Makie.wong_colors()),
     )
 
     return cfg
