@@ -159,8 +159,6 @@ function plot_butterfly!(
     return f
 end
 
-
-# should we make this adjustable?
 function topoplot_legend(axis, unique_val, colors, all_positions, topo_attributes)
     all_positions = unique(all_positions)
     topo_matrix = eeg_head_matrix(all_positions, (0.5, 0.5), 0.5)
