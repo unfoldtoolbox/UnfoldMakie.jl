@@ -167,7 +167,6 @@ function eeg_topoplot_series!(
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
-    # @debug axis_options
     for r = 1:length(select_row)
         for c = 1:length(select_col)
             df_single =
@@ -177,7 +176,7 @@ function eeg_topoplot_series!(
                 break
             end
 
-            ax = Axis(     #here we loose 60 seconds
+            ax = Axis(     #here we loose 30 seconds
                 fig[:, :][r, c];
                 topo_axis...,
                 xlabel = label_management(cat_or_cont_columns, df_single, col),
@@ -192,9 +191,8 @@ function eeg_topoplot_series!(
                 highlight_scatter,
                 interactive_scatter,
             )
-
             single_topoplot =
-                eeg_topoplot!(ax, single_y, labels; positions, topo_attributes...)
+                eeg_topoplot!(ax, to_value(single_y), labels; positions, topo_attributes...)
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
@@ -208,7 +206,7 @@ function eeg_topoplot_series!(
     return fig, axlist, topo_attributes[:colorrange]
 end
 
-function label_management(cat_or_cont_columns, df_single, col) #here we loose 30 seconds
+function label_management(cat_or_cont_columns, df_single, col)
     if cat_or_cont_columns == "cat"
         tmp_labels = string(to_value(df_single)[1, col])
     else

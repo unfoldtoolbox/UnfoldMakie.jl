@@ -33,8 +33,8 @@ Plot an ERP plot.
     Enable or disable legend and colorbar.\\
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
-- `visual.color = Makie.wong_colors, visual.colormap = :roma`\\
-    For categorical color use `visual.color`, for contionous - `visual.colormap`.\\
+- `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
+    For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
 
 $(_docstring(:erp))
 
@@ -59,6 +59,7 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
+    sigtype = :line,
     mapping = (;),
     kwargs...,
 )
@@ -140,7 +141,7 @@ function plot_erp!(
 
     # add the p-values
     if !isnothing(significance)
-        basic = basic + add_significance(plot_data, significance, config)
+        basic = basic + add_significance(plot_data, significance, config, sigtype)
     end
 
     plot_equation = basic * mapp
@@ -171,7 +172,7 @@ function plot_erp!(
     return f
 end
 
-function add_significance(plot_data, significance, config)
+function add_significance(plot_data, significance, config, sigtype)
     p = deepcopy(significance)
 
     # for now, add them to the fixed effect
@@ -199,13 +200,20 @@ function add_significance(plot_data, significance, config)
     stepY = scaleY[2] - scaleY[1]
     posY = stepY * -0.05 + scaleY[1]
     Δt = diff(plot_data.time[1:2])[1]
-    Δy = 0.01
+    if sigtype == :line
+        Δy = 0.01
+        alpha = 0.3
+    elseif sigtype == :vspan
+        Δy = 1
+        alpha = 0.1
+    end
     p[!, :segments] = [
         Makie.Rect(
             Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
-            Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
+            Makie.Vec(y - x + Δt, 0.5 * Δy * stepY)
         ) for (x, y, n) in zip(p.from, p.to, p.sigindex)
     ]
-    res = data(p) * mapping(:segments) * visual(Poly)
+    @debug alpha
+    res = data(p) * mapping(:segments) * visual(Poly, transparency = true, alpha = 0.9) #poly means Polygon
     return (res)
 end
