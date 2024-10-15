@@ -171,6 +171,7 @@ function plot_erp!(
     apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
 end
+
 function add_significance(plot_data, significance, config)
     p = deepcopy(significance)
 

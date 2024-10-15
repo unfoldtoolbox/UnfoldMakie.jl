@@ -3,15 +3,11 @@ using BSplineKit, Unfold
 """
     plot_splines(m::UnfoldModel; kwargs...)
     plot_splines!(f::Union{GridPosition, GridLayout, Figure}, m::UnfoldModel; kwargs...)
-
 Visualization of spline terms in an UnfoldModel. Two subplots are generated for each spline term:\\
 1) the basis function of the spline; 2) the density of the underlying covariate.\\
-
 Multiple spline terms are arranged across columns.\\
 Dashed lines indicate spline knots.
-
 ## Arguments:
-
 - `f::Union{GridPosition, GridLayout, Figure}`
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `m::UnfoldModel`\\
@@ -28,9 +24,7 @@ Dashed lines indicate spline knots.
     Here you can flexibly change configurations of the Label on the top of the plot.\\
     To see all options just type `?Label` in REPL.\\
     Defaults: $(supportive_defaults(:superlabel_default))
-
 $(_docstring(:splines))
-
 **Return Value:** `Figure` with splines and their density for basis functions.
 """
 plot_splines(m::UnfoldModel; kwargs...) = plot_splines(Figure(), m; kwargs...)
