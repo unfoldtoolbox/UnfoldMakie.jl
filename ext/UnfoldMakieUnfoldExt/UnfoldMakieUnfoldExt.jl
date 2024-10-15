@@ -4,6 +4,7 @@ using Unfold
 using UnfoldMakie
 using GridLayoutBase
 using Makie
+
 # Unfold Backward Compatability. AbstractDesignMatrix was introduced only in v0.7
 if isdefined(Unfold, :AbstractDesignMatrix)
     # nothing to do for AbstractDesignMatrix, already imprted

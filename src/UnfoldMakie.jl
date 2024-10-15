@@ -45,6 +45,7 @@ include("plot_topoplotseries.jl")
 include("plot_erp.jl")
 include("plot_butterfly.jl")
 
+#include("../ext/UnfoldMakieUnfoldExt/UnfoldMakieUnfoldExt.jl")
 """
     plot_splines()
     plot_splines!()

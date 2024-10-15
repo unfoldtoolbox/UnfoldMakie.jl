@@ -47,14 +47,14 @@ function UnfoldMakie.plot_designmatrix!(
     kwargs...,
 )
     config = PlotConfig(:designmat)
-    config_kwargs!(config; kwargs...)
-    designmat = UnfoldMakie.modelmatrix(data)
+    UnfoldMakie.config_kwargs!(config; kwargs...)
+    designmat = modelmatrix(data)
     if standardize_data
         designmat = designmat ./ std(designmat, dims = 1)
         designmat[isinf.(designmat)] .= 1.0
     end
 
-    if isa(designmat, SparseMatrixCSC)
+    if isa(designmat, Unfold.SparseMatrixCSC)
         if sort_data
             @warn "Sorting does not make sense for time-expanded designmatrices. sort_data has been set to `false`"
             sort_data = false
@@ -137,9 +137,6 @@ function UnfoldMakie.plot_designmatrix!(
     if isa(designmat, SparseMatrixCSC)
         ax.yreversed = true
     end
-
-
-
 
     apply_layout_settings!(config; fig = f, hm = hm)
 
