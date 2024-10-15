@@ -7,7 +7,7 @@ using AlgebraOfGraphics
 using TopoPlots
 using GridLayoutBase # for relative_axis
 
-using Unfold
+#using Unfold
 using ImageFiltering
 using LinearAlgebra # for PCP
 using Statistics
@@ -34,17 +34,6 @@ import Makie.hidespines!
 import AlgebraOfGraphics.hidedecorations!
 #import AlgebraOfGraphics.hidespines!
 
-# Unfold Backward Compatability. AbstractDesignMatrix was introduced only in v0.7
-if isdefined(Unfold, :AbstractDesignMatrix)
-    # nothing to do for AbstractDesignMatrix, already imprted
-    # backward compatible accessor
-    const drop_missing_epochs = Unfold.drop_missing_epochs
-    const modelmatrices = Unfold.modelmatrices
-else
-    const AbstractDesignMatrix = Unfold.DesignMatrix
-    const drop_missing_epochs = Unfold.dropMissingEpochs
-    const modelmatrices = Unfold.get_Xs
-end
 
 include("plotconfig.jl")
 include("docstring_template.jl")
@@ -55,8 +44,23 @@ include("plot_topoplotseries.jl")
 
 include("plot_erp.jl")
 include("plot_butterfly.jl")
-include("plot_designmatrix.jl")
-include("plot_splines.jl")
+
+"""
+    plot_splines()
+    plot_splines!()
+Please in addition load Unfold via  `using Unfold` to use this plot-type
+"""
+plot_splines() = error("This function is available after `using Unfold` and calling `plot_splines` with their respective arguments.")
+plot_splines!() = plot_splines()
+
+"""
+    plot_designmatrix()
+    plot_designmatrix!()
+Please in addition load Unfold via  `using Unfold` to use this plot-type
+"""
+plot_designmatrix() = error("This function is available after `using Unfold` and calling `plot_designmatrix` with their respective arguments.")
+plot_designmatrix!() = plot_designmatrix()
+
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")
