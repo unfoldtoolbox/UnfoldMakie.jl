@@ -71,7 +71,30 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 @benchmark simulated_epochs.plot_topomap(1:50)
 
 # MATLAB
+# At present, it is not possible to run MATLAB within a Julia environment on GitHub. As a result, we can only provide a screenshot of the program execution.
 
 # ```@raw html
 # <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
 # ```
+
+
+# Animation 
+
+dat_obs = Observable(dat[:, 1, 1])
+timestamps = range(1, 5, step = 1)
+f = Figure()
+plot_topoplot!(f, dat_obs; positions = positions)
+
+@benchmark record(
+    f,
+    "../../src/assets/topoplot_animation.mp4",
+    timestamps;
+    framerate = 1,
+) do t
+    dat_obs[] = dat[:, t, 1]
+end
+
+
+#```@raw html
+#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation.mp4" />
+#```
