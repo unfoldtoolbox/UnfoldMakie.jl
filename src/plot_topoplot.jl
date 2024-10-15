@@ -15,7 +15,14 @@ Plot a topoplot.
     Labels used if `data` is not a DataFrame.
 -  `high_chan = nothing` - channnel(s) to highlight by color.
 -  `high_color = :darkgreen` - color for highlighting. 
-
+- `topo_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot axis.\\
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_default_single))
+- `topo_attributes::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot interoplation.\\
+    To see all options just type `?Topoplot.topoplot` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_attributes_default))
 $(_docstring(:topoplot))
 
 **Return Value:** `Figure` displaying the Topoplot.
@@ -30,6 +37,8 @@ function plot_topoplot!(
     positions = nothing,
     high_chan = nothing,
     high_color = :darkgreen,
+    topo_attributes = (;),
+    topo_axis = (;),
     kwargs...,
 )
     config = PlotConfig(:topoplot)
@@ -46,25 +55,29 @@ function plot_topoplot!(
         positions = TopoPlots.labels2positions(labels)
     end
     positions = get_topo_positions(; positions = positions, labels = labels)
+    topo_attributes =
+        update_axis(supportive_defaults(:topo_attributes_default); topo_attributes...)
     if isa(high_chan, Int) || isa(high_chan, Vector{Int64})
         x = zeros(length(positions))
         isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
         clist = [:gray, high_color][Int.(x .+ 1)] #color for highlighting
-        eeg_topoplot!(
-            axis,
-            data,
-            labels;
-            positions,
-            config.visual...,
+        topo_axis = update_axis(
+            supportive_defaults(:topo_default_single);
             label_scatter = (;
                 color = clist,
-                markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustabel for users
+                markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustable
             ),
         )
-    else
-        eeg_topoplot!(axis, data, labels; positions, config.visual...)
     end
-
+    eeg_topoplot!(
+        axis,
+        data,
+        labels;
+        positions,
+        config.visual...,
+        topo_attributes...,
+        topo_axis...,
+    )
 
     if config.layout.use_colorbar == true
         Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
