@@ -44,7 +44,7 @@ function UnfoldMakie.plot_splines(
     kwargs...,
 )
     config = PlotConfig(:splines)
-    config_kwargs!(config; kwargs...)
+    UnfoldMakie.config_kwargs!(config; kwargs...)
     spline_axis, density_axis, superlabel_config =
         supportive_axes_management(spline_axis, density_axis, superlabel_config)
 
@@ -68,8 +68,8 @@ function UnfoldMakie.plot_splines(
         basis_set = splFunction(x_range, spline_term)
 
         if subplot_id > 1
-            spline_axis = update_axis(spline_axis; ylabelvisible = false)
-            density_axis = update_axis(density_axis; ylabelvisible = false)
+            spline_axis = UnfoldMakie.update_axis(spline_axis; ylabelvisible = false)
+            density_axis = UnfoldMakie.update_axis(density_axis; ylabelvisible = false)
         end
         a1 = Axis(ga[1, subplot_id]; title = string(spline_term), spline_axis...)
         series!(
@@ -98,9 +98,9 @@ function UnfoldMakie.plot_splines(
 end
 
 function supportive_axes_management(spline_axis, density_axis, superlabel_config)
-    spline_axis = update_axis(supportive_defaults(:spline_default); spline_axis...)
-    density_axis = update_axis(supportive_defaults(:density_default); density_axis...)
+    spline_axis = UnfoldMakie.update_axis(supportive_defaults(:spline_default); spline_axis...)
+    density_axis = UnfoldMakie.update_axis(supportive_defaults(:density_default); density_axis...)
     superlabel_config =
-        update_axis(supportive_defaults(:superlabel_default); superlabel_config...)
+        UnfoldMakie.update_axis(supportive_defaults(:superlabel_default); superlabel_config...)
     return spline_axis, density_axis, superlabel_config
 end
