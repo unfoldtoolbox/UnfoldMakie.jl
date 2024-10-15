@@ -4,8 +4,7 @@ using CairoMakie
 using DataFramesMeta
 using UnfoldSim
 using Unfold
-using MakieThemes
-set_theme!(theme_ggthemr(:fresh)) # nicer defaults - should maybe be default?</code></pre><h2 id="Data-input"><a class="docs-heading-anchor" href="#Data-input">Data input</a><a id="Data-input-1"></a><a class="docs-heading-anchor-permalink" href="#Data-input" title="Permalink"></a></h2><pre><code class="language-julia hljs">include(&quot;../../../example_data.jl&quot;)
+using MakieThemes</code></pre><h2 id="Data-input"><a class="docs-heading-anchor" href="#Data-input">Data input</a><a id="Data-input-1"></a><a class="docs-heading-anchor-permalink" href="#Data-input" title="Permalink"></a></h2><pre><code class="language-julia hljs">include(&quot;../../../example_data.jl&quot;)
 d_topo, positions = example_data(&quot;TopoPlots.jl&quot;)
 uf_deconv = example_data(&quot;UnfoldLinearModelContinuousTime&quot;)
 uf = example_data(&quot;UnfoldLinearModel&quot;)
@@ -13,16 +12,18 @@ results = coeftable(uf)
 uf_5chan = example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
 data, positions = TopoPlots.example_data()
 dat_e, evts, times = example_data(&quot;sort_data&quot;)
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)</code></pre><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>.</p><pre><code class="language-julia hljs">f = Figure()
-plot_erp!(f[1, 1], coeftable(uf_deconv))
-plot_erp!(
-    f[1, 2],
-    effects(Dict(:condition =&gt; [&quot;car&quot;, &quot;face&quot;]), uf_deconv),
-    mapping = (; color = :condition),
-)
-plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)</code></pre><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>. Also we used a specified theme <code>fresh</code>.</p><pre><code class="language-julia hljs">f = Figure()
+with_theme(theme_ggthemr(:fresh)) do
 
-f</code></pre><img src="5e371374.png" alt="Example block output"/><h1 id="Very-complex-figure"><a class="docs-heading-anchor" href="#Very-complex-figure">Very complex figure</a><a id="Very-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Very-complex-figure" title="Permalink"></a></h1><p>We can create a large figure with any type of plot using predefined data.</p><p>With so many plots at once, it&#39;s better to set a fixed resolution in your image to order the plots evenly.</p><details>
+    plot_erp!(f[1, 1], coeftable(uf_deconv))
+    plot_erp!(
+        f[1, 2],
+        effects(Dict(:condition =&gt; [&quot;car&quot;, &quot;face&quot;]), uf_deconv),
+        mapping = (; color = :condition),
+    )
+    plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
+end
+f</code></pre><img src="78e76fb0.png" alt="Example block output"/><h1 id="Very-complex-figure"><a class="docs-heading-anchor" href="#Very-complex-figure">Very complex figure</a><a id="Very-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Very-complex-figure" title="Permalink"></a></h1><p>We can create a large figure with any type of plot using predefined data.</p><p>With so many plots at once, it&#39;s better to set a fixed resolution in your image to order the plots evenly.</p><details>
 <summary>Click to expand</summary><pre><code class="language-julia hljs">f = Figure(size = (2000, 2000))
 
 plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
@@ -67,7 +68,7 @@ plot_circular_topoplots!(
     positions = positions,
     predictor = :time,
     predictor_bounds = [-0.3, 0.5],
-)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridPosition(GridLayout[4, 5] (9 children), GridLayoutBase.Span(3:4, 4:5), GridLayoutBase.Inner())</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="7cefec06.png" alt="Example block output"/><h1 id="Complex-figure-in-two-columns"><a class="docs-heading-anchor" href="#Complex-figure-in-two-columns">Complex figure in two columns</a><a id="Complex-figure-in-two-columns-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-two-columns" title="Permalink"></a></h1><details>
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridPosition(GridLayout[4, 5] (9 children), GridLayoutBase.Span(3:4, 4:5), GridLayoutBase.Inner())</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="539bf0a8.png" alt="Example block output"/><h1 id="Complex-figure-in-two-columns"><a class="docs-heading-anchor" href="#Complex-figure-in-two-columns">Complex figure in two columns</a><a id="Complex-figure-in-two-columns-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-two-columns" title="Permalink"></a></h1><details>
 <summary>Click to expand</summary><pre><code class="language-julia hljs">f = Figure(size = (1200, 1400))
 ga = f[1, 1]
 gc = f[2, 1]
@@ -150,4 +151,4 @@ for (label, layout) in
         padding = (20, 20, 22, 0),
         halign = :right,
     )
-end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="913fb0b1.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide decorations and axis spines</a><a class="docs-footer-nextpage" href="../../explanations/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Tuesday 15 October 2024 14:40">Tuesday 15 October 2024</span>. Using Julia version 1.11.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="b94929d0.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide decorations and axis spines</a><a class="docs-footer-nextpage" href="../../explanations/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Tuesday 15 October 2024 14:48">Tuesday 15 October 2024</span>. Using Julia version 1.11.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
