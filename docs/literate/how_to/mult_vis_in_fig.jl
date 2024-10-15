@@ -13,7 +13,7 @@ using DataFramesMeta
 using UnfoldSim
 using Unfold
 using MakieThemes
-set_theme!(theme_ggthemr(:fresh)) # nicer defaults - should maybe be default?
+
 
 # ## Data input
 include("../../../example_data.jl")
@@ -37,16 +37,19 @@ By using the !-version of the plotting function and inserting a grid position in
 # `f = Figure()`
 
 # Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
+# Also we used a specified theme `fresh`.
 
 f = Figure()
-plot_erp!(f[1, 1], coeftable(uf_deconv))
-plot_erp!(
-    f[1, 2],
-    effects(Dict(:condition => ["car", "face"]), uf_deconv),
-    mapping = (; color = :condition),
-)
-plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
+with_theme(theme_ggthemr(:fresh)) do
 
+    plot_erp!(f[1, 1], coeftable(uf_deconv))
+    plot_erp!(
+        f[1, 2],
+        effects(Dict(:condition => ["car", "face"]), uf_deconv),
+        mapping = (; color = :condition),
+    )
+    plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
+end
 f
 
 # # Very complex figure
