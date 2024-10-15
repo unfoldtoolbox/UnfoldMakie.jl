@@ -45,7 +45,7 @@ end
 @benchmark begin
     plot_topoplotseries(
         df;
-        bin_num = 20,
+        bin_num = 50,
         positions = positions,
         axis = (; xlabel = "Time windows [s]"),
     )
