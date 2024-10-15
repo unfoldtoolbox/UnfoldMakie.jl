@@ -55,11 +55,12 @@ end
 @benchmark begin
     plot_topoplotseries(
         df;
-        bin_num = 20,
+        bin_num = 50,
         positions = positions,
         topo_attributes = (; interpolation = DelaunayMesh()),
     )
 end
+
 # MNE
 easycap_montage = PyMNE.channels.make_standard_montage("standard_1020")
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
@@ -67,4 +68,10 @@ info = PyMNE.create_info(PyList(ch_names), ch_types = "eeg", sfreq = 1)
 info.set_montage(easycap_montage)
 simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
-@benchmark simulated_epochs.plot_topomap(1:20)
+@benchmark simulated_epochs.plot_topomap(1:50)
+
+# MATLAB
+
+# ```@raw html
+# <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
+# ```
