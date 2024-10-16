@@ -4,6 +4,8 @@ using TopoPlots
 using PyMNE
 using PythonPlot
 using BenchmarkTools
+using Observables
+using CairoMakie
 
 # Data input 
 dat, positions = TopoPlots.example_data()
@@ -78,17 +80,17 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 # ```
 
 
-# Animation 
+# # Animation 
 
 # UnfoldMakie
 dat_obs = Observable(dat[:, 1, 1])
 timestamps = range(5, 10, step = 1)
-f = Figure()
+f = Makie.Figure()
 plot_topoplot!(f, dat_obs; positions = positions)
-
+#
 @benchmark record(
     f,
-    "../../src/assets/topoplot_animation_UM.mp4",
+    "../../../assets/topoplot_animation_UM.mp4",
     timestamps;
     framerate = 1,
 ) do t
@@ -97,9 +99,11 @@ end
 
 
 # MNE 
-fig, anim = simulated_epochs.animate_topomap(times=Py(timestamps), frame_rate=1, blit=false)
-anim.save("topomap_animation.mp4", writer="ffmpeg", fps=1)
+@benchmark begin
+    fig, anim = simulated_epochs.animate_topomap(times=Py(timestamps), frame_rate=1, blit=false)
+    anim.save("../../../assets/topomap_animation_mne.mp4", writer="ffmpeg", fps=1)
+end
 
 #```@raw html
-#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation.mp4" />
+#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_mne.mp4" />
 #```
