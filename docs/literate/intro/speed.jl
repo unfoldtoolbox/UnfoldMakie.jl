@@ -90,18 +90,17 @@ plot_topoplot!(f, dat_obs; positions = positions)
 #
 @benchmark record(
     f,
-    "../../../assets/topoplot_animation_UM.mp4",
+    "docs/src/assets/topoplot_animation_UM.mp4",
     timestamps;
     framerate = 1,
 ) do t
     dat_obs[] = dat[:, t, 1]
 end
 
-
 # MNE 
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(times=Py(timestamps), frame_rate=1, blit=false)
-    anim.save("../../../assets/topomap_animation_mne.mp4", writer="ffmpeg", fps=1)
+    anim.save("docs/src/assets/topomap_animation_mne.mp4", writer="ffmpeg", fps=1)
 end
 
 #```@raw html
