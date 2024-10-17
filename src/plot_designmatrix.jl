@@ -2,14 +2,12 @@
     plot_designmatrix!(f::Union{GridPosition, GridLayout, Figure}, data::Unfold.DesignMatrix; kwargs...)
     plot_designmatrix(data::Unfold.DesignMatrix; kwargs...)
         
-
 Plot a designmatrix. 
 ## Arguments
 - `f::Union{GridPosition, GridLayout, Figure}`\\
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Unfold.DesignMatrix`\\
     Data for the plot visualization.
-
 ## Keyword arguments (kwargs)
 - `standardize_data::Bool = true`\\
     Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
@@ -22,9 +20,7 @@ Plot a designmatrix.
     - `xticks` = 2: first and last possible labels are placed.
     - 2 < `xticks` < `number of labels`: equally distribute the labels.
     - `xticks` ≥ `number of labels`: all labels are placed.
-
 $(_docstring(:designmat))
-
 **Return Value:** `Figure` displaying the Design matrix. 
 """
 plot_designmatrix(
@@ -48,7 +44,7 @@ function plot_designmatrix!(
 )
     config = PlotConfig(:designmat)
     config_kwargs!(config; kwargs...)
-    designmat = UnfoldMakie.modelmatrix(data)
+    designmat = modelmatrix(data)
     if standardize_data
         designmat = designmat ./ std(designmat, dims = 1)
         designmat[isinf.(designmat)] .= 1.0
@@ -138,13 +134,7 @@ function plot_designmatrix!(
         ax.yreversed = true
     end
 
-
-
-
     apply_layout_settings!(config; fig = f, hm = hm)
 
     return f
 end
-# Unfold.extract_coef_info.(Unfold.get_coefnames.(designmatrix(td)),3)
-# use it!
-# vcat(Unfold.extract_coef_info.(Unfold.get_coefnames.(designmatrix(td)),3)...)
