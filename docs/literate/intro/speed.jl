@@ -86,16 +86,21 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 dat_obs = Observable(dat[:, 1, 1])
 timestamps = range(1, 50, step = 1)
 #
-
 @benchmark begin
     f = Makie.Figure()
     plot_topoplot!(f, dat_obs; positions = positions)
-    record(f, "../../../topoplot_animation_UM.mp4", timestamps; framerate = 1) do t
+    record(f, "../../../topoplot_animation_UM.gif", timestamps; framerate = 1) do t
         dat_obs[] = dat[:, t, 1]
     end
 end
 
-#
-#```@raw html
-#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" />
-#```
+# MNE 
+@benchmark begin
+    fig, anim = simulated_epochs.animate_topomap(
+        times = Py(timestamps),
+        frame_rate = 1,
+        blit = false,
+    )
+    anim.save("../../../topomap_animation_mne.gif", writer="writergif", fps = 1)
+end
+
