@@ -94,3 +94,8 @@ timestamps = range(1, 50, step = 1)
         dat_obs[] = dat[:, t, 1]
     end
 end
+
+#
+#```@raw html
+#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" />
+#```
