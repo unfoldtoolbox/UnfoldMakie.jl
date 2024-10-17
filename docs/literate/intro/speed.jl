@@ -94,10 +94,7 @@ timestamps = range(1, 50, step = 1)
         dat_obs[] = dat[:, t, 1]
     end
 end
-#
-#```@raw html
-#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.gif" />
-#```
+
 # MNE 
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
@@ -107,9 +104,3 @@ end
     )
     anim.save("../../../topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
-
-
-#
-#```@raw html
-#<video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_mne.gif" />
-#```
