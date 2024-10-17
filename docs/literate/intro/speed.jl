@@ -94,17 +94,3 @@ timestamps = range(1, 50, step = 1)
         dat_obs[] = dat[:, t, 1]
     end
 end
-
-# MNE 
-@benchmark begin
-    fig, anim = simulated_epochs.animate_topomap(
-        times = Py(timestamps),
-        frame_rate = 1,
-        blit = false,
-    )
-    anim.save("../../../topomap_animation_mne.mp4", writer = "ffmpeg", fps = 1)
-end
-
-#```@raw html
-#<video autoplay loop muted playsinline controls src="../../../topoplot_animation_mne.mp4" />
-#```
