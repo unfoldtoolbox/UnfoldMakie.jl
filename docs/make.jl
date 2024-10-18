@@ -39,6 +39,7 @@ makedocs(;
             "Installation" => "generated/intro/installation.md",
             "Plot types" => "generated/intro/plot_types.md",
             "Code principles" => "generated/intro/code_principles.md",
+            "Benchmarking" => "generated/intro/speed.md",
         ],
         "ERP Visualizations" => [
             "ERP plot" => "generated/tutorials/erp.md",

@@ -66,3 +66,22 @@ end
 @testset "topoplot: positions through labels" begin
     plot_topoplot(dat[1:19, 50, 1]; labels = TopoPlots.CHANNELS_10_20)
 end
+
+@testset "topoplot: change interpolation" begin
+    plot_topoplot(
+        dat[:, 320, 1];
+        positions = positions,
+        topo_attributes = (; interpolation = DelaunayMesh()),
+    )
+end
+
+@testset "topoplot: change aspect" begin
+    plot_topoplot(dat[:, 320, 1]; positions = positions, topo_axis = (; aspect = (1, 2, 1)))
+end
+
+@testset "topoplot: observable" begin
+    dat_obs = Observable(dat[:, 320, 1])
+    plot_topoplot(dat_obs; positions = positions)
+    dat_obs[] = dat[:, 320, 1]
+    plot_topoplot(dat_obs; positions = positions)
+end
