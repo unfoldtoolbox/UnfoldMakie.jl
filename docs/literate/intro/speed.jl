@@ -94,7 +94,7 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 dat_obs = Observable(dat[:, 1, 1])
 timestamps = range(1, 50, step = 1)
 
-# UnfoldMakie
+# UnfoldMakie with .gif
 
 @benchmark begin
     f = Makie.Figure()
@@ -108,7 +108,8 @@ timestamps = range(1, 50, step = 1)
         dat_obs[] .= @view(dat[:, t, 1])
     end
 end
-#
+
+# UnfoldMakie with .mp4
 
 @benchmark begin
     f = Makie.Figure()
@@ -137,7 +138,8 @@ end
     )
 end
 
-#<video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
-#
-#
+```@raw html
+<video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
+```
+
 pwd()
