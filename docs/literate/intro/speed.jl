@@ -99,15 +99,26 @@ timestamps = range(1, 50, step = 1)
 @benchmark begin
     f = Makie.Figure()
     plot_topoplot!(f, dat_obs; positions = positions)
-    record(f, "../../../src/assets/topoplot_animation_UM.gif", timestamps; framerate = 1) do t
+    record(
+        f,
+        "../../../src/assets/topoplot_animation_UM.gif",
+        timestamps;
+        framerate = 1,
+    ) do t
         dat_obs[] .= @view(dat[:, t, 1])
     end
 end
+#
 
 @benchmark begin
     f = Makie.Figure()
     plot_topoplot!(f, dat_obs; positions = positions)
-    record(f, "../../../src/assets/topoplot_animation_UM.mp4", timestamps; framerate = 1) do t
+    record(
+        f,
+        "../../../src/assets/topoplot_animation_UM.mp4",
+        timestamps;
+        framerate = 1,
+    ) do t
         dat_obs[] .= @view(dat[:, t, 1])
     end
 end
@@ -119,8 +130,14 @@ end
         frame_rate = 1,
         blit = false,
     )
-    anim.save("../../../src/assets/topomap_animation_mne.gif", writer = "writergif", fps = 1)
+    anim.save(
+        "../../../src/assets/topomap_animation_mne.gif",
+        writer = "writergif",
+        fps = 1,
+    )
 end
+
+#<video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
 #
 #
 pwd()
