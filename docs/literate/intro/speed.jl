@@ -81,6 +81,7 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
 
 # # Animation 
+# The main advantage of Julia is the speed with which the figures are updated.
 
 dat_obs = Observable(dat[:, 1, 1])
 timestamps = range(1, 50, step = 1)
@@ -91,7 +92,7 @@ timestamps = range(1, 50, step = 1)
     f = Makie.Figure()
     plot_topoplot!(f, dat_obs; positions = positions)
     record(f, "../../../topoplot_animation_UM.gif", timestamps; framerate = 1) do t
-        dat_obs[] = dat[:, t, 1]
+        dat_obs[] .= @view(dat[:, t, 1])
     end
 end
 
@@ -100,7 +101,7 @@ end
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
         frame_rate = 1,
-        blit = false,
+        blit = false
     )
     anim.save("../../../topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
