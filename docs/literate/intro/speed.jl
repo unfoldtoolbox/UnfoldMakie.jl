@@ -108,6 +108,11 @@ timestamps = range(1, 50, step = 1)
         dat_obs[] .= @view(dat[:, t, 1])
     end
 end
+#
+# ```@raw html
+# <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_UM.gif" />
+# ```
+
 
 # UnfoldMakie with .mp4
 
@@ -124,6 +129,12 @@ end
     end
 end
 
+#
+# ```@raw html
+# <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_UM.mp4" />
+# ```
+
+
 # MNE 
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
@@ -137,9 +148,7 @@ end
         fps = 1,
     )
 end
-
+#
 # ```@raw html
 # <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
 # ```
-
-pwd()
