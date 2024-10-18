@@ -1,4 +1,11 @@
-# Speed measurement
+# # Speed measurement
+# Here we will compare the speed of plotting UnfoldMakie with MNE and MATLAB (partially).
+#
+# Three cases are measured: 
+# - Single topoplot
+# - Topoplot series with 50 topoplots
+# - Topoplott animation with 50 timestamps
+
 using UnfoldMakie
 using TopoPlots
 using PyMNE
@@ -73,6 +80,7 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 @benchmark simulated_epochs.plot_topomap(1:50)
 
 # MATLAB
+#
 # At present, it is not possible to run MATLAB within a Julia environment on GitHub. As a result, we can only provide a screenshot of the program execution.
 
 # ```@raw html
@@ -91,7 +99,15 @@ timestamps = range(1, 50, step = 1)
 @benchmark begin
     f = Makie.Figure()
     plot_topoplot!(f, dat_obs; positions = positions)
-    record(f, "../../../topoplot_animation_UM.gif", timestamps; framerate = 1) do t
+    record(f, "../../../src/assets/topoplot_animation_UM.gif", timestamps; framerate = 1) do t
+        dat_obs[] .= @view(dat[:, t, 1])
+    end
+end
+
+@benchmark begin
+    f = Makie.Figure()
+    plot_topoplot!(f, dat_obs; positions = positions)
+    record(f, "../../../src/assets/topoplot_animation_UM.mp4", timestamps; framerate = 1) do t
         dat_obs[] .= @view(dat[:, t, 1])
     end
 end
@@ -103,7 +119,7 @@ end
         frame_rate = 1,
         blit = false,
     )
-    anim.save("../../../topomap_animation_mne.gif", writer = "writergif", fps = 1)
+    anim.save("../../../src/assets/topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
 #
 #
