@@ -110,7 +110,7 @@ timestamps = range(1, 50, step = 1)
 end
 #
 # ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_UM.gif" />
+# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.gif" />
 # ```
 
 
@@ -131,7 +131,7 @@ end
 
 #
 # ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_UM.mp4" />
+# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" />
 # ```
 
 
@@ -150,5 +150,5 @@ end
 end
 #
 # ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
+# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_mne.gif" />
 # ```
