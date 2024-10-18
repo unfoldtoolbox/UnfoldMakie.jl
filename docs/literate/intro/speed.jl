@@ -101,7 +101,10 @@ end
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
         frame_rate = 1,
-        blit = false
+        blit = false,
     )
     anim.save("../../../topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
+#
+#
+pwd()
