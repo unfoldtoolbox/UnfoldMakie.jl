@@ -138,8 +138,8 @@ end
     )
 end
 
-```@raw html
-<video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
-```
+# ```@raw html
+# <video autoplay loop muted playsinline controls src="../../../src/assets/topoplot_animation_mne.gif" />
+# ```
 
 pwd()
