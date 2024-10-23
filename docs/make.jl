@@ -12,7 +12,6 @@ using DataFrames
 using DataFramesMeta
 using Literate
 using Glob
-using FFMPEG_jll
 
 GENERATED = joinpath(@__DIR__, "src", "generated")
 SOURCE = joinpath(@__DIR__, "literate")
