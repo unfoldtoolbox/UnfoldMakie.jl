@@ -42,7 +42,7 @@ end
 end
 
 @testset "topoplot: GridLayout" begin
-    f = Figure()
+    f = Makie.Figure()
     plot_topoplot!(f[1, 1], dat[:, 150, 1]; positions = positions)
     f
 end
@@ -53,7 +53,7 @@ end
 end
 
 @testset "topoplot: GridSubposition" begin
-    f = Figure()
+    f = Makie.Figure()
     plot_topoplot!(
         f[1, 1][1, 1],
         data_for_topoplot;
@@ -76,12 +76,12 @@ end
 end
 
 @testset "topoplot: change aspect" begin
-    plot_topoplot(dat[:, 320, 1]; positions = positions, topo_axis = (; aspect = (1, 2, 1)))
+    plot_topoplot(dat[:, 320, 1]; positions = positions, topo_axis = (; aspect = 2))
 end
 
 @testset "topoplot: observable" begin
     dat_obs = Observable(dat[:, 320, 1])
     plot_topoplot(dat_obs; positions = positions)
-    dat_obs[] = dat[:, 320, 1]
+    dat_obs[] = dat[:, 30, 1]
     plot_topoplot(dat_obs; positions = positions)
 end

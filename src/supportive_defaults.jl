@@ -24,8 +24,8 @@ function supportive_defaults(cfg_symb::Symbol)
         # plot_butterfly
     elseif cfg_symb == :topo_default_single
         return (;
-            width = Relative(0.35),
-            height = Relative(0.35),
+            width = Relative(1),
+            height = Relative(1),
             halign = 0.05,
             valign = 0.95,
             aspect = 1,
