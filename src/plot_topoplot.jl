@@ -56,7 +56,10 @@ function plot_topoplot!(
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
-    axis = Axis(f[1, 1]; config.axis...)
+    outer_axis = Axis(f[1, 1]; config.axis...)
+    hidespines!(outer_axis)
+    hidedecorations!(outer_axis, label = false)
+
     if !(data isa Vector || data isa Observable{<:AbstractVector})
         config.mapping = resolve_mappings(data, config.mapping)
         data = data[:, config.mapping.y]
@@ -68,32 +71,32 @@ function plot_topoplot!(
     positions = get_topo_positions(; positions = positions, labels = labels)
     topo_attributes =
         update_axis(supportive_defaults(:topo_attributes_default); topo_attributes...)
+    topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
+    inner_axis = Axis(f[1, 1]; topo_axis...)
     if isa(high_chan, Int) || isa(high_chan, Vector{Int64})
         x = zeros(length(positions))
         isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
         clist = [:gray, high_color][Int.(x .+ 1)] #color for highlighting
-        topo_axis = update_axis(
-            supportive_defaults(:topo_default_single);
+        eeg_topoplot!(
+            inner_axis,
+            data,
+            labels;
+            positions,
+            config.visual...,
+            topo_attributes...,
             label_scatter = (;
                 color = clist,
                 markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustable
             ),
         )
+    else
+        eeg_topoplot!(inner_axis, data, labels; positions, config.visual...)
     end
-    eeg_topoplot!(
-        axis,
-        data,
-        labels;
-        positions,
-        config.visual...,
-        topo_attributes...,
-        topo_axis...,
-    )
+
 
     if config.layout.use_colorbar == true
-        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
+        Colorbar(f[:, 2]; colormap = config.visual.colormap, config.colorbar...)
     end
-
     clims = @lift (min($data...), max($data...))
     if clims[][1] ≈ clims[][2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
@@ -104,6 +107,5 @@ Note: The identical min and max may cause an interpolation error when plotting t
         config_kwargs!(config, colorbar = (; limits = clims))
     end
     apply_layout_settings!(config; fig = f)
-
     return f
 end
