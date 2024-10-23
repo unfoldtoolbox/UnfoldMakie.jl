@@ -90,7 +90,14 @@ function plot_topoplot!(
             ),
         )
     else
-        eeg_topoplot!(inner_axis, data, labels; positions, config.visual...)
+        eeg_topoplot!(
+            inner_axis,
+            data,
+            labels;
+            positions,
+            config.visual...,
+            topo_attributes...,
+        )
     end
 
 

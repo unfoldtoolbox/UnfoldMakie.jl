@@ -178,8 +178,14 @@ end
 end
 
 
-#= @testset "ERP plot: colors in theme" begin
-    with_theme(Theme(Color = (; palette = [:red, :blue, :purple]))) do
+@testset "ERP plot: colors and lines in cycled theme" begin
+    with_theme(
+        Theme(
+            palette = (color = [:red, :green], linestyle = [:dash, :dot]),
+            Lines = (cycle = Cycle([:color, :linestyle], covary = true),),
+        ),
+    ) do
         plot_erp(results)
+
     end
-end =#
+end

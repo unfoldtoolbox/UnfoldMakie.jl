@@ -75,6 +75,16 @@ end
     )
 end
 
+
+@testset "topoplot: change interpolation" begin
+    plot_topoplot(
+        dat[:, 320, 1];
+        positions = positions,
+        topo_attributes = (; interpolation = NullInterpolator()),
+    )
+end
+
+
 @testset "topoplot: change aspect" begin
     plot_topoplot(dat[:, 320, 1]; positions = positions, topo_axis = (; aspect = 2))
 end
