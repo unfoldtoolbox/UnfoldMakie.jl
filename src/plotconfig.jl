@@ -254,7 +254,7 @@ function PlotConfig(T::Val{:erpimage})
         cfg;
         layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]"),
-        axis = (xlabel = "Time [s]", ylabel = "Trials"),
+        axis = (xlabel = "Time samples", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg
