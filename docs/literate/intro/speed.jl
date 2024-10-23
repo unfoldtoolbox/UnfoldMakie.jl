@@ -173,7 +173,3 @@ end
 # ```@raw html
 # <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_mne.gif" align="middle" />
 # ```
-
-# ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_mne.mp4" align="middle" />
-# ```
