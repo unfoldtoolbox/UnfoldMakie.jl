@@ -156,11 +156,14 @@ end
 # <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" align="middle" />
 # ```
 
+# test
+
 # ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.gif" align="middle" />
+# <img src="../../../assets/topoplot_animation_UM.gif" align="middle" />
 # ```
 
+# test
 
 # ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_mne.gif" align="middle" />
+# <img src="../../../assets/topoplot_animation_mne.gif" align="middle" />
 # ```
