@@ -135,7 +135,7 @@ end
     end
 end
 
-# MNE 
+# MNE with .gif
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
@@ -150,20 +150,11 @@ end
     )
 end
 
-@benchmark begin
-    fig, anim = simulated_epochs.animate_topomap(
-        times = Py(timestamps),
-        frame_rate = 1,
-        blit = false,
-        image_interp = "linear", # same as DelaunayMesh
-    )
-    anim.save("../../../src/assets/topomap_animation_mne.mp4", writer = "ffmpeg", fps = 1)
-end
+# Animations
 
 # ```@raw html
 # <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" align="middle" />
 # ```
-
 
 # ```@raw html
 # <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.gif" align="middle" />
