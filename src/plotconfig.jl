@@ -213,6 +213,7 @@ function PlotConfig(T::Val{:erp})
             xtickformat = "{:.1f}",
         ),
         colorbar = (; label = "", flipaxis = true),
+        visual = (; colormap = :roma, color = Makie.wong_colors()),
     )
 
     return cfg
@@ -253,7 +254,7 @@ function PlotConfig(T::Val{:erpimage})
         cfg;
         layout = (; use_colorbar = true),
         colorbar = (; label = "Voltage [µV]"),
-        axis = (xlabel = "Time [s]", ylabel = "Trials"),
+        axis = (xlabel = "Time samples", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg

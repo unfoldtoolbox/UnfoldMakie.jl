@@ -10,13 +10,18 @@ dat, positions = TopoPlots.example_data()
 
 m7 = example_data("7channels")
 results7 = coeftable(m7)
+pvals = DataFrame(
+    from = [0.01, 0.2, 0.1],
+    to = [0.3, 0.4, 0.2],
+    coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
+)
 
 @testset "ERP plot: DataFrame data" begin
     plot_erp(results)
 end
 
 @testset "ERP plot: Matrix data" begin
-    plot_erp(dat[1, :, 1:2]')
+    plot_erp(dat[1, 1:100, 1:2]')
 end
 
 @testset "ERP plot: Array data" begin
@@ -59,7 +64,7 @@ end
     plot_erp(results; mapping = (; col = :group), stderror = true)
 end
 
-@testset "ERP plot: with and withour error ribbons" begin
+@testset "ERP plot: with and without error ribbons" begin
     results = coeftable(m)
     results.coefname =
         replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
@@ -106,13 +111,12 @@ end
 end
 
 @testset "ERP plot with significance" begin
-    pvals = DataFrame(
-        from = [0.01, 0.2],
-        to = [0.3, 0.4],
-        coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
-    )
     plot_erp(results; :significance => pvals)
 end
+
+#= @testset "ERP plot with significance 2" begin
+    plot_erp(results; :significance => pvals, sigtype = :vspan)
+end =#
 
 @testset "ERP plot: 7 channels faceted" begin
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
@@ -171,4 +175,17 @@ end
         ),
     )
     f
+end
+
+
+@testset "ERP plot: colors and lines in cycled theme" begin
+    with_theme(
+        Theme(
+            palette = (color = [:red, :green], linestyle = [:dash, :dot]),
+            Lines = (cycle = Cycle([:color, :linestyle], covary = true),),
+        ),
+    ) do
+        plot_erp(results)
+
+    end
 end

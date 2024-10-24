@@ -102,12 +102,10 @@ function plot_circular_topoplots!(
 
     apply_layout_settings!(config; ax = ax)
     # set the scene's background color according to config
-    #set_theme!(Theme(backgroundcolor = config.axisData.backgroundcolor))
     return f
 end
 
 function calculate_global_max_values(data, predictor)
-
     x = combine(
         groupby(DataFrame(:e => data, :p => predictor), :p),
         :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :local_max_val,

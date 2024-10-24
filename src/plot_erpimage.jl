@@ -77,7 +77,7 @@ function plot_erpimage!(
     sortval_xlabel = Observable("Sorting variable"),
     meanplot_axis = (;),
     sortplot_axis = (;),
-    kwargs..., # not observables for a while ;)
+    kwargs...,
 )
     ga = f[1, 1:2] = GridLayout()
     sortvalues = _as_observable(sortvalues)
@@ -88,6 +88,7 @@ function plot_erpimage!(
     if isnothing(sortindex) && !isnothing(sortvalues)
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
+
     config_kwargs!(config; kwargs...)
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(ga[1:4, 1:4]; config.axis...)
