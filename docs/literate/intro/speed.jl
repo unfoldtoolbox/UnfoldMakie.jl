@@ -132,33 +132,18 @@ end
         times = Py(timestamps),
         frame_rate = 1,
         blit = false,
-        #image_interp = "linear", # same as DelaunayMesh
+        #image_interp = "cubic", # same as CloughTocher
     )
     anim.save("topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
 
-# not saving
-fig, anim = simulated_epochs.animate_topomap(
-        times = Py(timestamps),
-        frame_rate = 1,
-        blit = false,
-        #image_interp = "linear", # same as DelaunayMesh
-    )
-anim
+# test
 
-# not saving
-f = Makie.Figure()
-dat_obs = Observable(dat[:, 1, 1])
-plot_topoplot!(f[1, 1], dat_obs, positions = positions)
-record(
-    f,
-    "../../../src/assets/topoplot_animation_UM.gif",
-    timestamps;
-    framerate = 1,
-) do t
-    dat_obs[] = @view(dat[:, t, 1])
-end
-f
+# ![](topomap_animation_mne.gif)
+
+# test
+
+# ![](../../../assets/topomap_animation_mne.gif)
 
 # Animations
 
