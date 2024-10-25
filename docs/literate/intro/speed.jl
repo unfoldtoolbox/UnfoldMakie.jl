@@ -99,11 +99,7 @@ timestamps = range(1, 50, step = 1)
 @benchmark begin
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
-    plot_topoplot!(
-        f[1, 1],
-        dat_obs,
-        positions = positions,
-    )
+    plot_topoplot!(f[1, 1], dat_obs, positions = positions)
     record(
         f,
         "../../../src/assets/topoplot_animation_UM.gif",
@@ -119,11 +115,7 @@ end
 @benchmark begin
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
-    plot_topoplot!(
-        f,
-        dat_obs;
-        positions = positions,
-    )
+    plot_topoplot!(f, dat_obs; positions = positions)
     record(
         f,
         "../../../src/assets/topoplot_animation_UM.mp4",
@@ -145,11 +137,41 @@ end
     anim.save("topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
 
+# not saving
+fig, anim = simulated_epochs.animate_topomap(
+        times = Py(timestamps),
+        frame_rate = 1,
+        blit = false,
+        #image_interp = "linear", # same as DelaunayMesh
+    )
+anim
+
+# not saving
+f = Makie.Figure()
+dat_obs = Observable(dat[:, 1, 1])
+plot_topoplot!(f[1, 1], dat_obs, positions = positions)
+record(
+    f,
+    "../../../src/assets/topoplot_animation_UM.gif",
+    timestamps;
+    framerate = 1,
+) do t
+    dat_obs[] = @view(dat[:, t, 1])
+end
+f
+
 # Animations
 
 # ```@raw html
 # <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" align="middle" />
 # ```
+
+# test test test
+
+# ```@raw html
+# <video autoplay loop muted playsinline controls src="../../../assets/topomap_animation_mne.mp4" align="middle" />
+# ```
+
 
 # test
 
@@ -162,5 +184,3 @@ end
 # ```@raw html
 # <img src="../../../assets/topomap_animation_mne.gif" align="middle" />
 # ```
-
-# ![](topomap_animation_mne.gif)
