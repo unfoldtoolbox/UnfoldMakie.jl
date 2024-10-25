@@ -102,7 +102,7 @@ timestamps = range(1, 50, step = 1)
     plot_topoplot!(f[1, 1], dat_obs, positions = positions)
     record(
         f,
-        "../../../src/assets/topoplot_animation_UM.gif",
+        "topoplot_animation_UM.gif",
         timestamps;
         framerate = 1,
     ) do t
@@ -120,7 +120,7 @@ end
     plot_topoplot!(f, dat_obs; positions = positions)
     record(
         f,
-        "../../../src/assets/topoplot_animation_UM.mp4",
+        "topoplot_animation_UM.mp4",
         timestamps;
         framerate = 1,
     ) do t
@@ -136,7 +136,7 @@ end
         times = Py(timestamps),
         frame_rate = 1,
         blit = false,
-        #image_interp = "cubic", # same as CloughTocher
+        image_interp = "cubic", # same as CloughTocher
     )
     anim.save("topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
