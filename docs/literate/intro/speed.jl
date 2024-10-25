@@ -88,11 +88,13 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 # <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
 # ```
 
+# ![](MATLAB_benchmarking.png)
 
 # # Animation 
 # The main advantage of Julia is the speed with which the figures are updated.
 
 timestamps = range(1, 50, step = 1)
+framerate = 50
 
 # UnfoldMakie with .gif
 
@@ -100,12 +102,7 @@ timestamps = range(1, 50, step = 1)
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
     plot_topoplot!(f[1, 1], dat_obs, positions = positions)
-    record(
-        f,
-        "topoplot_animation_UM.gif",
-        timestamps;
-        framerate = 1,
-    ) do t
+    record(f, "topoplot_animation_UM.gif", timestamps; framerate = framerate) do t
         dat_obs[] = @view(dat[:, t, 1])
     end
 end
@@ -118,12 +115,7 @@ end
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
     plot_topoplot!(f, dat_obs; positions = positions)
-    record(
-        f,
-        "topoplot_animation_UM.mp4",
-        timestamps;
-        framerate = 1,
-    ) do t
+    record(f, "topoplot_animation_UM.mp4", timestamps; framerate = framerate) do t
         dat_obs[] = @view(dat[:, t, 1])
     end
 end
@@ -138,7 +130,20 @@ end
         blit = false,
         image_interp = "cubic", # same as CloughTocher
     )
-    anim.save("topomap_animation_mne.gif", writer = "writergif", fps = 1)
+    anim.save("topomap_animation_mne.gif", writer = "writergif", fps = framerate)
 end
 
 # ![](topomap_animation_mne.gif)
+
+# MNE with mp4
+
+@benchmark begin
+    fig, anim = simulated_epochs.animate_topomap(
+        times = Py(timestamps),
+        frame_rate = 1,
+        blit = false,
+        image_interp = "cubic", # same as CloughTocher
+    )
+    FFwriter = matplotlib.animation.FFMpegWriter(fps = framerate)
+    anim.save("topomap_animation_mne.mp4", writer = FFwriter)
+end
