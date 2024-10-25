@@ -130,7 +130,8 @@ function plot_butterfly!(
     f_grid = f[1, 1]
 
     if (topolegend)
-        topo_axis = update_axis(supportive_defaults(:topo_default_single_butterfly); topo_axis...)
+        topo_axis =
+            update_axis(supportive_defaults(:topo_default_single_butterfly); topo_axis...)
         topo_attributes = update_axis(
             supportive_defaults(:topo_attributes_default_butterfly);
             topo_attributes...,
