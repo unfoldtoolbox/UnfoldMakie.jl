@@ -7,29 +7,29 @@ using BenchmarkTools
 using Observables
 using CairoMakie
 using FFMPEG_jll</code></pre><p>Data input</p><pre><code class="language-julia hljs">dat, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));</code></pre><h1 id="Topoplots"><a class="docs-heading-anchor" href="#Topoplots">Topoplots</a><a id="Topoplots-1"></a><a class="docs-heading-anchor-permalink" href="#Topoplots" title="Permalink"></a></h1><p>UnfoldMakie.jl</p><pre><code class="language-julia hljs">@benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 118 samples with 1 evaluation.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">39.653 ms</span></span> … <span class="sgr35">76.142 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">41.777 ms              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">42.592 ms</span></span> ± <span class="sgr32"> 4.321 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));</code></pre><h1 id="Topoplots"><a class="docs-heading-anchor" href="#Topoplots">Topoplots</a><a id="Topoplots-1"></a><a class="docs-heading-anchor-permalink" href="#Topoplots" title="Permalink"></a></h1><p>UnfoldMakie.jl</p><pre><code class="language-julia hljs">@benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 124 samples with 1 evaluation.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">37.541 ms</span></span> … <span class="sgr35">77.525 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">39.119 ms              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">40.185 ms</span></span> ± <span class="sgr32"> 4.122 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-   █▄▄▂<span class="sgr34">▇</span><span class="sgr32">▂</span>                                                      
-  ▆████<span class="sgr34">█</span><span class="sgr32">█</span>▄▄▆▇▄▃▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃ ▃
-  39.7 ms<span class="sgr90">         Histogram: frequency by time</span>          67 ms <span class="sgr1">&lt;</span>
+    █▇▂<span class="sgr34"> </span>  <span class="sgr32">▁</span>                                                    
+  ▄████<span class="sgr34">▅</span>▆▅<span class="sgr32">█</span>▆▃▄▃▄▅▁▃▃▃▁▁▃▃▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃ ▃
+  37.5 ms<span class="sgr90">         Histogram: frequency by time</span>        57.4 ms <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">9.55 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">140358</span>.</code></pre><p>UnfoldMakie.jl with DelaunayMesh</p><pre><code class="language-julia hljs">@benchmark plot_topoplot(
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">9.55 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">140367</span>.</code></pre><p>UnfoldMakie.jl with DelaunayMesh</p><pre><code class="language-julia hljs">@benchmark plot_topoplot(
     dat[:, 320, 1];
     positions = positions,
     topo_interpolation = (; interpolation = DelaunayMesh()),
-)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 112 samples with 1 evaluation.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">41.507 ms</span></span> … <span class="sgr35">81.473 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">44.172 ms              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">44.667 ms</span></span> ± <span class="sgr32"> 3.783 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 122 samples with 1 evaluation.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">38.314 ms</span></span> … <span class="sgr35">67.322 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">40.939 ms              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">41.220 ms</span></span> ± <span class="sgr32"> 3.275 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-              ▄ ▄▆▆ ▄  <span class="sgr34">█</span>  ▆<span class="sgr32"> </span>▂ ▂ ▂    ▄                         
-  ▆▄▁▄▁▁▄█▄█▆▆█████▆███<span class="sgr34">█</span>▆██<span class="sgr32">▁</span>███▆██▆▁▄█▁█▄▁▄▄▁▁▁▁▁▄▁▁▄▁▄▄▁▁▁▁▄ ▄
-  41.5 ms<span class="sgr90">         Histogram: frequency by time</span>        48.9 ms <span class="sgr1">&lt;</span>
+     ▁  ▄▄<span class="sgr34">█</span><span class="sgr32">█</span>█                                                  
+  █▇██▆▁██<span class="sgr34">█</span><span class="sgr32">█</span>█▇▆▄▁▁▁▃▃▁▁▁▁▁▁▃▁▁▁▁▃▁▃▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃ ▃
+  38.3 ms<span class="sgr90">         Histogram: frequency by time</span>        56.6 ms <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">9.55 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">140365</span>.</code></pre><p>MNE</p><pre><code class="language-julia hljs">posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])&#39;)
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">9.55 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">140374</span>.</code></pre><p>MNE</p><pre><code class="language-julia hljs">posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])&#39;)
 pypos = Py(posmat).to_numpy()
 pydat = Py(dat[:, 320, 1])
 
@@ -45,14 +45,14 @@ pydat = Py(dat[:, 320, 1])
         contours = 6,
     )
     f.show()
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 233 samples with 1 evaluation.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">14.420 ms</span></span> … <span class="sgr35">635.372 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">15.377 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">22.584 ms</span></span> ± <span class="sgr32"> 61.751 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 241 samples with 1 evaluation.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">14.090 ms</span></span> … <span class="sgr35">581.460 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">14.386 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">20.751 ms</span></span> ± <span class="sgr32"> 54.749 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
   <span class="sgr34">█</span><span class="sgr32"> </span>                                                            
   <span class="sgr34">█</span><span class="sgr32">▅</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄ ▅
-  14.4 ms<span class="sgr90">       Histogram: <span class="sgr1">log(</span>frequency<span class="sgr1">)</span> by time</span>       502 ms <span class="sgr1">&lt;</span>
+  14.1 ms<span class="sgr90">       Histogram: <span class="sgr1">log(</span>frequency<span class="sgr1">)</span> by time</span>       443 ms <span class="sgr1">&lt;</span>
 
  Memory estimate<span class="sgr90">: </span><span class="sgr33">4.27 KiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">134</span>.</code></pre><h1 id="Topoplot-series"><a class="docs-heading-anchor" href="#Topoplot-series">Topoplot series</a><a id="Topoplot-series-1"></a><a class="docs-heading-anchor-permalink" href="#Topoplot-series" title="Permalink"></a></h1><p>UnfoldMakie.jl</p><pre><code class="language-julia hljs">@benchmark begin
     plot_topoplotseries(
@@ -62,15 +62,15 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         axis = (; xlabel = &quot;Time windows [s]&quot;),
     )
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 3 samples with 1 evaluation.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">2.082 s</span></span> … <span class="sgr35">  2.221 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">2.160 s              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">2.154 s</span></span> ± <span class="sgr32">69.697 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">1.911 s</span></span> … <span class="sgr35">  2.053 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">1.978 s              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">1.981 s</span></span> ± <span class="sgr32">70.769 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-  <span class="sgr34">█</span>                             <span class="sgr32"> </span> █                       █  
-  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  2.08 s<span class="sgr90">         Histogram: frequency by time</span>        2.22 s <span class="sgr1">&lt;</span>
+  <span class="sgr34">█</span>                         █ <span class="sgr32"> </span>                           █  
+  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  1.91 s<span class="sgr90">         Histogram: frequency by time</span>        2.05 s <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">414.18 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">5851710</span>.</code></pre><p>UnfoldMakie.jl with DelaunayMesh</p><pre><code class="language-julia hljs">@benchmark begin
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">414.18 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">5851866</span>.</code></pre><p>UnfoldMakie.jl with DelaunayMesh</p><pre><code class="language-julia hljs">@benchmark begin
     plot_topoplotseries(
         df;
         bin_num = 50,
@@ -78,37 +78,33 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         topo_attributes = (; interpolation = DelaunayMesh()),
     )
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 3 samples with 1 evaluation.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">1.848 s</span></span> … <span class="sgr35"> 1.862 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">1.854 s             </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">1.855 s</span></span> ± <span class="sgr32">7.106 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">1.638 s</span></span> … <span class="sgr35">  1.758 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">1.753 s              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">1.716 s</span></span> ± <span class="sgr32">68.059 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-  <span class="sgr34">█</span>                       █  <span class="sgr32"> </span>                           █  
-  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  1.85 s<span class="sgr90">        Histogram: frequency by time</span>        1.86 s <span class="sgr1">&lt;</span>
+  <span class="sgr34">█</span>                                    <span class="sgr32"> </span>                █ █  
+  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁█ ▁
+  1.64 s<span class="sgr90">         Histogram: frequency by time</span>        1.76 s <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">285.33 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">5517599</span>.</code></pre><p>MNE</p><pre><code class="language-julia hljs">easycap_montage = PyMNE.channels.make_standard_montage(&quot;standard_1020&quot;)
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">285.34 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">5517755</span>.</code></pre><p>MNE</p><pre><code class="language-julia hljs">easycap_montage = PyMNE.channels.make_standard_montage(&quot;standard_1020&quot;)
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
 info = PyMNE.create_info(PyList(ch_names), ch_types = &quot;eeg&quot;, sfreq = 1)
 info.set_montage(easycap_montage)
 simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
 @benchmark simulated_epochs.plot_topomap(1:50)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 5 samples with 1 evaluation.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">860.004 ms</span></span> … <span class="sgr35">   2.240 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">891.088 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">   1.153 s</span></span> ± <span class="sgr32">607.808 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">828.879 ms</span></span> … <span class="sgr35">   2.039 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">845.561 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">   1.078 s</span></span> ± <span class="sgr32">537.182 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-  <span class="sgr34">█</span>▁▁          <span class="sgr32"> </span>                                              ▁  
-  <span class="sgr34">█</span>██▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  860 ms<span class="sgr90">           Histogram: frequency by time</span>          2.24 s <span class="sgr1">&lt;</span>
+  <span class="sgr34">█</span>            <span class="sgr32"> </span>                                                 
+  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▆ ▁
+  829 ms<span class="sgr90">           Histogram: frequency by time</span>          2.04 s <span class="sgr1">&lt;</span>
 
  Memory estimate<span class="sgr90">: </span><span class="sgr33">3.25 KiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">111</span>.</code></pre><p>MATLAB</p><p>At present, it is not possible to run MATLAB within a Julia environment on GitHub. As a result, we can only provide a screenshot of the program execution.</p><img src="../../../assets/MATLAB_benchmarking.png" align="middle"/><h1 id="Animation"><a class="docs-heading-anchor" href="#Animation">Animation</a><a id="Animation-1"></a><a class="docs-heading-anchor-permalink" href="#Animation" title="Permalink"></a></h1><p>The main advantage of Julia is the speed with which the figures are updated.</p><pre><code class="language-julia hljs">timestamps = range(1, 50, step = 1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1:1:50</code></pre><p>UnfoldMakie with .gif</p><pre><code class="language-julia hljs">@benchmark begin
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
-    plot_topoplot!(
-        f[1, 1],
-        dat_obs,
-        positions = positions,
-    )
+    plot_topoplot!(f[1, 1], dat_obs, positions = positions)
     record(
         f,
         &quot;../../../src/assets/topoplot_animation_UM.gif&quot;,
@@ -118,15 +114,11 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
         dat_obs[] = @view(dat[:, t, 1])
     end
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 1 sample with 1 evaluation.
- Single result which took <span class="sgr34">5.792 s</span> (0.00% GC) to evaluate,
- with a memory estimate of <span class="sgr33">1.66 GiB</span>, over <span class="sgr33">17701320</span> allocations.</code></pre><p>UnfoldMakie with .mp4</p><pre><code class="language-julia hljs">@benchmark begin
+ Single result which took <span class="sgr34">5.634 s</span> (0.00% GC) to evaluate,
+ with a memory estimate of <span class="sgr33">1.66 GiB</span>, over <span class="sgr33">17701329</span> allocations.</code></pre><p>UnfoldMakie with .mp4</p><pre><code class="language-julia hljs">@benchmark begin
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
-    plot_topoplot!(
-        f,
-        dat_obs;
-        positions = positions,
-    )
+    plot_topoplot!(f, dat_obs; positions = positions)
     record(
         f,
         &quot;../../../src/assets/topoplot_animation_UM.mp4&quot;,
@@ -136,8 +128,8 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         dat_obs[] = @view(dat[:, t, 1])
     end
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 1 sample with 1 evaluation.
- Single result which took <span class="sgr34">5.570 s</span> (0.00% GC) to evaluate,
- with a memory estimate of <span class="sgr33">1.66 GiB</span>, over <span class="sgr33">17697607</span> allocations.</code></pre><p>MNE with .gif</p><pre><code class="language-julia hljs">@benchmark begin
+ Single result which took <span class="sgr34">5.486 s</span> (0.00% GC) to evaluate,
+ with a memory estimate of <span class="sgr33">1.66 GiB</span>, over <span class="sgr33">17697616</span> allocations.</code></pre><p>MNE with .gif</p><pre><code class="language-julia hljs">@benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
         frame_rate = 1,
@@ -146,5 +138,22 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
     )
     anim.save(&quot;topomap_animation_mne.gif&quot;, writer = &quot;writergif&quot;, fps = 1)
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 1 sample with 1 evaluation.
- Single result which took <span class="sgr34">9.517 s</span> (0.00% GC) to evaluate,
- with a memory estimate of <span class="sgr33">3.96 KiB</span>, over <span class="sgr33">153</span> allocations.</code></pre><p>Animations</p><video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" align="middle" /><p>test</p><img src="../../../assets/topoplot_animation_UM.gif" align="middle" /><p>test</p><img src="../../../assets/topomap_animation_mne.gif" align="middle" /><p><img src="../topomap_animation_mne.gif" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../code_principles/">« Code principles</a><a class="docs-footer-nextpage" href="../../tutorials/erp/">ERP plot »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Friday 25 October 2024 09:48">Friday 25 October 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ Single result which took <span class="sgr34">9.078 s</span> (0.00% GC) to evaluate,
+ with a memory estimate of <span class="sgr33">3.96 KiB</span>, over <span class="sgr33">153</span> allocations.</code></pre><p>not saving</p><pre><code class="language-julia hljs">fig, anim = simulated_epochs.animate_topomap(
+        times = Py(timestamps),
+        frame_rate = 1,
+        blit = false,
+        #image_interp = &quot;linear&quot;, # same as DelaunayMesh
+    )
+anim</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Python: &lt;matplotlib.animation.FuncAnimation object at 0x7fa14ff3dbb0&gt;</code></pre><p>not saving</p><pre><code class="language-julia hljs">f = Makie.Figure()
+dat_obs = Observable(dat[:, 1, 1])
+plot_topoplot!(f[1, 1], dat_obs, positions = positions)
+record(
+    f,
+    &quot;../../../src/assets/topoplot_animation_UM.gif&quot;,
+    timestamps;
+    framerate = 1,
+) do t
+    dat_obs[] = @view(dat[:, t, 1])
+end
+f</code></pre><img src="af580252.png" alt="Example block output"/><p>Animations</p><video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" align="middle" /><p>test test test</p><video autoplay loop muted playsinline controls src="../../../assets/topomap_animation_mne.mp4" align="middle" /><p>test</p><img src="../../../assets/topoplot_animation_UM.gif" align="middle" /><p>test</p><img src="../../../assets/topomap_animation_mne.gif" align="middle" /><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../code_principles/">« Code principles</a><a class="docs-footer-nextpage" href="../../tutorials/erp/">ERP plot »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Friday 25 October 2024 10:46">Friday 25 October 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
