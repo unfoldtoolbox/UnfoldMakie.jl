@@ -110,6 +110,8 @@ timestamps = range(1, 50, step = 1)
     end
 end
 
+# ![](topoplot_animation_UM.gif)
+
 # UnfoldMakie with .mp4
 
 @benchmark begin
@@ -126,6 +128,8 @@ end
     end
 end
 
+# ![](topoplot_animation_UM.mp4)
+
 # MNE with .gif
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
@@ -137,35 +141,4 @@ end
     anim.save("topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
 
-# test
-
 # ![](topomap_animation_mne.gif)
-
-# test
-
-# ![](../../../assets/topomap_animation_mne.gif)
-
-# Animations
-
-# ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../assets/topoplot_animation_UM.mp4" align="middle" />
-# ```
-
-# test test test
-
-# ```@raw html
-# <video autoplay loop muted playsinline controls src="../../../assets/topomap_animation_mne.mp4" align="middle" />
-# ```
-
-
-# test
-
-# ```@raw html
-# <img src="../../../assets/topoplot_animation_UM.gif" align="middle" />
-# ```
-
-# test
-
-# ```@raw html
-# <img src="../../../assets/topomap_animation_mne.gif" align="middle" />
-# ```
