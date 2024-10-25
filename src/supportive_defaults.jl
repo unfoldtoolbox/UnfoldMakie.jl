@@ -22,10 +22,10 @@ function supportive_defaults(cfg_symb::Symbol)
     elseif cfg_symb == :superlabel_default
         return (; fontsize = 20, padding = (0, 0, 40, 0))
         # plot_butterfly
-    elseif cfg_symb == :topo_default_single
+    elseif cfg_symb == :topo_default_single_butterfly
         return (;
-            width = Relative(1),
-            height = Relative(1),
+            width = Relative(0.35),
+            height = Relative(0.35),
             halign = 0.05,
             valign = 0.95,
             aspect = 1,
@@ -55,9 +55,18 @@ function supportive_defaults(cfg_symb::Symbol)
         return (; color = :deepskyblue3)
     elseif cfg_symb == :labels_grid_default
         return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
-        # plot_topoplot and plot_topoplotseries
+        # plot_topoplot 
+    elseif cfg_symb == :topo_default_single
+        return (;
+            width = Relative(1),
+            height = Relative(1),
+            halign = 0.05,
+            valign = 0.95,
+            aspect = 1,
+        )
     elseif cfg_symb == :topo_attributes_default
         return (; interp_resolution = (128, 128), interpolation = CloughTocher())
+        # plot_topoplotseries
     elseif cfg_symb == :topo_default_series
         return (;
             aspect = 1,
