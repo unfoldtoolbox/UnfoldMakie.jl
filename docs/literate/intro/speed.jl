@@ -1,5 +1,5 @@
 # # Speed measurement
-# Here we will compare the speed of plotting UnfoldMakie with MNE and MATLAB (partially).
+# Here we will compare the speed of plotting UnfoldMakie with MNE (Python) and EEGLAB (MATLAB).
 #
 # Three cases are measured: 
 # - Single topoplot
@@ -92,18 +92,17 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 # # Animation 
 # The main advantage of Julia is the speed with which the figures are updated.
 
-dat_obs = Observable(dat[:, 1, 1])
 timestamps = range(1, 50, step = 1)
 
 # UnfoldMakie with .gif
 
 @benchmark begin
     f = Makie.Figure()
+    dat_obs = Observable(dat[:, 1, 1])
     plot_topoplot!(
         f[1, 1],
         dat_obs,
         positions = positions,
-        topo_attributes = (; interpolation = DelaunayMesh()),
     )
     record(
         f,
@@ -111,7 +110,7 @@ timestamps = range(1, 50, step = 1)
         timestamps;
         framerate = 1,
     ) do t
-        dat_obs[] .= @view(dat[:, t, 1])
+        dat_obs[] = @view(dat[:, t, 1])
     end
 end
 
@@ -119,11 +118,11 @@ end
 
 @benchmark begin
     f = Makie.Figure()
+    dat_obs = Observable(dat[:, 1, 1])
     plot_topoplot!(
         f,
         dat_obs;
         positions = positions,
-        topo_attributes = (; interpolation = DelaunayMesh()),
     )
     record(
         f,
@@ -131,7 +130,7 @@ end
         timestamps;
         framerate = 1,
     ) do t
-        dat_obs[] .= @view(dat[:, t, 1])
+        dat_obs[] = @view(dat[:, t, 1])
     end
 end
 
@@ -141,13 +140,9 @@ end
         times = Py(timestamps),
         frame_rate = 1,
         blit = false,
-        image_interp = "linear", # same as DelaunayMesh
+        #image_interp = "linear", # same as DelaunayMesh
     )
-    anim.save(
-        "../../../src/assets/topomap_animation_mne.gif",
-        writer = "writergif",
-        fps = 1,
-    )
+    anim.save("topomap_animation_mne.gif", writer = "writergif", fps = 1)
 end
 
 # Animations
@@ -165,5 +160,7 @@ end
 # test
 
 # ```@raw html
-# <img src="../../../assets/topoplot_animation_mne.gif" align="middle" />
+# <img src="../../../assets/topomap_animation_mne.gif" align="middle" />
 # ```
+
+# ![](topomap_animation_mne.gif)
