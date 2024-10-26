@@ -15,6 +15,7 @@ using Observables
 using CairoMakie
 using FFMPEG_jll
 
+
 # Data input 
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
@@ -82,13 +83,16 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
 # MATLAB
 #
-# At present, it is not possible to run MATLAB within a Julia environment on GitHub. As a result, we can only provide a screenshot of the program execution.
-
+# It is not easy to run MatLab as a GitHub action. Therefore, we provide execution times of three consecutive executions on a relatively fast machine (64 cores, from 2020).
 # ```@raw html
 # <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
 # ```
 
+# test
+
 # ![](MATLAB_benchmarking.png)
+
+# test
 
 # # Animation 
 # The main advantage of Julia is the speed with which the figures are updated.
