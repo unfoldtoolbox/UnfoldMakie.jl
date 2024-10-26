@@ -62,16 +62,6 @@ end
     )
 end
 
-# UnfoldMakie.jl with DelaunayMesh
-@benchmark begin
-    plot_topoplotseries(
-        df;
-        bin_num = 50,
-        positions = positions,
-        topo_attributes = (; interpolation = DelaunayMesh()),
-    )
-end
-
 # MNE
 easycap_montage = PyMNE.channels.make_standard_montage("standard_1020")
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
@@ -84,15 +74,11 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 # MATLAB
 #
 # It is not easy to run MatLab as a GitHub action. Therefore, we provide execution times of three consecutive executions on a relatively fast machine (64 cores, from 2020).
+
 # ```@raw html
 # <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
 # ```
 
-# test
-
-# ![](MATLAB_benchmarking.png)
-
-# test
 
 # # Animation 
 # The main advantage of Julia is the speed with which the figures are updated.
