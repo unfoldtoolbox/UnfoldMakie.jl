@@ -47,7 +47,7 @@ Multiple miniature topoplots in regular distances.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_attributes_default))
+    Defaults: $(supportive_defaults(:topo_default_attributes))
 
 Code description:
 - 
@@ -85,7 +85,7 @@ function plot_topoplotseries!(
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
     topo_attributes = update_axis(
-        supportive_defaults(:topo_attributes_default);
+        supportive_defaults(:topo_default_attributes);
         topo_attributes...,
         config.visual...,
     )

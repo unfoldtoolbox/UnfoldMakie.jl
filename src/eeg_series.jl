@@ -81,7 +81,7 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_attributes_default)).
+    Defaults: $(supportive_defaults(:topo_default_attributes)).
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
@@ -172,11 +172,11 @@ function eeg_topoplot_series!(
             df_single =
                 topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
             single_y = @lift($df_single[:, y])
-            if isempty(to_value(single_y))
+            if isempty(to_value(single_y)) # exits the loop if there is no data for a new topoplot.
                 break
             end
 
-            ax = Axis(     #here we loose 30 seconds
+            ax = Axis(
                 fig[:, :][r, c];
                 topo_axis...,
                 xlabel = label_management(cat_or_cont_columns, df_single, col),
