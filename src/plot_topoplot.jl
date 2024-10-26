@@ -22,7 +22,7 @@ Plot a topoplot.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_attributes_default))
+    Defaults: $(supportive_defaults(:topo_default_attributes))
 $(_docstring(:topoplot))
 
 **Return Value:** `Figure` displaying the Topoplot.
@@ -70,7 +70,7 @@ function plot_topoplot!(
     end
     positions = get_topo_positions(; positions = positions, labels = labels)
     topo_attributes =
-        update_axis(supportive_defaults(:topo_attributes_default); topo_attributes...)
+        update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
     inner_axis = Axis(f[1, 1]; topo_axis...)
     if isa(high_chan, Int) || isa(high_chan, Vector{Int64})

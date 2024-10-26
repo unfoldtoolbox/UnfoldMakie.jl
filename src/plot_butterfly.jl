@@ -33,7 +33,7 @@ Plot a Butterfly plot.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_attributes_default_butterfly))
+    Defaults: $(supportive_defaults(:topo_default_attributes_butterfly))
 - `mapping = (;)`\\
     For highlighting specific channels.\\
     Example: `mapping = (; color = :highlight))`, where `:highlight` is variable with appopriate mapping.
@@ -133,7 +133,7 @@ function plot_butterfly!(
         topo_axis =
             update_axis(supportive_defaults(:topo_default_single_butterfly); topo_axis...)
         topo_attributes = update_axis(
-            supportive_defaults(:topo_attributes_default_butterfly);
+            supportive_defaults(:topo_default_attributes_butterfly);
             topo_attributes...,
         )
         ix = unique(i -> plot_data[:, config.mapping.group[1]][i], 1:size(plot_data, 1))

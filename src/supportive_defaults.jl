@@ -30,7 +30,7 @@ function supportive_defaults(cfg_symb::Symbol)
             valign = 0.95,
             aspect = 1,
         )
-    elseif cfg_symb == :topo_attributes_default_butterfly
+    elseif cfg_symb == :topo_default_attributes_butterfly
         return (;
             head = (color = :black, linewidth = 1),
             label_scatter = (markersize = 10, strokewidth = 0.5),
@@ -64,7 +64,7 @@ function supportive_defaults(cfg_symb::Symbol)
             valign = 0.95,
             aspect = 1,
         )
-    elseif cfg_symb == :topo_attributes_default
+    elseif cfg_symb == :topo_default_attributes
         return (; interp_resolution = (128, 128), interpolation = CloughTocher())
         # plot_topoplotseries
     elseif cfg_symb == :topo_default_series
