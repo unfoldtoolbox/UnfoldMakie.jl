@@ -62,11 +62,7 @@ function PlotConfig(T::Val{:circtopos})
     config_kwargs!(
         cfg;
         layout = (; show_legend = false),
-        colorbar = (;
-            labelrotation = -π / 2,
-            label = "Voltage [µV]",
-            colormap = Reverse(:RdBu),
-        ),
+        colorbar = (; labelrotation = -π / 2, label = "Voltage", colormap = Reverse(:RdBu)),
         mapping = (;),
         axis = (;
             label = ""
@@ -99,7 +95,7 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
-        colorbar = (; flipaxis = true, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, label = "Voltage"),
         axis = (; xlabel = "", aspect = DataAspect()),
     )
     return cfg
@@ -112,7 +108,7 @@ function PlotConfig(T::Val{:topoplotseries})
             title = "",
             titlesize = 16,
             titlefont = :bold,
-            xlabel = "Time windows [s]",
+            xlabel = "Time windows",
             ylabel = "",
             ylabelpadding = 25,
             xlabelpadding = 25,
@@ -124,7 +120,7 @@ function PlotConfig(T::Val{:topoplotseries})
             yrectzoom = false,
         ),
         layout = (; use_colorbar = true),
-        colorbar = (; flipaxis = true, label = "Voltage [µV]", colorrange = nothing),
+        colorbar = (; flipaxis = true, label = "Voltage", colorrange = nothing),
         visual = (;
             label_text = false, # true doesnt work again
             colormap = Reverse(:RdBu),
@@ -182,7 +178,7 @@ function PlotConfig(T::Val{:butterfly})
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
             group = (:channel,),
         ),
-        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
+        axis = (xlabel = "Time", ylabel = "Voltage", yticklabelsize = 14),
         visual = (; color = nothing, colormap = nothing),
     )
     return cfg
@@ -207,8 +203,8 @@ function PlotConfig(T::Val{:erp})
         ),
         legend = (; framevisible = false),
         axis = (
-            xlabel = "Time [s]",
-            ylabel = "Voltage [µV]",
+            xlabel = "Time",
+            ylabel = "Voltage",
             yticklabelsize = 14,
             xtickformat = "{:.1f}",
         ),
@@ -227,8 +223,8 @@ function PlotConfig(T::Val{:erpgrid})
         colorbar = (;),
         mapping = (;),
         axis = (
-            xlabel = "Time [s]",
-            ylabel = "Voltage [µV]",
+            xlabel = "Time",
+            ylabel = "Voltage",
             xlim = [-0.04, 1],
             ylim = [-0.04, 1],
             fontsize = 12,
@@ -242,8 +238,8 @@ function PlotConfig(T::Val{:channelimage})
     config_kwargs!(
         cfg;
         #layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]"),
-        axis = (xlabel = "Time [s]", ylabel = "Channels", yticklabelsize = 14),
+        colorbar = (; label = "Voltage"),
+        axis = (xlabel = "Time", ylabel = "Channels", yticklabelsize = 14),
         visual = (; colormap = Reverse("RdBu")), #cork
     )
     return cfg
@@ -253,8 +249,8 @@ function PlotConfig(T::Val{:erpimage})
     config_kwargs!(
         cfg;
         layout = (; use_colorbar = true),
-        colorbar = (; label = "Voltage [µV]"),
-        axis = (xlabel = "Time samples", ylabel = "Trials"),
+        colorbar = (; label = "Voltage"),
+        axis = (xlabel = "Time", ylabel = "Trials"),
         visual = (; colormap = Reverse("RdBu")),
     )
     return cfg
