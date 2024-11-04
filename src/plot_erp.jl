@@ -153,11 +153,15 @@ function plot_erp!(
     color_type = isa(config.mapping.color, Symbol) ? "nonnumeric" : config.mapping.color[2]
 
     scales_tmp = if !isa(plot_data[:, color_mapper][1], String) && color_type != nonnumeric
-        (; colormap = config.visual.colormap) # for continuous
+        drawing = draw!(
+            f_grid,
+            plot_equation,
+            scales(Color = (; colormap = config.visual.colormap));
+            axis = config.axis,
+        ) # for continuous
     else
-        (; palette = config.visual.color) # for categorical
+        drawing = draw!(f_grid, plot_equation; axis = config.axis) # for categorical
     end
-    drawing = draw!(f_grid, plot_equation, scales(Color = scales_tmp); axis = config.axis)
 
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
