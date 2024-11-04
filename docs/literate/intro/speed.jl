@@ -13,8 +13,6 @@ using PythonPlot
 using BenchmarkTools
 using Observables
 using CairoMakie
-using FFMPEG_jll
-
 
 # Data input 
 dat, positions = TopoPlots.example_data()
@@ -52,6 +50,8 @@ pydat = Py(dat[:, 320, 1])
 end
 
 # # Topoplot series
+
+# Note that UnfoldMakie and MNE have different defaults for displaying topoplot series. UnfoldMakie in plot_topoplot averages over time samples. MNE in plot_topopmap displays single samples without averaging.
 # UnfoldMakie.jl
 @benchmark begin
     plot_topoplotseries(
@@ -73,7 +73,8 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
 # MATLAB
 #
-# It is not easy to run MatLab as a GitHub action. Therefore, we provide execution times of three consecutive executions on a relatively fast machine (64 cores, from 2020).
+# It is not easy to run MATLAB as a GitHub action. Therefore, we provided execution times of three consecutive executions.
+# Executions were performed on a server with an AMD EPYC 7452 32-core processor.
 
 # ```@raw html
 # <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
@@ -103,11 +104,11 @@ end
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
-        frame_rate = 1,
+        frame_rate = framerate,
         blit = false,
         image_interp = "cubic", # same as CloughTocher
     )
-    anim.save("topomap_animation_mne.gif", writer = "writergif", fps = framerate)
+    anim.save("topomap_animation_mne.gif", writer = "ffmpeg", fps = framerate)
 end
 
 # ![](topomap_animation_mne.gif)
