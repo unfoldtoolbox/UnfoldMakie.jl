@@ -157,25 +157,21 @@ function ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
 end
 
 function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
-    @debug typeof(sortvalues)
-    @debug sortvalues
     if isnothing(to_value(sortvalues))
         error("`show_sortval` needs non-empty `sortvalues` argument")
     end
-    #=  if all(isnan, to_value(sortvalues))
-         error("`show_sortval` can not take `sortvalues` with all NaN-values")
-     end =#
+
     gb = f[1, 3] = GridLayout()
     sortplot_axis = update_axis(supportive_defaults(:sortplot_default); sortplot_axis...)
     ys = @lift(1:length($sortvalues))
     xs = @lift(sort($sortvalues))
     if !isa(sortvalues, Observable{Vector{String}})
-        @debug "test"
+        if all(isnan, to_value(sortvalues))
+            error("`show_sortval` can not take `sortvalues` with all NaN-values")
+        end
         axleft = Axis(
             gb[1:4, 1:5];
             xlabel = sortval_xlabel,
-            #xautolimitmargin = (-1, 1),
-            #yautolimitmargin = (1, 100),
             xticks = @lift([
                 round(minimum($sortvalues), digits = 2),
                 round(maximum($sortvalues), digits = 2),
@@ -191,7 +187,7 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
         lines!(axleft, xs, ys)
     else
         axleft = Axis(gb[1:4, 1:5]; xlabel = sortval_xlabel, sortplot_axis...)
-        lines!(axleft, xs, ys)
+        stairs!(axleft, ys, ys)
     end
 
     axempty = Axis(gb[5, 1])
