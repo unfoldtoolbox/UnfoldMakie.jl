@@ -51,7 +51,10 @@ end
 
 # # Topoplot series
 
-# Note that UnfoldMakie and MNE have different defaults for displaying topoplot series. UnfoldMakie in plot_topoplot averages over time samples. MNE in plot_topopmap displays single samples without averaging.
+# Note that UnfoldMakie and MNE have different defaults for displaying topoplot series. 
+# UnfoldMakie in `plot_topoplot` averages over time samples. 
+# MNE in `plot_topopmap` displays single samples without averaging.
+#
 # UnfoldMakie.jl
 @benchmark begin
     plot_topoplotseries(
