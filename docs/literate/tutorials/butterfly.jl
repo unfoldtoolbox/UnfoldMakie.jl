@@ -36,12 +36,12 @@ plot_butterfly(df)
 
 plot_butterfly(df; positions = pos)
 
-# You want to change size of topomarkers and size of topoplot:
+# You want to change size of topoplot markers and size of topoplot:
 
 plot_butterfly(
     df;
     positions = pos,
-    topomarkersize = 10,
+    topo_attributes = (; label_scatter = (; markersize = 30)),
     topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
 )
 
@@ -103,7 +103,7 @@ plot_butterfly(
     visual = (; color = 1:2, colormap = [gray, :red]),
 )
 
-# # Column Mappings for Butterfly Plot
+# # Column Mappings
 
 # Since butterfly plots use a `DataFrame` as input, the library needs to know the names of the columns used for plotting. You can set these mapping values by calling `plot_butterfly(...; mapping=(; :x=:time))`. Just specify a `NamedTuple`. Note the `;` right after the opening parentheses.
 
