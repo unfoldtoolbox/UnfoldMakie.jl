@@ -40,7 +40,7 @@ function supportive_defaults(cfg_symb::Symbol)
     elseif cfg_symb == :meanplot_default
         return (;
             height = 100,
-            xlabel = "Time [s]",
+            xlabel = "Time",
             xlabelpadding = 0,
             xautolimitmargin = (0, 0),
         )
