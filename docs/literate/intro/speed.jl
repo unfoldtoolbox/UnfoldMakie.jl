@@ -5,7 +5,8 @@
 # - Single topoplot
 # - Topoplot series with 50 topoplots
 # - Topoplott animation with 50 timestamps
-
+#
+# Note that the results of benchmarking on your computer and on Github may differ. 
 using UnfoldMakie
 using TopoPlots
 using PyMNE
@@ -76,8 +77,9 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
 # MATLAB
 #
-# It is not easy to run MATLAB as a GitHub action. Therefore, we provided execution times of three consecutive executions.
-# Executions were performed on a server with an AMD EPYC 7452 32-core processor.
+# Running MATLAB on a GitHub Action is not easy. 
+# So we benchmarked three consecutive executions (on a screenshot) on a server with an AMD EPYC 7452 32-core processor.
+# Note that Github and the server we used for MATLAB benchmarking are two different computers, which can give different timing results.
 
 # ```@raw html
 # <img src="../../../assets/MATLAB_benchmarking.png" align="middle"/>
