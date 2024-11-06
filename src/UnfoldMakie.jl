@@ -55,8 +55,10 @@ include("plot_topoplotseries.jl")
 
 include("plot_erp.jl")
 include("plot_butterfly.jl")
-include("plot_designmatrix.jl")
 include("plot_splines.jl")
+include("plot_designmatrix.jl")
+
+
 include("plot_topoplot.jl")
 include("plot_erpimage.jl")
 include("plot_parallelcoordinates.jl")

@@ -77,7 +77,7 @@ function plot_erpimage!(
     sortval_xlabel = Observable("Sorting variable"),
     meanplot_axis = (;),
     sortplot_axis = (;),
-    kwargs..., # not observables for a while ;)
+    kwargs...,
 )
     ga = f[1, 1:2] = GridLayout()
     sortvalues = _as_observable(sortvalues)
@@ -88,6 +88,7 @@ function plot_erpimage!(
     if isnothing(sortindex) && !isnothing(sortvalues)
         config_kwargs!(config; axis = (; ylabel = "Trials sorted"))
     end
+
     config_kwargs!(config; kwargs...)
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(ga[1:4, 1:4]; config.axis...)
@@ -100,7 +101,7 @@ function plot_erpimage!(
         size(to_value(data), 2),
     ]
     ax.yticklabelsvisible = true
-    sortindex = sortindex_managment(sortindex, sortvalues, data)
+    sortindex = sortindex_management(sortindex, sortvalues, data)
     filtered_data = @lift(
         UnfoldMakie.imfilter(
             $data[:, $sortindex],
@@ -159,35 +160,40 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     if isnothing(to_value(sortvalues))
         error("`show_sortval` needs non-empty `sortvalues` argument")
     end
-    if all(isnan, to_value(sortvalues))
-        error("`show_sortval` can not take `sortvalues` with all NaN-values")
-    end
+
     gb = f[1, 3] = GridLayout()
     sortplot_axis = update_axis(supportive_defaults(:sortplot_default); sortplot_axis...)
-    axleft = Axis(
-        gb[1:4, 1:5];
-        xlabel = sortval_xlabel,
-        #xautolimitmargin = (-1, 1),
-        #yautolimitmargin = (1, 100),
-        xticks = @lift([
-            round(minimum($sortvalues), digits = 2),
-            round(maximum($sortvalues), digits = 2),
-        ]),
-        limits = @lift((
-            minimum($sortvalues) - (maximum($sortvalues) / 100 * 3),
-            maximum($sortvalues) + (maximum($sortvalues) / 100 * 3),
-            0 - (length($sortvalues) / 100 * 3),
-            length($sortvalues) + (length($sortvalues) / 100 * 3), #they should be realtive
-        )),
-        sortplot_axis...,
-    )
     ys = @lift(1:length($sortvalues))
     xs = @lift(sort($sortvalues))
+    if !isa(sortvalues, Observable{Vector{String}})
+        if all(isnan, to_value(sortvalues))
+            error("`show_sortval` can not take `sortvalues` with all NaN-values")
+        end
+        axleft = Axis(
+            gb[1:4, 1:5];
+            xlabel = sortval_xlabel,
+            xticks = @lift([
+                round(minimum($sortvalues), digits = 2),
+                round(maximum($sortvalues), digits = 2),
+            ]),
+            limits = @lift((
+                minimum($sortvalues) - (maximum($sortvalues) / 100 * 3),
+                maximum($sortvalues) + (maximum($sortvalues) / 100 * 3),
+                0 - (length($sortvalues) / 100 * 3),
+                length($sortvalues) + (length($sortvalues) / 100 * 3), #they should be realtive
+            )),
+            sortplot_axis...,
+        )
+        lines!(axleft, xs, ys)
+    else
+        axleft = Axis(gb[1:4, 1:5]; xlabel = sortval_xlabel, sortplot_axis...)
+        stairs!(axleft, ys, ys)
+    end
+
     axempty = Axis(gb[5, 1])
     hidedecorations!(axempty)
     hidespines!(axempty)
     hidespines!(axleft, :r, :t)
-    lines!(axleft, xs, ys)
     if config.layout.use_colorbar != false
         Colorbar(
             gb[1:4, 6],
@@ -199,7 +205,7 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     apply_layout_settings!(config; fig = f, ax = axleft)
 end
 
-function sortindex_managment(sortindex, sortvalues, data)
+function sortindex_management(sortindex, sortvalues, data)
     if isnothing(to_value(sortindex))
         if isnothing(to_value(sortvalues))
             sortindex = @lift(1:size($data, 2))

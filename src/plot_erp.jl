@@ -31,6 +31,11 @@ Plot an ERP plot.
     Enable or disable legend.\\
 - `layout.show_legend = true`\\
     Enable or disable legend and colorbar.\\
+- `mapping = (;)`\\
+    Specify `color`, `col` (column), `linestyle`, `group`.\\
+    F.i. `mapping = (; col = :group)` will make a column for each group.
+- `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
+    For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
 
 $(_docstring(:erp))
 
@@ -142,7 +147,22 @@ function plot_erp!(
     plot_equation = basic * mapp
 
     f_grid = f[1, 1] = GridLayout()
-    drawing = draw!(f_grid, plot_equation; axis = config.axis)
+
+    color_mapper =
+        isa(config.mapping.color, Symbol) ? config.mapping.color : config.mapping.color[1]
+    color_type = isa(config.mapping.color, Symbol) ? "nonnumeric" : config.mapping.color[2]
+
+    scales_tmp = if !isa(plot_data[:, color_mapper][1], String) && color_type != nonnumeric
+        drawing = draw!(
+            f_grid,
+            plot_equation,
+            scales(Color = (; colormap = config.visual.colormap));
+            axis = config.axis,
+        ) # for continuous
+    else
+        drawing = draw!(f_grid, plot_equation; axis = config.axis) # for categorical
+    end
+
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true

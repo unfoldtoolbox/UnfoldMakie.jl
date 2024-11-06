@@ -274,3 +274,12 @@ end
     )
     f
 end
+
+@testset "toposeries: change interpolation" begin
+    plot_topoplotseries(
+        df;
+        bin_num = 2,
+        positions = positions,
+        topo_attributes = (; interpolation = DelaunayMesh()),
+    )
+end

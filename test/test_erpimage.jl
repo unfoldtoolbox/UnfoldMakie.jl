@@ -2,9 +2,15 @@ include("../docs/example_data.jl")
 
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 dat_e, evts_e, times = example_data("sort_data")
-@testset "ERP image basic" begin
-    plot_erpimage(dat;)
+
+@testset "ERP image with data matrix" begin
+    plot_erpimage(dat)
 end
+
+#= @testset "ERP image with data matrix" begin
+    plot_erpimage(Resampler(rand(10, 100000)))
+end
+ =#
 
 @testset "ERP image naked" begin
     f = Figure(; figure_padding = 0)
@@ -200,4 +206,9 @@ end
         show_sortval = true,
         sortplot_axis = (; title = "test"),
     )
+end
+
+@testset "ERP image with categorical sorting values" begin
+    tmp_d = rand(5, 10)
+    plot_erpimage(tmp_d, sortvalues = string.(1:10), show_sortval = true)
 end
