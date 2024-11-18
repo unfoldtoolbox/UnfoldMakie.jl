@@ -138,6 +138,7 @@ function eeg_topoplot_series!(
     topo_axis = (;),
     topo_attributes = (;),
     positions,
+    labels = nothing,
 )
     topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
 
@@ -175,16 +176,13 @@ function eeg_topoplot_series!(
             if isempty(to_value(single_y)) # exits the loop if there is no data for a new topoplot.
                 break
             end
-
             ax = Axis(
                 fig[:, :][r, c];
                 topo_axis...,
                 xlabel = label_management(cat_or_cont_columns, df_single, col),
             )
-            # select labels
-            labels = to_value(df_single)[:, label]
-            # select data
 
+            # select data
             topo_attributes = scatter_management(
                 single_y,
                 topo_attributes,
@@ -192,7 +190,8 @@ function eeg_topoplot_series!(
                 interactive_scatter,
             )
             single_topoplot =
-                eeg_topoplot!(ax, to_value(single_y), labels; positions, topo_attributes...)
+                eeg_topoplot!(ax, to_value(single_y); positions, labels, topo_attributes...)
+
             if rasterize_heatmaps
                 single_topoplot.plots[1].plots[1].rasterize = true
             end
@@ -227,7 +226,7 @@ function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c
     return df_single
 end
 
-function scatter_management( # should be chekec and simplified
+function scatter_management( # should be cheked and simplified
     single_y,
     topo_attributes,
     highlight_scatter,
