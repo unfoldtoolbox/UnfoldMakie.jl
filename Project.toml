@@ -55,7 +55,7 @@ PyMNE = "0.2"
 SparseArrays = "1"
 StaticArrays = "1"
 Statistics = "1"
-TopoPlots = "0.1"
+TopoPlots = "0.1, 0.2"
 Unfold = "0.6, 0.7"
 julia = "1"
 
