@@ -171,22 +171,23 @@ f
 
 # Use `visual` to specify channel labelss and channels markers.  `visual.label_text = true` makes channel names visible.
 
-f = Figure()
-df_col = UnfoldMakie.eeg_array_to_dataframe(data[1:4, :, 1], string.(1:4))
-labs4 = ["s1", "s2", "s3", "s4"]
-plot_topoplotseries!(
-    f[1, 1:5],
-    df_col;
-    bin_num = 2,
-    positions = positions[4:7],
-    labels = labs4,
-    visual = (;
-        label_scatter = (markersize = 15, strokecolor = "green", strokewidth = 2),
-        label_text = true,
-    ),
-)
-f
-
+begin
+    f = Figure()
+    df_col = UnfoldMakie.eeg_array_to_dataframe(data[1:4, :, 1], string.(1:4))
+    labs4 = ["s1", "s2", "s3", "s4"]
+    plot_topoplotseries!(
+        f[1, 1:5],
+        df_col;
+        bin_num = 2,
+        positions = positions[4:7],
+        labels = labs4,
+        visual = (;
+            label_scatter = (markersize = 15, color = "white", strokecolor = "green", strokewidth = 2),
+            label_text = true,
+        ),
+    )
+    f
+end
 # # Configurations of Topoplot series
 
 #=
