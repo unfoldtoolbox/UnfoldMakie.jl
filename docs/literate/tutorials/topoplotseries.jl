@@ -182,7 +182,12 @@ begin
         positions = positions[4:7],
         labels = labs4,
         visual = (;
-            label_scatter = (markersize = 15, color = "white", strokecolor = "green", strokewidth = 2),
+            label_scatter = (
+                markersize = 15,
+                color = "white",
+                strokecolor = "green",
+                strokewidth = 2,
+            ),
             label_text = true,
         ),
     )
