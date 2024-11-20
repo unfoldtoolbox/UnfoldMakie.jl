@@ -69,27 +69,30 @@ Example: `plot_topoplot(...; visual=(; label_text = true))`
 
 Example: `plot_topoplot(...; visual=(; label_scatter = true))`
 =#
-f = Figure(size = (500, 500))
-labs4 = ["O1", "F2", "F3", "P4"]
-plot_topoplot!(
-    f[1, 1],
-    dat[1:4, 340, 1];
-    positions = positions[1:4],
-    visual = (; label_scatter = false),
-    labels = labs4,
-    axis = (; title = "no channel scatter"),
-)
+begin
+    f = Figure(size = (500, 500))
+    labs4 = ["s1", "s2", "s3", "s4"]
+    plot_topoplot!(
+        f[1, 1],
+        dat[1:4, 340, 1];
+        positions = positions[1:4],
+        visual = (; label_scatter = false),
+        labels = labs4,
+        axis = (; xlabel = "", title = "No markers"),
+        colorbar = (; height = 100, 
+    ))
 
-plot_topoplot!(
-    f[1, 2],
-    dat[1:4, 340, 1];
-    positions = positions[1:4],
-    visual = (; label_text = true, label_scatter = (markersize = 15, strokewidth = 2)),
-    labels = labs4,
-    axis = (; title = "channel scatter with text"),
-    mapping = (; labels = labs4),
-)
-f
+    plot_topoplot!(
+        f[2, 1],
+        dat[1:4, 340, 1];
+        positions = positions[1:4],
+        visual = (; label_text = true, label_scatter = (markersize = 15, color = "white", strokecolor = "green", strokewidth = 2)),
+        labels = labs4,
+        axis = (; xlabel = "340 ms", title = "Markers with channel labels"),
+        mapping = (; labels = labs4),
+        colorbar = (; height = 100))
+    f
+end
 
 # # Highlighting channels
 plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
