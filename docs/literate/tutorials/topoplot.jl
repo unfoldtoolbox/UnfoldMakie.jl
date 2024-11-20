@@ -79,18 +79,27 @@ begin
         visual = (; label_scatter = false),
         labels = labs4,
         axis = (; xlabel = "", title = "No markers"),
-        colorbar = (; height = 100, 
-    ))
+        colorbar = (; height = 100,),
+    )
 
     plot_topoplot!(
         f[2, 1],
         dat[1:4, 340, 1];
         positions = positions[1:4],
-        visual = (; label_text = true, label_scatter = (markersize = 15, color = "white", strokecolor = "green", strokewidth = 2)),
+        visual = (;
+            label_text = true,
+            label_scatter = (
+                markersize = 15,
+                color = "white",
+                strokecolor = "green",
+                strokewidth = 2,
+            ),
+        ),
         labels = labs4,
         axis = (; xlabel = "340 ms", title = "Markers with channel labels"),
         mapping = (; labels = labs4),
-        colorbar = (; height = 100))
+        colorbar = (; height = 100),
+    )
     f
 end
 
