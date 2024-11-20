@@ -27,10 +27,10 @@ Multiple miniature topoplots in regular distances.
     This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything very slow.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels for categorical values. 
-- `labels::Vector{String} = nothing`\\
-    Show labels for each electrode.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
     Specify channel positions. Requires the list of x and y positions for all unique electrode.
+ - `labels::Vector{String} = nothing`\\
+    Show labels for each electrode.
 - `interactive_scatter = nothing`\\
     Enable interactive mode.\\
     If you create `obs_tuple = Observable((0, 0, 0))` and pass it into `interactive_scatter` you can update the observable tuple with the indices of the clicked topoplot markers.\\
@@ -48,7 +48,6 @@ Multiple miniature topoplots in regular distances.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(supportive_defaults(:topo_default_attributes))
-
 Code description:
 - 
 $(_docstring(:topoplotseries))
@@ -64,8 +63,8 @@ function plot_topoplotseries!(
     bin_width = nothing,
     bin_num = nothing,
     positions = nothing,
+    labels = nothing,
     nrows = 1,
-    labels = nothing, # rename to channel_labels?
     combinefun = mean,
     col_labels = false,
     row_labels = true,
@@ -90,6 +89,11 @@ function plot_topoplotseries!(
         config.visual...,
     )
 
+    if !isnothing(labels) && length(labels) != length(positions)
+        error(
+            "The length of `labels` differs from the length of `position`. Please make sure they are the same length.",
+        )
+    end
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     data_copy = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
@@ -125,7 +129,8 @@ function plot_topoplotseries!(
         axis = (; xlabel = string(config.mapping.col)),
     )
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
-    # overkll as we would only need to check the xlabel ;)
+    # overkill as we would only need to check the xlabel ;)
+
     ftopo, axlist, colorrange = eeg_topoplot_series!(
         f,
         data_row;
@@ -142,6 +147,7 @@ function plot_topoplotseries!(
         topo_axis = topo_axis,
         topo_attributes = topo_attributes,
         positions,
+        labels,
     )
     config_kwargs!(
         config,
@@ -156,6 +162,7 @@ function plot_topoplotseries!(
     if config.layout.use_colorbar == true
         Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
     end
+
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
 end
