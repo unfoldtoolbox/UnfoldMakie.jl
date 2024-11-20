@@ -178,10 +178,14 @@ end
     )
 end
 
-
 #TO DO
 # not working
 #= @testset "butterfly: with two size highlighted channels" begin
     df.highlight = in.(df.channel, Ref([10, 12]))
     plot_butterfly(df; positions = pos, mapping = (; linesize = :highlight))
 end =#
+
+@testset "butterfly: topoplot channel names" begin
+    plot_butterfly(df; positions = pos, 
+    topo_attributes = (; label_text = true, label_scatter = (; markersize = 10)))
+end
