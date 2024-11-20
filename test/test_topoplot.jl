@@ -49,7 +49,12 @@ end
 
 @testset "topoplot: labels" begin
     labels = ["s$i" for i = 1:size(dat[:, 150, 1], 1)]
-    plot_topoplot(dat[:, 150, 1], positions = positions; labels = labels)
+    plot_topoplot(
+        dat[:, 150, 1],
+        positions = positions;
+        labels = labels,
+        visual = (; label_text = true),
+    )
 end
 
 @testset "topoplot: GridSubposition" begin
@@ -64,7 +69,11 @@ end
 end
 
 @testset "topoplot: positions through labels" begin
-    plot_topoplot(dat[1:19, 50, 1]; labels = TopoPlots.CHANNELS_10_20)
+    plot_topoplot(
+        dat[1:19, 50, 1];
+        labels = TopoPlots.CHANNELS_10_20,
+        visual = (; label_text = true),
+    )
 end
 
 @testset "topoplot: change interpolation" begin
