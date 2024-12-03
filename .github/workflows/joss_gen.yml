@@ -2,8 +2,8 @@ name: JOSS generation
 on:
   push:
     paths:
-      - joss_paper/paper.md
-      - joss_paper/paper_cit.bib
+      - joss_paper/paper_UM.md
+      - joss_paper/paper_UM.bib
       - .github/workflows/joss.yml
       - joss_paper/plots/* # Trigger the paper generation workflow when the plots have changed (only works when the plots are pushed manually)
   workflow_call:
@@ -32,7 +32,7 @@ jobs:
         with:
           journal: joss
           # This should be the path to the paper within your repo.
-          paper-path: joss_paper/paper.md
+          paper-path: joss_paper/paper_UM.md
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
