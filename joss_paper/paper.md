@@ -30,7 +30,7 @@ affiliations:
    index: 2
 
 date: 30 October 2024
-bibliography: paper.bib
+bibliography: paper_cit.bib
 
 ---
 
