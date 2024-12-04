@@ -34,8 +34,8 @@ makedocs(;
         assets = String[],
     ),
     pages = [
-        "UnfoldMakie Documentation" => "index.md",
         "Intro" => [
+            "UnfoldMakie Highlights" => "index.md",
             "Installation" => "generated/intro/installation.md",
             "Plot types" => "generated/intro/plot_types.md",
             "Code principles" => "generated/intro/code_principles.md",
