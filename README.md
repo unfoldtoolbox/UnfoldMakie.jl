@@ -70,7 +70,7 @@ AppStore -> JuliaUp,  or `winget install julia -s msstore` in CMD
 `curl -fsSL https://install.julialang.org | sh` in any shell
 </details>
 
-### Installing Unfold
+### Installing UnfoldMakie.jl
 
 ```julia
 using Pkg

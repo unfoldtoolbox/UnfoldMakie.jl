@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: UnfoldMakie
+title: UnfoldMakie.jl
 message: 'If you use this page, please cite it as below.'
 type: software
 authors:
@@ -20,7 +20,7 @@ authors:
   orcid: 'https://orcid.org/0000-0002-6276-3332'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.6531996
+    value: 10.5281/zenodo.14046394
 repository-code: 'https://github.com/unfoldtoolbox/UnfoldMakie.jl'
-version: 0.3.5
+version: 0.5.9
 date-released: '2023-10-24'

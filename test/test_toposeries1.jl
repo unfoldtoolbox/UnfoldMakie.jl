@@ -60,9 +60,49 @@ end
     )
 end
 
-@testset "toposeries: channel names" begin
-    plot_topoplotseries(df; bin_width = 80, positions = positions, labels = raw_ch_names)
-end # doesnt work rn
+@testset "toposeries: channel names true" begin
+    plot_topoplotseries(
+        df;
+        bin_width = 80,
+        nrows = 3,
+        positions = positions,
+        visual = (; label_text = true),
+    )
+end
+
+@testset "toposeries: channel names given by user" begin
+    df_30 = UnfoldMakie.eeg_array_to_dataframe(dat[1:30, :, 1], string.(1:30))
+
+    plot_topoplotseries(
+        df_30;
+        bin_width = 80,
+        nrows = 3,
+        positions = positions[1:30],
+        labels = raw_ch_names,
+        visual = (; label_text = true),
+    )
+end
+
+@testset "error checking: different length of channel names gand positions" begin
+    err1 = nothing
+    t() = error(
+        plot_topoplotseries(
+            df;
+            bin_width = 80,
+            nrows = 3,
+            positions = positions,
+            labels = raw_ch_names,
+            visual = (; label_text = true),
+        ),
+    )
+    try
+        t()
+    catch err1
+    end
+    @test err1 == ErrorException(
+        "The length of `labels` differs from the length of `position`. Please make sure they are the same length.",
+    )
+end
 
 @testset "toposeries: xlabel" begin
     f = Figure()

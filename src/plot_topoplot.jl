@@ -79,8 +79,8 @@ function plot_topoplot!(
         clist = [:gray, high_color][Int.(x .+ 1)] #color for highlighting
         eeg_topoplot!(
             inner_axis,
-            data,
-            labels;
+            data;
+            labels = labels,
             positions,
             config.visual...,
             topo_attributes...,
@@ -92,8 +92,8 @@ function plot_topoplot!(
     else
         eeg_topoplot!(
             inner_axis,
-            data,
-            labels;
+            data;
+            labels = labels,
             positions,
             config.visual...,
             topo_attributes...,
