@@ -86,7 +86,7 @@ function PlotConfig(T::Val{:topoplot})
             contours = (color = :white, linewidth = 2),
             enlarge = 1,
             label_scatter = true,
-            label_text = true,
+            label_text = false,
             bounding_geometry = Circle,
             colormap = Reverse(:RdBu),
         ),
