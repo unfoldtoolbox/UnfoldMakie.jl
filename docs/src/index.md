@@ -1,12 +1,8 @@
-# UnfoldMakie Documentation
+# Highlights of UnfoldMakie.jl
 
 ```@raw html
 <img src="assets/complex_plot.png" width="300" align="right"/>
 ```
-
-This is the documentation of the UnfoldMakie.jl package for the Julia programming language. 
-
-## Highlights of UnfoldMakie.jl
 
 `UnfoldMakie.jl` excels in various fields:
 
