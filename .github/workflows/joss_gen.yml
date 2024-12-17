@@ -4,7 +4,7 @@ on:
     paths:
       - joss_paper/paper.md
       - joss_paper/paper_UM.bib
-      - .github/workflows/joss.yml
+      - .github/workflows/joss_gen.yml
       - joss_paper/plots/* # Trigger the paper generation workflow when the plots have changed (only works when the plots are pushed manually)
   workflow_call:
 
