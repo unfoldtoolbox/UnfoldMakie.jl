@@ -8,8 +8,7 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev)
 [![Build Status](https://github.com/unfoldtoolbox/UnfoldMakie.jl/workflows/CI/badge.svg)](https://github.com/unfoldtoolbox/UnfoldMakie.jl/actions)
 [![Coverage](https://codecov.io/gh/behinger/UnfoldMakie.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/behinger/UnfoldMakie.jl)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14192333.svg)](https://doi.org/10.5281/zenodo.14192333)
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14500860.svg)](https://doi.org/10.5281/zenodo.14192333)
 
 
 |rERP|EEG visualisation|EEG Simulations|BIDS pipeline|Decode EEG data|Statistical testing|
