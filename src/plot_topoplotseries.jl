@@ -28,7 +28,7 @@ Multiple miniature topoplots in regular distances.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels for categorical values. 
 - `positions::Vector{Point{2, Float32}} = nothing`\\
-    Specify channel positions. Requires the list of x and y positions for all unique electrode.
+    Specify channel positions. Requires the list of x and y positions for all unique electrodes.
  - `labels::Vector{String} = nothing`\\
     Show labels for each electrode.
 - `interactive_scatter = nothing`\\
@@ -48,8 +48,7 @@ Multiple miniature topoplots in regular distances.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(supportive_defaults(:topo_default_attributes))
-Code description:
-- 
+
 $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.
@@ -97,7 +96,6 @@ function plot_topoplotseries!(
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
 
-    #data_copy = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
     cat_or_cont_columns =
         @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     if to_value(cat_or_cont_columns) == "cat"
@@ -152,7 +150,7 @@ function plot_topoplotseries!(
     )
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;)
-
+    @debug typeof(to_value(xlabels))
     ftopo, axlist, colorrange = eeg_topoplot_series!(
         f[1, 1],
         data_row;
