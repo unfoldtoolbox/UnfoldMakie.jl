@@ -212,23 +212,6 @@ end
     )
 end
 
-@testset "basic eeg_topoplot_series" begin
-    df = DataFrame(
-        :erp => repeat(1:64, 100),
-        :cont_cuts => repeat(1:20, 5 * 64),
-        :label => repeat(1:64, 100),
-        :col_coord => repeat(1:5, 20 * 64),
-        :row_coord => repeat(1:1, 6400),
-    ) # simulated data
-    UnfoldMakie.eeg_topoplot_series(
-        df;
-        bin_width = 5,
-        positions = positions,
-        col = :col_coord,
-        row = :row_coord,
-    )
-end
-
 @testset "toposeries: GridSubposition" begin
     f = Figure(size = (500, 500))
     plot_topoplotseries!(
@@ -241,9 +224,6 @@ end
     )
 end
 
-@testset "eeg_array_to_dataframe" begin
-    eeg_array_to_dataframe(rand(2, 2))
-end
 
 @testset "contours" begin
     plot_topoplotseries(
@@ -321,5 +301,18 @@ end
         bin_num = 2,
         positions = positions,
         topo_attributes = (; interpolation = DelaunayMesh()),
+    )
+end
+
+@testset "eeg_array_to_dataframe" begin
+    eeg_array_to_dataframe(rand(2, 2))
+end
+
+@testset "eeg_topoplot_series" begin
+    matrix = rand(64, 5) # simulated data
+    UnfoldMakie.eeg_topoplot_series(
+        matrix;
+        layout = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
+        positions = positions,
     )
 end
