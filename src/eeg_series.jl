@@ -34,46 +34,26 @@ function eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVec
 end
 
 """
-    eeg_topoplot_series(data::DataFrame,
-        f,
-        data::DataFrame;
-        bin_width = nothing,
-        bin_num = nothing,
-        y = :erp,
-        label = :label,
-        col = :time,
-        row = nothing,
-        col_labels = false,
-        row_labels = false,
+     eeg_topoplot_series(data::DataFrame,
+        fig,
+        data_inp::Union{<:Observable,<:AbstractMatrix};
+        layout = nothing,
+        xlabels = nothing, # can be a vector too
+        labels = nothing,
         rasterize_heatmaps = true,
-        combinefun = mean,
-        xlim_topo,
-        ylim_topo,
-        topo_attributes...,
+        interactive_scatter = nothing,
+        highlight_scatter = false,
+        topo_axis = (;),
+        topo_attributes = (;),
+        positions,
     )
     eeg_topoplot_series!(fig, data::DataFrame; kwargs..)
 
 Plot a series of topoplots. 
 The function takes the `combinefun = mean` over the `:time` column of `data`.
-- `f` \\
+- `fig` \\
     Figure object. \\
-- `data::DataFrame`\\
-    Needs the columns `:time` and `y(=:erp)`, and `label(=:label)`. \\
-    If `data` is a matrix, it is automatically cast to a dataframe, time bins are in samples, labels are `string.(1:size(data,1))`.
-- `bin_width::Real = nothing`\\
-    Number specifing the width of bin of continuous x-value in its units.\\
-- `bin_num::Real = nothing`\\
-    Number of topoplots.\\
-    Either `bin_width`, or `bin_num` should be specified. Error if they are both specified\\
-    If `mapping.col` or `mapping.row` are categorical `bin_width` and `bin_num` stay as `nothing`.
-- `col`, `row = :time` \\
-    Specify the field to be divided into columns and rows. The default is `col = :time` to split by the time field and `row = nothing`. \\
-    Useful to split by a condition, e.g. `...(..., col = :time, row = :condition)` would result in multiple (as many as different values in `df.condition`) rows of topoplot series.
-- `row_labels`, `col_labels = false` \\
-    Indicate whether there should be labels in the plots in the first column to indicate the row value and in the last row to indicate the time (typically timerange).
-- `combinefun::Function = mean`\\
-    Specify how the samples are summarised.\\
-    Example functions: `mean`, `median`, `std`.  
+- `data::Union{<:Observable,<:AbstractMatrix}`\\
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
@@ -93,46 +73,12 @@ function eeg_topoplot_series(
     return eeg_topoplot_series!(Figure(; figure...), data; kwargs...)
 end
 
-# AbstractMatrix
 function eeg_topoplot_series!(
     fig,
-    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix};
-    kwargs...,
-)
-    return eeg_topoplot_series!(fig, data, string.(1:size(data, 1)); kwargs...)
-end
-
-# convert a 2D Matrix to the dataframe
-function eeg_topoplot_series(
-    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix},
-    labels;
-    kwargs...,
-)
-    return eeg_topoplot_series(eeg_array_to_dataframe(data, labels); kwargs...)
-end
-function eeg_topoplot_series!(
-    fig,
-    data::Union{<:Observable,<:DataFrame,<:AbstractMatrix},
-    labels;
-    kwargs...,
-)
-    return eeg_topoplot_series!(fig, eeg_array_to_dataframe(data, labels); kwargs...)
-end
-
-function eeg_topoplot_series!(
-    fig,
-    data::Union{<:Observable{<:DataFrame},<:DataFrame};
-    bin_width = nothing,
-    bin_num = nothing,
-    cat_or_cont_columns = "cont",
-    y = :erp,
-    label = :label,
-    col = :time,
-    row = nothing,
-    col_labels = false,
-    row_labels = false,
+    data_inp::Union{<:Observable,<:AbstractMatrix};
+    layout = nothing,
+    xlabels = nothing, # can be a vector too
     rasterize_heatmaps = true,
-    combinefun = mean,
     interactive_scatter = nothing,
     highlight_scatter = false,
     topo_axis = (;),
@@ -140,64 +86,53 @@ function eeg_topoplot_series!(
     positions,
     labels = nothing,
 )
+    # for performance, new variable name is necessary, as type might change
+    data = _as_observable(data_inp)
+
     topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
 
-    # aggregate the data over time bins
-    # using same colormap + contour levels for all plots
-    data = _as_observable(data)
-    select_col = isnothing(col) ? 1 : unique(to_value(data)[:, :col_coord])
-    select_row = isnothing(row) ? 1 : unique(to_value(data)[:, :row_coord])
-    if eltype(to_value(data)[!, col]) <: Number
-        data_mean = @lift(
-            data_binning(
-                $data;
-                col_y = y,
-                fun = combinefun,
-                grouping = [label, :col_coord, :row_coord],
-            )
-        )
-    else
-        # categorical detected, no binning necessary
-        data_mean = data
-    end
-    (q_min, q_max) = extract_colorrange(to_value(data_mean), y)
-    topo_attributes = update_axis(topo_attributes; colorrange = (q_min, q_max))
+    qminmax = @lift(extract_colorrange($data))
+    topo_attributes = update_axis(topo_attributes; colorrange = qminmax)
 
     # do the col/row plot
     axlist = []
     if interactive_scatter != nothing
         @assert isa(interactive_scatter, Observable)
     end
-    for r = 1:length(select_row)
-        for c = 1:length(select_col)
-            df_single =
-                topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
-            single_y = @lift($df_single[:, y])
-            if isempty(to_value(single_y)) # exits the loop if there is no data for a new topoplot.
-                break
-            end
-            ax = Axis(
-                fig[:, :][r, c];
-                topo_axis...,
-                xlabel = label_management(cat_or_cont_columns, df_single, col),
-            )
 
-            # select data
-            topo_attributes = scatter_management(
-                single_y,
-                topo_attributes,
-                highlight_scatter,
-                interactive_scatter,
-            )
-            single_topoplot =
-                eeg_topoplot!(ax, to_value(single_y); positions, labels, topo_attributes...)
+    for t_idx = 1:size(to_value(data), 2)
 
-            if rasterize_heatmaps
-                single_topoplot.plots[1].plots[1].rasterize = true
-            end
-            interactive_toposeries(interactive_scatter, single_topoplot, r, c)
-            push!(axlist, ax)
+        single_y = @lift $data[:, t_idx]
+        if isnothing(layout)
+            r = 1
+            c = size(fig.layout, 2) + 1
+
+        else
+            r = layout[t_idx][1]
+            c = layout[t_idx][2]
         end
+        #@show r c topo_axis xlabels t_idx
+        #@show xlabels
+        ax = Axis(
+            fig[r, c];
+            topo_axis...,
+            xlabel = isnothing(xlabels) ? "" : to_value(xlabels)[t_idx],
+        )
+        # select data
+        topo_attributes = scatter_management(
+            single_y,
+            topo_attributes,
+            highlight_scatter,
+            interactive_scatter,
+        )
+        single_topoplot = eeg_topoplot!(ax, single_y; positions, labels, topo_attributes...)
+
+        if rasterize_heatmaps
+            single_topoplot.plots[1].plots[1].rasterize = true
+        end
+        interactive_toposeries(interactive_scatter, single_topoplot, r, c) #TODO
+        push!(axlist, ax)
+
     end
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
