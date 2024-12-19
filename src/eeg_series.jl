@@ -38,7 +38,7 @@ end
         fig,
         data_inp::Union{<:Observable,<:AbstractMatrix};
         layout = nothing,
-        xlabels = nothing, # can be a vector too
+        xlabels = nothing,
         labels = nothing,
         rasterize_heatmaps = true,
         interactive_scatter = nothing,
@@ -54,6 +54,11 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
 - `fig` \\
     Figure object. \\
 - `data::Union{<:Observable,<:AbstractMatrix}`\\
+    Matrix with size = (n_channel, n_topoplots).
+- `layout::Vector{Tuple{Int64, Int64}}`\\
+    Vector of tuples with coordinates for each topoplot.
+- `xlabels::Vector{String}`\\
+    Vector of xlabels for each topoplot. 
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
@@ -62,6 +67,8 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(supportive_defaults(:topo_default_attributes)).
+- `positions::Vector{Point{2, Float32}}`\\
+    Channel positions. The list of x and y positions for all unique electrodes. 
 
 **Return Value:** `Tuple{Figure, Vector{Any}}`.
 """
