@@ -103,12 +103,13 @@ function plot_topoplotseries!(
     if to_value(cat_or_cont_columns) == "cat"
         # overwrite 'Time windows [s]' default if categorical
         n_topoplots =
-            number_of_topoplots(data; bin_width, bin_num, bins = 0, config.mapping)
-        #ix =
-        #    findall.(
-        #        isequal.(unique(data_copy[!, config.mapping.col])),
-        #        [data_copy[!, config.mapping.col]],
-        #    )
+            @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
+        df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
+        df_combined = @lift combine($df_grouped, :estimate => mean)
+        data_unstacked = @lift unstack($df_combined, :channel, :estimate_mean)
+        data_row = @lift Matrix($data_unstacked[:, 2:end])'
+
+
     else
         bins = @lift bins_estimation(
             $data[!, config.mapping.col];
@@ -116,6 +117,7 @@ function plot_topoplotseries!(
             bin_num,
             cat_or_cont_columns = $cat_or_cont_columns,
         )
+
         n_topoplots = @lift number_of_topoplots(
             $data;
             bin_width,
@@ -125,13 +127,22 @@ function plot_topoplotseries!(
         )
 
         cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
+        on(cont_cuts, update = true) do s
+            data_cuts[][!, :cont_cuts] .= string.(s)
+        end
 
-        #unique_cuts = unique(to_value(data_cuts).cont_cuts)
+        data_binned = @lift data_binning(
+            $data_cuts;
+            col_y = config.mapping.y,
+            fun = combinefun,
+            grouping = [chan_or_label],
+        )
+        data_unstacked = @lift unstack($data_binned, :channel, :estimate)
+        data_row = @lift Matrix($data_unstacked[:, 2:end])'
 
-        #ix = findall.(isequal.(unique_cuts), [to_value(data_cuts).cont_cuts])
     end
+    xlabels = @lift string.($data_unstacked[:, 1])
     rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
-
     layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
 
     config_kwargs!(
@@ -141,20 +152,6 @@ function plot_topoplotseries!(
     )
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;)
-
-    on(cont_cuts, update = true) do s
-        data_cuts[][!, :cont_cuts] .= string.(s)
-    end
-    data_binned = @lift data_binning(
-        $data_cuts;
-        col_y = config.mapping.y,
-        fun = combinefun,
-        grouping = [chan_or_label],
-    )
-
-    data_unstacked = @lift unstack($data_binned, :channel, :estimate)
-    data_row = @lift Matrix($data_unstacked[:, 2:end])'
-    xlabels = @lift string.($data_unstacked[:, 1])
 
     ftopo, axlist, colorrange = eeg_topoplot_series!(
         f[1, 1],
@@ -204,12 +201,6 @@ function row_col_management(n_topoplots, nrows, config)
     end
     col_coord = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
     row_coord = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-    #data.col_coord .= 1
-    #data.row_coord .= 1
-    #for topo = 1:n_topoplots
-    #    data.col_coord[ix[topo]] .= col_coord[topo]
-    #    data.row_coord[ix[topo]] .= row_coord[topo]
-    #end
     return row_coord, col_coord
 end
 
