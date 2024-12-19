@@ -104,7 +104,7 @@ end
     )
 end
 
-@testset "toposeries: xlabel" begin
+@testset "toposeries: xlabel as text" begin
     f = Figure()
     ax = Axis(f[1, 1])
     plot_topoplotseries!(f[1, 1], df; bin_width = 80, positions = positions)
