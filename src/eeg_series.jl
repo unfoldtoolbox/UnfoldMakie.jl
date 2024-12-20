@@ -1,39 +1,4 @@
 """
-    eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
-    eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
-    eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
-
-Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
-
-Format of Arrays:\\
-- times x condition for plot\\_erp.\\
-- channels x time for plot\\_butterfly, plot\\_topoplotseries.\\
-- channels for plot\\_topoplot.\\
-
-**Return Value:** `DataFrame`.
-"""
-eeg_array_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
-    eeg_array_to_dataframe(data, string.(1:size(data, 1)))
-
-eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector) =
-    eeg_array_to_dataframe(reshape(data, 1, :), label_aliases)
-
-function eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
-    array_to_df(data, label_aliases) = DataFrame(data', label_aliases)
-    array_to_df(data::LinearAlgebra.Adjoint{<:Number,<:AbstractVector}, label_aliases) =
-        DataFrame(collect(data)', label_aliases)
-
-    df = array_to_df(data, label_aliases)
-    df[!, :time] .= 1:nrow(df)
-
-    df = stack(df, Not([:time]); variable_name = :label_aliases, value_name = "estimate")
-    df.color = df.label_aliases
-    df.group = df.label_aliases
-    df.channel = df.label_aliases
-    return df
-end
-
-"""
      eeg_topoplot_series(data::DataFrame,
         fig,
         data_inp::Union{<:Observable,<:AbstractMatrix};
@@ -209,26 +174,36 @@ function interactive_toposeries(interactive_scatter, single_topoplot, r, c)
 end
 
 """
-    data_binning(df; col_y = :erp, fun = mean, grouping = [])
-Group `DataFrame` according to topoplot coordinates and apply aggregation function.
+    eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
+    eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
+    eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
 
-Arguments:
-- `df::AbstractTable`\\
-    Requires columns `:cont_cuts`, `col_y` (default `:erp`), and all columns in `grouping` (`col_coord`, `row_coord`, `label`);
-- `col_y = :erp` \\
-    The column to combine over (with `fun`);
-- `fun = mean()`\\
-    Function to combine.
-- `grouping = []`\\
-    Vector of symbols or strings, columns to group by the data before aggregation. Values of `nothing` are ignored.
+Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
+
+Format of Arrays:\\
+- times x condition for plot\\_erp.\\
+- channels x time for plot\\_butterfly, plot\\_topoplotseries.\\
+- channels for plot\\_topoplot.\\
 
 **Return Value:** `DataFrame`.
 """
-function data_binning(df; col_y = :erp, fun = mean, grouping = [])
-    df = deepcopy(df) # cut seems to change stuff inplace
-    grouping = grouping[.!isnothing.(grouping)]
-    df_grouped = groupby(df, unique([:cont_cuts, grouping...]))
-    df_combined = combine(df_grouped, col_y => fun)
-    rename!(df_combined, names(df_combined)[end] => col_y) # renames estimate_fun to estimate    
-    return df_combined
+eeg_array_to_dataframe(data::Union{AbstractMatrix,AbstractVector{<:Number}}) =
+    eeg_array_to_dataframe(data, string.(1:size(data, 1)))
+
+eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector) =
+    eeg_array_to_dataframe(reshape(data, 1, :), label_aliases)
+
+function eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
+    array_to_df(data, label_aliases) = DataFrame(data', label_aliases)
+    array_to_df(data::LinearAlgebra.Adjoint{<:Number,<:AbstractVector}, label_aliases) =
+        DataFrame(collect(data)', label_aliases)
+
+    df = array_to_df(data, label_aliases)
+    df[!, :time] .= 1:nrow(df)
+
+    df = stack(df, Not([:time]); variable_name = :label_aliases, value_name = "estimate")
+    df.color = df.label_aliases
+    df.group = df.label_aliases
+    df.channel = df.label_aliases
+    return df
 end
