@@ -62,3 +62,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
+
+      - name: Update UnfoldDocs
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.UNFOLDDOCSPAT }}
+          repository: unfoldtoolbox/UnfoldDocs
+          event-type: individual-docs-updated
