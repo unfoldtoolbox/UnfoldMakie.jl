@@ -1,5 +1,5 @@
 ---
-title: '`UnfoldMakie.jl`: EEG/ERP visualization package'
+title: 'UnfoldMakie.jl: EEG/ERP visualization package'
 
 tags:
   - Julia
