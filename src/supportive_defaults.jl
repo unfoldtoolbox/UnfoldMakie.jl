@@ -62,7 +62,7 @@ function supportive_defaults(cfg_symb::Symbol)
             height = Relative(1),
             halign = 0.05,
             valign = 0.95,
-            aspect = 1,
+            aspect = DataAspect(),
         )
     elseif cfg_symb == :topo_default_attributes
         return (; interp_resolution = (128, 128), interpolation = CloughTocher())

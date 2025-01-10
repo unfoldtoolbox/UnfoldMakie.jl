@@ -56,7 +56,7 @@ function plot_topoplot!(
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
-    outer_axis = Axis(f[1, 1]; config.axis...)
+    outer_axis = Axis(f[1:4, 1]; config.axis...)
     hidespines!(outer_axis)
     hidedecorations!(outer_axis, label = false)
 
@@ -72,7 +72,7 @@ function plot_topoplot!(
     topo_attributes =
         update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
-    inner_axis = Axis(f[1, 1]; topo_axis...)
+    inner_axis = Axis(f[1:4, 1]; topo_axis...)
     if isa(high_chan, Int) || isa(high_chan, Vector{Int64})
         x = zeros(length(positions))
         isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
@@ -100,10 +100,6 @@ function plot_topoplot!(
         )
     end
 
-
-    if config.layout.use_colorbar == true
-        Colorbar(f[:, 2]; colormap = config.visual.colormap, config.colorbar...)
-    end
     clims = @lift (min($data...), max($data...))
     if clims[][1] ≈ clims[][2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
@@ -111,7 +107,20 @@ We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
-        config_kwargs!(config, colorbar = (; limits = clims))
+        ticks = LinRange(clims[][1], clims[][2], 5)
+        rounded_ticks = round.(ticks, digits = 2)  # Round to 2 decimal places
+        config_kwargs!(
+            config,
+            colorbar = (; ticks = (ticks, string.(rounded_ticks)), limits = clims),
+        )
+    end
+    if config.layout.use_colorbar == true
+        if config.colorbar.vertical == true
+            Colorbar(f[1:4, 2]; colormap = config.visual.colormap, config.colorbar...)
+        else
+            config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
+            Colorbar(f[5, 1]; colormap = config.visual.colormap, config.colorbar...)
+        end
     end
     apply_layout_settings!(config; fig = f)
     return f
