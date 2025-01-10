@@ -57,10 +57,10 @@ function cart2pol(x, y)
     return θ, r
 end
 
-function extract_colorrange(data_mean, y)
+function extract_colorrange(data_mean)
     # aggregate the data over time bins
     # using same colormap + contour levels for all plots
-    (q_min, q_max) = Statistics.quantile(data_mean[:, y], [0.001, 0.999])
+    (q_min, q_max) = Statistics.quantile(data_mean, [0.001, 0.999])
     # make them symmetrical
     q_min = q_max = max(abs(q_min), abs(q_max))
     q_min = -q_min

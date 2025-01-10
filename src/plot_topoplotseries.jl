@@ -28,7 +28,7 @@ Multiple miniature topoplots in regular distances.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
     Shows column and row labels for categorical values. 
 - `positions::Vector{Point{2, Float32}} = nothing`\\
-    Specify channel positions. Requires the list of x and y positions for all unique electrode.
+    Specify channel positions. Requires the list of x and y positions for all unique electrodes.
  - `labels::Vector{String} = nothing`\\
     Show labels for each electrode.
 - `interactive_scatter = nothing`\\
@@ -48,8 +48,7 @@ Multiple miniature topoplots in regular distances.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(supportive_defaults(:topo_default_attributes))
-Code description:
-- 
+
 $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.
@@ -59,7 +58,7 @@ plot_topoplotseries(data::Union{<:Observable{<:DataFrame},DataFrame}; kwargs...)
 
 function plot_topoplotseries!(
     f::Union{GridPosition,GridLayout,Figure,GridLayoutBase.GridSubposition},
-    data::Union{<:Observable{<:DataFrame},DataFrame};
+    data_inp::Union{<:Observable{<:DataFrame},DataFrame};
     bin_width = nothing,
     bin_num = nothing,
     positions = nothing,
@@ -75,8 +74,8 @@ function plot_topoplotseries!(
     kwargs...,
 )
 
-    data = _as_observable(data)
-    data_cuts = data
+    data = _as_observable(data_inp)
+    data_cuts = @lift deepcopy($data)
     positions = get_topo_positions(; positions = positions, labels = labels)
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
@@ -96,33 +95,54 @@ function plot_topoplotseries!(
     end
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
-    data_copy = deepcopy(to_value(data)) # deepcopy prevents overwriting initial data
+
     cat_or_cont_columns =
-        eltype(data_copy[!, config.mapping.col]) <: Number ? "cont" : "cat"
-    if cat_or_cont_columns == "cat"
+        @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
+    if to_value(cat_or_cont_columns) == "cat"
         # overwrite 'Time windows [s]' default if categorical
         n_topoplots =
-            number_of_topoplots(data_copy; bin_width, bin_num, bins = 0, config.mapping)
-        ix =
-            findall.(
-                isequal.(unique(data_copy[!, config.mapping.col])),
-                [data_copy[!, config.mapping.col]],
-            )
+            @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
+        df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
+        df_combined = @lift combine($df_grouped, :estimate => mean)
+        data_unstacked = @lift unstack($df_combined, :channel, :estimate_mean)
+        data_row = @lift Matrix($data_unstacked[:, 2:end])'
+
+
     else
-        bins = bins_estimation(
-            data_copy[!, config.mapping.col];
+        bins = @lift bins_estimation(
+            $data[!, config.mapping.col];
             bin_width,
             bin_num,
-            cat_or_cont_columns,
+            cat_or_cont_columns = $cat_or_cont_columns,
         )
-        n_topoplots =
-            number_of_topoplots(data_copy; bin_width, bin_num, bins, config.mapping)
-        to_value(data_cuts).cont_cuts =
-            cut(to_value(data_cuts)[!, config.mapping.col], bins; extend = true)
-        unique_cuts = unique(to_value(data_cuts).cont_cuts)
-        ix = findall.(isequal.(unique_cuts), [to_value(data).cont_cuts])
+
+        n_topoplots = @lift number_of_topoplots(
+            $data;
+            bin_width,
+            bin_num,
+            bins = $bins,
+            config.mapping,
+        )
+
+        cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
+        on(cont_cuts, update = true) do s
+            data_cuts[][!, :cont_cuts] .= string.(s)
+        end
+
+        data_binned = @lift data_binning(
+            $data_cuts;
+            col_y = config.mapping.y,
+            fun = combinefun,
+            grouping = [chan_or_label],
+        )
+        data_unstacked = @lift unstack($data_binned, :channel, :estimate)
+        data_row = @lift Matrix($data_unstacked[:, 2:end])'
+
     end
-    data_row = @lift row_col_management($data_cuts, ix, n_topoplots, nrows, config)
+    xlabels = @lift string.($data_unstacked[:, 1])
+    rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
+    layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
+
     config_kwargs!(
         config;
         mapping = (; row = :row_coord, col = :col_coord),
@@ -130,19 +150,14 @@ function plot_topoplotseries!(
     )
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;)
-
     ftopo, axlist, colorrange = eeg_topoplot_series!(
-        f,
+        f[1, 1],
         data_row;
-        cat_or_cont_columns = cat_or_cont_columns,
-        y = config.mapping.y,
-        label = chan_or_label,
-        col = config.mapping.col,
-        row = config.mapping.row,
-        col_labels = col_labels,
-        row_labels = row_labels,
+        layout,
+        xlabels,
+        #col_labels = col_labels, # TODO
+        #row_labels = row_labels, # TODO
         rasterize_heatmaps = rasterize_heatmaps,
-        combinefun = combinefun,
         interactive_scatter = interactive_scatter,
         topo_axis = topo_axis,
         topo_attributes = topo_attributes,
@@ -165,73 +180,4 @@ function plot_topoplotseries!(
 
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
-end
-
-function row_col_management(data, ix, n_topoplots, nrows, config)
-    if :layout ∈ keys(config.mapping)
-        n_cols = Int(ceil(sqrt(n_topoplots)))
-        n_rows = Int(ceil(n_topoplots / n_cols))
-    else
-        n_rows = nrows
-        if 0 > n_topoplots / nrows
-            @warn "Impossible number of rows, set to 1 row"
-            n_rows = 1
-        elseif n_topoplots / nrows < 1
-            @warn "Impossible number of rows, set to $(n_topoplots) rows"
-        end
-        n_cols = Int(ceil(n_topoplots / n_rows))
-    end
-    col_coord = repeat(1:n_cols, outer = n_rows)[1:n_topoplots]
-    row_coord = repeat(1:n_rows, inner = n_cols)[1:n_topoplots]
-    data.col_coord .= 1
-    data.row_coord .= 1
-    for topo = 1:n_topoplots
-        data.col_coord[ix[topo]] .= col_coord[topo]
-        data.row_coord[ix[topo]] .= row_coord[topo]
-    end
-    return data
-end
-
-function bins_estimation(
-    continous_value;
-    bin_width = nothing,
-    bin_num = nothing,
-    cat_or_cont_columns = "cont",
-)
-    c_min = minimum(continous_value)
-    c_max = maximum(continous_value)
-    if (!isnothing(bin_width) && !isnothing(bin_num))
-        error("Ambigious parameters: specify only `bin_width` or `bin_num`.")
-    elseif (isnothing(bin_width) && isnothing(bin_num) && cat_or_cont_columns == "cont")
-        error(
-            "You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.",
-        )
-    end
-    if isnothing(bin_width)
-        bins = range(; start = c_min, length = bin_num + 1, stop = c_max)
-    else
-        bins = range(; start = c_min, step = bin_width, stop = c_max)
-    end
-    return bins
-end
-
-function number_of_topoplots(
-    df::DataFrame;
-    bin_width = nothing,
-    bin_num = nothing,
-    bins,
-    mapping = config.mapping,
-)
-    if !isnothing(bin_width) | !isnothing(bin_num)
-        if typeof(df[:, mapping.col]) == Vector{String}
-            error(
-                "Parameters `bin_width` or `bin_num` are only allowed with continonus `mapping.col` or `mapping.row`, while you specifed categorical.",
-            )
-        end
-        cont_new = cut(df[:, mapping.col], bins; extend = true)
-        n = length(unique(cont_new))
-    else
-        n = length(unique(df[:, mapping.col]))
-    end
-    return n
 end

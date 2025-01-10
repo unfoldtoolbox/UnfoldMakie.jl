@@ -52,6 +52,7 @@ include("supportive_defaults.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")
+include("toposeries_support.jl")
 
 include("plot_erp.jl")
 include("plot_butterfly.jl")
