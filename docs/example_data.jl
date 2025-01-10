@@ -9,9 +9,9 @@ using Random
 Creates example data or model. Currently, 3 datasets and 6 models are available.
 
 Datasets:
-- `TopoPlots.jl` (default) - 2 DataFrames from `TopoPlots.jl`:\\
-    - DataFrame with estimate, time, 64 channels, topopositions, sterror and pvalue and 800 ms time range.\\
-    - Posiions for 64 electrodes.
+- `TopoPlots.jl` (default) - provide 2 outputs from `TopoPlots.jl`:\\
+    - `Array{Float32, 3}` with 64 channels, 800 ms time range and 3 types of values (estimate, sterror and pvalue).\\
+    - `Vector{Point{2, Float32}}` with posiions for 64 electrodes.
 - `UnfoldLinearModelMultiChannel` - DataFrame with 5 channels, 3 coefnames, sterror, time and estimate.
 - `sort_data` - 2 DataFrames: 
     - `dat` for EEG recordings  and `evts` with event variables occured during experiment.\\
