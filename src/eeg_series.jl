@@ -31,7 +31,7 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_default_attributes)).
+    Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_")).
 - `positions::Vector{Point{2, Float32}}`\\
     Channel positions. The list of x and y positions for all unique electrodes. 
 

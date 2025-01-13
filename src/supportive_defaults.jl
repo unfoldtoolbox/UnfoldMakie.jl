@@ -8,7 +8,7 @@ Such supporting axes allow users to flexibly see defaults in docstrings and mani
 For developers: to make them updateable in the function, use `update_axis`.
 **Return value:** `NamedTuple`.
 """
-function supportive_defaults(cfg_symb::Symbol)
+function supportive_defaults(cfg_symb::Symbol; docstring = false)
     # plot_splines
     if cfg_symb == :spline_default
         return (;
@@ -65,7 +65,11 @@ function supportive_defaults(cfg_symb::Symbol)
             aspect = DataAspect(),
         )
     elseif cfg_symb == :topo_default_attributes
-        return (; interp_resolution = (128, 128), interpolation = CloughTocher())
+        if docstring == false
+            return (; interp_resolution = (128, 128), interpolation = CloughTocher())
+        else
+            return string("interp_resolution = (128, 128), interpolation = CloughTocher()")
+        end
         # plot_topoplotseries
     elseif cfg_symb == :topo_default_series
         return (;
