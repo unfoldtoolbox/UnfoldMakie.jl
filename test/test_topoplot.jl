@@ -104,3 +104,34 @@ end
     dat_obs[] = dat[:, 30, 1]
     plot_topoplot(dat_obs; positions = positions)
 end
+
+
+@testset "topoplot: horizontal colorbar" begin
+    plot_topoplot(
+        dat[:, 50, 1];
+        positions,
+        colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+        axis = (; xlabel = "50 ms"),
+    )
+end
+
+@testset "topoplot: std errors" begin
+    f = Figure()
+    plot_topoplot!(
+        f[:, 1],
+        dat[:, 50, 1];
+        positions,
+        colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+        axis = (; xlabel = "50 ms"),
+    )
+    plot_topoplot!(
+        f[:, 2],
+        dat[:, 50, 2];
+        positions,
+        colorbar = (; vertical = false, width = 180, label = "Voltage uncertainty"),
+        axis = (; xlabel = "50 ms"),
+        visual = (; colormap = :viridis),
+    )
+    colgap!(f.layout, 0)
+    f
+end

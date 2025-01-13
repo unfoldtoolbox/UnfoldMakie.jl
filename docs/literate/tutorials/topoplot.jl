@@ -106,6 +106,16 @@ end
 # # Highlighting channels
 plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
 
+
+# # Horizontal colorbars
+# Just switch `colorbar.vertical` to `false`
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+)
+
 # # Configurations of Topoplot
 
 # ```@docs
