@@ -22,7 +22,7 @@ Plot a topoplot.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
-    Defaults: $(supportive_defaults(:topo_default_attributes))
+    Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 $(_docstring(:topoplot))
 
 **Return Value:** `Figure` displaying the Topoplot.

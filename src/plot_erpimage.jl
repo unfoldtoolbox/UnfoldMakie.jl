@@ -12,7 +12,7 @@ Plot an ERP image.
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Union{DataFrame, Vector{Float32}}`\\
     Data for the plot visualization.
-        
+         
 ## Keyword arguments (kwargs) 
 - `erpblur::Number = 10`\\
     Number indicating how much blur is applied to the image. \\

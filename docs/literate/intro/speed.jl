@@ -106,6 +106,7 @@ end
 # ![](topoplot_animation_UM.gif)
 
 # MNE with .gif
+# Note that due to some bugs in (probably) `CondaPkg` topoplot is blac and white. 
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
