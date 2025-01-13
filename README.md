@@ -113,7 +113,10 @@ You are very welcome to submit issues and start pull requests!
 
 If you use these visualizations, please cite:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6531996.svg)](https://doi.org/10.5281/zenodo.6531996)
+
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07560/status.svg)](https://doi.org/10.21105/joss.07560) - this is our publication in *Journal of Open Source Software* on version 0.5.11. We recommend to cite this paper.
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14500860.svg)](https://doi.org/10.5281/zenodo.14192333) - this is DOI of the last version of UM.jl. Cite this or others DOIs if you need to mention specific version of the package. 
 
 ## Contributors
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
