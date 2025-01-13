@@ -56,7 +56,7 @@ function plot_topoplot!(
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
-    outer_axis = Axis(f[1:4, 1]; config.axis...)
+    outer_axis = Axis(f[1:4, 1:2]; config.axis...)
     hidespines!(outer_axis)
     hidedecorations!(outer_axis, label = false)
 
@@ -72,7 +72,8 @@ function plot_topoplot!(
     topo_attributes =
         update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
-    inner_axis = Axis(f[1:4, 1]; topo_axis...)
+    inner_axis = Axis(f[1:4, 1:2]; topo_axis...)
+
     if isa(high_chan, Int) || isa(high_chan, Vector{Int64})
         x = zeros(length(positions))
         isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
@@ -119,7 +120,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
             Colorbar(f[1:4, 2]; colormap = config.visual.colormap, config.colorbar...)
         else
             config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
-            Colorbar(f[5, 1]; colormap = config.visual.colormap, config.colorbar...)
+            Colorbar(f[5, 1:2]; colormap = config.visual.colormap, config.colorbar...)
         end
     end
     apply_layout_settings!(config; fig = f)
