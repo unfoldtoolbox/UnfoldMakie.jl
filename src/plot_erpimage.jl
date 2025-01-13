@@ -93,13 +93,8 @@ function plot_erpimage!(
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
     ax = Axis(ga[1:4, 1:4]; config.axis...)
 
-    ax.yticks = [
-        1,
-        size(to_value(data), 2) ÷ 4,
-        size(to_value(data), 2) ÷ 2,
-        size(to_value(data), 2) - (size(to_value(data), 2) ÷ 4),
-        size(to_value(data), 2),
-    ]
+    ax.yticks = LinRange(1, size(to_value(data), 2), 5)
+
     ax.yticklabelsvisible = true
     sortindex = sortindex_management(sortindex, sortvalues, data)
     filtered_data = @lift(
@@ -138,10 +133,14 @@ function ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
 
     trace = @lift(mean($data, dims = 2)[:, 1])
     meanplot_axis = update_axis(supportive_defaults(:meanplot_default); meanplot_axis...)
+    xticks = @lift(round.(LinRange(minimum($times), maximum($times), 5), digits = 2))
+    yticks = @lift(round.(LinRange(minimum($trace), maximum($trace), 5), digits = 1))
 
     axbottom = Axis(
         ga[5, 1:4];
         ylabel = config.colorbar.label === nothing ? "" : config.colorbar.label,
+        xticks = xticks,
+        yticks = yticks,
         limits = @lift((
             minimum($times),
             maximum($times),
@@ -172,10 +171,9 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
         axleft = Axis(
             gb[1:4, 1:5];
             xlabel = sortval_xlabel,
-            xticks = @lift([
-                round(minimum($sortvalues), digits = 2),
-                round(maximum($sortvalues), digits = 2),
-            ]),
+            xticks = @lift(
+                round.(LinRange(minimum($sortvalues), maximum($sortvalues), 2), digits = 2)
+            ),
             limits = @lift((
                 minimum($sortvalues) - (maximum($sortvalues) / 100 * 3),
                 maximum($sortvalues) + (maximum($sortvalues) / 100 * 3),
