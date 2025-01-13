@@ -132,6 +132,6 @@ end
         axis = (; xlabel = "50 ms"),
         visual = (; colormap = :viridis),
     )
-    colgap!(f.layout, 50)
+    colgap!(f.layout, 0)
     f
 end
