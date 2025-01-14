@@ -4,7 +4,7 @@ dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
 bin_width = 80
 
-@testset "14 topoplots, 4 rows" begin # horrific
+@testset "14 topoplots, 4 rows" begin
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
     plot_topoplotseries(
         df;
@@ -177,10 +177,10 @@ end
         interactive_scatter = obs_tuple,
     )
 end
-#=
-@testset "interactive data in eeg_array_to_dataframe" begin
+
+#= @testset "interactive data in eeg_array_to_dataframe" begin
     data_obs3 = Observable(UnfoldMakie.eeg_array_to_dataframe(rand(10, 20)))
     plot_topoplotseries!(Figure(), data_obs3; bin_num = 5, positions = rand(Point2f, 10))
     data_obs3[] = UnfoldMakie.eeg_array_to_dataframe(rand(10, 20))
 end
-=#
+ =#
