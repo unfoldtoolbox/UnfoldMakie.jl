@@ -76,7 +76,6 @@ function plot_topoplotseries!(
     data = _as_observable(data_inp)
     data_cuts = @lift deepcopy($data)
     positions = get_topo_positions(; positions = positions, labels = labels)
-    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
@@ -94,49 +93,10 @@ function plot_topoplotseries!(
     end
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
+    # check number of topoplots and group the data accordint to their location
+    data_row, data_unstacked, n_topoplots =
+        cutting_management(data, data_cuts, bin_width, bin_num, combinefun, config)
 
-    cat_or_cont_columns =
-        @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
-    if to_value(cat_or_cont_columns) == "cat"
-        # overwrite 'Time windows [s]' default if categorical
-        n_topoplots =
-            @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
-        df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
-        df_combined = @lift combine($df_grouped, :estimate => mean)
-        data_unstacked = @lift unstack($df_combined, :channel, :estimate_mean)
-        data_row = @lift Matrix($data_unstacked[:, 2:end])'
-
-    else
-        bins = @lift bins_estimation(
-            $data[!, config.mapping.col];
-            bin_width,
-            bin_num,
-            cat_or_cont_columns = $cat_or_cont_columns,
-        )
-
-        n_topoplots = @lift number_of_topoplots(
-            $data;
-            bin_width,
-            bin_num,
-            bins = $bins,
-            config.mapping,
-        )
-
-        cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
-        on(cont_cuts, update = true) do s
-            data_cuts[][!, :cont_cuts] .= string.(s)
-        end
-
-        data_binned = @lift data_binning(
-            $data_cuts;
-            col_y = config.mapping.y,
-            fun = combinefun,
-            grouping = [chan_or_label],
-        )
-        data_unstacked = @lift unstack($data_binned, :channel, :estimate)
-        data_row = @lift Matrix($data_unstacked[:, 2:end])'
-
-    end
     xlabels = @lift string.($data_unstacked[:, 1])
     rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
     layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
@@ -178,4 +138,50 @@ function plot_topoplotseries!(
 
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
+end
+
+function cutting_management(data, data_cuts, bin_width, bin_num, combinefun, config)
+    cat_or_cont_columns =
+        @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
+    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
+    if to_value(cat_or_cont_columns) == "cat"
+        # overwrite 'Time windows [s]' default if categorical
+        n_topoplots =
+            @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
+        df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
+        df_combined = @lift combine($df_grouped, :estimate => mean)
+        data_unstacked = @lift unstack($df_combined, :channel, :estimate_mean)
+        data_row = @lift Matrix($data_unstacked[:, 2:end])'
+
+    else
+        bins = @lift bins_estimation(
+            $data[!, config.mapping.col];
+            bin_width,
+            bin_num,
+            cat_or_cont_columns = $cat_or_cont_columns,
+        )
+
+        n_topoplots = @lift number_of_topoplots(
+            $data;
+            bin_width,
+            bin_num,
+            bins = $bins,
+            config.mapping,
+        )
+
+        cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
+        on(cont_cuts, update = true) do s
+            data_cuts[][!, :cont_cuts] .= string.(s)
+        end
+
+        data_binned = @lift data_binning(
+            $data_cuts;
+            col_y = config.mapping.y,
+            fun = combinefun,
+            grouping = [chan_or_label],
+        )
+        data_unstacked = @lift unstack($data_binned, :channel, :estimate)
+        data_row = @lift Matrix($data_unstacked[:, 2:end])'
+    end
+    return data_row, data_unstacked, n_topoplots
 end
