@@ -93,6 +93,7 @@ function plot_topoplotseries!(
     end
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
+  
     # check number of topoplots and group the data accordint to their location
     data_row, xlabels, layout =
         cutting_management(data, data_cuts, bin_width, bin_num, combinefun, nrows, config)
