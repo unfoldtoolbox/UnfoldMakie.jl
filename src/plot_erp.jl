@@ -60,6 +60,7 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
+    sign_type = :line,
     mapping = (;),
     kwargs...,
 )
@@ -141,9 +142,8 @@ function plot_erp!(
 
     # add the p-values
     if !isnothing(significance)
-        basic = basic + add_significance(plot_data, significance, config)
+        basic = basic + add_significance(plot_data, significance, config, sign_type)
     end
-
     plot_equation = basic * mapp
 
     f_grid = f[1, 1] = GridLayout()
@@ -176,7 +176,7 @@ function plot_erp!(
     return f
 end
 
-function add_significance(plot_data, significance, config)
+function add_significance(plot_data, significance, config, sign_type)
     p = deepcopy(significance)
 
     # for now, add them to the fixed effect
@@ -194,23 +194,24 @@ function add_significance(plot_data, significance, config)
     if :color ∈ keys(config.mapping)
         c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
         un = unique(p[!, c])
-        p[!, :sigindex] .= [findfirst(un .== x) for x in p.coefname]
+        p[!, :signindex] .= [findfirst(un .== x) for x in p.coefname]
     else
         p[!, :signindex] .= 1
     end
     # define an index to dodge the lines vertically
 
     scaleY = [minimum(plot_data.estimate), maximum(plot_data.estimate)]
-    stepY = scaleY[2] - scaleY[1]
+    stepY = scaleY[2] - scaleY[1] # gap between significance rectangles
     posY = stepY * -0.05 + scaleY[1]
-    Δt = diff(plot_data.time[1:2])[1]
-    Δy = 0.01
+    Δt = diff(plot_data.time[1:2])[1] # added length of significance polygone
+
     p[!, :segments] = [
         Makie.Rect(
             Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
             Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
-        ) for (x, y, n) in zip(p.from, p.to, p.sigindex)
+        ) for (x, y, n) in zip(p.from, p.to, p.signindex)
     ]
+
     res = data(p) * mapping(:segments) * visual(Poly)
     return (res)
 end
