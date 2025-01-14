@@ -196,7 +196,6 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     hidedecorations!(axempty)
     hidespines!(axempty)
     hidespines!(axleft, :r, :t)
-    
     if config.layout.use_colorbar != false
         Colorbar(gb[1:4, 6], hm; config.colorbar...)
     end
