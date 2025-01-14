@@ -120,9 +120,9 @@ function PlotConfig(T::Val{:topoplotseries})
             yrectzoom = false,
         ),
         layout = (; use_colorbar = true),
-        colorbar = (; flipaxis = true, label = "Voltage", colorrange = nothing),
+        colorbar = (; flipaxis = true, label = "Voltage"),
         visual = (;
-            label_text = false, # true doesnt work again
+            label_text = false,
             colormap = Reverse(:RdBu),
             enlarge = 1,
             label_scatter = false,
