@@ -94,12 +94,8 @@ function plot_topoplotseries!(
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     # check number of topoplots and group the data accordint to their location
-    data_row, data_unstacked, n_topoplots =
-        cutting_management(data, data_cuts, bin_width, bin_num, combinefun, config)
-
-    xlabels = @lift string.($data_unstacked[:, 1])
-    rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
-    layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
+    data_row, xlabels, layout =
+        cutting_management(data, data_cuts, bin_width, bin_num, combinefun, nrows, config)
 
     ftopo, axlist = eeg_topoplot_series!(
         f[1, 1],
@@ -140,7 +136,7 @@ function plot_topoplotseries!(
     return f
 end
 
-function cutting_management(data, data_cuts, bin_width, bin_num, combinefun, config)
+function cutting_management(data, data_cuts, bin_width, bin_num, combinefun, nrows, config)
     cat_or_cont_columns =
         @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
@@ -183,5 +179,14 @@ function cutting_management(data, data_cuts, bin_width, bin_num, combinefun, con
         data_unstacked = @lift unstack($data_binned, :channel, :estimate)
         data_row = @lift Matrix($data_unstacked[:, 2:end])'
     end
-    return data_row, data_unstacked, n_topoplots
+
+    xlabels = @lift string.(($data_unstacked[:, 1]))
+    xlabels_rounded = @lift replace.($xlabels, r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
+        num = round(parse(Float64, x), digits=1) # this number should be adjustable
+        num == floor(num) ? string(Int(num)) : string(num)
+    end)
+
+    rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
+    layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
+    return data_row, xlabels_rounded, layout
 end
