@@ -2,7 +2,21 @@
 
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)))
+df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)))
 bin_width = 80
+
+@testset "eeg_array_to_dataframe" begin
+    eeg_array_to_dataframe(rand(2, 2))
+end
+
+@testset "eeg_topoplot_series" begin
+    matrix = rand(64, 5) # simulated data
+    UnfoldMakie.eeg_topoplot_series(
+        matrix;
+        layout = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
+        positions = positions,
+    )
+end
 
 @testset "toposeries: bin_width" begin
     plot_topoplotseries(df; bin_width = 80, positions = positions)
@@ -304,15 +318,24 @@ end
     )
 end
 
-@testset "eeg_array_to_dataframe" begin
-    eeg_array_to_dataframe(rand(2, 2))
-end
-
-@testset "eeg_topoplot_series" begin
-    matrix = rand(64, 5) # simulated data
-    UnfoldMakie.eeg_topoplot_series(
-        matrix;
-        layout = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
+@testset "toposeries: uncertainty - second row" begin
+    f = Figure()
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        bin_num = 5,
         positions = positions,
+        axis = (; xlabel = ""),
+        colorbar = (; label = "Voltage estimate"),
     )
+    plot_topoplotseries!(
+        f[2, 1],
+        df_uncert;
+        bin_num = 5,
+        positions = positions,
+        visual = (; colormap = :viridis),
+        axis = (; xlabel = "50 ms"),
+        colorbar = (; label = "Voltage uncertainty"),
+    )
+    f
 end
