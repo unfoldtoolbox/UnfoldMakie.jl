@@ -63,9 +63,6 @@ function eeg_topoplot_series!(
 
     topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
 
-    qminmax = @lift(extract_colorrange($data))
-    topo_attributes = update_axis(topo_attributes; colorrange = qminmax)
-
     # do the col/row plot
     axlist = []
     if interactive_scatter != nothing
@@ -83,8 +80,7 @@ function eeg_topoplot_series!(
             r = layout[t_idx][1]
             c = layout[t_idx][2]
         end
-        #@show r c topo_axis xlabels t_idx
-        #@show xlabels
+
         ax = Axis(
             fig[r, c];
             topo_axis...,
@@ -109,7 +105,7 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-    return fig, axlist, topo_attributes[:colorrange]
+    return fig, axlist
 end
 
 function label_management(cat_or_cont_columns, df_single, col)
