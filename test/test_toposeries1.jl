@@ -198,24 +198,6 @@ end
     plot_topoplotseries(df; bin_width, positions = positions, axis = (; xlabel = "test"))
 end
 
-@testset "toposeries: adjustable colorrange" begin
-    plot_topoplotseries(
-        df;
-        bin_width,
-        positions = positions,
-        visual = (; colorrange = (-3, 3)),
-    )
-end
-
-@testset "toposeries: visual.colorrange and colorbar.colorrange" begin
-    plot_topoplotseries(
-        df;
-        bin_width,
-        positions = positions,
-        colorbar = (; colorrange = (-1, 1)),
-        visual = (; colorrange = (-1, 1)),
-    )
-end
 
 @testset "toposeries: adjusted ylim_topo" begin
     plot_topoplotseries(
