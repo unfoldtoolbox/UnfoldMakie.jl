@@ -118,10 +118,7 @@ function plot_erpimage!(
 
     cb_ticks = LinRange(minimum(filtered_data.val), maximum(filtered_data.val), 5) # set ticklables for colorbar
     rounded_ticks = round.(cb_ticks, digits = 2)
-    config_kwargs!(
-        config,
-        colorbar = (; ticks = (cb_ticks, string.(rounded_ticks))),
-    )
+    config_kwargs!(config, colorbar = (; ticks = (cb_ticks, string.(rounded_ticks))))
 
     if show_sortval
         ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
