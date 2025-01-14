@@ -181,10 +181,13 @@ function cutting_management(data, data_cuts, bin_width, bin_num, combinefun, nro
     end
 
     xlabels = @lift string.(($data_unstacked[:, 1]))
-    xlabels_rounded = @lift replace.($xlabels, r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
-        num = round(parse(Float64, x), digits=1) # this number should be adjustable
-        num == floor(num) ? string(Int(num)) : string(num)
-    end)
+    xlabels_rounded = @lift replace.(
+        $xlabels,
+        r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
+            num = round(parse(Float64, x), digits = 1) # this number should be adjustable
+            num == floor(num) ? string(Int(num)) : string(num)
+        end,
+    )
 
     rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
     layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
