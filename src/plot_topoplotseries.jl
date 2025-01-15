@@ -42,8 +42,6 @@ Multiple miniature topoplots in regular distances.
     `mapping.col` - specify x-value, can be any continuous or categorical variable.\\
     `mapping.row` - specify y-value, can be any continuous or categorical variable (not implemented yet).\\
     `mapping.layout` - arranges topoplots by rows when equals `:time`.\\
-- `visual.colorrange::2-element Vector{Int64}`\\
-    Resposnible for colorrange in topoplots and in colorbar.
 - `topo_attributes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
@@ -71,13 +69,11 @@ function plot_topoplotseries!(
     interactive_scatter = nothing,
     topo_axis = (;),
     topo_attributes = (;),
+    #uncertainty = false, 
     kwargs...,
 )
-
     data = _as_observable(data_inp)
-    data_cuts = @lift deepcopy($data)
     positions = get_topo_positions(; positions = positions, labels = labels)
-    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
@@ -93,11 +89,56 @@ function plot_topoplotseries!(
             "The length of `labels` differs from the length of `position`. Please make sure they are the same length.",
         )
     end
+
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
+    # check number of topoplots and group the data accordint to their location
+    data_row, xlabels, layout =
+        cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
 
+    ftopo, axlist = eeg_topoplot_series!(
+        f[1, 1],
+        data_row;
+        layout,
+        xlabels,
+        #col_labels, # TODO
+        #row_labels, # TODO
+        rasterize_heatmaps,
+        interactive_scatter,
+        topo_axis,
+        topo_attributes,
+        positions,
+        labels,
+    )
+    cb_limits = (minimum(data.val.estimate), maximum(data.val.estimate)) # set limits for colorbar
+    cb_ticks = LinRange(cb_limits[1], cb_limits[2], 5) # set ticklables for colorbar
+    rounded_ticks = round.(cb_ticks, digits = 2)
+
+    config_kwargs!(
+        config;
+        # mapping = (; row = :row_coord, col = :col_coord),
+        axis = (; xlabel = string(config.mapping.col)),
+        colorbar = (; limits = cb_limits, ticks = (cb_ticks, string.(rounded_ticks))),
+    )
+    config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
+    # overkill as we would only need to check the xlabel ;) 
+
+    ax = Axis(
+        f[1, 1];
+        (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)..., # what it this??
+    )
+    if config.layout.use_colorbar == true
+        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
+    end
+
+    apply_layout_settings!(config; fig = f, ax = ax)
+    return f
+end
+
+function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
     cat_or_cont_columns =
         @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
+    chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
     if to_value(cat_or_cont_columns) == "cat"
         # overwrite 'Time windows [s]' default if categorical
         n_topoplots =
@@ -106,7 +147,6 @@ function plot_topoplotseries!(
         df_combined = @lift combine($df_grouped, :estimate => mean)
         data_unstacked = @lift unstack($df_combined, :channel, :estimate_mean)
         data_row = @lift Matrix($data_unstacked[:, 2:end])'
-
 
     else
         bins = @lift bins_estimation(
@@ -126,58 +166,29 @@ function plot_topoplotseries!(
 
         cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
         on(cont_cuts, update = true) do s
-            data_cuts[][!, :cont_cuts] .= string.(s)
+            data[][!, :cont_cuts] .= string.(s)
         end
 
         data_binned = @lift data_binning(
-            $data_cuts;
+            $data;
             col_y = config.mapping.y,
             fun = combinefun,
             grouping = [chan_or_label],
         )
         data_unstacked = @lift unstack($data_binned, :channel, :estimate)
         data_row = @lift Matrix($data_unstacked[:, 2:end])'
-
     end
-    xlabels = @lift string.($data_unstacked[:, 1])
+
+    xlabels = @lift string.(($data_unstacked[:, 1]))
+    xlabels_rounded = @lift replace.(
+        $xlabels,
+        r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
+            num = round(parse(Float64, x), digits = 1) # this number should be adjustable
+            num == floor(num) ? string(Int(num)) : string(num)
+        end,
+    )
+
     rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
     layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
-
-    config_kwargs!(
-        config;
-        mapping = (; row = :row_coord, col = :col_coord),
-        axis = (; xlabel = string(config.mapping.col)),
-    )
-    config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
-    # overkill as we would only need to check the xlabel ;)
-    ftopo, axlist, colorrange = eeg_topoplot_series!(
-        f[1, 1],
-        data_row;
-        layout,
-        xlabels,
-        #col_labels = col_labels, # TODO
-        #row_labels = row_labels, # TODO
-        rasterize_heatmaps = rasterize_heatmaps,
-        interactive_scatter = interactive_scatter,
-        topo_axis = topo_axis,
-        topo_attributes = topo_attributes,
-        positions,
-        labels,
-    )
-    config_kwargs!(
-        config,
-        visual = (; colorrange = colorrange),
-        colorbar = (; colorrange = colorrange),
-    )
-
-    ax = Axis(
-        f[1, 1];
-        (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)...,
-    )
-    if config.layout.use_colorbar == true
-        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
-    end
-
-    apply_layout_settings!(config; fig = f, ax = ax)
-    return f
+    return data_row, xlabels_rounded, layout
 end

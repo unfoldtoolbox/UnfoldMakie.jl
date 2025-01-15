@@ -60,11 +60,7 @@ function eeg_topoplot_series!(
 )
     # for performance, new variable name is necessary, as type might change
     data = _as_observable(data_inp)
-
     topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
-
-    qminmax = @lift(extract_colorrange($data))
-    topo_attributes = update_axis(topo_attributes; colorrange = qminmax)
 
     # do the col/row plot
     axlist = []
@@ -83,8 +79,6 @@ function eeg_topoplot_series!(
             r = layout[t_idx][1]
             c = layout[t_idx][2]
         end
-        #@show r c topo_axis xlabels t_idx
-        #@show xlabels
         ax = Axis(
             fig[r, c];
             topo_axis...,
@@ -109,7 +103,7 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-    return fig, axlist, topo_attributes[:colorrange]
+    return fig, axlist
 end
 
 function label_management(cat_or_cont_columns, df_single, col)
@@ -177,7 +171,6 @@ end
     eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
-
 Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
 
 Format of Arrays:\\
