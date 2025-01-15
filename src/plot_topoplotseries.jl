@@ -116,7 +116,7 @@ function plot_topoplotseries!(
 
     config_kwargs!(
         config;
-        mapping = (; row = :row_coord, col = :col_coord),
+        # mapping = (; row = :row_coord, col = :col_coord),
         axis = (; xlabel = string(config.mapping.col)),
         colorbar = (; limits = cb_limits, ticks = (cb_ticks, string.(rounded_ticks))),
     )
@@ -136,7 +136,6 @@ function plot_topoplotseries!(
 end
 
 function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
-    data_cuts = @lift deepcopy($data)
     cat_or_cont_columns =
         @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
@@ -167,11 +166,11 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
 
         cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
         on(cont_cuts, update = true) do s
-            data_cuts[][!, :cont_cuts] .= string.(s)
+            data[][!, :cont_cuts] .= string.(s)
         end
 
         data_binned = @lift data_binning(
-            $data_cuts;
+            $data;
             col_y = config.mapping.y,
             fun = combinefun,
             grouping = [chan_or_label],
