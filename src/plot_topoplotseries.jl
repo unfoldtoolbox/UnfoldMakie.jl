@@ -72,9 +72,7 @@ function plot_topoplotseries!(
     #uncertainty = false, 
     kwargs...,
 )
-
     data = _as_observable(data_inp)
-    data_cuts = @lift deepcopy($data)
     positions = get_topo_positions(; positions = positions, labels = labels)
 
     config = PlotConfig(:topoplotseries)
@@ -91,11 +89,12 @@ function plot_topoplotseries!(
             "The length of `labels` differs from the length of `position`. Please make sure they are the same length.",
         )
     end
+
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     # check number of topoplots and group the data accordint to their location
     data_row, xlabels, layout =
-        cutting_management(data, data_cuts, bin_width, bin_num, combinefun, nrows, config)
+        cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
 
     ftopo, axlist = eeg_topoplot_series!(
         f[1, 1],
@@ -111,7 +110,7 @@ function plot_topoplotseries!(
         positions,
         labels,
     )
-    cb_limits = (minimum(data_cuts.val.estimate), maximum(data_cuts.val.estimate)) # set limits for colorbar
+    cb_limits = (minimum(data.val.estimate), maximum(data.val.estimate)) # set limits for colorbar
     cb_ticks = LinRange(cb_limits[1], cb_limits[2], 5) # set ticklables for colorbar
     rounded_ticks = round.(cb_ticks, digits = 2)
 
@@ -136,7 +135,8 @@ function plot_topoplotseries!(
     return f
 end
 
-function cutting_management(data, data_cuts, bin_width, bin_num, combinefun, nrows, config)
+function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
+    data_cuts = @lift deepcopy($data)
     cat_or_cont_columns =
         @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
