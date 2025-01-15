@@ -108,11 +108,11 @@ We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
-        ticks = LinRange(clims[][1], clims[][2], 5)
-        rounded_ticks = round.(ticks, digits = 2)  # Round to 2 decimal places
-        config_kwargs!(
+        ticks = @lift LinRange($clims[1], $clims[2], 5)
+        rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
+        @lift config_kwargs!(
             config,
-            colorbar = (; ticks = (ticks, string.(rounded_ticks)), limits = clims),
+            colorbar = (; ticks = ($ticks, $rounded_ticks), limits = $clims),
         )
     end
     if config.layout.use_colorbar == true
