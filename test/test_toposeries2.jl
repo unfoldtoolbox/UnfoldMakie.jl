@@ -178,9 +178,8 @@ end
     )
 end
 
-#= @testset "interactive data in eeg_array_to_dataframe" begin
+@testset "interactive data in eeg_array_to_dataframe" begin
     data_obs3 = Observable(UnfoldMakie.eeg_array_to_dataframe(rand(10, 20)))
     plot_topoplotseries!(Figure(), data_obs3; bin_num = 5, positions = rand(Point2f, 10))
     data_obs3[] = UnfoldMakie.eeg_array_to_dataframe(rand(10, 20))
 end
- =#
