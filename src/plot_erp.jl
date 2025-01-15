@@ -205,6 +205,12 @@ function add_significance(plot_data, significance, config, sign_type)
     posY = stepY * -0.05 + scaleY[1]
     Δt = diff(plot_data.time[1:2])[1] # added length of significance polygone
 
+    if sign_type == :line
+        Δy = 0.01 # height of significance polygone
+    else
+        Δy = 0.5
+        stepY = stepY - 3
+    end
     p[!, :segments] = [
         Makie.Rect(
             Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
@@ -212,6 +218,6 @@ function add_significance(plot_data, significance, config, sign_type)
         ) for (x, y, n) in zip(p.from, p.to, p.signindex)
     ]
 
-    res = data(p) * mapping(:segments) * visual(Poly)
+    res = data(p) * mapping(:segments) * visual(Poly, alpha = 0.5)
     return (res)
 end
