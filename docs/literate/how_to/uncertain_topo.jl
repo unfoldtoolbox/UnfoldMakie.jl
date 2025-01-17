@@ -9,9 +9,10 @@ using Statistics
 
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)));
+df_uncert = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 2], string.(1:length(positions)));
 nothing #hide
 
-# # Ucertainty via additional row
+# # Uncertainty via additional row
 
 f = Figure()
 plot_topoplotseries!(
@@ -34,7 +35,7 @@ plot_topoplotseries!(
 f
 
 
-# # Toposeries: uncertainty via animation 
+# # Uncertainty via animation 
 
 function bootstrap_toposeries(df)
     df1 = groupby(df, [:time])
