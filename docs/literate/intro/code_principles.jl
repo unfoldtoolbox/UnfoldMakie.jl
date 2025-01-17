@@ -1,7 +1,7 @@
 # # Code principles
 
 
-# Here we will write about principles which we developed through our [publication](https://apertureneuro.org/article/116386-the-art-of-brainwaves-a-survey-on-event-related-potential-visualization-practices):
+# Here we will write about coding principles which we developed through our [publication](https://apertureneuro.org/article/116386-the-art-of-brainwaves-a-survey-on-event-related-potential-visualization-practices):
 
 # - Code should be clear and concise.
 # - Variables in the code should have meaningful names.
