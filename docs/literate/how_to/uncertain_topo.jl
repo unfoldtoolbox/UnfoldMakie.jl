@@ -4,11 +4,13 @@ using DataFrames
 using CairoMakie
 using TopoPlots
 using Statistics
+using UnfoldSim
+using Random
 
 # Data input
 
-data, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)));
+dat, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 2], string.(1:length(positions)));
 nothing #hide
 
@@ -38,7 +40,7 @@ f
 # # Uncertainty via animation 
 
 function bootstrap_toposeries(df)
-    df1 = groupby(df, [:time])
+    df1 = groupby(df, [:time, :channel])
     tmp = vcat([d.estimate[rand(1:64, 64)] for d in df1]...)
     df1 = DataFrame(df1)
     df1.estimate = tmp
@@ -54,4 +56,5 @@ record(f, "bootstrap_toposeries.gif"; framerate = 10000) do io
         recordframe!(io)
     end
 end
-f
+
+# ![](bootstrap_toposeries.gif)
