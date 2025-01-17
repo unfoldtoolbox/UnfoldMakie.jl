@@ -106,7 +106,7 @@ end
 # ![](topoplot_animation_UM.gif)
 
 # MNE with .gif
-# Note that due to some bugs in (probably) `CondaPkg` topoplot is blac and white. 
+
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
@@ -116,5 +116,7 @@ end
     )
     anim.save("topomap_animation_mne.gif", writer = "ffmpeg", fps = framerate)
 end
+
+# Note, that due to some bugs in (probably) `CondaPkg` topoplot is black and white. 
 
 # ![](topomap_animation_mne.gif)
