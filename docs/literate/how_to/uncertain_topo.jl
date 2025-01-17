@@ -11,7 +11,7 @@ using Random
 
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
-df_uncert = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 2], string.(1:length(positions)));
+df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
 nothing #hide
 
 # # Uncertainty via additional row
@@ -58,3 +58,4 @@ record(f, "bootstrap_toposeries.gif"; framerate = 10000) do io
 end
 
 # ![](bootstrap_toposeries.gif)
+
