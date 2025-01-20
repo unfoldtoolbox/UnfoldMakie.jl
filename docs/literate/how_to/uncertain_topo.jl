@@ -1,3 +1,7 @@
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 using Unfold
 using UnfoldMakie
 using UnfoldSim
@@ -7,11 +11,20 @@ using TopoPlots
 using Statistics
 using Random
 
+# ```@raw html
+# </details >
+# ```
+# Representing uncertainty is one of the most difficult tasks in visualization. It is especially difficult for heatmaps and topoplots. 
+# Here we will present new ways to show uncertainty for topoplots series.
+
 # Data input
 include("../../../example_data.jl")
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
+
+# Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
+df_toposeries, pos_toposeries = data, pos = example_data("bootstrap_toposeries");
 nothing #hide
 
 # # Uncertainty via additional row
@@ -50,15 +63,12 @@ function bootstrap_toposeries(df)
     df1.estimate = tmp
     return df1
 end
-
-# Generate data with 227 channels, 50 trials, 500 mseconds
 # ```@raw html
 # </details >
 # ```
 
 #  To show uncertainty of estimate we will compute 10 different means of bootsrtaped data. 
 # More detailed: 1) create N boostrapped datasets by random sampling with replacement across trials; 2) compute their means; 3) do toposeries animation iterating across these means. 
-df_toposeries, pos_toposeries = data, pos = example_data("bootstrap_toposeries")
 dat_obs = Observable(df_toposeries)
 f = Figure()
 plot_topoplotseries!(
@@ -74,6 +84,6 @@ record(f, "bootstrap_toposeries.gif"; framerate = 10000) do io
         dat_obs[] = bootstrap_toposeries(df_toposeries)
         recordframe!(io)
     end
-end
+end;
 
 # ![](bootstrap_toposeries.gif)
