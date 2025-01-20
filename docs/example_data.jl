@@ -204,7 +204,7 @@ function example_data(example = "TopoPlots.jl")
             design,
             mc,
             onset,
-            PinkNoise(noiselevel = 0.05),
+            PinkNoise(noiselevel = 10.5),
             return_epoched = true,
         )
 
