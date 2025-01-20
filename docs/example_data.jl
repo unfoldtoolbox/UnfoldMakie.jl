@@ -177,6 +177,46 @@ function example_data(example = "TopoPlots.jl")
         dat_e = dat_e[1, :, :]
         #evts = filter(row -> row.Δlatency > 0, evts)
         return dat_e, evts, times
+    elseif example == "bootstrap_toposeries"
+        trials = 50
+        time_padding = 100
+        component = n400()
+        design = UnfoldSim.SingleSubjectDesign(conditions = Dict(:condA => ["levelA"])) # design with one condition
+        design = UnfoldSim.RepeatDesign(design, trials)
+        generate_events(design)
+
+        time1 = vcat(rand(time_padding), component) # 500 msec = randiom 100 msec and 400 msec of n400
+        c = UnfoldSim.LinearModelComponent(; basis = time1, formula = @formula(0 ~ 1), β = [1])
+
+        hart = headmodel(type = "hartmut") # 227 electrodes
+        less_hart = magnitude(hart)[:, 1] # extract 1 lead field and 64 electrodes
+
+        mc = UnfoldSim.MultichannelComponent(c, less_hart)
+
+        # simulation of 3d matrix
+        onset = UniformOnset(; width = 20, offset = 4)
+        dat, events = simulate(
+            MersenneTwister(1),
+            design,
+            mc,
+            onset,
+            PinkNoise(noiselevel = 0.05),
+            return_epoched = true,
+        )
+
+        # Create the DataFrame
+        df = DataFrame(
+            :estimate => dat[:],
+            :channel => repeat(1:size(dat, 1), outer = Int(length(dat[:]) / size(dat, 1))),
+            :time => repeat(1:size(dat, 2), outer = Int(length(dat[:]) / size(dat, 2))),
+            :trial => repeat(1:size(dat, 3), outer = Int(length(dat[:]) / size(dat, 3))),
+        )
+
+        # chosing positions
+        pos3d = hart.electrodes["pos"]
+        pos2d = to_positions(pos3d')
+        pos2d = [Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
+    return df, pos2d
     elseif example == "raw_ch_names"
         return [
             "FP1",
