@@ -18,7 +18,7 @@ using Random
 # Here we will present new ways to show uncertainty for topoplots series.
 
 # Data input
-include("../../example_data.jl")
+include("../../../example_data.jl")
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
