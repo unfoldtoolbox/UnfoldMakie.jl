@@ -209,7 +209,7 @@ function example_data(example = "TopoPlots.jl")
         )
 
         # Create the DataFrame
-        df = DataFrame(
+        df_toposeries = DataFrame(
             :estimate => dat[:],
             :channel =>
                 repeat(1:size(dat, 1), outer = Int(length(dat[:]) / size(dat, 1))),
@@ -221,8 +221,8 @@ function example_data(example = "TopoPlots.jl")
         # chosing positions
         pos3d = hart.electrodes["pos"]
         pos2d = to_positions(pos3d')
-        pos2d = [Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
-        return df, pos2d
+        pos_toposeries = [Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
+        return df_toposeries, pos_toposeries
     elseif example == "raw_ch_names"
         return [
             "FP1",
