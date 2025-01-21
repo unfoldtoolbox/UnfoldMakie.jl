@@ -10,6 +10,7 @@ using CairoMakie
 using TopoPlots
 using Statistics
 using Random
+using Animations
 
 # ```@raw html
 # </details >
@@ -79,11 +80,29 @@ plot_topoplotseries!(
     positions = pos_toposeries,
     axis = (; xlabel = "Time [msec]"),
 )
-record(f, "bootstrap_toposeries.gif"; framerate = 100) do io
+record(f, "bootstrap_toposeries.mp4"; framerate = 2) do io
     for i = 1:10
         dat_obs[] = bootstrap_toposeries(df_toposeries)
         recordframe!(io)
     end
 end;
+# ![](bootstrap_toposeries.mp4)
 
-# ![](bootstrap_toposeries.gif)
+f = Figure()
+plot_topoplotseries!(
+    f[1, 1],
+    dat_obs;
+    bin_num = 5,
+    nrows = 2,
+    positions = pos_toposeries,
+    visual = (; contours = false),
+    axis = (; xlabel = "Time [msec]"),
+)
+f
+record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
+    for i = 1:10
+        dat_obs[] = bootstrap_toposeries(df_toposeries)
+        recordframe!(io)
+    end
+end;
+# ![](bootstrap_toposeries_nocontours.mp4)
