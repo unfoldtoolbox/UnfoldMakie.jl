@@ -7,7 +7,8 @@ using DataFrames
 using CairoMakie
 using TopoPlots
 using Statistics
-using Random</code></pre></details ><p>Representing uncertainty is one of the most difficult tasks in visualization. It is especially difficult for heatmaps and topoplots. Here we will present new ways to show uncertainty for topoplots series.</p><p>Data input</p><pre><code class="language-julia hljs">include(&quot;../../../example_data.jl&quot;)
+using Random
+using Animations</code></pre></details ><p>Representing uncertainty is one of the most difficult tasks in visualization. It is especially difficult for heatmaps and topoplots. Here we will present new ways to show uncertainty for topoplots series.</p><p>Data input</p><pre><code class="language-julia hljs">include(&quot;../../../example_data.jl&quot;)
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));</code></pre><p>Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping</p><pre><code class="language-julia hljs">df_toposeries, pos_toposeries = data, pos = example_data(&quot;bootstrap_toposeries&quot;);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Please cite: HArtMuT: Harmening Nils, Klug Marius, Gramann Klaus and Miklody Daniel - 10.1088/1741-2552/aca8ce</code></pre><h1 id="Uncertainty-via-additional-row"><a class="docs-heading-anchor" href="#Uncertainty-via-additional-row">Uncertainty via additional row</a><a id="Uncertainty-via-additional-row-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-additional-row" title="Permalink"></a></h1><pre><code class="language-julia hljs">f = Figure()
@@ -28,7 +29,7 @@ plot_topoplotseries!(
     axis = (; xlabel = &quot;50 ms&quot;),
     colorbar = (; label = &quot;Voltage uncertainty&quot;),
 )
-f</code></pre><img src="661b01c4.png" alt="Example block output"/><h1 id="Uncertainty-via-animation"><a class="docs-heading-anchor" href="#Uncertainty-via-animation">Uncertainty via animation</a><a id="Uncertainty-via-animation-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-animation" title="Permalink"></a></h1><details>
+f</code></pre><img src="01b47a8f.png" alt="Example block output"/><h1 id="Uncertainty-via-animation"><a class="docs-heading-anchor" href="#Uncertainty-via-animation">Uncertainty via animation</a><a id="Uncertainty-via-animation-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-animation" title="Permalink"></a></h1><details>
 <summary>Click to expand</summary><p>This function we need to bootsrtap data.</p><pre><code class="language-julia hljs">function bootstrap_toposeries(df)
     df1 = groupby(df, [:time, :channel])
     tmp = vcat([d.estimate[rand(1:length(d.estimate), length(d.estimate))] for d in df1]...)
@@ -45,9 +46,25 @@ plot_topoplotseries!(
     positions = pos_toposeries,
     axis = (; xlabel = &quot;Time [msec]&quot;),
 )
-record(f, &quot;bootstrap_toposeries.gif&quot;; framerate = 100) do io
+record(f, &quot;bootstrap_toposeries.mp4&quot;; framerate = 2) do io
     for i = 1:10
         dat_obs[] = bootstrap_toposeries(df_toposeries)
         recordframe!(io)
     end
-end;</code></pre><p><img src="../bootstrap_toposeries.gif" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../mult_vis_in_fig/">« Include multiple figures in one</a><a class="docs-footer-nextpage" href="../../explanations/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Tuesday 21 January 2025 10:17">Tuesday 21 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end;</code></pre><p><video src="../bootstrap_toposeries.mp4" controls="true" title><a href="../bootstrap_toposeries.mp4"></a></video></p><pre><code class="language-julia hljs">f = Figure()
+plot_topoplotseries!(
+    f[1, 1],
+    dat_obs;
+    bin_num = 5,
+    nrows = 2,
+    positions = pos_toposeries,
+    visual = (; contours = false),
+    axis = (; xlabel = &quot;Time [msec]&quot;),
+)
+f
+record(f, &quot;bootstrap_toposeries_nocontours.mp4&quot;; framerate = 2) do io
+    for i = 1:10
+        dat_obs[] = bootstrap_toposeries(df_toposeries)
+        recordframe!(io)
+    end
+end;</code></pre><p><video src="../bootstrap_toposeries_nocontours.mp4" controls="true" title><a href="../bootstrap_toposeries_nocontours.mp4"></a></video></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../mult_vis_in_fig/">« Include multiple figures in one</a><a class="docs-footer-nextpage" href="../../explanations/positions/">Convert electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Wednesday 22 January 2025 15:03">Wednesday 22 January 2025</span>. Using Julia version 1.11.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
