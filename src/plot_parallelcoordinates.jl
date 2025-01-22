@@ -1,3 +1,4 @@
+using Makie
 
 """
     plot_parallelcoordinates(data::Union{DataFrame, AbstractMatrix}; kwargs...)
@@ -122,9 +123,10 @@ function plot_parallelcoordinates(
         Legend(f[1, 2], ax, config.legend.title; config.legend...)
     end
     apply_layout_settings!(config; fig = f1, ax = ax)
-
-    return isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :
-           Makie.AxisPlot([ax, axlist], hlines[1])
+    res =
+        isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :
+        Makie.AxisPlot([ax, axlist], hlines[1])
+    return res
 end
 
 
