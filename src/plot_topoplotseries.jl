@@ -165,15 +165,13 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
         )
 
         cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
-        on(cont_cuts, update = true) do s
-            data[][!, :cont_cuts] .= string.(s)
-        end
 
         data_binned = @lift data_binning(
             $data;
             col_y = config.mapping.y,
             fun = combinefun,
             grouping = [chan_or_label],
+            cont_cuts,
         )
         data_unstacked = @lift unstack($data_binned, :channel, :estimate)
         data_row = @lift Matrix($data_unstacked[:, 2:end])'
