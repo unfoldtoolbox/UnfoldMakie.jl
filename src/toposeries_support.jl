@@ -77,10 +77,12 @@ Arguments:
 
 **Return Value:** `DataFrame`.
 """
-function data_binning(df; col_y = :erp, fun = mean, grouping = [])
-    df = deepcopy(df) # cut seems to change stuff inplace
+function data_binning(df; col_y = :erp, fun = mean, grouping = [], cont_cuts)
+    df_grouped = deepcopy(df) # cut seems to change stuff inplace
+    df_grouped.cont_cuts = string.(cont_cuts.val)
+
     grouping = grouping[.!isnothing.(grouping)]
-    df_grouped = groupby(df, unique([:cont_cuts, grouping...]))
+    df_grouped = groupby(df_grouped, unique([:cont_cuts, grouping...]))
     df_combined = combine(df_grouped, col_y => fun)
     rename!(df_combined, names(df_combined)[end] => col_y) # renames estimate_fun to estimate    
     return df_combined
