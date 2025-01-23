@@ -106,27 +106,6 @@ function eeg_topoplot_series!(
     return fig, axlist
 end
 
-function label_management(cat_or_cont_columns, df_single, col)
-    if cat_or_cont_columns == "cat"
-        tmp_labels = string(to_value(df_single)[1, col])
-    else
-        tmp_labels = string(to_value(df_single).cont_cuts[1, :][])
-    end
-    return tmp_labels
-end
-
-function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
-    sel = 1 .== ones(size(to_value(data_mean), 1))
-    if !isnothing(col)
-        sel = sel .&& (to_value(data_mean)[:, :col_coord] .== select_col[c]) # subselect
-    end
-    if !isnothing(row)
-        sel = sel .&& (to_value(data_mean)[:, :row_coord] .== select_row[r]) # subselect
-    end
-    df_single = @lift($data_mean[sel, :])
-    return df_single
-end
-
 function scatter_management( # should be cheked and simplified
     single_y,
     topo_attributes,
