@@ -68,7 +68,7 @@ end
 # </details >
 # ```
 
-#  To show uncertainty of estimate we will compute 10 different means of bootsrtaped data. 
+#  To show uncertainty of estimate we will compute 10 different means of bootstrapped data. 
 # More detailed: 1) create N boostrapped datasets by random sampling with replacement across trials; 2) compute their means; 3) do toposeries animation iterating across these means. 
 dat_obs = Observable(df_toposeries)
 f = Figure()
