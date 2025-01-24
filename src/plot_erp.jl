@@ -142,7 +142,8 @@ function plot_erp!(
 
     # add the p-values
     if !isnothing(significance)
-        basic = basic + add_significance(plot_data, significance, config, significance_plotgeom)
+        basic =
+            basic + add_significance(plot_data, significance, config, significance_plotgeom)
     end
     plot_equation = basic * mapp
 
