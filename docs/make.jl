@@ -32,6 +32,7 @@ makedocs(;
         prettyurls = get(ENV, "CI", "false") == "true",
         canonical = "https://unfoldtoolbox.github.io/UnfoldMakie.jl",
         assets = String[],
+        sidebar_sitename = false,
     ),
     pages = [
         "Intro" => [
