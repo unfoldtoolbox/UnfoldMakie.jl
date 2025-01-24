@@ -69,7 +69,7 @@ function plot_topoplotseries!(
     interactive_scatter = nothing,
     topo_axis = (;),
     topo_attributes = (;),
-    #uncertainty = false, 
+    #uncertainty = false,
     kwargs...,
 )
     data = _as_observable(data_inp)
