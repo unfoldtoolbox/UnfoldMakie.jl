@@ -58,22 +58,23 @@ f
 
 # # Uncertainty via animation 
 
-# In this case we need to do boostrapping of the data and that's why use raw data with individual trials. 
+# In this case, we need to boostrap the data, so we'll use raw data with single trials. 
 
-# To show uncertainty of estimate we will compute 10 different means of bootsrtaped data. 
-# More detailed: 1) create N boostrapped datasets by random sampling with replacement across trials; 2) compute their means; 3) do toposeries animation iterating across these means. 
+# To show the uncertainty of the estimate, we will compute 10 different means of the boostrapped data. 
+# More specifically: 1) create N boostrapped data sets using random sampling with replacement across trials; 2) compute their means; 3) do a toposeries animation iterating over these means. 
 
 # ```@raw html
 # <details>
 # <summary>Click to expand for supportive functions</summary>
 # ```
-# This function we need to bootsrtap data.
+# With this function we will bootstrap the data.
+# `rng` - random number generated. Be sure to send the same rng from outside the function.
 bootstrap_toposeries(df; kwargs...) = bootstrap_toposeries(MersenneTwister(), df; kwargs...)
 function bootstrap_toposeries(rng::AbstractRNG, df)
-    # rng - random number generated. Be usre to send the same rng from outside
+    
     df1 = groupby(df, [:time, :channel])
     len_estimate = length(df1[1].estimate)
-    bootstrap_ix = rand(rng, 1:len_estimate, len_estimate) # random sample with rreplacemnt
+    bootstrap_ix = rand(rng, 1:len_estimate, len_estimate) # random sample with replacement
     tmp = vcat([d.estimate[bootstrap_ix] for d in df1]...)
     df1 = DataFrame(df1)
 
@@ -81,44 +82,18 @@ function bootstrap_toposeries(rng::AbstractRNG, df)
     return df1
 end
 
+# function for easing - smooth transition between frames in animation.
+# `update_ratio` - transition ratio between time1 and time2.
+# `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
+
 function ease_between(new, old, update_ratio; easing_function = sineio())
-    # function for easing - smoooth transition between frames in animation
-    # update_ratio - stage of transion between time1 and time2
+
     anim = Animation(0, old, 1, new; defaulteasing = easing_function)
-    # create animation Object: 0 and 1 are time points, old and new are data vectors 
     return at(anim, update_ratio)
 end
 # ```@raw html
 # </details >
 # ```
-
-# Toposeries with easing (smooth transition between frames)
-dat_obs = Observable(df_toposeries)
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    dat_obs;
-    bin_num = 5,
-    nrows = 2,
-    positions = pos_toposeries,
-    visual = (; contours = false),
-    axis = (; xlabel = "Time [msec]"),
-)
-record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
-    rng = MersenneTwister(1)
-    for n_bootstrapping = 1:10
-        recordframe!(io)
-        new_df = bootstrap_toposeries(rng, df_toposeries)
-        old_estimate = dat_obs.val.estimate
-        for update_ratio in range(0, 1, length = 8)
-            #@show n_bootstrapping update_ratio
-            dat_obs.val.estimate .=
-                ease_between(new_df.estimate, old_estimate, update_ratio)
-            notify(dat_obs)
-            recordframe!(io)
-        end
-    end
-end;
 
 dat_obs = Observable(df_toposeries)
 f = Figure()
@@ -160,5 +135,32 @@ record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
 end;
 # ![](bootstrap_toposeries_nocontours.mp4)
 
+# Toposeries with easing (smooth transition between frames)
+dat_obs = Observable(df_toposeries)
+f = Figure()
+plot_topoplotseries!(
+    f[1, 1],
+    dat_obs;
+    bin_num = 5,
+    nrows = 2,
+    positions = pos_toposeries,
+    visual = (; contours = false),
+    axis = (; xlabel = "Time [msec]"),
+)
+record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
+    rng = MersenneTwister(1)
+    for n_bootstrapping = 1:10
+        recordframe!(io)
+        new_df = bootstrap_toposeries(rng, df_toposeries)
+        old_estimate = dat_obs.val.estimate
+        for update_ratio in range(0, 1, length = 8)
+            #@show n_bootstrapping update_ratio
+            dat_obs.val.estimate .=
+                ease_between(new_df.estimate, old_estimate, update_ratio)
+            notify(dat_obs)
+            recordframe!(io)
+        end
+    end
+end;
 
 # ![](bootstrap_toposeries_easing.mp4)
