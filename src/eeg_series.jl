@@ -3,7 +3,7 @@
         fig,
         data_inp::Union{<:Observable,<:AbstractMatrix};
         layout = nothing,
-        xlabels = nothing,
+        topoplot_xlables = nothing,
         labels = nothing,
         rasterize_heatmaps = true,
         interactive_scatter = nothing,
@@ -22,8 +22,8 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
     Matrix with size = (n_channel, n_topoplots).
 - `layout::Vector{Tuple{Int64, Int64}}`\\
     Vector of tuples with coordinates for each topoplot.
-- `xlabels::Vector{String}`\\
-    Vector of xlabels for each topoplot. 
+- `topoplot_xlables::Vector{String}`\\
+    Vector of xlables for each topoplot. 
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
@@ -49,7 +49,7 @@ function eeg_topoplot_series!(
     fig,
     data_inp::Union{<:Observable,<:AbstractMatrix};
     layout = nothing,
-    xlabels = nothing, # can be a vector too
+    topoplot_xlables = nothing, # can be a vector too
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
     highlight_scatter = false,
@@ -84,7 +84,7 @@ function eeg_topoplot_series!(
         ax = Axis(
             fig[r, c];
             topo_axis...,
-            xlabel = isnothing(xlabels) ? "" : to_value(xlabels)[t_idx],
+            xlabel = isnothing(topoplot_xlables) ? "" : to_value(topoplot_xlables)[t_idx],
         )
         # select data
         topo_attributes = scatter_management(
