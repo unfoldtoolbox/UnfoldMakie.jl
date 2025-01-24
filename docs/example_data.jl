@@ -209,15 +209,16 @@ function example_data(example = "TopoPlots.jl")
         )
 
         # Create the DataFrame
-        df_toposeries = DataFrame(
-            :estimate => dat[:],
-            :channel =>
-                repeat(1:size(dat, 1), outer = Int(length(dat[:]) / size(dat, 1))),
-            :time => repeat(1:size(dat, 2), outer = Int(length(dat[:]) / size(dat, 2))),
-            :trial =>
-                repeat(1:size(dat, 3), outer = Int(length(dat[:]) / size(dat, 3))),
+        #= Unfold.result_to_table(eff::Vector{<:AbstractArray}, events::Vector{<:DataFrame},
+            times::Vector, eventnames::Vector)
+        Unfold.result_to_table(rand(5,11,13), [DataFrame(:trial=>1:13)], [1:11], ["myevent"]) =#
+        df_toposeries = Unfold.result_to_table(
+            dat,
+            [DataFrame(:trial => 1:size(dat, 3))],
+            [1:size(dat, 2)],
+            ["myevent"],
         )
-
+        rename!(df_toposeries, :yhat => :estimate)
         # chosing positions
         pos3d = hart.electrodes["pos"]
         pos2d = to_positions(pos3d')
