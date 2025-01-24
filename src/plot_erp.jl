@@ -60,7 +60,7 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
-    sign_type = :line,
+    significance_plotgeom = :line,
     mapping = (;),
     kwargs...,
 )
@@ -142,7 +142,7 @@ function plot_erp!(
 
     # add the p-values
     if !isnothing(significance)
-        basic = basic + add_significance(plot_data, significance, config, sign_type)
+        basic = basic + add_significance(plot_data, significance, config, significance_plotgeom)
     end
     plot_equation = basic * mapp
 
@@ -176,7 +176,7 @@ function plot_erp!(
     return f
 end
 
-function add_significance(plot_data, significance, config, sign_type)
+function add_significance(plot_data, significance, config, significance_plotgeom)
     p = deepcopy(significance)
 
     # for now, add them to the fixed effect
@@ -205,7 +205,7 @@ function add_significance(plot_data, significance, config, sign_type)
     posY = stepY * -0.05 + scaleY[1]
     Δt = diff(plot_data.time[1:2])[1] # added length of significance polygone
 
-    if sign_type == :line
+    if significance_plotgeom == :line
         Δy = 0.01 # height of significance polygone
     else
         Δy = 0.5
