@@ -117,6 +117,6 @@ end
     anim.save("topomap_animation_mne.gif", writer = "ffmpeg", fps = framerate)
 end
 
-# Note, that due to some bugs in (probably) `CondaPkg` topoplot is black and white. 
+# Note, that due to some bugs in (probably) `PythonCall` topoplot is black and white. 
 
 # ![](topomap_animation_mne.gif)
