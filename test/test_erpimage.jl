@@ -212,3 +212,7 @@ end
     tmp_d = rand(5, 10)
     plot_erpimage(tmp_d, sortvalues = string.(1:10), show_sortval = true)
 end
+
+@testset "ERP image with user-setted colorrange" begin
+    plot_erpimage(dat, colorbar = (; colorrange = (-0.75, 0.75)))
+end
