@@ -46,9 +46,9 @@ else
     const modelmatrices = Unfold.get_Xs
 end
 
-include("plotconfig.jl")
+include("configs.jl")
+include("configs_supportive.jl")
 include("docstring_template.jl")
-include("supportive_defaults.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")

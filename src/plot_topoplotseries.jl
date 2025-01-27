@@ -69,6 +69,7 @@ function plot_topoplotseries!(
     interactive_scatter = nothing,
     topo_axis = (;),
     topo_attributes = (;),
+    topolabels_rounding = (; sigdigits = 3),
     #uncertainty = false,
     kwargs...,
 )
@@ -95,6 +96,14 @@ function plot_topoplotseries!(
     # check number of topoplots and group the data accordint to their location
     data_row, topoplot_xlables, layout =
         cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
+
+    # Replace and round numeric labels in `topoplot_xlables`
+    topoplot_xlables = @lift replace.(
+        $topoplot_xlables,
+        r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
+            num = round_number(x, topolabels_rounding) # this number should be adjustable
+        end,
+    )
 
     ftopo, axlist = eeg_topoplot_series!(
         f[1, 1],
@@ -133,6 +142,20 @@ function plot_topoplotseries!(
 
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
+end
+
+function round_number(x, rounding_config)
+    if haskey(rounding_config, :digits) && haskey(rounding_config, :sigdigits)
+        error(
+            "Only one of :digits or :sigdigits should be provided in topolabels_rounding.",
+        )
+    elseif haskey(rounding_config, :digits)
+        round(parse(Float64, x), digits = rounding_config[:digits])
+    elseif haskey(rounding_config, :sigdigits)
+        round(parse(Float64, x), sigdigits = rounding_config[:sigdigits])
+    else
+        error("Rounding configuration must contain either :digits or :sigdigits.")
+    end
 end
 
 function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
@@ -178,15 +201,8 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
     end
 
     topoplot_xlables = @lift string.(($data_unstacked[:, 1]))
-    topoplot_xlables_rounded = @lift replace.(
-        $topoplot_xlables,
-        r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
-            num = round(parse(Float64, x), digits = 1) # this number should be adjustable
-            num == floor(num) ? string(Int(num)) : string(num)
-        end,
-    )
 
     rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
     layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
-    return data_row, topoplot_xlables_rounded, layout
+    return data_row, topoplot_xlables, layout
 end
