@@ -49,7 +49,6 @@ end
         plot_topoplotseries(
             df;
             bin_num = 5,
-            col_labels = true,
             mapping = (; col = :condition),
             positions = positions,
         ),
@@ -136,7 +135,6 @@ end
 
     plot_topoplotseries(
         df;
-        col_labels = true,
         mapping = (; col = :condition),
         axis = (; xlabel = "test"),
         positions = positions,

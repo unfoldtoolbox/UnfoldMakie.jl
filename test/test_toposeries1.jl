@@ -273,6 +273,26 @@ end
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
+@testset "toposeries: adjusted precision 1" begin
+    df.time = df.time .+ 0.5555
+    plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        topolabels_rounding = (; digits = 3),
+    )
+end
+
+@testset "toposeries: adjusted precision 2" begin
+    df.time = df.time .+ 0.5555
+    plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        topolabels_rounding = (; sigdigits = 3),
+    )
+end
+
 @testset "toposeries: colgap" begin
     with_theme(colgap = 50) do
         plot_topoplotseries(df, bin_num = 5; positions = positions)
