@@ -30,7 +30,7 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
 df_toposeries, pos_toposeries = example_data("bootstrap_toposeries");
-df_toposeries = df_toposeries[df_toposeries.trial.<=15, :]
+df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 
 
 # # Uncertainty via additional row
@@ -71,7 +71,6 @@ f
 # `rng` - random number generated. Be sure to send the same rng from outside the function.
 bootstrap_toposeries(df; kwargs...) = bootstrap_toposeries(MersenneTwister(), df; kwargs...)
 function bootstrap_toposeries(rng::AbstractRNG, df)
-    
     df1 = groupby(df, [:time, :channel])
     len_estimate = length(df1[1].estimate)
     bootstrap_ix = rand(rng, 1:len_estimate, len_estimate) # random sample with replacement
