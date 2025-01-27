@@ -109,14 +109,23 @@ function plot_erpimage!(
     ax.xticks = round.(LinRange(minimum(times.val), maximum(times.val), 5), digits = 2)
     ax.yticklabelsvisible = true
 
-    clims = @lift (min($filtered_data...), max($filtered_data...)) # set limits for colorbar
-    hm = heatmap!(ax, times, yvals, filtered_data; colorrange = clims, config.visual...)
+    # get() retrieves the value of :colorrange from config.colorbar if it exists; otherwise, it uses the default value, which is the @lift expression.
+    crange = get(
+        config.colorbar,
+        :colorrange,
+        @lift (min($filtered_data...), max($filtered_data...))
+    )
+    # Check if crange is an Observable, and extract its value if needed
+    crange_value = isa(crange, Observable) ? crange[] : crange
+    # Create the tick labels for the colorbar
+    cb_ticks = LinRange(crange_value[1], crange_value[2], 5)
+
+    hm = heatmap!(ax, times, yvals, filtered_data; colorrange = crange, config.visual...)
 
     if meanplot
         ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     end
 
-    cb_ticks = LinRange(minimum(filtered_data.val), maximum(filtered_data.val), 5) # set ticklables for colorbar
     rounded_ticks = round.(cb_ticks, digits = 2)
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, string.(rounded_ticks))))
 
