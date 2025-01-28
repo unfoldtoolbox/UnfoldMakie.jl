@@ -26,7 +26,7 @@ Multiple miniature topoplots in regular distances.
     Except for the interpolated heatmap, all lines/points are vectors.\\
     This is typically what you want, otherwise you get ~128x128 vectors per topoplot, which makes everything very slow.
 - `col_labels::Bool`, `row_labels::Bool = true`\\
-    Shows column and row labels for categorical values. 
+    Shows column and row labels in faceting mode. (not implemented)
 - `positions::Vector{Point{2, Float32}} = nothing`\\
     Specify channel positions. Requires the list of x and y positions for all unique electrodes.
  - `labels::Vector{String} = nothing`\\
@@ -63,8 +63,8 @@ function plot_topoplotseries!(
     labels = nothing,
     nrows = 1,
     combinefun = mean,
-    col_labels = false,
-    row_labels = true,
+    col_labels = nothing,
+    row_labels = nothing,
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
     topo_axis = (;),
@@ -73,6 +73,11 @@ function plot_topoplotseries!(
     #uncertainty = false,
     kwargs...,
 )
+
+    @assert(
+        isnothing(col_labels) & isnothing(row_labels),
+        "col_labels and row_labels are not implemented right now. please contact us if you need them"
+    )
     data = _as_observable(data_inp)
     positions = get_topo_positions(; positions = positions, labels = labels)
 
@@ -144,6 +149,7 @@ function plot_topoplotseries!(
     return f
 end
 
+#round(323434.2323;(;sigdigits=3)...) - other way to implement it
 function round_number(x, rounding_config)
     if haskey(rounding_config, :digits) && haskey(rounding_config, :sigdigits)
         error(
