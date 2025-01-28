@@ -1,8 +1,8 @@
 #include("setup.jl")
-data, pos = TopoPlots.example_data()
-dat = data[:, 240, 1]
+dat, pos = TopoPlots.example_data()
+#dat = dat[:, 240, 1]
 df = DataFrame(
-    :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
+    :estimate => eachcol(Float64.(dat[:, 100:40:300, 1])),
     :circularVariable => [0, 50, 80, 120, 180, 210],
     :time => 100:40:300,
 )
@@ -24,7 +24,7 @@ d_topo, positions = example_data("TopoPlots.jl")
         )
     end
 
-    @testset "tooManyBoundsErr" begin
+    @testset "Too Many BoundsErr" begin
         testdf = DataFrame(
             estimate = [[4.0, 1.0], [4.0, 3.0], [4.0, 3.0]],
             predictor = [70, 80, 90],

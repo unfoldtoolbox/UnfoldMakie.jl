@@ -91,11 +91,7 @@ function plot_erpimage!(
 
     config_kwargs!(config; kwargs...)
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
-    ax = Axis(ga[1:4, 1:4]; config.axis...)
 
-    ax.yticks = LinRange(1, size(to_value(data), 2), 5)
-
-    ax.yticklabelsvisible = true
     sortindex = sortindex_management(sortindex, sortvalues, data)
     filtered_data = @lift(
         UnfoldMakie.imfilter(
@@ -106,21 +102,37 @@ function plot_erpimage!(
 
     yvals = @lift(1:size($filtered_data, 2))
 
-    hm = heatmap!(ax, times, yvals, filtered_data; config.visual...)
+    ax = Axis(ga[1:4, 1:4]; config.axis...)
+
+    ax.yticks = round.(LinRange(1, size(data.val, 2), 5))
+    ax.xticks = round.(LinRange(minimum(times.val), maximum(times.val), 5), digits = 2)
+    ax.yticklabelsvisible = true
+
+    # get() retrieves the value of :colorrange from config.colorbar if it exists; otherwise, it uses the default value, which is the @lift expression.
+    crange = get(
+        config.colorbar,
+        :colorrange,
+        @lift (min($filtered_data...), max($filtered_data...))
+    )
+    # Check if crange is an Observable, and extract its value if needed
+    crange_value = isa(crange, Observable) ? crange[] : crange
+    # Create the tick labels for the colorbar
+    cb_ticks = LinRange(crange_value[1], crange_value[2], 5)
+
+    hm = heatmap!(ax, times, yvals, filtered_data; colorrange = crange, config.visual...)
 
     if meanplot
         ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     end
 
+    rounded_ticks = round.(cb_ticks, digits = 2)
+    config_kwargs!(config, colorbar = (; ticks = (cb_ticks, string.(rounded_ticks))))
+
     if show_sortval
         ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
     elseif config.layout.use_colorbar != false
-        Colorbar(
-            ga[1:4, 5],
-            hm,
-            label = config.colorbar.label,
-            labelrotation = config.colorbar.labelrotation,
-        )
+
+        Colorbar(ga[1:4, 5], hm; config.colorbar...)
     end
     hidespines!(ax, :r, :t)
     apply_layout_settings!(config; fig = f, hm = hm, ax = ax, plot_area = (4, 1))
@@ -193,12 +205,7 @@ function ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_ax
     hidespines!(axempty)
     hidespines!(axleft, :r, :t)
     if config.layout.use_colorbar != false
-        Colorbar(
-            gb[1:4, 6],
-            hm,
-            label = config.colorbar.label,
-            labelrotation = config.colorbar.labelrotation,
-        )
+        Colorbar(gb[1:4, 6], hm; config.colorbar...)
     end
     apply_layout_settings!(config; fig = f, ax = axleft)
 end

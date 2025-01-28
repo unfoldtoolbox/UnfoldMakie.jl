@@ -49,14 +49,14 @@ plot_parallelcoordinates(
     subset(results_plot, :channel => x -> x .< 10);
     mapping = (; color = :coefname),
     axis = (; title = "normalize = nothing"),
-)
+);
 plot_parallelcoordinates(
     f[2, 1],
     subset(results_plot, :channel => x -> x .< 10);
     mapping = (; color = :coefname),
     normalize = :minmax,
     axis = (; title = "normalize = :minmax"),
-)
+);
 f
 
 # ## Color schemes
@@ -71,14 +71,14 @@ plot_parallelcoordinates(
     mapping = (; color = :coefname),
     visual = (; colormap = :tab10),
     axis = (; title = "colormap = tab10"),
-)
+);
 plot_parallelcoordinates(
     f[2, 1],
     subset(results_plot, :channel => x -> x .<= 5);
     mapping = (; color = :coefname),
     visual = (; colormap = :Accent_3),
     axis = (; title = "colormap = Accent_3"),
-)
+);
 f
 
 # ## Labels
@@ -104,7 +104,7 @@ plot_parallelcoordinates(
     ax_ticklabels = :all,
     normalize = :minmax,
     axis = (; title = "ax_ticklabels = :all"),
-) # show all ticks on all axes
+); # show all ticks on all axes
 plot_parallelcoordinates(
     f[2, 1],
     subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
@@ -112,7 +112,7 @@ plot_parallelcoordinates(
     ax_ticklabels = :left,
     normalize = :minmax,
     axis = (; title = "ax_ticklabels = :left"),
-) # show all ticks on the left axis, but only extremities on others 
+); # show all ticks on the left axis, but only extremities on others 
 plot_parallelcoordinates(
     f[3, 1],
     subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
@@ -120,7 +120,7 @@ plot_parallelcoordinates(
     ax_ticklabels = :outmost,
     normalize = :minmax,
     axis = (; title = "ax_ticklabels = :outmost"),
-) # show ticks on extremities of all axes
+); # show ticks on extremities of all axes
 
 plot_parallelcoordinates(
     f[4, 1],
@@ -129,7 +129,7 @@ plot_parallelcoordinates(
     ax_ticklabels = :none,
     normalize = :minmax,
     axis = (; title = "ax_ticklabels = :none"),
-) #  disable all ticks
+); #  disable all ticks
 f
 
 # ## Bending the parallel plot
@@ -141,13 +141,13 @@ plot_parallelcoordinates(
     f[1, 1],
     subset(results_plot, :channel => x -> x .< 10),
     axis = (; title = "bend = false"),
-)
+);
 plot_parallelcoordinates(
     f[2, 1],
     subset(results_plot, :channel => x -> x .< 10),
     bend = true,
     axis = (; title = "bend = true"),
-)
+);
 f
 
 
@@ -162,14 +162,14 @@ plot_parallelcoordinates(
     mapping = (; color = :coefname),
     visual = (; alpha = 0.1),
     axis = (; title = "alpha = 0.1"),
-)
+);
 plot_parallelcoordinates(
     f[2, 1],
     uf_5chan,
     mapping = (; color = :coefname),
     visual = (; alpha = 0.9),
     axis = (; title = "alpha = 0.9"),
-)
+);
 f
 
 # # Configurations of Parallel coordinates plot

@@ -94,11 +94,7 @@ plot_erp!(
     legend = (; nbanks = 2),
 )
 
-plot_parallelcoordinates(
-    f[3, 2:3],
-    uf_5chan;
-    mapping = (; color = :coefname),
-)
+plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))
 
 plot_erpimage!(f[1, 4:5], times, d_singletrial)
 plot_circular_topoplots!(

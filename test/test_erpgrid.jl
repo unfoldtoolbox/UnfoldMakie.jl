@@ -1,14 +1,14 @@
-data, pos = TopoPlots.example_data()
-data = data[:, :, 1]
+dat, pos = TopoPlots.example_data()
+dat = dat[:, :, 1]
 
 df, pos2 = example_data("TopoPlots.jl")
 
 @testset "erpgrid: one plot is out of the border" begin
-    plot_erpgrid(data[1:3, :], pos[1:3])
+    plot_erpgrid(dat[1:3, :], pos[1:3])
 end
 
 @testset "erpgrid: data input with Matrix" begin
-    plot_erpgrid(data[1:6, :], pos[1:6])
+    plot_erpgrid(dat[1:6, :], pos[1:6])
 end
 
 @testset "erpgrid: data input with DataFrame" begin
@@ -18,16 +18,16 @@ end
 end
 
 @testset "erpgrid: drawlabels" begin
-    plot_erpgrid(data, pos; drawlabels = true)
+    plot_erpgrid(dat, pos; drawlabels = true)
 end
 
 @testset "erpgrid: drawlabels with user_defined channel names" begin
-    plot_erpgrid(data[1:6, :], pos[1:6], raw_ch_names[1:6]; drawlabels = true)
+    plot_erpgrid(dat[1:6, :], pos[1:6], raw_ch_names[1:6]; drawlabels = true)
 end
 
 @testset "erpgrid: customizable labels" begin
     plot_erpgrid(
-        data[1:6, :],
+        dat[1:6, :],
         pos[1:6],
         raw_ch_names[1:6];
         drawlabels = true,
@@ -37,7 +37,7 @@ end
 
 @testset "erpgrid: customizable vlines and hlines" begin
     plot_erpgrid(
-        data[1:6, :],
+        dat[1:6, :],
         pos[1:6],
         raw_ch_names[1:6];
         hlines_grid_axis = (; color = :red),
@@ -47,7 +47,7 @@ end
 
 @testset "erpgrid: customizable lines" begin
     plot_erpgrid(
-        data[1:6, :],
+        dat[1:6, :],
         pos[1:6],
         raw_ch_names[1:6];
         lines_grid_axis = (; color = :red),
@@ -56,13 +56,13 @@ end
 
 @testset "erpgrid: GridPosition" begin
     f = Figure()
-    plot_erpgrid!(f[1, 1], data, pos)
+    plot_erpgrid!(f[1, 1], dat, pos)
     f
 end
 
 @testset "erpgrid: change x and y labels" begin
     f = Figure()
-    plot_erpgrid!(f[1, 1], data, pos; axis = (; xlabel = "s", ylabel = "µV"))
+    plot_erpgrid!(f[1, 1], dat, pos; axis = (; xlabel = "s", ylabel = "µV"))
     f
 end
 
@@ -73,7 +73,7 @@ end
     gd = f[2, 2] = GridLayout()
     gc = f[3, 1] = GridLayout()
     ge = f[4, 1] = GridLayout()
-    plot_erpgrid!(gb, data, pos; axis = (; xlabel = "s", ylabel = "µV"))
+    plot_erpgrid!(gb, dat, pos; axis = (; xlabel = "s", ylabel = "µV"))
     for (label, layout) in zip(["A", "B", "C", "D", "E"], [ga, gb, gc, gd, ge])
         Label(
             layout[1, 1, TopLeft()],
@@ -90,7 +90,7 @@ end
 
 @testset "erpgrid: error of unequal data and positions" begin
     err1 = nothing
-    t() = error(plot_erpgrid(data[1:6, :], pos[1:7], raw_ch_names[1:6]; drawlabels = true))
+    t() = error(plot_erpgrid(dat[1:6, :], pos[1:7], raw_ch_names[1:6]; drawlabels = true))
     try
         t()
     catch err1
@@ -99,7 +99,7 @@ end
 
 @testset "erpgrid: error of unequal ch_names and positions" begin
     err1 = nothing
-    t() = error(plot_erpgrid(data[1:6, :], pos[1:6], raw_ch_names[1:7]; drawlabels = true))
+    t() = error(plot_erpgrid(dat[1:6, :], pos[1:6], raw_ch_names[1:7]; drawlabels = true))
     try
         t()
     catch err1

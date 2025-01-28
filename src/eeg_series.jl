@@ -3,7 +3,7 @@
         fig,
         data_inp::Union{<:Observable,<:AbstractMatrix};
         layout = nothing,
-        xlabels = nothing,
+        topoplot_xlables = nothing,
         labels = nothing,
         rasterize_heatmaps = true,
         interactive_scatter = nothing,
@@ -22,8 +22,8 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
     Matrix with size = (n_channel, n_topoplots).
 - `layout::Vector{Tuple{Int64, Int64}}`\\
     Vector of tuples with coordinates for each topoplot.
-- `xlabels::Vector{String}`\\
-    Vector of xlabels for each topoplot. 
+- `topoplot_xlables::Vector{String}`\\
+    Vector of xlables for each topoplot. 
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
@@ -49,7 +49,7 @@ function eeg_topoplot_series!(
     fig,
     data_inp::Union{<:Observable,<:AbstractMatrix};
     layout = nothing,
-    xlabels = nothing, # can be a vector too
+    topoplot_xlables = nothing, # can be a vector too
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
     highlight_scatter = false,
@@ -60,11 +60,7 @@ function eeg_topoplot_series!(
 )
     # for performance, new variable name is necessary, as type might change
     data = _as_observable(data_inp)
-
     topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
-
-    qminmax = @lift(extract_colorrange($data))
-    topo_attributes = update_axis(topo_attributes; colorrange = qminmax)
 
     # do the col/row plot
     axlist = []
@@ -83,12 +79,10 @@ function eeg_topoplot_series!(
             r = layout[t_idx][1]
             c = layout[t_idx][2]
         end
-        #@show r c topo_axis xlabels t_idx
-        #@show xlabels
         ax = Axis(
             fig[r, c];
             topo_axis...,
-            xlabel = isnothing(xlabels) ? "" : to_value(xlabels)[t_idx],
+            xlabel = isnothing(topoplot_xlables) ? "" : to_value(topoplot_xlables)[t_idx],
         )
         # select data
         topo_attributes = scatter_management(
@@ -109,28 +103,7 @@ function eeg_topoplot_series!(
     if typeof(fig) != GridLayout && typeof(fig) != GridLayoutBase.GridSubposition
         colgap!(fig.layout, 0)
     end
-    return fig, axlist, topo_attributes[:colorrange]
-end
-
-function label_management(cat_or_cont_columns, df_single, col)
-    if cat_or_cont_columns == "cat"
-        tmp_labels = string(to_value(df_single)[1, col])
-    else
-        tmp_labels = string(to_value(df_single).cont_cuts[1, :][])
-    end
-    return tmp_labels
-end
-
-function topoplot_subselection(data_mean, col, row, select_col, select_row, r, c)
-    sel = 1 .== ones(size(to_value(data_mean), 1))
-    if !isnothing(col)
-        sel = sel .&& (to_value(data_mean)[:, :col_coord] .== select_col[c]) # subselect
-    end
-    if !isnothing(row)
-        sel = sel .&& (to_value(data_mean)[:, :row_coord] .== select_row[r]) # subselect
-    end
-    df_single = @lift($data_mean[sel, :])
-    return df_single
+    return fig, axlist
 end
 
 function scatter_management( # should be cheked and simplified
@@ -177,7 +150,6 @@ end
     eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
-
 Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
 
 Format of Arrays:\\
