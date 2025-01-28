@@ -19,8 +19,8 @@ using Animations
 # Here we will present new ways to show uncertainty for topoplots series.
 
 # Uncertainty in EEG data usually comes from subjects and trials: 
-# 1) Subjects may vary by phsiological or behavioral features; 
-# 2) Something can change between trials (electrode connection can got worse etc.).
+# 1) Subjects can vary in phisological or behavioral characteristics; 
+# 2) Something can change between trials (electrode connection can get worse, etc.).
 
 # Data input
 include("../../../example_data.jl")
@@ -31,7 +31,7 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
 df_toposeries, pos_toposeries = example_data("bootstrap_toposeries");
 df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
-
+rng = MersenneTwister(1)
 
 # # Uncertainty via additional row
 # In this case we alread have two datasets: `df` with mean estimates and `df_uncert` with variability estimation.
@@ -85,7 +85,7 @@ end
 # `update_ratio` - transition ratio between time1 and time2.
 # `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
 
-function ease_between(new, old, update_ratio; easing_function = sineio())
+function ease_between(old, new, update_ratio; easing_function = sineio())
 
     anim = Animation(0, old, 1, new; defaulteasing = easing_function)
     return at(anim, update_ratio)
@@ -108,7 +108,7 @@ plot_topoplotseries!(
 # Basic toposeries
 record(f, "bootstrap_toposeries.mp4"; framerate = 2) do io
     for i = 1:10
-        dat_obs[] = bootstrap_toposeries(df_toposeries)
+        dat_obs[] = bootstrap_toposeries(rng, df_toposeries)
         recordframe!(io)
     end
 end;
@@ -128,7 +128,7 @@ plot_topoplotseries!(
 )
 record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
     for i = 1:10
-        dat_obs[] = bootstrap_toposeries(df_toposeries)
+        dat_obs[] = bootstrap_toposeries(rng, df_toposeries)
         recordframe!(io)
     end
 end;
@@ -147,15 +147,14 @@ plot_topoplotseries!(
     axis = (; xlabel = "Time [msec]"),
 )
 record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
-    rng = MersenneTwister(1)
     for n_bootstrapping = 1:10
         recordframe!(io)
         new_df = bootstrap_toposeries(rng, df_toposeries)
-        old_estimate = dat_obs.val.estimate
+        old_estimate = deepcopy(dat_obs.val.estimate)
         for update_ratio in range(0, 1, length = 8)
-            #@show n_bootstrapping update_ratio
+
             dat_obs.val.estimate .=
-                ease_between(new_df.estimate, old_estimate, update_ratio)
+                ease_between(old_estimate, new_df.estimate, update_ratio)
             notify(dat_obs)
             recordframe!(io)
         end
