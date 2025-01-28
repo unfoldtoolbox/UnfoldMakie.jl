@@ -68,7 +68,6 @@ end
 
     plot_topoplotseries(
         df;
-        col_labels = true,
         mapping = (; col = :condition),
         positions = positions,
     )
@@ -151,7 +150,6 @@ end
     plot_topoplotseries!(
         f[1, 1],
         df_obs;
-        col_labels = true,
         mapping = (; col = :condition),
         positions = positions,
     )
@@ -168,7 +166,6 @@ end
     obs_tuple = Observable((0, 0, 0))
     plot_topoplotseries(
         df;
-        col_labels = true,
         mapping = (; col = :condition),
         positions = positions,
         visual = (; label_scatter = (markersize = 15, strokewidth = 2)),
