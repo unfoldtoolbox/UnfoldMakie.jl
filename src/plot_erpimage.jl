@@ -92,7 +92,6 @@ function plot_erpimage!(
     config_kwargs!(config; kwargs...)
     !isnothing(to_value(sortindex)) ? @assert(to_value(sortindex) isa Vector{Int}) : ""
 
-
     sortindex = sortindex_management(sortindex, sortvalues, data)
     filtered_data = @lift(
         UnfoldMakie.imfilter(

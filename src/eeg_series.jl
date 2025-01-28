@@ -80,7 +80,6 @@ function eeg_topoplot_series!(
             r = layout[t_idx][1]
             c = layout[t_idx][2]
         end
-
         ax = Axis(
             fig[r, c];
             topo_axis...,
@@ -152,7 +151,7 @@ end
     eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
-
+    
 Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
 
 Format of Arrays:\\
