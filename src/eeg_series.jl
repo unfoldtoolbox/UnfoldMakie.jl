@@ -60,6 +60,7 @@ function eeg_topoplot_series!(
 )
     # for performance, new variable name is necessary, as type might change
     data = _as_observable(data_inp)
+
     topo_axis = update_axis(supportive_defaults(:topo_default_series); topo_axis...)
 
     # do the col/row plot
@@ -150,6 +151,7 @@ end
     eeg_array_to_dataframe(data::AbstractMatrix, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::AbstractVector, label_aliases::AbstractVector)
     eeg_array_to_dataframe(data::Union{AbstractMatrix, AbstractVector{<:Number}})
+    
 Helper function converting an array (Matrix or Vector) to a tidy `DataFrame` with columns `:estimate`, `:time` and `:label` (with aliases `:color`, `:group`, `:channel`).
 
 Format of Arrays:\\
