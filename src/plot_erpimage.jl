@@ -146,7 +146,7 @@ function ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     trace = @lift(mean($data, dims = 2)[:, 1])
     meanplot_axis = update_axis(supportive_defaults(:meanplot_default); meanplot_axis...)
     xticks = @lift(round.(LinRange(minimum($times), maximum($times), 5), digits = 2))
-    yticks = @lift(round.(LinRange(minimum($trace), maximum($trace), 5), digits = 1))
+    yticks = @lift(round.(LinRange(minimum($trace), maximum($trace), 3), digits = 1))
 
     axbottom = Axis(
         ga[5, 1:4];
