@@ -202,13 +202,7 @@ begin
         plot_erp(eff; mapping = (; color = :condition,))
     end
 
-    @testset "ERP plot: error of not stating mapping.color" begin
-        err1 = nothing
-        t() = error(plot_erp(eff; mapping = (; col = :condition,)))
-        try
-            t()
-        catch err1
-        end
-
+    @testset "ERP plot: no color specified" begin
+        plot_erp(eff; mapping = (; col = :condition,))
     end
 end

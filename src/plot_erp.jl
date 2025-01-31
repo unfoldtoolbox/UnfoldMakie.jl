@@ -125,6 +125,28 @@ function plot_erp!(
             mapp = mapp * AlgebraOfGraphics.mapping(; i => tmp)
         end
     end
+
+    if !haskey(config.mapping, :color)
+        config_kwargs!(config; visual = (; colormap = nothing, color = :black))
+
+        @warn """By default we used `black` color for lines. If you need something else, please specify `config.visual.color`."""
+        is_categorical = true
+    else
+
+        # Determine color mapping
+        is_symbolic_color = isa(config.mapping.color, Symbol)
+        color_type =
+            is_symbolic_color ? AlgebraOfGraphics.nonnumeric : config.mapping.color[2]
+
+        # Check if the color data is categorical
+        color_mapper = is_symbolic_color ? config.mapping.color : config.mapping.color[1]
+        color_data = plot_data[:, color_mapper]
+        is_categorical =
+            isa(color_data[1], String) ||
+            isa(color_data[1], Bool) ||
+            color_type == AlgebraOfGraphics.nonnumeric
+    end
+
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
 
@@ -148,24 +170,6 @@ function plot_erp!(
     plot_equation = basic * mapp
 
     f_grid = f[1, 1] = GridLayout()
-
-    if !haskey(config.mapping, :color)
-        error(
-            "Please specify `config.mapping.color` or ensure `plot_data` contains a column named `:color` or `:coefname`.",
-        )
-    end
-
-    # Determine color mapping
-    is_symbolic_color = isa(config.mapping.color, Symbol)
-    color_type = is_symbolic_color ? AlgebraOfGraphics.nonnumeric : config.mapping.color[2]
-
-    # Check if the color data is categorical
-    color_mapper = is_symbolic_color ? config.mapping.color : config.mapping.color[1]
-    color_data = plot_data[:, color_mapper]
-    is_categorical =
-        isa(color_data[1], String) ||
-        isa(color_data[1], Bool) ||
-        color_type == AlgebraOfGraphics.nonnumeric
 
     # Draw the plot accordingly
     drawing = if is_categorical
