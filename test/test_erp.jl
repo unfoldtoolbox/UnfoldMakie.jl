@@ -205,4 +205,7 @@ begin
     @testset "ERP plot: no color specified" begin
         plot_erp(eff; mapping = (; col = :condition,))
     end
+    @testset "ERP plot: color is specified" begin
+        plot_erp(eff; mapping = (; col = :condition,), visual = (; color = :red))
+    end
 end
