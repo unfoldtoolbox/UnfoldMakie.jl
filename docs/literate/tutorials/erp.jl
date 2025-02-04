@@ -45,14 +45,6 @@ plot_erp(results, mapping = (; color = :coefname => "Conditions"))
 
 # Effect plot shows how ERP voltage is affected by variation of some variable (here: `:contionous`).
 
-# - `categorical_color::Bool = true` 
-
-#     Treat `:color` as continuous or categorical variable in case of numeric `:color` column.
-# - `categorical_group::Bool = true` 
-
-#    Treat `:group` as categorical variable by default in case of numeric `:group` column.
-
-
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),

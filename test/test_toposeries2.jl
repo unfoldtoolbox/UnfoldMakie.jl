@@ -66,11 +66,7 @@ end
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
 
-    plot_topoplotseries(
-        df;
-        mapping = (; col = :condition),
-        positions = positions,
-    )
+    plot_topoplotseries(df; mapping = (; col = :condition), positions = positions)
 end
 
 @testset "4 conditions" begin

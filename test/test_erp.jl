@@ -189,3 +189,23 @@ end
 
     end
 end
+
+begin
+    data, evts = UnfoldSim.predef_eeg(; noiselevel = 8)
+    evts.condition = evts.condition .== "face"
+
+    basisfunction = firbasis(τ = (-0.1, 0.5), sfreq = 100; interpolate = false)
+    f = @formula 0 ~ 1 + condition + continuous
+    m = fit(UnfoldModel, [Any => (f, basisfunction)], evts, data, eventcolumn = "type")
+    eff = effects(Dict(:condition => [true, false]), m)
+    @testset "ERP plot: color with Boolean values" begin
+        plot_erp(eff; mapping = (; color = :condition,))
+    end
+
+    @testset "ERP plot: no color specified" begin
+        plot_erp(eff; mapping = (; col = :condition,))
+    end
+    @testset "ERP plot: color is specified" begin
+        plot_erp(eff; mapping = (; col = :condition,), visual = (; color = :red))
+    end
+end
