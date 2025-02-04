@@ -125,6 +125,29 @@ function plot_erp!(
             mapp = mapp * AlgebraOfGraphics.mapping(; i => tmp)
         end
     end
+
+    if !haskey(config.mapping, :color)
+        if !haskey(config.visual, :color)
+            config_kwargs!(config; visual = (; colormap = nothing, color = :black))
+            @warn """By default we used `black` color for lines. If you need something else, please specify `config.visual.color`."""
+        end
+        is_categorical = true
+    else
+
+        # Determine color mapping
+        is_symbolic_color = isa(config.mapping.color, Symbol)
+        color_type =
+            is_symbolic_color ? AlgebraOfGraphics.nonnumeric : config.mapping.color[2]
+
+        # Check if the color data is categorical
+        color_mapper = is_symbolic_color ? config.mapping.color : config.mapping.color[1]
+        color_data = plot_data[:, color_mapper]
+        is_categorical =
+            isa(color_data[1], String) ||
+            isa(color_data[1], Bool) ||
+            color_type == AlgebraOfGraphics.nonnumeric
+    end
+
     # remove x / y
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
 
@@ -149,19 +172,16 @@ function plot_erp!(
 
     f_grid = f[1, 1] = GridLayout()
 
-    color_mapper =
-        isa(config.mapping.color, Symbol) ? config.mapping.color : config.mapping.color[1]
-    color_type = isa(config.mapping.color, Symbol) ? "nonnumeric" : config.mapping.color[2]
-
-    scales_tmp = if !isa(plot_data[:, color_mapper][1], String) && color_type != nonnumeric
-        drawing = draw!(
+    # Draw the plot accordingly
+    drawing = if is_categorical
+        draw!(f_grid, plot_equation; axis = config.axis)  # Categorical case
+    else
+        draw!(
             f_grid,
             plot_equation,
             scales(Color = (; colormap = config.visual.colormap));
             axis = config.axis,
-        ) # for continuous
-    else
-        drawing = draw!(f_grid, plot_equation; axis = config.axis) # for categorical
+        )  # Continuous case
     end
 
     if config.layout.show_legend == true
