@@ -70,47 +70,30 @@ function plot_erpgrid!(
     lines_grid_axis = (;),
     kwargs...,
 )
+    data = validate_inputs(data, positions, ch_names)
+    positions = normalize_positions(positions)
     config = PlotConfig(:erpgrid)
     config_kwargs!(config; kwargs...)
-
-    if typeof(data) == DataFrame #maybe better would be put it into signature?
-        data = Matrix(data)
-    end
-    if length(positions) != length(ch_names)
-        error(
-            "Length of positions and channel names are not equal: $(length(positions)) and $(length(ch_names))",
-        )
-    end
-    if size(data, 1) != length(positions)
-        error(
-            "Number of data rows and positions length are not equal: $(size(data, 1)) and $(length(positions))",
-        )
-    end
-    positions = hcat([[p[1], p[2]] for p in positions]...)
-    minmaxrange = (maximum(positions, dims = 2) - minimum(positions, dims = 2)) #should be different for x and y
-    positions = (positions .- mean(positions, dims = 2)) ./ minmaxrange .+ 0.5
 
     axlist = []
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
     labels_grid_axis =
         update_axis(supportive_defaults(:labels_grid_default); labels_grid_axis...)
     for (ix, p) in enumerate(eachcol(positions))
-        x = p[1]
-        y = p[2]
         ax = Axis(
             f[1, 1],
-            width = Relative(0.2),
-            height = Relative(0.2),
-            halign = x,
-            valign = y,
+            width = Relative(0.1),
+            height = Relative(0.1),
+            halign = p[1],
+            valign = p[2],
         )
         if drawlabels
             text!(ax, rel_zeropoint + 0.1, 1; text = ch_names[ix], labels_grid_axis...)
         end
         # todo: add label if not nothing
-
         push!(axlist, ax)
     end
+
     hlines_grid_axis =
         update_axis(supportive_defaults(:hlines_grid_default); hlines_grid_axis...)
     vlines_grid_axis =
@@ -124,7 +107,7 @@ function plot_erpgrid!(
     times = isnothing(times) ? (1:size(data, 2)) : times
 
     # todo: add customizable kwargs
-    h = lines!.(axlist, Ref(times), eachrow(data); lines_grid_axis...)
+    lines!.(axlist, Ref(times), eachrow(data); lines_grid_axis...)
 
     linkaxes!(axlist...)
     hidedecorations!.(axlist)
@@ -154,4 +137,31 @@ function plot_erpgrid!(
         rotation = π / 2,
     )
     f
+end
+
+
+# Helper function for validation
+function validate_inputs(data, positions, ch_names)
+    if isa(data, DataFrame)
+        data = Matrix(data)
+    end
+    if length(positions) != length(ch_names)
+        error(
+            "Length of positions and channel names are not equal: $(length(positions)) and $(length(ch_names))",
+        )
+    end
+    if size(data, 1) != length(positions)
+        error(
+            "Number of data rows and positions length are not equal: $(size(data, 1)) and $(length(positions))",
+        )
+    end
+    return data
+end
+
+# Normalize positions
+function normalize_positions(positions)
+    pos_matrix = hcat([[p[1], p[2]] for p in positions]...)
+    minmaxrange = maximum(pos_matrix, dims = 2) - minimum(pos_matrix, dims = 2)
+    normalized = (pos_matrix .- mean(pos_matrix, dims = 2)) ./ minmaxrange .+ 0.5
+    return normalized
 end
