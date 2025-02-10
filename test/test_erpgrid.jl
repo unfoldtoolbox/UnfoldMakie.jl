@@ -33,7 +33,7 @@ end
 @testset "erpgrid: adding coordinates" begin
     pos3 = deepcopy(pos)
     pos3[1] = Point(pos3[1][1], pos3[1][2] + 0.1)
-    pos3[3] = Point(pos3[3][1] - 0.1, pos3[3][2] )
+    pos3[3] = Point(pos3[3][1] - 0.1, pos3[3][2])
     plot_erpgrid(dat[1:3, :], pos3[1:3])
 end
 
@@ -63,6 +63,15 @@ end
         pos[1:6],
         raw_ch_names[1:6];
         lines_grid_axis = (; color = :red),
+    )
+end
+
+@testset "erpgrid: customizable subaxes" begin
+    plot_erpgrid(
+        dat[1:6, :],
+        pos[1:6],
+        raw_ch_names[1:6];
+        subaxes = (; width = Relative(0.2)),
     )
 end
 
@@ -117,4 +126,3 @@ end
     catch err1
     end
 end
-
