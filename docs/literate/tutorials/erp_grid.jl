@@ -17,6 +17,7 @@ include("../../../example_data.jl")
 
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
+channels_32, positions_32 = example_data("motage32.jl")
 
 
 plot_erpgrid(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
@@ -29,15 +30,15 @@ plot_erpgrid(data, pos; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV
 # You can adjust the coordinates of subplots to improve their alignment.
 # One simple method is rounding the coordinates to specific intervals.
 
-# Example: Rounding the y-coordinate to the nearest 0.2 (1/5).
-pos_new = [Point2(p[1], round(p[2] * 5) / 5) for p in pos]
-plot_erpgrid(data, pos_new; drawlabels = true)
+# Example: Rounding the y-coordinate by 3 precision digits.
+pos_new = [Point2(p[1], round(p[2], digits = 3)) for p in positions_32]
+plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
 
 # To manually adjust the position of a specific subplot, modify its coordinates using `Point()` with arithmetic operations.
 
 # Example: Shifting the first subplot 0.1 units upward on the y-axis.
-pos_new[1] = Point(pos_new[1][1], pos_new[1][2] + 0.1)
-plot_erpgrid(data, pos_new; drawlabels = true)
+pos_new[31] = Point(pos_new[31][1] + 0.2, pos_new[31][2]) # P9
+plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
 
 # # Configurations for Channel image
 
