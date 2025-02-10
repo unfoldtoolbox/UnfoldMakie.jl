@@ -19,11 +19,25 @@ data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 
 
-plot_erpgrid!(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
 
-# # Plot with labels
+# # Adding labels
 
-plot_erpgrid!(data, pos; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(data, pos; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
+
+# # Customizing coordinates
+# You can adjust the coordinates of subplots to improve their alignment.
+# One simple method is rounding the coordinates to specific intervals.
+
+# Example: Rounding the y-coordinate to the nearest 0.2 (1/5).
+pos_new = [Point2(p[1], round(p[2] * 5) / 5) for p in pos]
+plot_erpgrid(dat, pos_new; drawlabels = true)
+
+# To manually adjust the position of a specific subplot, modify its coordinates using `Point()` with arithmetic operations.
+
+# Example: Shifting the first subplot 0.1 units upward on the y-axis.
+pos_new[1] = Point(pos_new[1][1], pos_new[1][2] + 0.1)
+plot_erpgrid(dat, pos_new; drawlabels = true)
 
 # # Configurations for Channel image
 

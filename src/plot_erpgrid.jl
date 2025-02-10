@@ -29,6 +29,10 @@ Plot an ERP image.
     Here you can flexibly change configurations of the labels on all subaxes.\\
     To see all options just type `?text` in REPL.\\
     Defaults: $(supportive_defaults(:labels_grid_default))
+- `subaxis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of all subaxes. F.e. make them wider or shorter\\
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(supportive_defaults(:subaxis_default))
         
 ## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
@@ -63,11 +67,12 @@ function plot_erpgrid!(
     positions::Vector,
     ch_names::Vector{String};
     drawlabels = false,
-    times = -1:size(data, 2)-2, #arbitrary
+    times = nothing,
     labels_grid_axis = (;),
     hlines_grid_axis = (;),
     vlines_grid_axis = (;),
     lines_grid_axis = (;),
+    subaxis = (;),
     kwargs...,
 )
     data = validate_inputs(data, positions, ch_names)
@@ -76,16 +81,26 @@ function plot_erpgrid!(
     config_kwargs!(config; kwargs...)
 
     axlist = []
+    times = isnothing(times) ? (-10:size(data, 2)-11) : times
     rel_zeropoint = argmin(abs.(times)) ./ length(times)
+    
     labels_grid_axis =
         update_axis(supportive_defaults(:labels_grid_default); labels_grid_axis...)
+    hlines_grid_axis =
+        update_axis(supportive_defaults(:hlines_grid_default); hlines_grid_axis...)
+    vlines_grid_axis =
+        update_axis(supportive_defaults(:vlines_grid_default); vlines_grid_axis...)
+    lines_grid_axis =
+        update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
+    subaxis =
+        update_axis(supportive_defaults(:subaxis_default); subaxis...)
+    
     for (ix, p) in enumerate(eachcol(positions))
         ax = Axis(
             f[1, 1],
-            width = Relative(0.1),
-            height = Relative(0.1),
             halign = p[1],
-            valign = p[2],
+            valign = p[2];
+            subaxis...
         )
         if drawlabels
             text!(ax, rel_zeropoint + 0.1, 1; text = ch_names[ix], labels_grid_axis...)
@@ -94,12 +109,7 @@ function plot_erpgrid!(
         push!(axlist, ax)
     end
 
-    hlines_grid_axis =
-        update_axis(supportive_defaults(:hlines_grid_default); hlines_grid_axis...)
-    vlines_grid_axis =
-        update_axis(supportive_defaults(:vlines_grid_default); vlines_grid_axis...)
-    lines_grid_axis =
-        update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
+    
 
     hlines!.(axlist, Ref([0.0]); hlines_grid_axis...)
     vlines!.(axlist, Ref([0.0]); vlines_grid_axis...)
