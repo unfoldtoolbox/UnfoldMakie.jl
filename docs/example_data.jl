@@ -16,6 +16,7 @@ Datasets:
 - `sort_data` - 2 DataFrames: 
     - `dat` for EEG recordings  and `evts` with event variables occured during experiment.\\
     - `evts` could be used for sorting EEG data in ERP image. 
+- `montage_32` - return positions and channel names for 32-channel montage.
 
 Models:
 - `UnfoldLinearModel` - Model with formula `1 + condition + continuous`.
@@ -224,38 +225,60 @@ function example_data(example = "TopoPlots.jl")
         pos2d = to_positions(pos3d')
         pos_toposeries = [Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
         return df_toposeries, pos_toposeries
-    elseif example == "raw_ch_names"
+
+    elseif example == "montage_32" # rename to channels_30
+        # Channel names
+        channels_32 = [
+            "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",
+            "FC5", "FC1", "FC2", "FC6",
+            "T7", "C3", "Cz", "C4", "T8",
+            "CP5", "CP1", "CP2", "CP6",
+            "P7", "P3", "Pz", "P4", "P8",
+            "O1", "Oz", "O2",
+            "F9", "F10", "P9", "P10",
+        ]
+        # Compute positions
+        positions_32 = [
+            Point{2,Float32}(-0.5, 1.0),   # Fp1
+            Point{2,Float32}(0.5, 1.0),   # Fp2
+            Point{2,Float32}(-0.9, 0.6),   # F7
+            Point{2,Float32}(-0.3, 0.6),   # F3
+            Point{2,Float32}(0.0, 0.6),   # Fz
+            Point{2,Float32}(0.3, 0.6),   # F4
+            Point{2,Float32}(0.9, 0.6),   # F8
+            Point{2,Float32}(-0.7, 0.3),   # FC5
+            Point{2,Float32}(-0.2, 0.3),   # FC1
+            Point{2,Float32}(0.2, 0.3),   # FC2
+            Point{2,Float32}(0.7, 0.3),   # FC6
+            Point{2,Float32}(-1.0, 0.0),   # T7
+            Point{2,Float32}(-0.5, 0.0),   # C3
+            Point{2,Float32}(0.0, 0.0),   # Cz
+            Point{2,Float32}(0.5, 0.0),   # C4
+            Point{2,Float32}(1.0, 0.0),   # T8
+            Point{2,Float32}(-0.7, -0.3),   # CP5
+            Point{2,Float32}(-0.2, -0.3),   # CP1
+            Point{2,Float32}(0.2, -0.3),   # CP2
+            Point{2,Float32}(0.7, -0.3),   # CP6
+            Point{2,Float32}(-0.9, -0.6),   # P7
+            Point{2,Float32}(-0.3, -0.6),   # P3
+            Point{2,Float32}(0.0, -0.6),   # Pz
+            Point{2,Float32}(0.3, -0.6),   # P4
+            Point{2,Float32}(0.9, -0.6),   # P8
+            Point{2,Float32}(-0.5, -0.9),   # O1
+            Point{2,Float32}(0.0, -0.9),   # Oz
+            Point{2,Float32}(0.5, -0.9),   # O2
+            Point{2,Float32}(-1.1, 0.8),   # F9
+            Point{2,Float32}(1.1, 0.8),   # F10
+            Point{2,Float32}(-1.1, -0.8),   # P9
+            Point{2,Float32}(1.1, -0.8),    # P10
+        ]
+    elseif example == "raw_ch_names" # rename to channels_30
         return [
-            "FP1",
-            "F3",
-            "F7",
-            "FC3",
-            "C3",
-            "C5",
-            "P3",
-            "P7",
-            "P9",
-            "PO7",
-            "PO3",
-            "O1",
-            "Oz",
-            "Pz",
-            "CPz",
-            "FP2",
-            "Fz",
-            "F4",
-            "F8",
-            "FC4",
-            "FCz",
-            "Cz",
-            "C4",
-            "C6",
-            "P4",
-            "P8",
-            "P10",
-            "PO8",
-            "PO4",
-            "O2",
+            "FP1", "F3", "F7", "FC3", "C3", "C5",
+            "P3", "P7", "P9", "PO7", "PO3", "O1",
+            "Oz", "Pz", "CPz", "FP2", "Fz", "F4",
+            "F8", "FC4", "FCz", "Cz", "C4", "C6",
+            "P4", "P8", "P10", "PO8", "PO4", "O2",
         ]
     else
         error("unknown example data")

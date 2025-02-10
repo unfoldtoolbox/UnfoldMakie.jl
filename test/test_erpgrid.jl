@@ -2,6 +2,11 @@ dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 
 df, pos2 = example_data("TopoPlots.jl")
+channels_32, positions_32 = example_data("motage32.jl")
+
+@testset "erpgrid: montage 32" begin
+    plot_erpgrid(dat[1:32, :], positions_32, channels_32; drawlabels = true)
+end
 
 @testset "erpgrid: one plot is out of the border" begin
     plot_erpgrid(dat[1:3, :], pos[1:3])
@@ -30,11 +35,16 @@ end
     plot_erpgrid(dat, pos_new; drawlabels = true)
 end
 
+@testset "erpgrid: rounding coordinates 2" begin
+    pos_new = [Point2(p[1], round(p[2], digits = 3)) for p in positions_32]
+    plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
+end
+
 @testset "erpgrid: adding coordinates" begin
-    pos3 = deepcopy(pos)
-    pos3[1] = Point(pos3[1][1], pos3[1][2] + 0.1)
-    pos3[3] = Point(pos3[3][1] - 0.1, pos3[3][2])
-    plot_erpgrid(dat[1:3, :], pos3[1:3])
+    pos_new = [Point2(p[1], round(p[2], digits = 3)) for p in positions_32]
+    pos_new[31] = Point(pos_new[31][1] + 0.2, pos_new[31][2])
+
+    plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
 end
 
 @testset "erpgrid: customizable labels" begin
