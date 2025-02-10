@@ -19,9 +19,11 @@ data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 
 
-f = Figure()
-plot_erpgrid!(f[1, 1], data, pos; axis = (; xlabel = "s", ylabel = "µV"))
-f
+plot_erpgrid!(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
+
+# # Plot with labels
+
+plot_erpgrid!(data, pos; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
 
 # # Configurations for Channel image
 
