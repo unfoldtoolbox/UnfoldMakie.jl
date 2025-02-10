@@ -25,6 +25,18 @@ end
     plot_erpgrid(dat[1:6, :], pos[1:6], raw_ch_names[1:6]; drawlabels = true)
 end
 
+@testset "erpgrid: rounding coordinates" begin
+    pos_new = [Point2(p[1], round(p[2] * 5) / 5) for p in pos]
+    plot_erpgrid(dat, pos_new; drawlabels = true)
+end
+
+@testset "erpgrid: adding coordinates" begin
+    pos3 = deepcopy(pos)
+    pos3[1] = Point(pos3[1][1], pos3[1][2] + 0.1)
+    pos3[3] = Point(pos3[3][1] - 0.1, pos3[3][2] )
+    plot_erpgrid(dat[1:3, :], pos3[1:3])
+end
+
 @testset "erpgrid: customizable labels" begin
     plot_erpgrid(
         dat[1:6, :],
@@ -105,3 +117,4 @@ end
     catch err1
     end
 end
+
