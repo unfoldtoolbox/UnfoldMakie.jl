@@ -17,7 +17,7 @@ include("../../../example_data.jl")
 
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
-channels_32, positions_32 = example_data("motage32.jl")
+channels_32, positions_32 = example_data("montage_32")
 
 
 plot_erpgrid(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
@@ -40,6 +40,7 @@ plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
 pos_new[31] = Point(pos_new[31][1] + 0.2, pos_new[31][2]) # P9
 plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
 
+# Hint: you can ask any AI assistant to generate a montage coordinates and channel names you wish. They are quite good at them
 # # Configurations for Channel image
 
 # ```@docs
