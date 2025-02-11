@@ -15,3 +15,4 @@ with_theme(Theme(; fontsize = 25, fonts = (; regular = "Courier New"))) do
         axis = (; xlabel = "340 ms")
     )
 end
+

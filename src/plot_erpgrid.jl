@@ -108,7 +108,7 @@ function plot_erpgrid!(
 
     times = isnothing(times) ? (1:size(data, 2)) : times
 
-    # drawing lines
+    # drawing ERP lines
     lines!.(axlist, Ref(times), eachrow(data); lines_grid_axis...)
 
     linkaxes!(axlist...)
@@ -146,16 +146,23 @@ function normalize_positions(positions)
     return normalized
 end
 
-
+# Draw an axis indicator in the bottom-left corner.
 function axis_indicator(f, config)
     ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05),)
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
+
+    # Set the x and y axis limits based on the provided `config`
     xlims!(ax2, config.axis.xlim)
     ylims!(ax2, config.axis.ylim)
+    
+    # Define the starting points for arrows (origin at (0, 0) for both directions)
     xstart = [Point2f(0), Point2f(0)]
+    # Define the direction vectors for the arrows (one pointing right and the other pointing up)
     xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
+    # Draw the arrows with the specified starting points and directions
     arrows!(xstart, xdir, arrowsize = 10)
+    # Add the x-axis label
     text!(
         0.02,
         0,
@@ -163,6 +170,7 @@ function axis_indicator(f, config)
         fontsize = config.axis.fontsize,
         align = (:left, :top),
     )
+    # Add the y-axis label
     text!(
         -0.008,
         0.01,
