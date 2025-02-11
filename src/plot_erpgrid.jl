@@ -103,43 +103,19 @@ function plot_erpgrid!(
         push!(axlist, ax)
     end
 
-
-
     hlines!.(axlist, Ref([0.0]); hlines_grid_axis...)
     vlines!.(axlist, Ref([0.0]); vlines_grid_axis...)
 
     times = isnothing(times) ? (1:size(data, 2)) : times
 
-    # todo: add customizable kwargs
+    # drawing lines
     lines!.(axlist, Ref(times), eachrow(data); lines_grid_axis...)
 
     linkaxes!(axlist...)
     hidedecorations!.(axlist)
     hidespines!.(axlist)
 
-    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05))
-    hidespines!(ax2)
-    hidedecorations!(ax2, label = false)
-    xlims!(ax2, config.axis.xlim)
-    ylims!(ax2, config.axis.ylim)
-    xstart = [Point2f(0), Point2f(0)]
-    xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
-    arrows!(xstart, xdir, arrowsize = 10)
-    text!(
-        0.02,
-        0,
-        text = config.axis.xlabel,
-        fontsize = config.axis.fontsize,
-        align = (:left, :top),
-    )
-    text!(
-        -0.008,
-        0.01,
-        text = config.axis.ylabel,
-        fontsize = config.axis.fontsize,
-        align = (:left, :baseline),
-        rotation = π / 2,
-    )
+    ax2 = axis_indicator(f, config)
     f
 end
 
@@ -168,4 +144,32 @@ function normalize_positions(positions)
     minmaxrange = maximum(pos_matrix, dims = 2) - minimum(pos_matrix, dims = 2)
     normalized = (pos_matrix .- mean(pos_matrix, dims = 2)) ./ minmaxrange .+ 0.5
     return normalized
+end
+
+
+function axis_indicator(f, config)
+    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05),)
+    hidespines!(ax2)
+    hidedecorations!(ax2, label = false)
+    xlims!(ax2, config.axis.xlim)
+    ylims!(ax2, config.axis.ylim)
+    xstart = [Point2f(0), Point2f(0)]
+    xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
+    arrows!(xstart, xdir, arrowsize = 10)
+    text!(
+        0.02,
+        0,
+        text = config.axis.xlabel,
+        fontsize = config.axis.fontsize,
+        align = (:left, :top),
+    )
+    text!(
+        -0.008,
+        0.01,
+        text = config.axis.ylabel,
+        fontsize = config.axis.fontsize,
+        align = (:left, :baseline),
+        rotation = π / 2,
+    )
+    return ax2
 end
