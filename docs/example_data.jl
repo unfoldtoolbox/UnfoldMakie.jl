@@ -348,7 +348,7 @@ function example_data(example = "TopoPlots.jl")
             Point{2,Float32}(-0.6, -0.9),  # TP9
             Point{2,Float32}(0.6, -0.9)    # TP10
         ]
-        return channels_64, positions_32
+        return channels_64, positions_64
     elseif example == "raw_ch_names" # rename to channels_30
         return [
             "FP1", "F3", "F7", "FC3", "C3", "C5",
