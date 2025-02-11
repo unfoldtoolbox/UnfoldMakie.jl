@@ -1,5 +1,6 @@
 # Customizing channel labels
 using CairoMakie, TopoPlots, MakieThemes
+using UnfoldMakie
 
 # Changing fonts and font size
 
