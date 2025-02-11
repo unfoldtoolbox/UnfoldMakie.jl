@@ -58,10 +58,11 @@ makedocs(;
             "Spline plot" => "generated/tutorials/splines.md",
         ],
         "How To" => [
-            "Change colormap of Butterfly plot" => "generated/how_to/position2color.md",
+            "Change colormap of butterfly plot" => "generated/how_to/position2color.md",
             "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
             "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
-            "Uncertainty visualization in topoplot series" => "generated/how_to/uncertain_topo.md",
+            "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",
+            "Customize channel labels" => "generated/how_to/customize_labels.md",
         ],
         "Explanations" => [
             "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
