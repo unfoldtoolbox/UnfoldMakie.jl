@@ -2,6 +2,12 @@ dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 
 df, pos2 = example_data("TopoPlots.jl")
+include("../docs/example_data.jl")
+channels_32, positions_32 = example_data("montage_32")
+
+@testset "erpgrid: montage 32" begin
+    plot_erpgrid(dat[1:32, :], positions_32, channels_32; drawlabels = true)
+end
 
 @testset "erpgrid: one plot is out of the border" begin
     plot_erpgrid(dat[1:3, :], pos[1:3])
@@ -23,6 +29,23 @@ end
 
 @testset "erpgrid: drawlabels with user_defined channel names" begin
     plot_erpgrid(dat[1:6, :], pos[1:6], raw_ch_names[1:6]; drawlabels = true)
+end
+
+@testset "erpgrid: rounding coordinates" begin
+    pos_new = [Point2(p[1], round(p[2] * 5) / 5) for p in pos]
+    plot_erpgrid(dat, pos_new; drawlabels = true)
+end
+
+@testset "erpgrid: rounding coordinates 2" begin
+    pos_new = [Point2(p[1], round(p[2], digits = 3)) for p in positions_32]
+    plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
+end
+
+@testset "erpgrid: adding coordinates" begin
+    pos_new = [Point2(p[1], round(p[2], digits = 3)) for p in positions_32]
+    pos_new[31] = Point(pos_new[31][1] + 0.2, pos_new[31][2])
+
+    plot_erpgrid(dat[1:32, :], pos_new, channels_32; drawlabels = true)
 end
 
 @testset "erpgrid: customizable labels" begin
@@ -51,6 +74,15 @@ end
         pos[1:6],
         raw_ch_names[1:6];
         lines_grid_axis = (; color = :red),
+    )
+end
+
+@testset "erpgrid: customizable subaxes" begin
+    plot_erpgrid(
+        dat[1:6, :],
+        pos[1:6],
+        raw_ch_names[1:6];
+        subaxes = (; width = Relative(0.2)),
     )
 end
 

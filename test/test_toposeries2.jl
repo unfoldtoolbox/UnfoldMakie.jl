@@ -65,6 +65,7 @@ end
 @testset "categorical columns" begin
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
     df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+    select!(df, Not(:time, :group, :color, :label_aliases))
 
     plot_topoplotseries(df; mapping = (; col = :condition), positions = positions)
 end

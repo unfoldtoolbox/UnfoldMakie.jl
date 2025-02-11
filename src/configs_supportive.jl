@@ -53,6 +53,8 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
         return (; color = :gray, linewidth = 0.5, ymin = 0.2, ymax = 0.8)
     elseif cfg_symb == :lines_grid_default
         return (; color = :deepskyblue3)
+    elseif cfg_symb == :subaxes_default
+        return (; width = Relative(0.1), height = Relative(0.1))
     elseif cfg_symb == :labels_grid_default
         return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
         # plot_topoplot 
