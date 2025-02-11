@@ -35,7 +35,7 @@ UnfoldMakiePyMNEExt = "PyMNE"
 
 [compat]
 AlgebraOfGraphics = "0.7, 0.8, 0.9"
-BSplineKit = "0.16, 0.17"
+BSplineKit = "0.16, 0.17, 0.18"
 CategoricalArrays = "0.10"
 ColorSchemes = "3"
 ColorTypes = "0.11, 0.12"
