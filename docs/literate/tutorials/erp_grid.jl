@@ -18,13 +18,17 @@ include("../../../example_data.jl")
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 channels_32, positions_32 = example_data("montage_32")
+channels_64, positions_64 = example_data("montage_64")
 
 
 plot_erpgrid(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
 
 # # Adding labels
-
+# By default labels are just numbers.
 plot_erpgrid(data, pos; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
+
+# But you can also use predefined vector of channel labels. 
+plot_erpgrid(data, pos, channels_64; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
 
 # # Customizing coordinates
 # You can adjust the coordinates of subplots to improve their alignment.
@@ -40,7 +44,7 @@ plot_erpgrid(data[1:32, :], pos_new, channels_32; drawlabels = true)
 pos_new[31] = Point(pos_new[31][1] + 0.2, pos_new[31][2]) # P9
 plot_erpgrid(data[1:32, :], pos_new, channels_32; drawlabels = true)
 
-# Hint: you can ask any AI assistant to generate a montage coordinates and channel names you wish. They are quite good at them
+# Hint: you can ask any AI assistant to generate a montage coordinates and channel names you wish. They are quite good at that.
 # # Configurations for Channel image
 
 # ```@docs
