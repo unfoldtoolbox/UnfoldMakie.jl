@@ -28,7 +28,7 @@ Models:
 
 **Return Value:** `DataFrame`.
 """
-function example_data(example = "TopoPlots.jl")
+function example_data(example = "TopoPlots.jl"; noiselevel = 10)
     if example == "UnfoldLinearModel"
         # load and generate a simulated Unfold Design
         data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
@@ -205,7 +205,7 @@ function example_data(example = "TopoPlots.jl")
             design,
             mc,
             onset,
-            PinkNoise(noiselevel = 10.5),
+            PinkNoise(noiselevel = noiselevel),
             return_epoched = true,
         )
 

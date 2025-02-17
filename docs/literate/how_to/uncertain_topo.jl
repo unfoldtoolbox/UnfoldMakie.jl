@@ -29,7 +29,8 @@ df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
 
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
-df_toposeries, pos_toposeries = example_data("bootstrap_toposeries");
+# noiselevel is important for adding variability it your data
+df_toposeries, pos_toposeries = example_data("bootstrap_toposeries"; noiselevel = 7);
 df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1)
 
@@ -86,7 +87,6 @@ end
 # `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
 
 function ease_between(old, new, update_ratio; easing_function = sineio())
-
     anim = Animation(0, old, 1, new; defaulteasing = easing_function)
     return at(anim, update_ratio)
 end
@@ -135,7 +135,7 @@ end;
 # ![](bootstrap_toposeries_nocontours.mp4)
 
 # Toposeries with easing (smooth transition between frames)
-dat_obs = Observable(df_toposeries)
+dat_obs = Observable(bootstrap_toposeries(rng, df_toposeries))
 f = Figure()
 plot_topoplotseries!(
     f[1, 1],
