@@ -18,4 +18,3 @@
 # - The most usable and/or difficult figure configurations should be presentated in documentation with code examples.
 # - Users should have opportunity to customize all parts of the figure.
 # - Most people will not look at the defaults, so it is very important to encourage users to label important details of the figure.
-
