@@ -20,7 +20,7 @@ include("../../../example_data.jl")
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 pos = pos[1:30]
-raw_ch_names = example_data("raw_ch_names")
+raw_ch_names = example_data("raw_ch_names");
 
 
 plot_channelimage(data[1:30, :], pos, raw_ch_names;)
