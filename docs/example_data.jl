@@ -193,7 +193,7 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
             β = [1],
         )
 
-        hart = headmodel(type = "hartmut") # 227 electrodes
+        hart = headmodel() # 227 electrodes
         less_hart = magnitude(hart)[:, 1] # extract 1 lead field and 64 electrodes
 
         mc = UnfoldSim.MultichannelComponent(c, less_hart)
