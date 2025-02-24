@@ -29,10 +29,10 @@ dat, positions = TopoPlots.example_data();
 # # Plot Topoplots
 
 # Here we select a time point in 340 msec and the mean estimate. 
-plot_topoplot(dat[1:4, 340, 1]; positions = positions[1:4])
+plot_topoplot(dat[1:4, 340, 1]; positions = positions[1:4], axis = (; xlabel = "340 ms"),)
 
 df = DataFrame(:estimate => dat[:, 340, 1])
-plot_topoplot(df; positions = positions)
+plot_topoplot(df; positions = positions, axis = (; xlabel = "340 ms"),)
 
 
 # ## Setting sensor positions
@@ -104,7 +104,7 @@ begin
 end
 
 # # Highlighting channels
-plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
+plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "340 ms"),)
 
 
 # # Horizontal colorbars
