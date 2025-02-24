@@ -19,7 +19,7 @@ using Statistics
 
 include("../../../example_data.jl")
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-plot_erpimage(data)
+plot_erpimage(data, axis = (; xlabel = "Time [s]"))
 
 # # Plot ERP image
 
@@ -37,21 +37,22 @@ plot_erpimage(data)
 
 dat_e, evts, times = example_data("sort_data")
 dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2) # normalisation
-plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency)
+plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency, axis = (; xlabel = "Time [s]"))
 
 # To see the effect of sorting and normalization, also check this figure.
 
 f = Figure()
-plot_erpimage!(f[1, 1], times, dat_e; axis = (; ylabel = "test"))
+plot_erpimage!(f[1, 1], times, dat_e; axis = (; ylabel = "Test", xlabel = ""))
 plot_erpimage!(
     f[2, 1],
     times,
     dat_e;
     sortvalues = evts.Δlatency,
-    axis = (; ylabel = "test"),
+    axis = (; ylabel = "Test"),
+    axis = (; xlabel = "Time [s]"),
 )
-plot_erpimage!(f[1, 2], times, dat_norm;)
-plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency)
+plot_erpimage!(f[1, 2], times, dat_norm; axis = (; xlabel = ""))
+plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency, axis = (; xlabel = "Time [s]"))
 f
 
 
@@ -73,6 +74,7 @@ plot_erpimage(
     meanplot = true,
     colorbar = (label = "Voltage [µV]",),
     visual = (colormap = :viridis, colorrange = (-40, 40)),
+    axis = (; xlabel = "Time [s]"),
 )
 
 # Example of mean plot and plot of sorted values
@@ -82,6 +84,7 @@ plot_erpimage(
     sortvalues = evts.Δlatency,
     meanplot = true,
     show_sortval = true,
+    axis = (; xlabel = "Time [s]"),
 )
 
 # # Configurations for ERP image

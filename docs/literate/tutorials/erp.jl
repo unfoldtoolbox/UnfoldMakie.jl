@@ -37,7 +37,7 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 plot_erp(results)
 
 # To change legend title use `mapping.color`:
-plot_erp(results, mapping = (; color = :coefname => "Conditions"))
+plot_erp(results, mapping = (; color = :coefname => "Conditions"), axis = (; xlabel = "Time [s]"))
 
 # # Additional features
 
@@ -49,6 +49,7 @@ plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
     layout = (; use_colorbar = false),
+    axis = (; xlabel = "Time [s]"),
 )
 
 # ## Significance lines
@@ -64,6 +65,7 @@ significancevalues = DataFrame(
     from = [0.01, 0.2],
     to = [0.3, 0.4],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
+    axis = (; xlabel = "Time [s]"),
 )
 plot_erp(results; :significance => significancevalues)
 
@@ -84,6 +86,7 @@ plot_erp!(
     axis = (title = "Bad example", titlegap = 12),
     :stderror => false,
     mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = ""),
 )
 
 plot_erp!(
@@ -92,6 +95,7 @@ plot_erp!(
     axis = (title = "Good example", titlegap = 12),
     :stderror => true,
     mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = "Time [s]"),
 )
 
 ax = Axis(f[2, 1], width = Relative(1), height = Relative(1))
@@ -107,7 +111,7 @@ f
 
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
-plot_erp(select(results, Not(:stderror)); stderror = true)
+plot_erp(select(results, Not(:stderror)); stderror = true, axis = (; xlabel = "Time [s]"),)
 
 # Second way is to specify manually lower and higher borders of the error bands.
 
@@ -119,7 +123,7 @@ plot_erp(select(results, Not(:stderror)); stderror = true)
 
 m7 = example_data("7channels")
 results7 = coeftable(m7)
-plot_erp(results7, mapping = (; col = :channel, group = :channel))
+plot_erp(results7, mapping = (; col = :channel, group = :channel), axis = (; xlabel = "Time [s]"),)
 
 # # Configurations of ERP plot
 
