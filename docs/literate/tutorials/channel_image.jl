@@ -23,7 +23,7 @@ pos = pos[1:30]
 raw_ch_names = example_data("raw_ch_names");
 
 
-plot_channelimage(data[1:30, :], pos, raw_ch_names; axis = (; xlabel = "Time [s]"),)
+plot_channelimage(data[1:30, :], pos, raw_ch_names; axis = (; xlabel = "Time [s]"))
 
 # # Configurations for Channel image
 
