@@ -130,7 +130,12 @@ plot_erp(select(results, Not(:stderror)); stderror = true, mapping = (; color = 
 
 m7 = example_data("7channels")
 results7 = coeftable(m7)
-plot_erp(results7, mapping = (; col = :channel, group = :channel), mapping = (; color = :coefname => "Conditions"), axis = (; xlabel = "Time [s]"))
+plot_erp(
+    results7,
+    mapping = (; col = :channel, group = :channel),
+    mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = "Time [s]"),
+)
 
 # # Configurations of ERP plot
 
