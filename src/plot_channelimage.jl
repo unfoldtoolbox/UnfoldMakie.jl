@@ -77,24 +77,23 @@ function plot_channelimage!(
     if typeof(data) == DataFrame
         data = Matrix(data)
     end
-    iz = mean(data, dims = 3)[sorted_indecies, :, 1]' #how it could be 3 dimensions if my data is 2D?
+    iz = mean(data, dims = 3)[sorted_indecies, :, 1]' 
 
     gl = f[1, 1] = GridLayout()
     ax = Axis(
         gl[1, 1],
         xlabel = config.axis.xlabel,
+        xticks = round.(LinRange(minimum(times), maximum(times), 5), digits = 2),
         ylabel = config.axis.ylabel,
         yticks = 1:length(ch_names),
         ytickformat = xc -> sorted_names,
         yticklabelsize = config.axis.yticklabelsize,
     )
-    hm = Makie.heatmap!(times, 1:length(ch_names), iz, colormap = config.visual.colormap)
 
-    Makie.Colorbar(
-        gl[1, 2],
-        hm,
-        label = config.colorbar.label,
-        labelrotation = config.colorbar.labelrotation,
-    )
+    cb_ticks = LinRange(minimum(iz), maximum(iz), 5)
+    rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
+    config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
+    hm = Makie.heatmap!(times, 1:length(ch_names), iz, colormap = config.visual.colormap)
+    Colorbar(gl[1, 2], hm; config.colorbar...)
     return f
 end
