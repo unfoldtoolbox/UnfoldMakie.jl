@@ -52,7 +52,13 @@ plot_erpimage!(
     colorbar = (; label = ""),
 )
 plot_erpimage!(f[1, 2], times, dat_norm; axis = (; ylabel = "", xlabel = ""))
-plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency, axis = (; ylabel = "", xlabel = "Time [s]"))
+plot_erpimage!(
+    f[2, 2],
+    times,
+    dat_norm;
+    sortvalues = evts.Δlatency,
+    axis = (; ylabel = "", xlabel = "Time [s]"),
+)
 f
 
 
