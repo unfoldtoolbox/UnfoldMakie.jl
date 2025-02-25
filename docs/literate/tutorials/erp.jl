@@ -83,19 +83,17 @@ results = filter(row -> row.coefname != "continuous", results)
 plot_erp!(
     f[1, 1],
     results;
-    axis = (title = "Bad example", titlegap = 12),
+    axis = (title = "Bad example", titlegap = 12, xlabel = ""),
     :stderror => false,
     mapping = (; color = :coefname => "Conditions"),
-    axis = (; xlabel = ""),
 )
 
 plot_erp!(
     f[2, 1],
     results;
-    axis = (title = "Good example", titlegap = 12),
+    axis = (title = "Good example", titlegap = 12, xlabel = "Time [s]"),
     :stderror => true,
     mapping = (; color = :coefname => "Conditions"),
-    axis = (; xlabel = "Time [s]"),
 )
 
 ax = Axis(f[2, 1], width = Relative(1), height = Relative(1))

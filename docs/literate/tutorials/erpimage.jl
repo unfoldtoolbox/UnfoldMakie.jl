@@ -48,8 +48,7 @@ plot_erpimage!(
     times,
     dat_e;
     sortvalues = evts.Δlatency,
-    axis = (; ylabel = "Test"),
-    axis = (; xlabel = "Time [s]"),
+    axis = (; ylabel = "Test", xlabel = "Time [s]"),
 )
 plot_erpimage!(f[1, 2], times, dat_norm; axis = (; xlabel = ""))
 plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency, axis = (; xlabel = "Time [s]"))
