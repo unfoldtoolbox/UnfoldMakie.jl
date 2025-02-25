@@ -30,11 +30,11 @@ first(df, 3)
 
 # The default butterfly plot:
 
-plot_butterfly(df)
+plot_butterfly(df, axis = (; xlabel = "Time [s]"),)
 
 # The butterfly plot with corresponding topoplot. You need to provide the channel positions.
 
-plot_butterfly(df; positions = pos)
+plot_butterfly(df; positions = pos, axis = (; xlabel = "Time [s]"),)
 
 # You want to change size of topoplot markers and size of topoplot:
 
@@ -43,12 +43,13 @@ plot_butterfly(
     positions = pos,
     topo_attributes = (; label_scatter = (; markersize = 30)),
     topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+    axis = (; xlabel = "Time [s]"),
 )
 
 # You want to add vline and hline:
 
 f = Figure()
-plot_butterfly!(f, df; positions = pos)
+plot_butterfly!(f, df; positions = pos, axis = (; xlabel = "Time [s]"),)
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
 f
@@ -58,6 +59,7 @@ f
 plot_butterfly(
     df;
     positions = pos,
+    axis = (; xlabel = "Time [s]"),
     layout = (; hidedecorations = (:label => true, :ticks => true, :ticklabels => true)),
 )
 
@@ -82,6 +84,7 @@ plot_butterfly!(
     positions = pos,
     mapping = (; color = :highlight1),
     visual = (; color = 1:2, colormap = [gray, :red]),
+    axis = (; xlabel = "Time [s]"),
 )
 plot_butterfly!(
     f[1, 2],
@@ -89,6 +92,7 @@ plot_butterfly!(
     positions = pos,
     mapping = (; color = :highlight2),
     visual = (; color = 1:2, colormap = [gray, :red]),
+    axis = (; xlabel = "Time [s]"),
 )
 f
 
@@ -101,6 +105,7 @@ plot_butterfly(
     positions = pos,
     mapping = (; color = :highlight2, col = :highlight2),
     visual = (; color = 1:2, colormap = [gray, :red]),
+    axis = (; xlabel = "Time [s]"),
 )
 
 # # Column Mappings

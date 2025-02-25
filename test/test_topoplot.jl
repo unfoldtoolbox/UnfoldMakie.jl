@@ -135,3 +135,14 @@ end
     colgap!(f.layout, 0)
     f
 end
+
+@testset "topoplot: shared colorbars" begin
+    data_1, positions = TopoPlots.example_data()
+    data_2 = data_1 .* 100
+    min, max = minimum(data_2[:, 5, 1]), maximum(data_2[:, 5, 1])
+
+	f = Figure()
+	plot_topoplot!(f[1,1], data_1[:,5,1], positions=positions, visual=(; limits=(min,max)), layout = (; use_colorbar = false)) # how to increase the gap?
+	plot_topoplot!(f[1,2], data_2[:,5,1], positions=positions, visual=(; limits=(min,max)))
+	f
+end

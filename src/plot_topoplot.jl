@@ -100,13 +100,20 @@ function plot_topoplot!(
         )
     end
 
-    clims = @lift (min($data...), max($data...))
+    # Set the color limits (`clims`) either from the config if specified by user or dynamically based on the data.
+    if haskey(config.visual, :limits)
+        clims = Observable(config.visual.limits)
+    else
+        clims = @lift (min($data...), max($data...))
+    end
+
     if clims[][1] ≈ clims[][2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
 We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
+        
         ticks = @lift LinRange($clims[1], $clims[2], 5)
         rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
         @lift config_kwargs!(
