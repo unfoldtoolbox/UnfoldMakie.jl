@@ -38,7 +38,11 @@ res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 plot_erp(results)
 
 # To change legend title use `mapping.color`:
-plot_erp(results, mapping = (; color = :coefname => "Conditions"), axis = (; xlabel = "Time [s]"))
+plot_erp(
+    results,
+    mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = "Time [s]"),
+)
 
 # # Additional features
 
