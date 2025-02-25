@@ -101,8 +101,9 @@ function plot_parallelcoordinates(
     end
     UnfoldMakie.config_kwargs!(config; visual = (; color = c))
 
-    f1, ax, axlist, hlines = parallelcoordinates(
-        f,
+    outer_axis = Axis(f[1, 1]; config.axis...)
+    f1, outer_axis, axlist, hlines = parallelcoordinates(
+        f, outer_axis,
         d5;
         normalize = normalize,
         color = c,
@@ -110,7 +111,6 @@ function plot_parallelcoordinates(
         line_labels = line_labels,
         ax_labels = ax_labels,
         ax_ticklabels = ax_ticklabels,
-        config.visual...,
     )
     Label(
         f[1, 1, Top()],
@@ -120,35 +120,36 @@ function plot_parallelcoordinates(
         font = :bold,
     )
     if config.layout.show_legend
-        Legend(f[1, 2], ax, config.legend.title; config.legend...)
+        Legend(f[1, 2], outer_axis, config.legend.title; config.legend...)
     end
-    apply_layout_settings!(config; fig = f1, ax = ax)
+    apply_layout_settings!(config; fig = f1, ax = outer_axis)
     res =
-        isa(f, Figure) ? Makie.FigureAxisPlot(f, [ax, axlist], hlines[1]) :
-        Makie.AxisPlot([ax, axlist], hlines[1])
+        isa(f, Figure) ? Makie.FigureAxisPlot(f, [outer_axis, axlist], hlines[1]) :
+        Makie.AxisPlot([outer_axis, axlist], hlines[1])
     return res
 end
 
 
 function parallelcoordinates(
     f::Union{<:Figure,<:GridPosition,<:GridLayout},
+    outer_axis,
     data::AbstractMatrix;
+    normalize = :minmax,
     color = nothing,
+    bend = false,
     line_labels = nothing,
     colormap = Makie.wong_colors(),
     ax_labels = nothing,
     ax_ticklabels = :outmost, # :all, :left,:none
-    normalize = :minmax,
     alpha = 0.3,
-    bend = false,
 )
     @assert size(data, 2) > 1 "Currently, for parallel plotting to work, more than one line must be plotted"
     if isa(color, AbstractVector)
         @assert size(data, 2) == length(color)
     end
     x_pos = 1:size(data, 1)
-    ax = Axis(f[1, 1])
-    scene = ax.parent.scene
+
+    scene = outer_axis.parent.scene
 
     ax_labels = isnothing(ax_labels) ? string.(1:size(data, 1)) : ax_labels
 
@@ -211,7 +212,7 @@ function parallelcoordinates(
     hlines = []
     for (ix, r) in enumerate(eachcol(plotdata_int))
         h = lines!(
-            ax,
+            outer_axis,
             x_plotdata,
             r;
             alpha = alpha,
@@ -224,13 +225,13 @@ function parallelcoordinates(
     end
 
     # put the right limits + hide the data axes
-    xlims!(ax, 1, size(data, 1))
-    hidespines!(ax)
-    hidedecorations!(ax)
+    xlims!(outer_axis, 1, size(data, 1))
+    hidespines!(outer_axis)
+    hidedecorations!(outer_axis, label = false)
 
     # get some defaults - necessary for LinkAxis
     def = Makie.default_attribute_values(Axis, nothing)
-    axesOptions = (;
+    axes_options = (;
         spinecolor = :black,
         spinevisible = true,
         labelfont = def[:ylabelfont],
@@ -246,7 +247,7 @@ function parallelcoordinates(
     axlist = Makie.LineAxis[]
     for i in eachindex(x_pos)
         # link them to the parent axes size
-        axis_endpoints = lift(ax.scene.viewport) do area
+        axis_endpoints = lift(outer_axis.scene.viewport) do area
             center(x_pos[i], x_pos[end], area)
         end
         if isa(minlist, AbstractArray)
@@ -270,7 +271,7 @@ function parallelcoordinates(
             ticks = PCPTicks(),
             endpoints = axis_endpoints,
             tickformat = tickformater,
-            axesOptions...,
+            axes_options...,
         )
 
         pcp_title!(
@@ -283,20 +284,20 @@ function parallelcoordinates(
     end
 
     # add some space to the left and top
-    pro = ax.layoutobservables.protrusions[]
-    ax.layoutobservables.protrusions[] = GridLayoutBase.RectSides(
+    pro = outer_axis.layoutobservables.protrusions[]
+    outer_axis.layoutobservables.protrusions[] = GridLayoutBase.RectSides(
         (axlist[1].protrusion[]),
         pro.right,
         pro.bottom,
         pro.top + def[:titlegap],
     )
     if normalize == :minmax
-        ylims!(ax, 0, 1)
+        ylims!(outer_axis, 0, 1)
     else
-        ylims!(ax, minimum(minlist), maximum(maxlist))
+        ylims!(outer_axis, minimum(minlist), maximum(maxlist))
     end
 
-    return f, ax, axlist, hlines
+    return f, outer_axis, axlist, hlines
 end
 
 function surpress_inner_labels(val)

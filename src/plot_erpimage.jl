@@ -103,12 +103,12 @@ function plot_erpimage!(
     yvals = @lift(1:size($filtered_data, 2))
 
     ax = Axis(ga[1:4, 1:4]; config.axis...)
-
     ax.yticks = round.(LinRange(1, size(data.val, 2), 5))
     ax.xticks = round.(LinRange(minimum(times.val), maximum(times.val), 5), digits = 2)
     ax.yticklabelsvisible = true
 
-    # get() retrieves the value of :colorrange from config.colorbar if it exists; otherwise, it uses the default value, which is the @lift expression.
+    # get() retrieves the value of :colorrange from config.colorbar if it exists; 
+    # otherwise, it uses the default value, which is the @lift expression.
     crange = get(
         config.colorbar,
         :colorrange,
@@ -125,13 +125,12 @@ function plot_erpimage!(
         ei_meanplot(ax, data, config, f, ga, times, meanplot_axis)
     end
 
-    rounded_ticks = round.(cb_ticks, digits = 2)
-    config_kwargs!(config, colorbar = (; ticks = (cb_ticks, string.(rounded_ticks))))
+    rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
+    config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
     if show_sortval
         ei_sortvalue(sortvalues, f, ax, hm, config, sortval_xlabel, sortplot_axis)
     elseif config.layout.use_colorbar != false
-
         Colorbar(ga[1:4, 5], hm; config.colorbar...)
     end
     hidespines!(ax, :r, :t)

@@ -28,7 +28,7 @@ Models:
 
 **Return Value:** `DataFrame`.
 """
-function example_data(example = "TopoPlots.jl")
+function example_data(example = "TopoPlots.jl"; noiselevel = 10)
     if example == "UnfoldLinearModel"
         # load and generate a simulated Unfold Design
         data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
@@ -193,7 +193,7 @@ function example_data(example = "TopoPlots.jl")
             β = [1],
         )
 
-        hart = headmodel(type = "hartmut") # 227 electrodes
+        hart = headmodel() # 227 electrodes
         less_hart = magnitude(hart)[:, 1] # extract 1 lead field and 64 electrodes
 
         mc = UnfoldSim.MultichannelComponent(c, less_hart)
@@ -205,7 +205,7 @@ function example_data(example = "TopoPlots.jl")
             design,
             mc,
             onset,
-            PinkNoise(noiselevel = 10.5),
+            PinkNoise(noiselevel = noiselevel),
             return_epoched = true,
         )
 

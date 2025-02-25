@@ -92,7 +92,7 @@ plot_topoplotseries(
 # Using `colgap` in `with_theme` helps to adjust column gaps.
 
 with_theme(colgap = 5) do
-    plot_topoplotseries(df, bin_num = 5; positions = positions)
+    plot_topoplotseries(df, bin_num = 5; positions = positions, axis = (; xlabel = "Time windows [s]"),)
 end
 
 # However it doesn't work with subsets. Here you need to use `topoplot_axes.limits`.
@@ -105,6 +105,7 @@ begin
         bin_num = 5;
         positions = positions,
         topoplot_axes = (; limits = (-0.05, 1.05, -0.1, 1.05)),
+        axis = (; xlabel = "Time windows [s]"),
     )
     f
 end
@@ -118,6 +119,7 @@ plot_topoplotseries(
     bin_width,
     positions = positions,
     visual = (; enlarge = 0.9, contours = (; linewidth = 1, color = :black)),
+    axis = (; xlabel = "Time windows [s]"),
 )
 
 # ## Aggregating functions
@@ -146,7 +148,7 @@ plot_topoplotseries!(
     bin_width,
     positions = positions,
     combinefun = std,
-    axis = (; title = "combinefun = std"),
+    axis = (; title = "combinefun = std", xlabel = "Time windows [s]"),
 )
 f
 
@@ -159,10 +161,11 @@ df_col = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(posi
 plot_topoplotseries!(
     f[1, 1:5],
     df_col;
-    bin_num = 14,
+    bin_num = 16,
     nrows = 4,
     positions = positions,
-    visual = (; label_scatter = false),
+    visual = (; label_scatter = false, contours = false),
+    axis = (; xlabel = "Time windows [s]"),
 )
 f
 
@@ -190,6 +193,7 @@ begin
             ),
             label_text = true,
         ),
+        axis = (; xlabel = "Time windows [s]"),
     )
     f
 end
