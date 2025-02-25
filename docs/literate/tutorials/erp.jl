@@ -137,8 +137,7 @@ m7 = example_data("7channels")
 results7 = coeftable(m7)
 plot_erp(
     results7,
-    mapping = (; col = :channel, group = :channel),
-    mapping = (; color = :coefname => "Conditions"),
+    mapping = (; col = :channel, group = :channel, color = :coefname => "Conditions"),
     axis = (; xlabel = "Time [s]"),
 )
 
