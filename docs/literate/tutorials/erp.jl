@@ -118,7 +118,12 @@ f
 
 results.se_low = results.estimate .- 0.5
 results.se_high = results.estimate .+ 0.15
-plot_erp(select(results, Not(:stderror)); stderror = true, mapping = (; color = :coefname => "Conditions"), axis = (; xlabel = "Time [s]"))
+plot_erp(
+    select(results, Not(:stderror));
+    stderror = true,
+    mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = "Time [s]"),
+)
 
 # Second way is to specify manually lower and higher borders of the error bands.
 
