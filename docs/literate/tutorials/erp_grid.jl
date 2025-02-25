@@ -48,7 +48,13 @@ plot_erpgrid(
 
 # Example: Shifting the first subplot 0.1 units upward on the y-axis.
 pos_new[31] = Point(pos_new[31][1] + 0.2, pos_new[31][2]) # P9
-plot_erpgrid(data[1:32, :], pos_new, channels_32; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(
+    data[1:32, :],
+    pos_new,
+    channels_32;
+    drawlabels = true,
+    axis = (; xlabel = "s", ylabel = "µV"),
+)
 
 # Hint: you can ask any AI assistant to generate a montage coordinates and channel names you wish. They are quite good at that.
 # # Configurations for Channel image
