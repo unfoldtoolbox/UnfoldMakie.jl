@@ -164,8 +164,8 @@ plot_topoplotseries!(
     bin_num = 16,
     nrows = 4,
     positions = positions,
-    visual = (; label_scatter = false),
-    axis = (; xlabel = "Time [s]"),
+    visual = (; label_scatter = false, contours = false),
+    axis = (; xlabel = "Time windows [s]"),
 )
 f
 
