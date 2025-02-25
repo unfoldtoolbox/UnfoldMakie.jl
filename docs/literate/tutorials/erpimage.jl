@@ -49,7 +49,7 @@ plot_erpimage!(
     dat_e;
     sortvalues = evts.Δlatency,
     axis = (; xlabel = "Time [s]"),
-    colorbar = (; label = "")
+    colorbar = (; label = ""),
 )
 plot_erpimage!(f[1, 2], times, dat_norm; axis = (; ylabel = "", xlabel = ""))
 plot_erpimage!(f[2, 2], times, dat_norm; sortvalues = evts.Δlatency, axis = (; ylabel = "", xlabel = "Time [s]"))
