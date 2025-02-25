@@ -77,7 +77,7 @@ function plot_channelimage!(
     if typeof(data) == DataFrame
         data = Matrix(data)
     end
-    iz = mean(data, dims = 3)[sorted_indecies, :, 1]' 
+    iz = mean(data, dims = 3)[sorted_indecies, :, 1]'
 
     gl = f[1, 1] = GridLayout()
     ax = Axis(
