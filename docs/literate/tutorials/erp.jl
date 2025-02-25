@@ -71,7 +71,12 @@ significancevalues = DataFrame(
     to = [0.3, 0.4],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
-plot_erp(results; :significance => significancevalues, mapping = (; color = :coefname => "Conditions"), axis = (; xlabel = "Time [s]"))
+plot_erp(
+    results;
+    :significance => significancevalues,
+    mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = "Time [s]"),
+)
 
 # ## Error ribbons 
 
