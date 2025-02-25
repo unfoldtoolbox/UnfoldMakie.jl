@@ -36,7 +36,13 @@ plot_erpgrid(data, pos, channels_64; drawlabels = true, axis = (; xlabel = "s", 
 
 # Example: Rounding the y-coordinate by 3 precision digits.
 pos_new = [Point2(p[1], round(p[2], digits = 3)) for p in positions_32]
-plot_erpgrid(data[1:32, :], pos_new, channels_32; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(
+    data[1:32, :],
+    pos_new,
+    channels_32;
+    drawlabels = true,
+    axis = (; xlabel = "s", ylabel = "µV"),
+)
 
 # To manually adjust the position of a specific subplot, modify its coordinates using `Point()` with arithmetic operations.
 
