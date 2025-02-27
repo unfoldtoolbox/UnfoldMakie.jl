@@ -175,3 +175,36 @@ end
     plot_topoplotseries!(Figure(), data_obs3; bin_num = 5, positions = rand(Point2f, 10))
     data_obs3[] = UnfoldMakie.eeg_array_to_dataframe(rand(10, 20))
 end
+
+
+@testset "toposeries: differend combine functions for categorical" begin
+    df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+    df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
+    f = Figure(size = (500, 500))
+    plot_topoplotseries!(
+        f[1, 1],
+        df;
+        mapping = (; col = :condition),
+        positions = positions,
+        combinefun = mean,
+        axis = (; xlabel = "", title = "combinefun = mean"),
+    )
+    plot_topoplotseries!(
+        f[2, 1],
+        df;
+        mapping = (; col = :condition),
+        positions = positions,
+        combinefun = median,
+        axis = (; xlabel = "", title = "combinefun = median"),
+    )
+    plot_topoplotseries!(
+        f[3, 1],
+        df;
+        mapping = (; col = :condition),
+        positions = positions,
+        combinefun = std,
+        axis = (; xlabel = "", title = "combinefun = std"),
+    )
+
+    f
+end
