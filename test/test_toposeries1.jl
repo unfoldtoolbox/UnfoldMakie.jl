@@ -341,3 +341,10 @@ end
     )
     f
 end
+
+@testset "toposeries: colorrange" begin
+    plot_topoplotseries(df; bin_width = 80, positions = positions,
+        visual=(; colorrange=[-5,0.5]),
+        colorbar = (; label = "p-value", limits = (0, 0.1), ticks = ([0.0, 0.1], ["0", "0.1"])))
+
+end
