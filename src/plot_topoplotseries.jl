@@ -205,9 +205,13 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
         )
 
         data_unstacked = @lift unstack($data_binned, :channel, :estimate)
-        data_row = @lift Matrix($data_unstacked[:, 3:end])'
-        nrows = @lift(length(unique($data_unstacked[:, 2])))
-        n_topoplots = @lift($nrows * $n_topoplots)
+        if haskey(config.mapping, :row) && config.mapping.row === nothing
+            data_row = @lift Matrix($data_unstacked[:, 2:end])'
+        else
+            data_row = @lift Matrix($data_unstacked[:, 3:end])'
+            nrows = @lift(length(unique($data_unstacked[:, 2])))
+            n_topoplots = @lift($nrows * $n_topoplots)
+        end
     end
 
     topoplot_xlabels = @lift string.(($data_unstacked[:, 1]))
