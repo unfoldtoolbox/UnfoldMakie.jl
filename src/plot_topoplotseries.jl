@@ -173,10 +173,9 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
         n_topoplots =
             @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
         df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
-        df_combined = @lift combine($df_grouped, :estimate => mean)
-        data_unstacked = @lift unstack($df_combined, :channel, :estimate_mean)
+        df_combined = @lift combine($df_grouped, :estimate => combinefun => :estimate)
+        data_unstacked = @lift unstack($df_combined, :channel, :estimate)
         data_row = @lift Matrix($data_unstacked[:, 2:end])'
-
     else
         bins = @lift bins_estimation(
             $data[!, config.mapping.col];
