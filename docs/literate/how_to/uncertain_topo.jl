@@ -23,7 +23,6 @@ using Animations
 # 2) Something can change between trials (electrode connection can get worse, etc.).
 
 # Data input
-include("../../../example_data.jl")
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));

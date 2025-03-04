@@ -16,7 +16,6 @@ using MakieThemes
 
 
 # ## Data input
-include("../../../example_data.jl")
 d_topo, positions = example_data("TopoPlots.jl")
 uf_deconv = example_data("UnfoldLinearModelContinuousTime")
 uf = example_data("UnfoldLinearModel")

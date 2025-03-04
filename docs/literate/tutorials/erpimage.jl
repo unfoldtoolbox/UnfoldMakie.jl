@@ -17,7 +17,6 @@ using Statistics
 
 # Data input
 
-include("../../../example_data.jl")
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 plot_erpimage(dat, axis = (; xlabel = "Time [s]"))
 
