@@ -1,6 +1,12 @@
 dat, positions = TopoPlots.example_data()
 data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 
+#= 
+@testset "eeg_topoplot: colorbar" begin
+    f, a, h= TopoPlots.eeg_topoplot(1:10, positions=rand(Point2f, 10))
+    Colorbar(f[1,2], h)
+end =#
+
 @testset "topoplot: basic" begin
     plot_topoplot(dat[:, 50, 1]; positions)
 end
