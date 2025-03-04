@@ -7,7 +7,6 @@ using UnfoldMakie
 using CairoMakie
 using DataFrames
 
-include("../../../example_data.jl")
 data, pos = example_data("TopoPlots.jl")
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 
