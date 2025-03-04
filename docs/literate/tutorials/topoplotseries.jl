@@ -169,6 +169,22 @@ plot_topoplotseries!(
 )
 f
 
+# ## Row mapping
+
+# Use `mapping.row` to specify faceting by condition. 
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:12, 1], string.(1:length(positions)))
+df.condition = repeat(repeat(["A", "B", "C"], inner = 4), 64)
+df.time = repeat(repeat([1, 2, 3, 4], outer = 3), 64)
+
+with_theme(rowgap = 0) do
+    plot_topoplotseries(
+        df;
+        bin_num = 4,
+        positions = positions,
+        mapping = (; row = :condition),
+    )
+end
+
 
 # ## Channel labels
 
