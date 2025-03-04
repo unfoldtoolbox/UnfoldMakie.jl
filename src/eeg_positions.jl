@@ -354,7 +354,7 @@ standard_1005_2D = Dict(
     ],
 )
 
-function getLabelPos(label)
+function get_label_pos(label)
     l = uppercase(label)
     #change value range from [-1,1] to [0,1]
     return (standard_1005_2D[l][1] / 2.0 + 0.5, standard_1005_2D[l][2] / 2.0 + 0.5)
@@ -396,7 +396,7 @@ label_in_channel_order = [
     "VEOG_lower",
 ]
 
-function channelToLabel(channel)
+function channel_to_label(channel)
     return label_in_channel_order[channel]
 end
 
