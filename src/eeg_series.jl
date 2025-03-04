@@ -72,6 +72,9 @@ function eeg_topoplot_series!(
 
     r_vec, c_vec = init_grid(layout, data, fig)
     r_max = maximum(r_vec)
+    if row_labels !== nothing && length(to_value(row_labels)) != r_max
+        throw(ArgumentError("Length of row_labels must be equal to the number of rows in layout"))
+    end
 
     for t_idx = 1:size(to_value(data), 2)
         single_y = @lift $data[:, t_idx]
