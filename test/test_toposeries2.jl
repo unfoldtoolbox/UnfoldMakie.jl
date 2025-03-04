@@ -103,7 +103,7 @@ begin
         )
     end
     @testset "error: incorrect number of row labels" begin
-        @test_throws ArgumentError  begin
+        @test_throws ArgumentError begin
             plot_topoplotseries(
                 df;
                 bin_num = 4,
