@@ -81,7 +81,7 @@ function eeg_topoplot_series!(
 
         if row_labels !== nothing
             if c == 1
-                ax.ylabel = row_labels.val[r]
+                ax.ylabel = to_value(row_labels)[r]
             end
             if r == r_max
                 ax.xlabel =
