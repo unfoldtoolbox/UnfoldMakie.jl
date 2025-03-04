@@ -44,7 +44,7 @@ function plot_splines(
 
     ga = f[1, 1] = GridLayout()
 
-    terms = Unfold.formulas(m)[1].rhs.terms
+    terms = Unfold.terms(Unfold.formulas(m)[1].rhs)
     spl_title = join(terms, " + ")
 
     splFunction = Base.get_extension(Unfold, :UnfoldBSplineKitExt).splFunction
