@@ -3,7 +3,7 @@
         fig,
         data_inp::Union{<:Observable,<:AbstractMatrix};
         layout = nothing,
-        topoplot_xlables = nothing,
+        topoplot_xlabels = nothing,
         labels = nothing,
         rasterize_heatmaps = true,
         interactive_scatter = nothing,
@@ -22,7 +22,7 @@ The function takes the `combinefun = mean` over the `:time` column of `data`.
     Matrix with size = (n_channel, n_topoplots).
 - `layout::Vector{Tuple{Int64, Int64}}`\\
     Vector of tuples with coordinates for each topoplot.
-- `topoplot_xlables::Vector{String}`\\
+- `topoplot_xlabels::Vector{String}`\\
     Vector of xlables for each topoplot. 
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
@@ -49,7 +49,8 @@ function eeg_topoplot_series!(
     fig,
     data_inp::Union{<:Observable,<:AbstractMatrix};
     layout = nothing,
-    topoplot_xlables = nothing, # can be a vector too
+    topoplot_xlabels = nothing, # can be a vector too
+    row_labels = nothing,
     rasterize_heatmaps = true,
     interactive_scatter = nothing,
     highlight_scatter = false,
@@ -69,22 +70,30 @@ function eeg_topoplot_series!(
         @assert isa(interactive_scatter, Observable)
     end
 
+    r_vec, c_vec = init_grid(layout, data, fig)
+    r_max = maximum(r_vec)
+    if row_labels !== nothing && length(to_value(row_labels)) != r_max
+        throw(ArgumentError("Length of row_labels must be equal to the number of rows in layout"))
+    end
+
     for t_idx = 1:size(to_value(data), 2)
-
         single_y = @lift $data[:, t_idx]
-        if isnothing(layout)
-            r = 1
-            c = size(fig.layout, 2) + 1
+        r = r_vec[t_idx]
+        c = c_vec[t_idx]
+        ax = Axis(fig[r, c]; topo_axis...)
 
+        if row_labels !== nothing
+            if c == 1
+                ax.ylabel = to_value(row_labels)[r]
+            end
+            if r == r_max
+                ax.xlabel =
+                    isnothing(topoplot_xlabels) ? "" : to_value(topoplot_xlabels)[t_idx]
+            end
         else
-            r = layout[t_idx][1]
-            c = layout[t_idx][2]
+            ax.xlabel = isnothing(topoplot_xlabels) ? "" : to_value(topoplot_xlabels)[t_idx]
         end
-        ax = Axis(
-            fig[r, c];
-            topo_axis...,
-            xlabel = isnothing(topoplot_xlables) ? "" : to_value(topoplot_xlables)[t_idx],
-        )
+
         # select data
         topo_attributes = scatter_management(
             single_y,
@@ -93,7 +102,6 @@ function eeg_topoplot_series!(
             interactive_scatter,
         )
         single_topoplot = eeg_topoplot!(ax, single_y; positions, labels, topo_attributes...)
-
         if rasterize_heatmaps
             single_topoplot.plots[1].plots[1].rasterize = true
         end
@@ -107,7 +115,27 @@ function eeg_topoplot_series!(
     return fig, axlist
 end
 
-function scatter_management( # should be cheked and simplified
+function init_grid(layout, data, fig)
+    # Initialize vectors for r and c
+    r_vec = Vector{Int}()
+    c_vec = Vector{Int}()
+
+    # Populate r_vec and c_vec based on layout or default values
+    if isnothing(layout)
+        for t_idx = 1:size(to_value(data), 2)
+            push!(r_vec, 1)
+            push!(c_vec, size(fig.layout, 2) + t_idx)
+        end
+    else
+        for t_idx = 1:size(to_value(data), 2)
+            push!(r_vec, layout[t_idx][1])
+            push!(c_vec, layout[t_idx][2])
+        end
+    end
+    return r_vec, c_vec
+end
+
+function scatter_management(
     single_y,
     topo_attributes,
     highlight_scatter,

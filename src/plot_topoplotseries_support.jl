@@ -8,7 +8,7 @@ function row_col_management(n_topoplots, nrows, config)
             @warn "Impossible number of rows, set to 1 row"
             n_rows = 1
         elseif n_topoplots / nrows < 1
-            @warn "Impossible number of rows, set to $(n_topoplots) rows"
+            @warn "Impossible number of rows, set n_cols to $(n_topoplots) / rows"
         end
         n_cols = Int(ceil(n_topoplots / n_rows))
     end
