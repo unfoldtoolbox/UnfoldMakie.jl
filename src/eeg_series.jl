@@ -74,12 +74,11 @@ function eeg_topoplot_series!(
     r_max = maximum(r_vec)
 
     for t_idx = 1:size(to_value(data), 2)
-
         single_y = @lift $data[:, t_idx]
         r = r_vec[t_idx]
         c = c_vec[t_idx]
         ax = Axis(fig[r, c]; topo_axis...)
-        
+
         if row_labels !== nothing
             if c == 1
                 ax.ylabel = row_labels.val[r]
@@ -90,7 +89,7 @@ function eeg_topoplot_series!(
             end
         else
             ax.xlabel = isnothing(topoplot_xlabels) ? "" : to_value(topoplot_xlabels)[t_idx]
-        end  
+        end
 
         # select data
         topo_attributes = scatter_management(
