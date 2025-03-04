@@ -26,6 +26,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 TopoPlots = "2bdbdf9c-dbd8-403f-947b-1a4e0dd41a7a"
 Unfold = "181c99d8-e21b-4ff3-b70b-c233eddec679"
+UnfoldSim = "ed8ae6d2-84d3-44c6-ab46-0baf21700804"
 
 [weakdeps]
 PyMNE = "6c5003b2-cbe8-491c-a0d1-70088e6a0fd6"
@@ -57,6 +58,7 @@ StaticArrays = "1"
 Statistics = "1"
 TopoPlots = "0.1, 0.2"
 Unfold = "0.6, 0.7, 0.8"
+UnfoldSim = "0.4.0"
 julia = "1"
 
 [extras]
