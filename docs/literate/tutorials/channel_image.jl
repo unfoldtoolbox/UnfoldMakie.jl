@@ -11,7 +11,6 @@ using Unfold
 using UnfoldMakie
 using CairoMakie
 using UnfoldSim
-include("../../../example_data.jl")
 
 # # Plot Channel image
 

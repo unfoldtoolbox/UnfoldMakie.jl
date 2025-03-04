@@ -49,6 +49,7 @@ end
 include("configs.jl")
 include("configs_supportive.jl")
 include("docstring_template.jl")
+include("example_data.jl")
 
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")

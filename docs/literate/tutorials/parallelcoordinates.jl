@@ -15,8 +15,6 @@ using DataFrames
 using CairoMakie
 
 # Data generation
-
-include("../../../example_data.jl")
 r1, positions = example_data();
 r2 = deepcopy(r1)
 r2.coefname .= "B" # create a second category
