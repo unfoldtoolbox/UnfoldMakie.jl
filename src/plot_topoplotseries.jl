@@ -109,14 +109,16 @@ function plot_topoplotseries!(
             num = round_number(x, topolabels_rounding) # this number should be adjustable
         end,
     )
-
+    if haskey(config.mapping, :row) && config.mapping.row !== nothing
+        row_labels = @lift unique($data[!, config.mapping.row])
+    end
     ftopo, axlist = eeg_topoplot_series!(
         f[1, 1],
         data_row;
         layout,
         topoplot_xlabels,
-        #col_labels, # TODO
-        #row_labels, # TODO
+        row_labels,
+        # col_labels # TODO
         rasterize_heatmaps,
         interactive_scatter,
         topo_axis,
@@ -130,8 +132,6 @@ function plot_topoplotseries!(
 
     config_kwargs!(
         config;
-        # mapping = (; row = :row_coord, col = :col_coord),
-        axis = (; xlabel = string(config.mapping.col)),
         colorbar = (; limits = cb_limits, ticks = (cb_ticks, string.(rounded_ticks))),
     )
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
@@ -149,7 +149,7 @@ function plot_topoplotseries!(
     return f
 end
 
-#round(323434.2323;(;sigdigits=3)...) - other way to implement it
+#round(323434.2323; (; sigdigits = 3)...) - other way to implement it
 function round_number(x, rounding_config)
     if haskey(rounding_config, :digits) && haskey(rounding_config, :sigdigits)
         error(
@@ -170,7 +170,7 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
 
     if to_value(cat_or_cont_columns) == "cat"
-        # overwrite 'Time windows [s]' default if categorical
+        # overwrite 'Time windows' default if categorical
         n_topoplots =
             @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
         df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
