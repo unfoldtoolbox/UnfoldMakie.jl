@@ -75,8 +75,8 @@ function plot_topoplotseries!(
 )
 
     @assert(
-        isnothing(col_labels) & isnothing(row_labels),
-        "col_labels and row_labels are not implemented right now. please contact us if you need them"
+        isnothing(col_labels),
+        "col_labels are not implemented right now. please contact us if you need them"
     )
     data = _as_observable(data_inp)
     positions = get_topo_positions(; positions = positions, labels = labels)
@@ -110,7 +110,9 @@ function plot_topoplotseries!(
         end,
     )
     if haskey(config.mapping, :row) && config.mapping.row !== nothing
-        row_labels = @lift unique($data[!, config.mapping.row])
+        if row_labels === nothing
+            row_labels = @lift unique($data[!, config.mapping.row])
+        end
     end
     ftopo, axlist = eeg_topoplot_series!(
         f[1, 1],
