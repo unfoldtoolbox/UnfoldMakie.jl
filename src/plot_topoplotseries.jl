@@ -75,8 +75,8 @@ function plot_topoplotseries!(
 )
 
     @assert(
-        isnothing(col_labels) & isnothing(row_labels),
-        "col_labels and row_labels are not implemented right now. please contact us if you need them"
+        isnothing(col_labels),
+        "col_labels are not implemented right now. please contact us if you need them"
     )
     data = _as_observable(data_inp)
     positions = get_topo_positions(; positions = positions, labels = labels)
@@ -99,24 +99,28 @@ function plot_topoplotseries!(
     # resolve columns with data
     config.mapping = resolve_mappings(to_value(data), config.mapping)
     # check number of topoplots and group the data accordint to their location
-    data_row, topoplot_xlables, layout =
+    data_row, topoplot_xlabels, layout =
         cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
 
-    # Replace and round numeric labels in `topoplot_xlables`
-    topoplot_xlables = @lift replace.(
-        $topoplot_xlables,
+    # Replace and round numeric labels in `topoplot_xlabels`
+    topoplot_xlabels = @lift replace.(
+        $topoplot_xlabels,
         r"\d+\.\d+"i => x -> begin # r"\d+\.\d+"i will check for cases like "1.0" and avoid "A.0"
             num = round_number(x, topolabels_rounding) # this number should be adjustable
         end,
     )
-
+    if haskey(config.mapping, :row) && config.mapping.row !== nothing
+        if row_labels === nothing
+            row_labels = @lift unique($data[!, config.mapping.row])
+        end
+    end
     ftopo, axlist = eeg_topoplot_series!(
         f[1, 1],
         data_row;
         layout,
-        topoplot_xlables,
-        #col_labels, # TODO
-        #row_labels, # TODO
+        topoplot_xlabels,
+        row_labels,
+        # col_labels # TODO
         rasterize_heatmaps,
         interactive_scatter,
         topo_axis,
@@ -130,8 +134,6 @@ function plot_topoplotseries!(
 
     config_kwargs!(
         config;
-        # mapping = (; row = :row_coord, col = :col_coord),
-        axis = (; xlabel = string(config.mapping.col)),
         colorbar = (; limits = cb_limits, ticks = (cb_ticks, string.(rounded_ticks))),
     )
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
@@ -149,7 +151,7 @@ function plot_topoplotseries!(
     return f
 end
 
-#round(323434.2323;(;sigdigits=3)...) - other way to implement it
+#round(323434.2323; (; sigdigits = 3)...) - other way to implement it
 function round_number(x, rounding_config)
     if haskey(rounding_config, :digits) && haskey(rounding_config, :sigdigits)
         error(
@@ -168,8 +170,9 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
     cat_or_cont_columns =
         @lift eltype($data[!, config.mapping.col]) <: Number ? "cont" : "cat"
     chan_or_label = "label" ∉ names(to_value(data)) ? :channel : :label
+
     if to_value(cat_or_cont_columns) == "cat"
-        # overwrite 'Time windows [s]' default if categorical
+        # overwrite 'Time windows' default if categorical
         n_topoplots =
             @lift number_of_topoplots($data; bin_width, bin_num, bins = 0, config.mapping)
         df_grouped = @lift groupby($data, unique([config.mapping.col, chan_or_label]))
@@ -198,16 +201,23 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
             $data;
             col_y = config.mapping.y,
             fun = combinefun,
-            grouping = [chan_or_label],
+            grouping = [chan_or_label, config.mapping.row],
             cont_cuts,
         )
+
         data_unstacked = @lift unstack($data_binned, :channel, :estimate)
-        data_row = @lift Matrix($data_unstacked[:, 2:end])'
+        if haskey(config.mapping, :row) && config.mapping.row === nothing
+            data_row = @lift Matrix($data_unstacked[:, 2:end])'
+        else
+            data_row = @lift Matrix($data_unstacked[:, 3:end])'
+            nrows = @lift(length(unique($data_unstacked[:, 2])))
+            n_topoplots = @lift($nrows * $n_topoplots)
+        end
     end
 
-    topoplot_xlables = @lift string.(($data_unstacked[:, 1]))
+    topoplot_xlabels = @lift string.(($data_unstacked[:, 1]))
 
-    rows, cols = row_col_management(to_value(n_topoplots), nrows, config)
+    rows, cols = row_col_management(to_value(n_topoplots), to_value(nrows), config)
     layout = map((x, y) -> (x, y), to_value(rows), to_value(cols))
-    return data_row, topoplot_xlables, layout
+    return data_row, topoplot_xlabels, layout
 end
