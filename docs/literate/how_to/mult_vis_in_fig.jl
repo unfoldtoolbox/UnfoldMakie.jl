@@ -128,7 +128,7 @@ gh = f[4, 2]
 d_topo, pos = example_data("TopoPlots.jl")
 data, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-raw_ch_names = example_data("raw_ch_names")
+channels_30 = example_montage("channels_30")
 
 m = example_data("UnfoldLinearModel")
 results = coeftable(m)
@@ -173,7 +173,7 @@ plot_erpgrid!(
 
 dat_e, evts, times = example_data("sort_data")
 plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
-plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], raw_ch_names;)
+plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], channels_30;)
 r1, positions = example_data()
 r2 = deepcopy(r1)
 r2.coefname .= "B" # create a second category

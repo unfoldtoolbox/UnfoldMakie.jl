@@ -66,7 +66,7 @@
 
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
-    plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], raw_ch_names;)
+    plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], channels_30;)
     r1, positions = example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category

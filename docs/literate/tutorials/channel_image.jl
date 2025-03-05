@@ -20,10 +20,10 @@ using TopoPlots
 dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 pos = pos[1:30]
-raw_ch_names = example_data("raw_ch_names");
+channels_30 = example_montage("channels_30");
 
 
-plot_channelimage(dat[1:30, :], pos, raw_ch_names; axis = (; xlabel = "Time [s]"))
+plot_channelimage(dat[1:30, :], pos, channels_30; axis = (; xlabel = "Time [s]"))
 
 # # Configurations for Channel image
 
