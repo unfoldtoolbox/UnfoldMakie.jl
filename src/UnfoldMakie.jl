@@ -104,6 +104,7 @@ export to_positions
 export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG
+
 export example_data
 export example_montage
 
