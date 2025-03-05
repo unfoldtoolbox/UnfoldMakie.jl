@@ -1,4 +1,3 @@
-include("../docs/example_data.jl") # we need more specified example data
 results_plot, positions = example_data()
 
 @testset "PCP: data input DataFrame" begin
