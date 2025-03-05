@@ -1,18 +1,18 @@
 """
     example_montage(String)
 
-Creates example channel labels and respective positions. Currently,  are available.
-
-Datasets:
-- `montage_32` - return positions and channel names for 32-channel montage.
-- `montage_64` - return positions and channel names for 64-channel montage.
-- `channels_30` - return channel names for 30-channel montage.
+Creates sample channel labels and corresponding positions. There are currently 3 montages available:
+- `montage_32` - return positions and channel names for 32-channel montage.\\
+- `montage_64` - return positions and channel names for 64-channel montage.\\
+- `channels_30` - return channel names for 30-channel montage.\\
 
 
-**Return Value:** `DataFrame`.
+**Return Value:** `(channels, positions)::Tuple{Vector{String}`, `Vector{Point{2,Float32}}`}:\\
+    - `channels` - vector of channel names.\\
+    - `positions` - vector of channel positions.
 """
 function example_montage(example = "montage_32")
-    if example == "montage_32"
+    if example == "montage_32" 
         # Channel names
         channels_32 = [
             "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",

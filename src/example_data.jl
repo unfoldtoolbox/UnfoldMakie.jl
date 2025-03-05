@@ -8,7 +8,10 @@ using Random
 
 Creates example data or model. Currently, 3 datasets and 6 models are available.
 
-Datasets:
+Arguments:\\
+- `noiselevel::Int64 = 10` - noise level for EEG data. Will be sent to `UnfoldSim.predef_eeg` function.\\
+
+Datasets:\\
 - `TopoPlots.jl` (default) - provide 2 outputs from `TopoPlots.jl`:\\
     - `Array{Float32, 3}` with 64 channels, 800 ms time range and 3 types of values (estimate, sterror and pvalue).\\
     - `Vector{Point{2, Float32}}` with posiions for 64 electrodes.
@@ -17,13 +20,13 @@ Datasets:
     - `dat` for EEG recordings  and `evts` with event variables occured during experiment.\\
     - `evts` could be used for sorting EEG data in ERP image. 
 
-Models:
-- `UnfoldLinearModel` - Model with formula `1 + condition + continuous`.
-- `UnfoldLinearModelContinuousTime` - Model with formula `timeexpand(1 + condition + continuous)` for times [0.0, 0.01 ... 0.5].
-- `UnfoldLinearModelwith1Spline` - Model with formula `1 + condition + spl(continuous, 4)`.
-- `UnfoldLinearModelwith2Splines` - Model with formula ` 1 + condition + spl(continuous, 4) + spl(continuous2, 6)`.
-- `7channels` - Model with formula `timeexpand(1 + condA)` for times [-0.1, -0.09 ... 0.5].
-- `UnfoldTimeExpanded` - Model with formula `timeexpand(1 + condition + continuous)` for times [-0.4, -0.39 ... 0.8].
+Models:\\
+- `UnfoldLinearModel` - Model with formula `1 + condition + continuous`.\\
+- `UnfoldLinearModelContinuousTime` - Model with formula `timeexpand(1 + condition + continuous)` for times [0.0, 0.01 ... 0.5].\\
+- `UnfoldLinearModelwith1Spline` - Model with formula `1 + condition + spl(continuous, 4)`.\\
+- `UnfoldLinearModelwith2Splines` - Model with formula ` 1 + condition + spl(continuous, 4) + spl(continuous2, 6)`.\\
+- `7channels` - Model with formula `timeexpand(1 + condA)` for times [-0.1, -0.09 ... 0.5].\\
+- `UnfoldTimeExpanded` - Model with formula `timeexpand(1 + condition + continuous)` for times [-0.4, -0.39 ... 0.8].\\
 
 **Return Value:** `DataFrame`.
 """
