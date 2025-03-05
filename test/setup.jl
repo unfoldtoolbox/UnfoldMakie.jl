@@ -1,3 +1,4 @@
+using UnfoldMakie
 using CairoMakie
 using UnfoldSim
 using Unfold
@@ -10,4 +11,4 @@ using Statistics
 using AlgebraOfGraphics
 using Random
 
-raw_ch_names = example_data("raw_ch_names")
+channels_30 = example_montage("channels_30")

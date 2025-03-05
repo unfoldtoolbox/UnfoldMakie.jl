@@ -2,7 +2,7 @@ dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 
 df, pos2 = example_data("TopoPlots.jl")
-channels_32, positions_32 = example_data("montage_32")
+channels_32, positions_32 = example_montage("montage_32")
 
 @testset "erpgrid: montage 32" begin
     plot_erpgrid(dat[1:32, :], positions_32, channels_32; drawlabels = true)
@@ -27,7 +27,7 @@ end
 end
 
 @testset "erpgrid: drawlabels with user_defined channel names" begin
-    plot_erpgrid(dat[1:6, :], pos[1:6], raw_ch_names[1:6]; drawlabels = true)
+    plot_erpgrid(dat[1:6, :], pos[1:6], channels_30[1:6]; drawlabels = true)
 end
 
 @testset "erpgrid: rounding coordinates" begin
@@ -51,7 +51,7 @@ end
     plot_erpgrid(
         dat[1:6, :],
         pos[1:6],
-        raw_ch_names[1:6];
+        channels_30[1:6];
         drawlabels = true,
         labels_grid_axis = (; color = :red),
     )
@@ -61,7 +61,7 @@ end
     plot_erpgrid(
         dat[1:6, :],
         pos[1:6],
-        raw_ch_names[1:6];
+        channels_30[1:6];
         hlines_grid_axis = (; color = :red),
         vlines_grid_axis = (; color = :green),
     )
@@ -71,7 +71,7 @@ end
     plot_erpgrid(
         dat[1:6, :],
         pos[1:6],
-        raw_ch_names[1:6];
+        channels_30[1:6];
         lines_grid_axis = (; color = :red),
     )
 end
@@ -80,7 +80,7 @@ end
     plot_erpgrid(
         dat[1:6, :],
         pos[1:6],
-        raw_ch_names[1:6];
+        channels_30[1:6];
         subaxes = (; width = Relative(0.2)),
     )
 end
@@ -121,7 +121,7 @@ end
 
 @testset "erpgrid: error of unequal data and positions" begin
     err1 = nothing
-    t() = error(plot_erpgrid(dat[1:6, :], pos[1:7], raw_ch_names[1:6]; drawlabels = true))
+    t() = error(plot_erpgrid(dat[1:6, :], pos[1:7], channels_30[1:6]; drawlabels = true))
     try
         t()
     catch err1
@@ -130,7 +130,7 @@ end
 
 @testset "erpgrid: error of unequal ch_names and positions" begin
     err1 = nothing
-    t() = error(plot_erpgrid(dat[1:6, :], pos[1:6], raw_ch_names[1:7]; drawlabels = true))
+    t() = error(plot_erpgrid(dat[1:6, :], pos[1:6], channels_30[1:7]; drawlabels = true))
     try
         t()
     catch err1
