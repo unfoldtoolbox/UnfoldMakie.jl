@@ -6,6 +6,7 @@ using TopoPlots
 using UnfoldMakie
 using CairoMakie
 using DataFrames
+using UnfoldSim
 
 data, pos = example_data("TopoPlots.jl")
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
