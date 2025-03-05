@@ -1,4 +1,3 @@
-using UnfoldMakie
 include("setup.jl")
 
 @testset "Test Config" begin

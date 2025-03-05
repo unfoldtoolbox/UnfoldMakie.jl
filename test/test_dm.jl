@@ -1,4 +1,3 @@
-include("../docs/example_data.jl")
 uf = example_data("UnfoldLinearModel")
 td = example_data("UnfoldTimeExpanded")
 

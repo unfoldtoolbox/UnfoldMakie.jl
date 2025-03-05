@@ -12,8 +12,6 @@ using DataFramesMeta
 using Colors
 
 # By default the plot looks like this:
-
-include("../../../example_data.jl")
 results, positions = example_data("TopoPlots.jl")
 plot_butterfly(results; positions = positions)
 

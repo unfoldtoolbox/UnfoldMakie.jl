@@ -1,5 +1,3 @@
-include("../docs/example_data.jl")
-
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
 dat_e, evts_e, times = example_data("sort_data")
 
