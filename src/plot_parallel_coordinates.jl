@@ -102,6 +102,7 @@ function plot_parallelcoordinates(
     UnfoldMakie.config_kwargs!(config; visual = (; color = c))
 
     outer_axis = Axis(f[1, 1]; config.axis...)
+    outer_axis.title = "" # we dont want a title here
     f1, outer_axis, axlist, hlines = parallel_coordinates(
         f, outer_axis,
         d5;
