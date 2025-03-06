@@ -194,7 +194,6 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
             bins = $bins,
             config.mapping,
         )
-        @debug  Symbol(config.mapping.y)
         cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
 
         data_binned = @lift data_binning(
