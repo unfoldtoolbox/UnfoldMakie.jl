@@ -1,5 +1,3 @@
-
-include("../docs/example_data.jl")
 df, pos = example_data("TopoPlots.jl")
 
 tmp = DataFrame(channel = df.channel, estimate = df.estimate)

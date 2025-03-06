@@ -50,6 +50,10 @@ include("configs.jl")
 include("configs_supportive.jl")
 include("docstring_template.jl")
 
+include("data/example_data.jl")
+include("data/example_montage.jl")
+include("eeg_positions.jl")
+
 include("eeg_series.jl")
 include("plot_topoplotseries.jl")
 include("plot_topoplotseries_support.jl")
@@ -68,7 +72,7 @@ include("plot_erpgrid.jl")
 include("plot_channelimage.jl")
 
 include("layout_helper.jl")
-include("eeg_positions.jl")
+
 include("topo_color.jl")
 include("relative_axis.jl")
 
@@ -102,5 +106,8 @@ export to_positions
 export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG
+
+export example_data
+export example_montage
 
 end
