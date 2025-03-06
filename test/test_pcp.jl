@@ -86,7 +86,7 @@ end
 @testset "Bending 1" begin
     # check that the points actually go through the provided points
     f = Figure()
-    f, b, c, d = UnfoldMakie.parallelcoordinates(
+    f, b, c, d = UnfoldMakie.parallel_coordinates(
         f,
         Axis(f[1, 1]),
         [0 1 0 2 0 3 0 4.0; -1 0 -2 0 -3 0 -4 0]',
