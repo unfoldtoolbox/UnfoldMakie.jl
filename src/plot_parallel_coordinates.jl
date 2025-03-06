@@ -103,6 +103,7 @@ function plot_parallelcoordinates(
 
     outer_axis = Axis(f[1, 1]; config.axis...)
     outer_axis.title = "" # we dont want a title here
+ 
     f1, outer_axis, axlist, hlines = parallel_coordinates(
         f, outer_axis,
         d5;
@@ -117,7 +118,7 @@ function plot_parallelcoordinates(
         f[1, 1, Top()],
         text = config.axis.title,
         padding = (20, 20, 22, 0),
-        fontsize = 20,
+        fontsize = 16,
         font = :bold,
     )
     if config.layout.show_legend

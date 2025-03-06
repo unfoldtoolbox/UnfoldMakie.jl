@@ -13,7 +13,7 @@ function parallel_coordinates(
     ax_ticklabels = :outmost, # :all, :left,:none
     alpha = 0.3,
 )
-    @assert size(data, 2) > 1 "Currently, for parallel plotting to work, more than one line must be plotted"
+    @assert size(data, 2) > 1 "Currently, parallel plotting requires plotting more than one line."
     if isa(color, AbstractVector)
         @assert size(data, 2) == length(color)
     end
@@ -40,8 +40,8 @@ function parallel_coordinates(
         minlist = minimum(plotdata)
         maxlist = maximum(plotdata)
     end
-    # edge bending / bundling
 
+    # edge bending / bundling
     if !bend
         x_plotdata = x_pos
         plotdata_int = plotdata
