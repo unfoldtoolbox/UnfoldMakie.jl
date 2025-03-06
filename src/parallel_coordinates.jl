@@ -202,7 +202,7 @@ function pcp_title!(
         title,
         position = titlepos,
         #visible = titlevisible,
-        #fontsize = config.legend.fontsize, # we need config here
+        #fontsize = config.axis.titlefontsize,
         align = (:center, :bottom),
         #font = titlefont,
         #color = titlecolor,
