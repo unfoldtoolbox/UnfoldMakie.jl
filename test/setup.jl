@@ -10,4 +10,4 @@ using Statistics
 using AlgebraOfGraphics
 using Random
 
-channels_30 = example_montage("channels_30")
+channels_30 = UnfoldMakie.example_montage("channels_30")
