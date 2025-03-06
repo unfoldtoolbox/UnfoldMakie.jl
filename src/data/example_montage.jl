@@ -12,7 +12,7 @@ Creates sample channel labels and corresponding positions. There are currently 3
     - `positions` - vector of channel positions.
 """
 function example_montage(example = "montage_32")
-    if example == "montage_32" 
+    if example == "montage_32"
         # Channel names
         channels_32 = [
             "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",
