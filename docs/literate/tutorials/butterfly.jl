@@ -22,7 +22,6 @@ using Colors
 
 # We filter the data to make it more clearly represented:
 
-include("../../../example_data.jl")
 df, pos = example_data("TopoPlots.jl")
 first(df, 3)
 

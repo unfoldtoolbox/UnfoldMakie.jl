@@ -9,7 +9,6 @@
     gf = f[3, 2]
     gh = f[4, 2]
 
-    include("../docs/example_data.jl")
     d_topo, pos = example_data("TopoPlots.jl")
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
@@ -67,7 +66,7 @@
 
     dat_e, evts, times = example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
-    plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], raw_ch_names;)
+    plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], channels_30;)
     r1, positions = example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
@@ -100,7 +99,6 @@ end
 @testset "8 plots with a Figure" begin
     f = Figure(size = (1200, 1400))
 
-    include("../docs/example_data.jl")
     d_topo, positions = example_data("TopoPlots.jl")
     data, positions = TopoPlots.example_data()
     uf = example_data("UnfoldLinearModel")
@@ -151,7 +149,6 @@ end
 
 
 @testset "testing combined figure (a Figure from mult_viz_in_fig from docs)" begin
-    include("../docs/example_data.jl")
     d_topo, positions = example_data("TopoPlots.jl")
     uf_deconv = example_data("UnfoldLinearModelContinuousTime")
     uf = example_data("UnfoldLinearModel")

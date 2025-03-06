@@ -1,3 +1,4 @@
+using UnfoldMakie
 using CairoMakie
 using UnfoldSim
 using Unfold
@@ -9,6 +10,5 @@ using Colors
 using Statistics
 using AlgebraOfGraphics
 using Random
-include("../docs/example_data.jl")
 
-raw_ch_names = example_data("raw_ch_names")
+channels_30 = example_montage("channels_30")

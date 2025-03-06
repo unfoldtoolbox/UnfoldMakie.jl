@@ -92,7 +92,7 @@ end
         bin_width = 80,
         nrows = 3,
         positions = positions[1:30],
-        labels = raw_ch_names,
+        labels = channels_30,
         visual = (; label_text = true),
     )
 end
@@ -105,7 +105,7 @@ end
             bin_width = 80,
             nrows = 3,
             positions = positions,
-            labels = raw_ch_names,
+            labels = channels_30,
             visual = (; label_text = true),
         ),
     )

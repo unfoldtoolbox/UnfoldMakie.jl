@@ -1,6 +1,5 @@
 using Unfold: stderror
 using AlgebraOfGraphics: group
-include("../docs/example_data.jl")
 m = example_data("UnfoldLinearModel")
 
 results = coeftable(m)
