@@ -46,8 +46,10 @@ else
     const modelmatrices = Unfold.get_Xs
 end
 
-include("configs.jl")
-include("configs_supportive.jl")
+include("configs/configs.jl")
+include("configs/configs_supportive.jl")
+include("configs/topo_color.jl")
+
 include("docstring_template.jl")
 
 include("data/example_data.jl")
@@ -73,8 +75,6 @@ include("plot_erpgrid.jl")
 include("plot_channelimage.jl")
 
 include("layout_helper.jl")
-
-include("topo_color.jl")
 include("relative_axis.jl")
 
 export PlotConfig

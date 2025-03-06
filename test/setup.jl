@@ -9,5 +9,6 @@ using Colors
 using Statistics
 using AlgebraOfGraphics
 using Random
+using UnfoldMakie
 
 channels_30 = UnfoldMakie.example_montage("channels_30")
