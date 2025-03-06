@@ -73,7 +73,6 @@ function plot_topoplotseries!(
     #uncertainty = false,
     kwargs...,
 )
-
     @assert(
         isnothing(col_labels),
         "col_labels are not implemented right now. please contact us if you need them"
@@ -128,7 +127,8 @@ function plot_topoplotseries!(
         positions,
         labels,
     )
-    cb_limits = (minimum(data.val.estimate), maximum(data.val.estimate)) # set limits for colorbar
+    estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
+    cb_limits = (minimum(estimate_column), maximum(estimate_column)) # set limits for colorbar
     cb_ticks = LinRange(cb_limits[1], cb_limits[2], 5) # set ticklables for colorbar
     rounded_ticks = round.(cb_ticks, digits = 2)
 
@@ -194,7 +194,7 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
             bins = $bins,
             config.mapping,
         )
-
+        @debug  Symbol(config.mapping.y)
         cont_cuts = @lift cut($data[!, config.mapping.col], $bins; extend = true)
 
         data_binned = @lift data_binning(
@@ -205,7 +205,7 @@ function cutting_management(data, bin_width, bin_num, combinefun, nrows, config)
             cont_cuts,
         )
 
-        data_unstacked = @lift unstack($data_binned, :channel, :estimate)
+        data_unstacked = @lift unstack($data_binned, :channel, Symbol(config.mapping.y))
         if haskey(config.mapping, :row) && config.mapping.row === nothing
             data_row = @lift Matrix($data_unstacked[:, 2:end])'
         else
