@@ -78,19 +78,16 @@ function plot_circular_topoplots!(
 
     plot_circular_axis!(ax, predictor_bounds, center_label)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
-    
+
     min, max = calculate_global_max_values(data[:, config.mapping.y], predictor_values)
     cb_ticks = LinRange(min, max, 5)
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
-    # setting the colorbar to the bottom right of the box.
-    # Relative values got determined by checking what subjectively looks best 
     Colorbar(
         f[1, 2];
         colorrange = (min, max),
         config.colorbar...,
-        height = @lift Fixed($(pixelarea(ax.scene)).widths[2])
     )
     plot_topo_plots!(
         f[1, 1],
