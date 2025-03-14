@@ -346,5 +346,10 @@ end
     plot_topoplotseries(df; bin_width = 80, positions = positions,
         visual=(; colorrange=[-5,0.5]),
         colorbar = (; label = "p-value", limits = (0, 0.1), ticks = ([0.0, 0.1], ["0", "0.1"])))
+end
 
+
+@testset "toposeries: dynamic mapping.y" begin
+    df = DataFrame(:my_estimate=>[1,2,3,4], :channel=>[1,2,1,2], :time=>[1,1,2,2])
+    plot_topoplotseries(df; bin_width = 1, mapping=(; y=:my_estimate), positions=rand(Point2f, 2))
 end

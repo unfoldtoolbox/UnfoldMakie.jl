@@ -1,4 +1,3 @@
-using UnfoldMakie
 using CairoMakie
 using UnfoldSim
 using Unfold
@@ -10,5 +9,6 @@ using Colors
 using Statistics
 using AlgebraOfGraphics
 using Random
+using UnfoldMakie
 
-channels_30 = example_montage("channels_30")
+channels_30 = UnfoldMakie.example_montage("channels_30")
