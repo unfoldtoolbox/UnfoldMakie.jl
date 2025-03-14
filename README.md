@@ -53,7 +53,7 @@ And 2 Unfold-specific plots:
 - Design matrices
 - Splines plot
 
-<video src="https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/8plots3/docs/src/assets/UM_plots.mp4" width="300" align="right">
+<video src="https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/fe42646b548de704a710bf43d8e33671497f487e/docs/build/assets/UM_plots.mp4" width="300" align="center">
 
 ## Install
 
