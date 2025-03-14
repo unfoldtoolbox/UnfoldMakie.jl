@@ -39,9 +39,10 @@ plot_circular_topoplots(
 plot_circular_topoplots(
     df;
     positions = pos,
-    center_label = "Time [sec]",
+    center_label = "Time [s]",
     predictor = :time,
     predictor_bounds = [80, 320],
+    colorbar = (; height = 350),
 )
 
 # # Configurations of Circular Topoplots
