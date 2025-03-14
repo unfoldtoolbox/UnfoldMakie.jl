@@ -55,7 +55,7 @@ And 2 Unfold-specific plots:
 
 [](https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/main/docs/build/assets/UM_plots.mp4)
 
-![Demo](docs/build/assets/UM_plots.gif)
+![Demo](docs/build/assets/UM_plots.mp4)
 ### Installing Julia
 
 <details>
