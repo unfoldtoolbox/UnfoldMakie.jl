@@ -29,13 +29,13 @@ Additionally we provide some specific plots for:
 - [Unfold.jl](https://github.com/unfoldtoolbox/unfold.jl/) - for performing rERP analyses;
 But `Unfold.jl` is not a dependency and all plotting functions are **agnostic** to any specific analysis package.
 
-<p align="center">
-  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
-</p>
-
 This package offers users high performance, and highly customizable plots.
 
 We currently support 9 general ERP plots: 
+
+<p align="center">
+  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
+</p>
 - ![icon_erpplot_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/22c8472d-df78-46d7-afe8-e1e4e7b04313)
 ERP plots
 - ![icon_butterfly_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/30b86665-3705-4258-bffa-97abcd308235)
