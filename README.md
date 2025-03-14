@@ -54,7 +54,7 @@ And 2 Unfold-specific plots:
 - Splines plot
 
 <p align="center">
-  <img src="docs/build/assets/UM_plots.gif" width="200">
+  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
 </p>
 
 ### Installing Julia
