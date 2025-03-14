@@ -53,9 +53,10 @@ And 2 Unfold-specific plots:
 - Design matrices
 - Splines plot
 
-[](https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/main/docs/build/assets/UM_plots.mp4)
+<p align="center">
+  <img src="docs/build/assets/UM_plots.gif" width="200">
+</p>
 
-![Demo](docs/build/assets/UM_plots.gif)
 ### Installing Julia
 
 <details>
