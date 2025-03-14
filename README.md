@@ -23,6 +23,7 @@ A toolbox for visualizations of EEG/ERP data and Unfold.jl models.
 <p align="center">
   <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
 </p>
+
 Based on two libraries:
 - [Makie.jl](https://makie.juliaplots.org/stable/) - very flexible visualisation library ([Maki-e](https://en.wikipedia.org/wiki/Maki-e) means "visualisation" on Japanese);
 - [AlgebraOfGraphics.jl](https://github.com/MakieOrg/AlgebraOfGraphics.jl) - Makie-based grammar of graphics visualisation library, allowing flexible mapping. 
