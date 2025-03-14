@@ -19,6 +19,10 @@
 
 A toolbox for visualizations of EEG/ERP data and Unfold.jl models.
 
+<img  src="https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/8plots3/docs/src/assets/complex_plot.png" width="300" align="right">
+<p align="center">
+  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
+</p>
 Based on two libraries:
 - [Makie.jl](https://makie.juliaplots.org/stable/) - very flexible visualisation library ([Maki-e](https://en.wikipedia.org/wiki/Maki-e) means "visualisation" on Japanese);
 - [AlgebraOfGraphics.jl](https://github.com/MakieOrg/AlgebraOfGraphics.jl) - Makie-based grammar of graphics visualisation library, allowing flexible mapping. 
@@ -30,7 +34,6 @@ But `Unfold.jl` is not a dependency and all plotting functions are **agnostic** 
 This package offers users high performance, and highly customizable plots.
 
 We currently support 9 general ERP plots: 
-<img  src="https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/8plots3/docs/src/assets/complex_plot.png" width="300" align="right">
 - ![icon_erpplot_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/22c8472d-df78-46d7-afe8-e1e4e7b04313)
 ERP plots
 - ![icon_butterfly_20px](https://github.com/unfoldtoolbox/UnfoldMakie.jl/assets/10183650/30b86665-3705-4258-bffa-97abcd308235)
@@ -52,10 +55,6 @@ Parallel coordinates
 And 2 Unfold-specific plots:
 - Design matrices
 - Splines plot
-
-<p align="center">
-  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
-</p>
 
 ### Installing Julia
 
