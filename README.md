@@ -20,9 +20,6 @@
 A toolbox for visualizations of EEG/ERP data and Unfold.jl models.
 
 <img  src="https://raw.githubusercontent.com/unfoldtoolbox/UnfoldMakie.jl/8plots3/docs/src/assets/complex_plot.png" width="300" align="right">
-<p align="center">
-  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
-</p>
 
 Based on two libraries:
 - [Makie.jl](https://makie.juliaplots.org/stable/) - very flexible visualisation library ([Maki-e](https://en.wikipedia.org/wiki/Maki-e) means "visualisation" on Japanese);
@@ -31,6 +28,10 @@ Based on two libraries:
 Additionally we provide some specific plots for:
 - [Unfold.jl](https://github.com/unfoldtoolbox/unfold.jl/) - for performing rERP analyses;
 But `Unfold.jl` is not a dependency and all plotting functions are **agnostic** to any specific analysis package.
+
+<p align="center">
+  <img src="docs/build/assets/UM_plots.gif" width="300" align="right">
+</p>
 
 This package offers users high performance, and highly customizable plots.
 
