@@ -1,4 +1,4 @@
-using BSplineKit, Unfold
+import BSplineKit, Unfold
 m0 = example_data("UnfoldLinearModel")
 m1 = example_data("UnfoldLinearModelwith1Spline")
 m2 = example_data("UnfoldLinearModelwith2Splines")
