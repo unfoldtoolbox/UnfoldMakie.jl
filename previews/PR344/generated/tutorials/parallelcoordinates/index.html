@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Parallel coordinates · UnfoldMakie.jl</title><meta name="title" content="Parallel coordinates · UnfoldMakie.jl"/><meta property="og:title" content="Parallel coordinates · UnfoldMakie.jl"/><meta property="twitter:title" content="Parallel coordinates · UnfoldMakie.jl"/><meta name="description" content="Documentation for UnfoldMakie.jl."/><meta property="og:description" content="Documentation for UnfoldMakie.jl."/><meta property="twitter:description" content="Documentation for UnfoldMakie.jl."/><meta property="og:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/generated/tutorials/parallelcoordinates/"/><meta property="twitter:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/generated/tutorials/parallelcoordinates/"/><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/generated/tutorials/parallelcoordinates/"/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.svg" alt="UnfoldMakie.jl logo"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><span class="tocitem">Intro</span><ul><li><a class="tocitem" href="../../../">UnfoldMakie Highlights</a></li><li><a class="tocitem" href="../../intro/installation/">Installation</a></li><li><a class="tocitem" href="../../intro/plot_types/">Plot types</a></li><li><a class="tocitem" href="../../intro/code_principles/">Code principles</a></li><li><a class="tocitem" href="../../intro/speed/">Benchmarking</a></li></ul></li><li><span class="tocitem">ERP Visualizations</span><ul><li><a class="tocitem" href="../erp/">ERP plot</a></li><li><a class="tocitem" href="../butterfly/">Butterfly plot</a></li><li><a class="tocitem" href="../topoplot/">Topoplot</a></li><li><a class="tocitem" href="../topoplotseries/">Topoplot series</a></li><li><a class="tocitem" href="../erp_grid/">ERP grid</a></li><li><a class="tocitem" href="../erpimage/">ERP image</a></li><li><a class="tocitem" href="../channel_image/">Channel image</a></li><li class="is-active"><a class="tocitem" href>Parallel coordinates</a><ul class="internal"><li class="toplevel"><a class="tocitem" href="#Setup"><span>Setup</span></a></li><li class="toplevel"><a class="tocitem" href="#Plot-PCPs"><span>Plot PCPs</span></a></li><li class="toplevel"><a class="tocitem" href="#Additional-features"><span>Additional features</span></a></li><li><a class="tocitem" href="#Normalization"><span>Normalization</span></a></li><li><a class="tocitem" href="#Color-schemes"><span>Color schemes</span></a></li><li><a class="tocitem" href="#Labels"><span>Labels</span></a></li><li><a class="tocitem" href="#Tick-labels"><span>Tick labels</span></a></li><li><a class="tocitem" href="#Bending-the-parallel-plot"><span>Bending the parallel plot</span></a></li><li><a class="tocitem" href="#Transparancy"><span>Transparancy</span></a></li><li class="toplevel"><a class="tocitem" href="#Configurations-of-Parallel-coordinates-plot"><span>Configurations of Parallel coordinates plot</span></a></li></ul></li><li><a class="tocitem" href="../circ_topo/">Circular topoplots</a></li></ul></li><li><span class="tocitem">Unfold-specific Visualisations</span><ul><li><a class="tocitem" href="../designmatrix/">Design matrix</a></li><li><a class="tocitem" href="../splines/">Spline plot</a></li></ul></li><li><span class="tocitem">How To</span><ul><li><a class="tocitem" href="../../how_to/position2color/">Change colormap of butterfly plot</a></li><li><a class="tocitem" href="../../how_to/hide_deco/">Hide decorations and axis spines</a></li><li><a class="tocitem" href="../../how_to/mult_vis_in_fig/">Include multiple figures in one</a></li><li><a class="tocitem" href="../../how_to/uncertain_topo/">Visualize uncertainty in topoplot series</a></li><li><a class="tocitem" href="../../how_to/customize_labels/">Customize channel labels</a></li></ul></li><li><span class="tocitem">Explanations</span><ul><li><a class="tocitem" href="../../explanations/positions/">Convert electrode positions from 3D to 2D</a></li></ul></li><li><a class="tocitem" href="../../../api/">API / DocStrings</a></li><li><a class="tocitem" href="../../../helper/">Utilities</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">ERP Visualizations</a></li><li class="is-active"><a href>Parallel coordinates</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Parallel coordinates</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/main/docs/literate/tutorials/parallelcoordinates.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Parallel-Coordinates"><a class="docs-heading-anchor" href="#Parallel-Coordinates">Parallel Coordinates</a><a id="Parallel-Coordinates-1"></a><a class="docs-heading-anchor-permalink" href="#Parallel-Coordinates" title="Permalink"></a></h1><p><strong>Parallel Coordinates Plot</strong> (PCP) is a plot type used to visualize EEG activity for some channels. It can fully represent condition and channel dimensions using lines. It can also partially represent time and trials.</p><p>Each vertical axis represents a voltage level for a channel. Each line represents a trial, each colour represents a condition.</p><h1 id="Setup"><a class="docs-heading-anchor" href="#Setup">Setup</a><a id="Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Setup" title="Permalink"></a></h1><p>Package loading</p><pre><code class="language-julia hljs">using Unfold
+using UnfoldMakie
+using DataFrames
+using CairoMakie</code></pre><p>Data generation</p><pre><code class="language-julia hljs">r1, positions = example_data();
+r2 = deepcopy(r1)
+r2.coefname .= &quot;B&quot; # create a second category
+r2.estimate .+= rand(length(r2.estimate)) * 0.1
+results_plot = vcat(r1, r2);</code></pre><h1 id="Plot-PCPs"><a class="docs-heading-anchor" href="#Plot-PCPs">Plot PCPs</a><a id="Plot-PCPs-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-PCPs" title="Permalink"></a></h1><pre><code class="language-julia hljs">plot_parallelcoordinates(
+    subset(results_plot, :channel =&gt; x -&gt; x .&lt;= 5);
+    mapping = (; color = :coefname),
+    ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;],
+    axis = (; ylabel = &quot;Time [s]&quot;),
+)</code></pre><img src="f9f87d0b.png" alt="Example block output"/><h1 id="Additional-features"><a class="docs-heading-anchor" href="#Additional-features">Additional features</a><a id="Additional-features-1"></a><a class="docs-heading-anchor-permalink" href="#Additional-features" title="Permalink"></a></h1><h2 id="Normalization"><a class="docs-heading-anchor" href="#Normalization">Normalization</a><a id="Normalization-1"></a><a class="docs-heading-anchor-permalink" href="#Normalization" title="Permalink"></a></h2><p>On the first image, there is no normalization and the extremes of all axes are the same and equal to the max and min values across all chanells. On the second image, there is a <code>minmax normalization</code>, so each axis has its own extremes based on the min and max of the data.</p><p>Typically, parallel plots are normalized per axis. Whether this makes sense for estimating channel x, we do not know.</p><pre><code class="language-julia hljs">begin
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;T7&quot;, &quot;CP3&quot;, &quot;P3&quot;, &quot;P7&quot;, &quot;O1&quot;],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 10);
+        mapping = (; color = :coefname),
+        axis = (; ylabel = &quot;Time [s]&quot;, xlabel = &quot;&quot;, title = &quot;normalize = nothing&quot;),
+    );
+    plot_parallelcoordinates(
+        f[2, 1],
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;T7&quot;, &quot;CP3&quot;, &quot;P3&quot;, &quot;P7&quot;, &quot;O1&quot;],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 10);
+        mapping = (; color = :coefname),
+        normalize = :minmax,
+        axis = (; ylabel = &quot;Time [s]&quot;, title = &quot;normalize = :minmax&quot;),
+    );
+    f
+end</code></pre><img src="171d25d6.png" alt="Example block output"/><h2 id="Color-schemes"><a class="docs-heading-anchor" href="#Color-schemes">Color schemes</a><a id="Color-schemes-1"></a><a class="docs-heading-anchor-permalink" href="#Color-schemes" title="Permalink"></a></h2><p>Use only categorical with high contrast between adjacent colors. More: <a href="https://docs.makie.org/stable/explanations/colors/index.html">change colormap</a>.</p><pre><code class="language-julia hljs">begin
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;, &quot;Pz&quot;],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt;= 5);
+        mapping = (; color = :coefname),
+        visual = (; colormap = :tab10),
+        axis = (; ylabel = &quot;Time [s]&quot;, xlabel = &quot;&quot;, title = &quot;colormap = tab10&quot;),
+    );
+    plot_parallelcoordinates(
+        f[2, 1],
+        ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;, &quot;Pz&quot;],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt;= 5);
+        mapping = (; color = :coefname),
+        visual = (; colormap = :Accent_3),
+        axis = (; ylabel = &quot;Time [s]&quot;, title = &quot;colormap = Accent_3&quot;),
+    );
+    f
+end</code></pre><img src="c3c1fdb6.png" alt="Example block output"/><h2 id="Labels"><a class="docs-heading-anchor" href="#Labels">Labels</a><a id="Labels-1"></a><a class="docs-heading-anchor-permalink" href="#Labels" title="Permalink"></a></h2><p>Use <code>ax_labels</code> to specify labels for the axes.</p><pre><code class="language-julia hljs">plot_parallelcoordinates(
+    subset(results_plot, :channel =&gt; x -&gt; x .&lt; 5);
+    visual = (; color = :steelblue1),
+    ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;],
+    axis = (; ylabel = &quot;Time [s]&quot;)
+)</code></pre><img src="b58200fd.png" alt="Example block output"/><h2 id="Tick-labels"><a class="docs-heading-anchor" href="#Tick-labels">Tick labels</a><a id="Tick-labels-1"></a><a class="docs-heading-anchor-permalink" href="#Tick-labels" title="Permalink"></a></h2><p>Specify tick labels on axis. There are four different options for the tick labels.</p><pre><code class="language-julia hljs">begin
+    f = Figure(size = (500, 900))
+    plot_parallelcoordinates(
+        f[1, 1],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 5, :time =&gt; x -&gt; x .&lt; 0);
+        ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;],
+        ax_ticklabels = :all,
+        normalize = :minmax,
+        visual = (; color = :burlywood1),
+        axis = (; xlabel = &quot;&quot;, ylabel = &quot;Time [s]&quot;, ylabelpadding = 40, title = &quot;ax_ticklabels = :all&quot;),
+    ); # show all ticks on all axes
+    plot_parallelcoordinates(
+        f[2, 1],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 5, :time =&gt; x -&gt; x .&lt; 0);
+        ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;],
+        ax_ticklabels = :left,
+        normalize = :minmax,
+        visual = (; color = :cyan3),
+        axis = (; xlabel = &quot;&quot;, ylabel = &quot;Time [s]&quot;, ylabelpadding = 40, title = &quot;ax_ticklabels = :left&quot;),
+    ); # show all ticks on the left axis, but only extremities on others
+    plot_parallelcoordinates(
+        f[3, 1],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 5, :time =&gt; x -&gt; x .&lt; 0);
+        ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;],
+        ax_ticklabels = :outmost,
+        normalize = :minmax,
+        visual = (; color = :burlywood1),
+        axis = (; xlabel = &quot;&quot;, ylabel = &quot;Time [s]&quot;, ylabelpadding = 40, title = &quot;ax_ticklabels = :outmost&quot;),
+    ); # show ticks on extremities of all axes
+
+    plot_parallelcoordinates(
+        f[4, 1],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 5, :time =&gt; x -&gt; x .&lt; 0);
+        ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;],
+        ax_ticklabels = :none,
+        normalize = :minmax,
+        visual = (; color = :cyan3),
+        axis = (; ylabel = &quot;Time [s]&quot;, ylabelpadding = 40, title = &quot;ax_ticklabels = :none&quot;),
+    ); #  disable all ticks
+    f
+end</code></pre><img src="e9c0bcb7.png" alt="Example block output"/><h2 id="Bending-the-parallel-plot"><a class="docs-heading-anchor" href="#Bending-the-parallel-plot">Bending the parallel plot</a><a id="Bending-the-parallel-plot-1"></a><a class="docs-heading-anchor-permalink" href="#Bending-the-parallel-plot" title="Permalink"></a></h2><p>Bending the linescan be helpful to make them more visible.</p><pre><code class="language-julia hljs">begin
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;T7&quot;, &quot;CP3&quot;, &quot;P3&quot;, &quot;P7&quot;, &quot;O1&quot;],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 10),
+        visual = (; color = :plum),
+        axis = (; title = &quot;bend = false&quot;, xlabel = &quot;&quot;, ylabel = &quot;Time [s]&quot;),
+    );
+    plot_parallelcoordinates(
+        f[2, 1],
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;T7&quot;, &quot;CP3&quot;, &quot;P3&quot;, &quot;P7&quot;, &quot;O1&quot;],
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 10),
+        bend = true, # here
+        visual = (; color = :plum),
+        axis = (; title = &quot;bend = true&quot;, ylabel = &quot;Time [s]&quot;),
+    );
+    f
+end</code></pre><img src="8dd1c89c.png" alt="Example block output"/><h2 id="Transparancy"><a class="docs-heading-anchor" href="#Transparancy">Transparancy</a><a id="Transparancy-1"></a><a class="docs-heading-anchor-permalink" href="#Transparancy" title="Permalink"></a></h2><pre><code class="language-julia hljs">uf_5chan = example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
+
+begin
+    f = Figure()
+    plot_parallelcoordinates(
+        f[1, 1],
+        uf_5chan;
+        mapping = (; color = :coefname),
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;],
+        visual = (; alpha = 0.1),
+        axis = (; title = &quot;alpha = 0.1&quot;, xlabel = &quot;&quot;, ylabel = &quot;Time [s]&quot;, ylabelpadding = 20),
+    );
+    plot_parallelcoordinates(
+        f[2, 1],
+        uf_5chan,
+        mapping = (; color = :coefname),
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;],
+        visual = (; alpha = 0.9),
+        axis = (; title = &quot;alpha = 0.9&quot;, ylabel = &quot;Time [s]&quot;, ylabelpadding = 20),
+    );
+    f
+end</code></pre><img src="13219bff.png" alt="Example block output"/><h1 id="Configurations-of-Parallel-coordinates-plot"><a class="docs-heading-anchor" href="#Configurations-of-Parallel-coordinates-plot">Configurations of Parallel coordinates plot</a><a id="Configurations-of-Parallel-coordinates-plot-1"></a><a class="docs-heading-anchor-permalink" href="#Configurations-of-Parallel-coordinates-plot" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="UnfoldMakie.plot_parallelcoordinates" href="#UnfoldMakie.plot_parallelcoordinates"><code>UnfoldMakie.plot_parallelcoordinates</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">plot_parallelcoordinates(data::Union{DataFrame, AbstractMatrix}; kwargs...)
+plot_parallelcoordinates!(f::Union{GridPosition, GridLayout, Figure}, data::Union{DataFrame, AbstractMatrix}; kwargs)</code></pre><p>Plot a PCP (parallel coordinates plot).<br/>Dimensions: conditions, channels, time, trials. </p><p><strong>Arguments:</strong></p><ul><li><code>f::Union{GridPosition, GridLayout, Figure}</code>   <code>Figure</code>, <code>GridLayout</code>, or <code>GridPosition</code> to draw the plot.</li><li><code>data::Union{DataFrame, AbstractMatrix}</code><br/>  Data for the plot visualization.</li></ul><p><strong>Keyword arguments (kwargs)</strong></p><ul><li><code>normalize::Symbol = nothing</code><br/>  If <code>:minmax</code>, normalize each axis to their respective min-max range.</li><li><code>ax_labels::Vector{String} = nothing</code><br/>  Specify axis labels. <br/>  Should be a vector of labels with length equal to the number of unique <code>mapping.x</code> values.<br/>  Example: <code>ax_labels = [&quot;Fz&quot;, &quot;Cz&quot;, &quot;O1&quot;, &quot;O2&quot;]</code>.</li><li><code>ax_ticklabels::Symbol = :outmost</code><br/>  Specify tick labels on axis.<ul><li><code>:all</code> - show all labels on all axes.</li><li><code>:left</code> - show all labels on the left axis, but only min and max on others. </li><li><code>:outmost</code> - show labels on min and max of all other axes. </li><li><code>:none</code> - remove all labels. </li></ul></li><li><code>bend::Bool = false</code><br/>  Change straight lines between the axes to curved (&quot;bent&quot;) lines using spline interpolation.<br/>  Note: While this makes the plot look cool, it is not generally recommended to bent the lines, as interpretation   suffers, and the resulting visualizations can be potentially missleading.</li><li><code>visual.alpha::Number = 0.5</code><br/>  Change of line transparency.</li></ul><p><strong>Defining the axes</strong></p><ul><li><code>mapping.x = :channel, mapping.y = :estimate</code>.<br/>  Overwrite what should be on the x and the y axes.</li><li><code>mapping.color = :colorcolumn</code> <br/>  Split conditions by color. The default color is <code>:black</code>.</li></ul><p><strong>Shared plot configuration options</strong></p><p>The shared plot options can be used as follows: <code>type = (; key = value, ...))</code>.<br/>For example, <code>plot_x(...; colorbar = (; vertical = true, label = &quot;Test&quot;))</code>.<br/>Multiple defaults will be cycled until match.</p><p>Placing <code>;</code> is important!</p><p><strong>figure =</strong> NamedTuple() - <em>use <code>kwargs...</code> of <a href="https://docs.makie.org/stable/explanations/figure/"><code>Makie.Figure</code></a></em> </p><p><strong>axis =</strong> (xlabel = &quot;Channels&quot;, ylabel = &quot;Time&quot;, title = &quot;&quot;, xlabelpadding = 14, ylabelpadding = 26) - <em>use <code>kwargs...</code> of  <a href="https://docs.makie.org/stable/reference/blocks/axis/"><code>Makie.Axis</code></a></em> </p><p><strong>layout =</strong> (show_legend = true, use_colorbar = true) - <em>check this <a href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/generated/how_to/hide_deco/">page</a></em> </p><p><strong>mapping =</strong> (x = :channel, y = (:estimate, :yhat, :y)) - <em>use any mapping from <a href="https://aog.makie.org/stable/layers/mapping/"><code>AlgebraOfGraphics</code></a></em> </p><p><strong>visual =</strong> (colormap = ColorTypes.RGBA{Float32}[RGBA(0.0, 0.44705883, 0.69803923, 1.0), RGBA(0.9019608, 0.62352943, 0.0, 1.0), RGBA(0.0, 0.61960787, 0.4509804, 1.0), RGBA(0.8, 0.4745098, 0.654902, 1.0), RGBA(0.3372549, 0.7058824, 0.9137255, 1.0), RGBA(0.8352941, 0.36862746, 0.0, 1.0), RGBA(0.9411765, 0.89411765, 0.25882354, 1.0)], color = :black, alpha = 0.3) - <em>use <code>kwargs...</code> of <a href="https://docs.makie.org/stable/reference/plots/lines/"><code>Makie.lines</code></a></em> </p><p><strong>legend =</strong> (orientation = :vertical, tellwidth = true, tellheight = false, halign = :right, valign = :center, title = &quot;Conditions&quot;, merge = true, framevisible = false) - <em>use <code>kwargs...</code> of  <a href="https://docs.makie.org/stable/reference/blocks/legend/"><code>Makie.Legend</code></a></em> </p><p><strong>colorbar =</strong> (vertical = true, tellwidth = true, tellheight = false, labelrotation = -1.5707963267948966) - <em>use <code>kwargs...</code> of  <a href="https://docs.makie.org/stable/reference/blocks/colorbar/"><code>Makie.Colorbar</code></a></em> </p><p><strong>Return Value:</strong> <code>Figure</code> displaying the Parallel coordinates plot.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/9da567b2782891c532c10a507147d92a48462ba2/src/general_plots/plot_parallel_coordinates.jl#L3-L46">source</a></section></article><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../channel_image/">« Channel image</a><a class="docs-footer-nextpage" href="../circ_topo/">Circular topoplots »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.9.0 on <span class="colophon-date" title="Friday 21 March 2025 16:59">Friday 21 March 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
