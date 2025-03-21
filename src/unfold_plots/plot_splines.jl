@@ -1,4 +1,4 @@
-using BSplineKit, Unfold
+import BSplineKit, Unfold
 
 """
     plot_splines(m::UnfoldModel; kwargs...)
