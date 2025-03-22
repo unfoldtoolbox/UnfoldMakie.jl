@@ -38,7 +38,7 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
         f = @formula 0 ~ 1 + condition + continuous
         # generate ModelStruct 
         se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-        return fit(
+        return Unfold.fit(
             UnfoldModel,
             [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
             evts,
@@ -65,7 +65,7 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
             f = @formula 0 ~ 1 + condition + continuous
             # generate ModelStruct
 
-            m = fit(
+            m = Unfold.fit(
                 UnfoldModel,
                 [(Any => (f, range(0, length = size(data, 2), step = 1 / 100)))],
                 evts,
@@ -84,7 +84,7 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
         f = @formula 0 ~ 1 + condition + continuous
         basis = firbasis([0, 0.5], 100)
         # generate ModelStruct
-        return fit(UnfoldModel, [Any => (f, basis)], evts, data)
+        return Unfold.fit(UnfoldModel, [Any => (f, basis)], evts, data)
     elseif example == "UnfoldLinearModelwith1Spline"
         # load and generate a simulated Unfold Design
         data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
@@ -94,7 +94,7 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
         f = @formula 0 ~ 1 + condition + spl(continuous, 4)
         # generate ModelStruct
         se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-        return fit(
+        return Unfold.fit(
             UnfoldModel,
             [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
             evts,
@@ -110,7 +110,7 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
         f = @formula 0 ~ 1 + condition + spl(continuous, 4) + spl(continuous2, 6)
         # generate ModelStruct
         se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true)
-        return fit(
+        return Unfold.fit(
             UnfoldModel,
             [Any => (f, range(0, length = size(data, 2), step = 1 / 100))],
             evts,
@@ -133,14 +133,14 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
         basisfunction = firbasis((-0.1, 0.5), 100)
         f = @formula 0 ~ 1 + condA
         bf_dict = [Any => (f, basisfunction)]
-        return fit(UnfoldModel, bf_dict, evnts, df)
+        return Unfold.fit(UnfoldModel, bf_dict, evnts, df)
     elseif example == "UnfoldTimeExpanded"
         df, evts = UnfoldSim.predef_eeg()
         f = @formula 0 ~ 1 + condition + continuous
         basisfunction = firbasis(τ = (-0.4, 0.8), sfreq = 100, name = "stimulus")
         #basisfunction = firbasis(τ = (-0.4, -0.3), sfreq = 10)
         bfDict = [Any => (f, basisfunction)]
-        return fit(UnfoldModel, bfDict, evts, df)
+        return Unfold.fit(UnfoldModel, bfDict, evts, df)
     elseif example == "TopoPlots.jl"
         data, chanlocs = TopoPlots.example_data()
         df = DataFrame(
