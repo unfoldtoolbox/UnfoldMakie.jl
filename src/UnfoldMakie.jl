@@ -46,35 +46,34 @@ else
     const modelmatrices = Unfold.get_Xs
 end
 
-include("configs.jl")
-include("configs_supportive.jl")
-include("docstring_template.jl")
+include("configs/configs.jl")
+include("configs/configs_supportive.jl")
+include("configs/topo_color.jl")
+
+include("configs/docstring_template.jl")
+include("configs/layout_helper.jl")
+include("configs/relative_axis.jl")
 
 include("data/example_data.jl")
 include("data/example_montage.jl")
-include("eeg_positions.jl")
+include("data/eeg_positions.jl")
 
-include("eeg_series.jl")
-include("plot_topoplotseries.jl")
-include("plot_topoplotseries_support.jl")
+include("unfold_plots/plot_splines.jl")
+include("unfold_plots/plot_designmatrix.jl")
 
-include("plot_erp.jl")
-include("plot_butterfly.jl")
-include("plot_splines.jl")
-include("plot_designmatrix.jl")
+include("general_plots/eeg_series.jl")
+include("general_plots/plot_topoplotseries.jl")
+include("general_plots/plot_topoplotseries_support.jl")
+include("general_plots/plot_erp.jl")
+include("general_plots/plot_butterfly.jl")
+include("general_plots/plot_topoplot.jl")
+include("general_plots/plot_erpimage.jl")
+include("general_plots/plot_parallel_coordinates.jl")
+include("general_plots/parallel_coordinates.jl")
+include("general_plots/plot_circular_topoplots.jl")
+include("general_plots/plot_erpgrid.jl")
+include("general_plots/plot_channelimage.jl")
 
-
-include("plot_topoplot.jl")
-include("plot_erpimage.jl")
-include("plot_parallelcoordinates.jl")
-include("plot_circular_topoplots.jl")
-include("plot_erpgrid.jl")
-include("plot_channelimage.jl")
-
-include("layout_helper.jl")
-
-include("topo_color.jl")
-include("relative_axis.jl")
 
 export PlotConfig
 

@@ -9,7 +9,7 @@
 # Package and data loading
 
 using Unfold, UnfoldMakie
-using BSplineKit, DataFrames
+import BSplineKit, DataFrames
 
 df, pos = example_data("TopoPlots.jl")
 m1 = example_data("UnfoldLinearModelwith1Spline");
