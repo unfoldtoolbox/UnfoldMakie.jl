@@ -1,8 +1,8 @@
 dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 
-df, pos2 = example_data("TopoPlots.jl")
-channels_32, positions_32 = example_montage("montage_32")
+df, pos2 = UnfoldMakie.example_data("TopoPlots.jl")
+channels_32, positions_32 = UnfoldMakie.example_montage("montage_32")
 
 @testset "erpgrid: montage 32" begin
     plot_erpgrid(dat[1:32, :], positions_32, channels_32; drawlabels = true)

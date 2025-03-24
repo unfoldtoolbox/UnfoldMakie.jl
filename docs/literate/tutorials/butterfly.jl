@@ -22,7 +22,7 @@ using Colors
 
 # We filter the data to make it more clearly represented:
 
-df, pos = example_data("TopoPlots.jl")
+df, pos = UnfoldMakie.example_data("TopoPlots.jl")
 first(df, 3)
 
 # # Plot Butterfly Plots

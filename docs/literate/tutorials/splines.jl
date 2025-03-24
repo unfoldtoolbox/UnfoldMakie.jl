@@ -11,9 +11,9 @@
 using Unfold, UnfoldMakie
 import BSplineKit, DataFrames
 
-df, pos = example_data("TopoPlots.jl")
-m1 = example_data("UnfoldLinearModelwith1Spline");
-m2 = example_data("UnfoldLinearModelwith2Splines");
+df, pos = UnfoldMakie.example_data("TopoPlots.jl")
+m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline");
+m2 = UnfoldMakie.example_data("UnfoldLinearModelwith2Splines");
 
 
 # Spline plot with one spline term:

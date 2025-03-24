@@ -3,7 +3,7 @@ dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 pos = pos[1:30]
 
-df, pos2 = example_data("TopoPlots.jl")
+df, pos2 = UnfoldMakie.example_data("TopoPlots.jl")
 
 
 @testset "Channel image: 3 arguments, data as Matrix" begin

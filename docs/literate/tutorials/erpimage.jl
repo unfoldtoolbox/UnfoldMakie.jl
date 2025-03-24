@@ -34,7 +34,7 @@ plot_erpimage(dat, axis = (; xlabel = "Time [s]"))
     `sortperm()` computes a permutation of the array's indices that puts the array in sorted order.
 =#
 
-dat_e, evts, times = example_data("sort_data")
+dat_e, evts, times = UnfoldMakie.example_data("sort_data")
 dat_norm = dat_e[:, :] .- mean(dat_e, dims = 2) # normalisation
 plot_erpimage(times, dat_norm; sortvalues = evts.Δlatency, axis = (; xlabel = "Time [s]"))
 

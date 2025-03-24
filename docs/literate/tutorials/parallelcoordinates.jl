@@ -15,7 +15,7 @@ using DataFrames
 using CairoMakie
 
 # Data generation
-r1, positions = example_data();
+r1, positions = UnfoldMakie.example_data();
 r2 = deepcopy(r1)
 r2.coefname .= "B" # create a second category
 r2.estimate .+= rand(length(r2.estimate)) * 0.1
@@ -170,7 +170,7 @@ end
 
 # ## Transparancy 
 
-uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 
 begin
     f = Figure()
