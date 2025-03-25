@@ -7,11 +7,11 @@ Creates sample channel labels and corresponding positions. There are currently 3
 - `channels_30` - return channel names for 30-channel montage.\\
 
 
-**Return Value:** `(channels, positions)::Tuple{Vector{String}`, `Vector{Point{2,Float32}}`}:\\
+**Return Value:** `(channels, positions)::Tuple{Vector{String}`, `Vector{UnfoldMakie.Point{2,Float32}}`}:\\
     - `channels` - vector of channel names.\\
     - `positions` - vector of channel positions.
 """
-function UnfoldMakie.example_montage(example = "montage_32")
+function example_montage(example = "montage_32")
     if example == "montage_32"
         # Channel names
         channels_32 = [
@@ -25,38 +25,38 @@ function UnfoldMakie.example_montage(example = "montage_32")
         ]
         # Compute positions
         positions_32 = [
-            Point{2,Float32}(-0.5, 1.0),   # Fp1
-            Point{2,Float32}(0.5, 1.0),   # Fp2
-            Point{2,Float32}(-0.9, 0.6),   # F7
-            Point{2,Float32}(-0.3, 0.6),   # F3
-            Point{2,Float32}(0.0, 0.6),   # Fz
-            Point{2,Float32}(0.3, 0.6),   # F4
-            Point{2,Float32}(0.9, 0.6),   # F8
-            Point{2,Float32}(-0.7, 0.3),   # FC5
-            Point{2,Float32}(-0.2, 0.3),   # FC1
-            Point{2,Float32}(0.2, 0.3),   # FC2
-            Point{2,Float32}(0.7, 0.3),   # FC6
-            Point{2,Float32}(-1.0, 0.0),   # T7
-            Point{2,Float32}(-0.5, 0.0),   # C3
-            Point{2,Float32}(0.0, 0.0),   # Cz
-            Point{2,Float32}(0.5, 0.0),   # C4
-            Point{2,Float32}(1.0, 0.0),   # T8
-            Point{2,Float32}(-0.7, -0.3),   # CP5
-            Point{2,Float32}(-0.2, -0.3),   # CP1
-            Point{2,Float32}(0.2, -0.3),   # CP2
-            Point{2,Float32}(0.7, -0.3),   # CP6
-            Point{2,Float32}(-0.9, -0.6),   # P7
-            Point{2,Float32}(-0.3, -0.6),   # P3
-            Point{2,Float32}(0.0, -0.6),   # Pz
-            Point{2,Float32}(0.3, -0.6),   # P4
-            Point{2,Float32}(0.9, -0.6),   # P8
-            Point{2,Float32}(-0.5, -0.9),   # O1
-            Point{2,Float32}(0.0, -0.9),   # Oz
-            Point{2,Float32}(0.5, -0.9),   # O2
-            Point{2,Float32}(-1.1, 0.8),   # F9
-            Point{2,Float32}(1.1, 0.8),   # F10
-            Point{2,Float32}(-1.1, -0.8),   # P9
-            Point{2,Float32}(1.1, -0.8),    # P10
+            UnfoldMakie.Point{2,Float32}(-0.5, 1.0),   # Fp1
+            UnfoldMakie.Point{2,Float32}(0.5, 1.0),   # Fp2
+            UnfoldMakie.Point{2,Float32}(-0.9, 0.6),   # F7
+            UnfoldMakie.Point{2,Float32}(-0.3, 0.6),   # F3
+            UnfoldMakie.Point{2,Float32}(0.0, 0.6),   # Fz
+            UnfoldMakie.Point{2,Float32}(0.3, 0.6),   # F4
+            UnfoldMakie.Point{2,Float32}(0.9, 0.6),   # F8
+            UnfoldMakie.Point{2,Float32}(-0.7, 0.3),   # FC5
+            UnfoldMakie.Point{2,Float32}(-0.2, 0.3),   # FC1
+            UnfoldMakie.Point{2,Float32}(0.2, 0.3),   # FC2
+            UnfoldMakie.Point{2,Float32}(0.7, 0.3),   # FC6
+            UnfoldMakie.Point{2,Float32}(-1.0, 0.0),   # T7
+            UnfoldMakie.Point{2,Float32}(-0.5, 0.0),   # C3
+            UnfoldMakie.Point{2,Float32}(0.0, 0.0),   # Cz
+            UnfoldMakie.Point{2,Float32}(0.5, 0.0),   # C4
+            UnfoldMakie.Point{2,Float32}(1.0, 0.0),   # T8
+            UnfoldMakie.Point{2,Float32}(-0.7, -0.3),   # CP5
+            UnfoldMakie.Point{2,Float32}(-0.2, -0.3),   # CP1
+            UnfoldMakie.Point{2,Float32}(0.2, -0.3),   # CP2
+            UnfoldMakie.Point{2,Float32}(0.7, -0.3),   # CP6
+            UnfoldMakie.Point{2,Float32}(-0.9, -0.6),   # P7
+            UnfoldMakie.Point{2,Float32}(-0.3, -0.6),   # P3
+            UnfoldMakie.Point{2,Float32}(0.0, -0.6),   # Pz
+            UnfoldMakie.Point{2,Float32}(0.3, -0.6),   # P4
+            UnfoldMakie.Point{2,Float32}(0.9, -0.6),   # P8
+            UnfoldMakie.Point{2,Float32}(-0.5, -0.9),   # O1
+            UnfoldMakie.Point{2,Float32}(0.0, -0.9),   # Oz
+            UnfoldMakie.Point{2,Float32}(0.5, -0.9),   # O2
+            UnfoldMakie.Point{2,Float32}(-1.1, 0.8),   # F9
+            UnfoldMakie.Point{2,Float32}(1.1, 0.8),   # F10
+            UnfoldMakie.Point{2,Float32}(-1.1, -0.8),   # P9
+            UnfoldMakie.Point{2,Float32}(1.1, -0.8),    # P10
         ]
         return channels_32, positions_32
     elseif example == "montage_64"
@@ -79,60 +79,60 @@ function UnfoldMakie.example_montage(example = "montage_32")
             "FT9", "FT10", "TP9", "TP10",
         ]
         positions_64 = [
-            Point{2,Float32}(-0.5, 1.0),   # Fp1
-            Point{2,Float32}(0.5, 1.0),    # Fp2
-            Point{2,Float32}(-0.9, 0.8),   # AF7
-            Point{2,Float32}(-0.3, 0.8),   # AF3
-            Point{2,Float32}(0.3, 0.8),    # AF4
-            Point{2,Float32}(0.9, 0.8),    # AF8
-            Point{2,Float32}(-1.0, 0.6),   # F7
-            Point{2,Float32}(-0.5, 0.6),   # F5
-            Point{2,Float32}(-0.2, 0.6),   # F3
-            Point{2,Float32}(0.2, 0.6),    # F4
-            Point{2,Float32}(0.5, 0.6),    # F6
-            Point{2,Float32}(1.0, 0.6),    # F8
-            Point{2,Float32}(-1.1, 0.4),   # FT7
-            Point{2,Float32}(-0.6, 0.4),   # FC5
-            Point{2,Float32}(-0.3, 0.4),   # FC3
-            Point{2,Float32}(0.0, 0.4),    # FCz
-            Point{2,Float32}(0.3, 0.4),    # FC4
-            Point{2,Float32}(0.6, 0.4),    # FC6
-            Point{2,Float32}(1.1, 0.4),    # FT8
-            Point{2,Float32}(-1.2, 0.2),   # T7
-            Point{2,Float32}(-0.7, 0.2),   # C5
-            Point{2,Float32}(-0.4, 0.2),   # C3
-            Point{2,Float32}(0.0, 0.2),    # Cz
-            Point{2,Float32}(0.4, 0.2),    # C4
-            Point{2,Float32}(0.7, 0.2),    # C6
-            Point{2,Float32}(1.2, 0.2),    # T8
-            Point{2,Float32}(-1.1, 0.0),   # TP7
-            Point{2,Float32}(-0.6, 0.0),   # CP5
-            Point{2,Float32}(-0.3, 0.0),   # CP3
-            Point{2,Float32}(0.0, 0.0),    # CPz
-            Point{2,Float32}(0.3, 0.0),    # CP4
-            Point{2,Float32}(0.6, 0.0),    # CP6
-            Point{2,Float32}(1.1, 0.0),    # TP8
-            Point{2,Float32}(-1.0, -0.2),  # P7
-            Point{2,Float32}(-0.5, -0.2),  # P5
-            Point{2,Float32}(-0.2, -0.2),  # P3
-            Point{2,Float32}(0.0, -0.2),   # Pz
-            Point{2,Float32}(0.2, -0.2),   # P4
-            Point{2,Float32}(0.5, -0.2),   # P6
-            Point{2,Float32}(1.0, -0.2),   # P8
-            Point{2,Float32}(-0.9, -0.4),  # PO7
-            Point{2,Float32}(-0.3, -0.4),  # PO3
-            Point{2,Float32}(0.0, -0.4),   # POz
-            Point{2,Float32}(0.3, -0.4),   # PO4
-            Point{2,Float32}(0.9, -0.4),   # PO8
-            Point{2,Float32}(-0.5, -0.6),  # O1
-            Point{2,Float32}(0.0, -0.6),   # Oz
-            Point{2,Float32}(0.5, -0.6),   # O2
-            Point{2,Float32}(-0.8, -0.8),  # Iz
-            Point{2,Float32}(0.8, -0.8),   # I2
-            Point{2,Float32}(-0.7, 0.9),   # FT9
-            Point{2,Float32}(0.7, 0.9),    # FT10
-            Point{2,Float32}(-0.6, -0.9),  # TP9
-            Point{2,Float32}(0.6, -0.9),    # TP10
+            UnfoldMakie.Point{2,Float32}(-0.5, 1.0),   # Fp1
+            UnfoldMakie.Point{2,Float32}(0.5, 1.0),    # Fp2
+            UnfoldMakie.Point{2,Float32}(-0.9, 0.8),   # AF7
+            UnfoldMakie.Point{2,Float32}(-0.3, 0.8),   # AF3
+            UnfoldMakie.Point{2,Float32}(0.3, 0.8),    # AF4
+            UnfoldMakie.Point{2,Float32}(0.9, 0.8),    # AF8
+            UnfoldMakie.Point{2,Float32}(-1.0, 0.6),   # F7
+            UnfoldMakie.Point{2,Float32}(-0.5, 0.6),   # F5
+            UnfoldMakie.Point{2,Float32}(-0.2, 0.6),   # F3
+            UnfoldMakie.Point{2,Float32}(0.2, 0.6),    # F4
+            UnfoldMakie.Point{2,Float32}(0.5, 0.6),    # F6
+            UnfoldMakie.Point{2,Float32}(1.0, 0.6),    # F8
+            UnfoldMakie.Point{2,Float32}(-1.1, 0.4),   # FT7
+            UnfoldMakie.Point{2,Float32}(-0.6, 0.4),   # FC5
+            UnfoldMakie.Point{2,Float32}(-0.3, 0.4),   # FC3
+            UnfoldMakie.Point{2,Float32}(0.0, 0.4),    # FCz
+            UnfoldMakie.Point{2,Float32}(0.3, 0.4),    # FC4
+            UnfoldMakie.Point{2,Float32}(0.6, 0.4),    # FC6
+            UnfoldMakie.Point{2,Float32}(1.1, 0.4),    # FT8
+            UnfoldMakie.Point{2,Float32}(-1.2, 0.2),   # T7
+            UnfoldMakie.Point{2,Float32}(-0.7, 0.2),   # C5
+            UnfoldMakie.Point{2,Float32}(-0.4, 0.2),   # C3
+            UnfoldMakie.Point{2,Float32}(0.0, 0.2),    # Cz
+            UnfoldMakie.Point{2,Float32}(0.4, 0.2),    # C4
+            UnfoldMakie.Point{2,Float32}(0.7, 0.2),    # C6
+            UnfoldMakie.Point{2,Float32}(1.2, 0.2),    # T8
+            UnfoldMakie.Point{2,Float32}(-1.1, 0.0),   # TP7
+            UnfoldMakie.Point{2,Float32}(-0.6, 0.0),   # CP5
+            UnfoldMakie.Point{2,Float32}(-0.3, 0.0),   # CP3
+            UnfoldMakie.Point{2,Float32}(0.0, 0.0),    # CPz
+            UnfoldMakie.Point{2,Float32}(0.3, 0.0),    # CP4
+            UnfoldMakie.Point{2,Float32}(0.6, 0.0),    # CP6
+            UnfoldMakie.Point{2,Float32}(1.1, 0.0),    # TP8
+            UnfoldMakie.Point{2,Float32}(-1.0, -0.2),  # P7
+            UnfoldMakie.Point{2,Float32}(-0.5, -0.2),  # P5
+            UnfoldMakie.Point{2,Float32}(-0.2, -0.2),  # P3
+            UnfoldMakie.Point{2,Float32}(0.0, -0.2),   # Pz
+            UnfoldMakie.Point{2,Float32}(0.2, -0.2),   # P4
+            UnfoldMakie.Point{2,Float32}(0.5, -0.2),   # P6
+            UnfoldMakie.Point{2,Float32}(1.0, -0.2),   # P8
+            UnfoldMakie.Point{2,Float32}(-0.9, -0.4),  # PO7
+            UnfoldMakie.Point{2,Float32}(-0.3, -0.4),  # PO3
+            UnfoldMakie.Point{2,Float32}(0.0, -0.4),   # POz
+            UnfoldMakie.Point{2,Float32}(0.3, -0.4),   # PO4
+            UnfoldMakie.Point{2,Float32}(0.9, -0.4),   # PO8
+            UnfoldMakie.Point{2,Float32}(-0.5, -0.6),  # O1
+            UnfoldMakie.Point{2,Float32}(0.0, -0.6),   # Oz
+            UnfoldMakie.Point{2,Float32}(0.5, -0.6),   # O2
+            UnfoldMakie.Point{2,Float32}(-0.8, -0.8),  # Iz
+            UnfoldMakie.Point{2,Float32}(0.8, -0.8),   # I2
+            UnfoldMakie.Point{2,Float32}(-0.7, 0.9),   # FT9
+            UnfoldMakie.Point{2,Float32}(0.7, 0.9),    # FT10
+            UnfoldMakie.Point{2,Float32}(-0.6, -0.9),  # TP9
+            UnfoldMakie.Point{2,Float32}(0.6, -0.9),    # TP10
         ]
         return channels_64, positions_64
     elseif example == "channels_30"

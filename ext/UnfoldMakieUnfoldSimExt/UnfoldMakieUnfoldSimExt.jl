@@ -2,7 +2,6 @@ module UnfoldMakieUnfoldSimExt
 
 using UnfoldSim
 using UnfoldMakie
-using UnfoldSim
 using TopoPlots
 using Unfold
 using Random
