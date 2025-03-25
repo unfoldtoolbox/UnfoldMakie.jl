@@ -1,5 +1,4 @@
-using CairoMakie
-using UnfoldSim
+using Makie
 using Unfold
 using Test
 using GeometryBasics
