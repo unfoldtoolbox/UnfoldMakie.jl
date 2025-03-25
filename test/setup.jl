@@ -1,5 +1,6 @@
 using CairoMakie
 using Unfold
+using UnfoldSim
 using Test
 using GeometryBasics
 using DataFrames
