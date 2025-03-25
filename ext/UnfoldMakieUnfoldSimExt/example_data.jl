@@ -14,6 +14,7 @@ Datasets:\\
 - `sort_data` - 2 DataFrames: 
     - `dat` for EEG recordings  and `evts` with event variables occured during experiment.\\
     - `evts` could be used for sorting EEG data in ERP image. 
+- `bootstrap_toposeries` - DataFrame with 50 trials, 160 time points and 227 electrode positions.\\
 
 Models:\\
 - `UnfoldLinearModel` - Model with formula `1 + condition + continuous`.\\
