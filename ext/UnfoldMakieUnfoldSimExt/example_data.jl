@@ -220,7 +220,7 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
         # chosing positions
         pos3d = hart.electrodes["pos"]
         pos2d = to_positions(pos3d')
-        pos_toposeries = [Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
+        pos_toposeries = [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
         return df_toposeries, pos_toposeries
     else
         error("unknown example data")
