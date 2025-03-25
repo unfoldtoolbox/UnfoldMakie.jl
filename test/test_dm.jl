@@ -1,5 +1,5 @@
-uf = example_data("UnfoldLinearModel")
-td = example_data("UnfoldTimeExpanded")
+uf = UnfoldMakie.example_data("UnfoldLinearModel")
+td = UnfoldMakie.example_data("UnfoldTimeExpanded")
 
 @testset "basic" begin
     plot_designmatrix(designmatrix(uf))

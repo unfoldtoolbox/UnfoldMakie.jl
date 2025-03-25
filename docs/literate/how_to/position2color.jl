@@ -12,7 +12,7 @@ using DataFramesMeta
 using Colors
 
 # By default the plot looks like this:
-results, positions = example_data("TopoPlots.jl")
+results, positions = UnfoldMakie.example_data("TopoPlots.jl")
 plot_butterfly(results; positions = positions)
 
 # # Color schemes

@@ -1,5 +1,5 @@
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-dat_e, evts_e, times = example_data("sort_data")
+dat_e, evts_e, times = UnfoldMakie.example_data("sort_data")
 
 @testset "ERP image with data matrix" begin
     plot_erpimage(dat)
@@ -101,7 +101,7 @@ end
 end
 
 @testset "ERP image with show_sortval" begin
-    dat_e, evts_e, times = example_data("sort_data")
+    dat_e, evts_e, times = UnfoldMakie.example_data("sort_data")
     plot_erpimage(times, dat_e; sortvalues = evts_e.Δlatency, show_sortval = true)
 end
 

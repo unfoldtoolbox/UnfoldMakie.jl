@@ -9,11 +9,11 @@
     gf = f[3, 2]
     gh = f[4, 2]
 
-    d_topo, pos = example_data("TopoPlots.jl")
+    d_topo, pos = UnfoldMakie.example_data("TopoPlots.jl")
     data, positions = TopoPlots.example_data()
     df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
 
-    m = example_data("UnfoldLinearModel")
+    m = UnfoldMakie.example_data("UnfoldLinearModel")
     results = coeftable(m)
 
     results.coefname =
@@ -64,10 +64,10 @@
         axis = (; ylabel = "µV", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
     )
 
-    dat_e, evts, times = example_data("sort_data")
+    dat_e, evts, times = UnfoldMakie.example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
     plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], channels_30;)
-    r1, positions = example_data()
+    r1, positions = UnfoldMakie.example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
     r2.estimate .+= rand(length(r2.estimate)) * 0.1
@@ -99,11 +99,11 @@ end
 @testset "8 plots with a Figure" begin
     f = Figure(size = (1200, 1400))
 
-    d_topo, positions = example_data("TopoPlots.jl")
+    d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
     data, positions = TopoPlots.example_data()
-    uf = example_data("UnfoldLinearModel")
+    uf = UnfoldMakie.example_data("UnfoldLinearModel")
     results = coeftable(uf)
-    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 
     pvals = DataFrame(
@@ -149,11 +149,11 @@ end
 
 
 @testset "testing combined figure (a Figure from mult_viz_in_fig from docs)" begin
-    d_topo, positions = example_data("TopoPlots.jl")
-    uf_deconv = example_data("UnfoldLinearModelContinuousTime")
-    uf = example_data("UnfoldLinearModel")
+    d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
+    uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
+    uf = UnfoldMakie.example_data("UnfoldLinearModel")
     results = coeftable(uf)
-    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
     data, positions = TopoPlots.example_data()
     times = -0.099609375:0.001953125:1.0

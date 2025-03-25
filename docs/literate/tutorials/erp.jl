@@ -63,7 +63,7 @@ plot_erp(
 # Here we manually specify p-value lines. If array is not empty, plot shows colored lines under the plot representing the p-values. 
 # Below is an example in which p-values are given:
 
-m = example_data("UnfoldLinearModel")
+m = UnfoldMakie.example_data("UnfoldLinearModel")
 results = coeftable(m)
 significancevalues = DataFrame(
     from = [0.01, 0.2],
@@ -132,7 +132,7 @@ plot_erp(
 # ## Faceting
 # Creation of column facets for each channel. 
 
-m7 = example_data("7channels")
+m7 = UnfoldMakie.example_data("7channels")
 results7 = coeftable(m7)
 plot_erp(
     results7,

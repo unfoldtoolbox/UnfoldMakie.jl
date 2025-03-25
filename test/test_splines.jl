@@ -1,7 +1,7 @@
 import BSplineKit, Unfold
-m0 = example_data("UnfoldLinearModel")
-m1 = example_data("UnfoldLinearModelwith1Spline")
-m2 = example_data("UnfoldLinearModelwith2Splines")
+m0 = UnfoldMakie.example_data("UnfoldLinearModel")
+m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
+m2 = UnfoldMakie.example_data("UnfoldLinearModelwith2Splines")
 
 @testset "Spline plot: no splines" begin
     err1 = nothing

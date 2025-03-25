@@ -9,7 +9,7 @@ df = DataFrame(
 labels = ["s$i" for i = 1:size(dat, 1)]
 df = flatten(df, :estimate)
 
-d_topo, positions = example_data("TopoPlots.jl")
+d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
 
 @testset "error cases and warns" begin
     @testset "out of error bounds" begin
