@@ -17,8 +17,8 @@ using TopoPlots
 
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
-channels_32, positions_32 = example_montage("montage_32")
-channels_64, positions_64 = example_montage("montage_64")
+channels_32, positions_32 = UnfoldMakie.example_montage("montage_32")
+channels_64, positions_64 = UnfoldMakie.example_montage("montage_64")
 
 
 plot_erpgrid(data, pos; axis = (; xlabel = "s", ylabel = "µV"))

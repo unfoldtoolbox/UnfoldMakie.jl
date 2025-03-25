@@ -29,7 +29,7 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
 # noiselevel is important for adding variability it your data
-df_toposeries, pos_toposeries = example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries, pos_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1)
 

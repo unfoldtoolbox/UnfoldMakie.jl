@@ -9,7 +9,7 @@ using DataFrames
 using CairoMakie
 
 # Data
-uf = example_data("UnfoldLinearModel");
+uf = UnfoldMakie.example_data("UnfoldLinearModel");
 
 # # Plot Designmatrices
 

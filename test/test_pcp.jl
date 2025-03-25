@@ -1,4 +1,4 @@
-results_plot, positions = example_data()
+results_plot, positions = UnfoldMakie.example_data()
 
 @testset "PCP: data input DataFrame" begin
     plot_parallelcoordinates(results_plot)
@@ -75,7 +75,7 @@ end
 end
 
 @testset "PCP: 3 conditions and 5 channels" begin
-    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
     plot_parallelcoordinates(
         uf_5chan;
         mapping = (; color = :coefname),
@@ -173,7 +173,7 @@ end
 end
 
 @testset "transparency" begin
-    uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+    uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 
     f = Figure()
     plot_parallelcoordinates(
@@ -194,7 +194,7 @@ end
 end
 
 @testset "styling" begin
-    r1, positions = example_data()
+    r1, positions = UnfoldMakie.example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
     r2.estimate .+= rand(length(r2.estimate)) * 0.1

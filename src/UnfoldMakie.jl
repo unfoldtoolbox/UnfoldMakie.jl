@@ -54,8 +54,6 @@ include("configs/docstring_template.jl")
 include("configs/layout_helper.jl")
 include("configs/relative_axis.jl")
 
-include("data/example_data.jl")
-include("data/example_montage.jl")
 include("data/eeg_positions.jl")
 
 include("unfold_plots/plot_splines.jl")
@@ -74,6 +72,17 @@ include("general_plots/plot_circular_topoplots.jl")
 include("general_plots/plot_erpgrid.jl")
 include("general_plots/plot_channelimage.jl")
 
+
+
+# extension functions
+example_data(args...; kwargs...) =
+    error("This function is only available after importing UnfoldSim")
+example_montage(args...; kwargs...) =
+    error("This function is only available after importing UnfoldSim")
+
+
+# public example_data
+# public example_montage
 
 export PlotConfig
 
@@ -106,7 +115,10 @@ export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG
 
-export example_data
-export example_montage
 
+
+if !isdefined(Base, :get_extension)
+    ## Extension Compatabality with julia  pre 1.9
+    include("../ext/UnfoldMakieSimExt.jl")
+end
 end
