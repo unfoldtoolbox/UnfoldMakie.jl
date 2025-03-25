@@ -1,8 +1,3 @@
-using UnfoldSim
-using TopoPlots
-using Unfold
-using Random
-
 """
     example_data(String; kwargs...) 
 
@@ -30,7 +25,7 @@ Models:\\
 
 **Return Value:** `DataFrame`.
 """
-function example_data(example = "TopoPlots.jl"; noiselevel = 10)
+function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
     if example == "UnfoldLinearModel"
         # load and generate a simulated Unfold Design
         data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
@@ -227,8 +222,6 @@ function example_data(example = "TopoPlots.jl"; noiselevel = 10)
         pos2d = to_positions(pos3d')
         pos_toposeries = [Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
         return df_toposeries, pos_toposeries
-
-   
     else
         error("unknown example data")
     end

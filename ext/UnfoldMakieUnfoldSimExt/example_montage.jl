@@ -11,7 +11,7 @@ Creates sample channel labels and corresponding positions. There are currently 3
     - `channels` - vector of channel names.\\
     - `positions` - vector of channel positions.
 """
-function example_montage(example = "montage_32")
+function UnfoldMakie.example_montage(example = "montage_32")
     if example == "montage_32"
         # Channel names
         channels_32 = [
