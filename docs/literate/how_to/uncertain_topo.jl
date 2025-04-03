@@ -1,4 +1,3 @@
-using Base: channeled_tasks
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
