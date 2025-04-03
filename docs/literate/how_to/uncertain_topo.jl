@@ -180,6 +180,7 @@ function draw_topoplots(rng, df_toposeries)
         axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
         positions = pos_toposeries,
     )
-    display(fig)
+    fig
 end
+
 draw_topoplots(rng, df_toposeries)
