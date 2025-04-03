@@ -10,7 +10,8 @@ using Statistics
 using Random
 using Animations</code></pre></details ><p>Representing uncertainty is one of the most difficult tasks in visualization. It is especially difficult for heatmaps and topoplots. Here we will present new ways to show uncertainty for topoplots series.</p><p>Uncertainty in EEG data usually comes from subjects and trials:</p><ol><li>Subjects can vary in phisological or behavioral characteristics;</li><li>Something can change between trials (electrode connection can get worse, etc.).</li></ol><p>Data input</p><pre><code class="language-julia hljs">dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
-df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));</code></pre><p>Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping noiselevel is important for adding variability it your data</p><pre><code class="language-julia hljs">df_toposeries, pos_toposeries = UnfoldMakie.example_data(&quot;bootstrap_toposeries&quot;; noiselevel = 7);
+df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));</code></pre><p>Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping noiselevel is important for adding variability it your data</p><pre><code class="language-julia hljs">df_toposeries, pos_toposeries =
+    UnfoldMakie.example_data(&quot;bootstrap_toposeries&quot;; noiselevel = 7);
 df_toposeries = df_toposeries[df_toposeries.trial.&lt;=15, :];
 rng = MersenneTwister(1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Random.MersenneTwister(1)</code></pre><h1 id="Uncertainty-via-additional-row"><a class="docs-heading-anchor" href="#Uncertainty-via-additional-row">Uncertainty via additional row</a><a id="Uncertainty-via-additional-row-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-additional-row" title="Permalink"></a></h1><p>In this case we alread have two datasets: <code>df</code> with mean estimates and <code>df_uncert</code> with variability estimation.</p><pre><code class="language-julia hljs">f = Figure()
 plot_topoplotseries!(
@@ -102,18 +103,18 @@ end;</code></pre><p><video src="../bootstrap_toposeries_easing.mp4" controls="tr
     fig = Figure(size = (800, 600))
 
     merged_df = DataFrame()
-    for i in 1:2, j in 1:3
+    for i = 1:2, j = 1:3
         boo = bootstrap_toposeries(rng, df_toposeries)
         boo.condition .= string((i - 1) * 3 + j) # Assign condition number
-        merged_df = vcat(merged_df, boo);
+        merged_df = vcat(merged_df, boo)
 
     end
     plot_topoplotseries!(fig, merged_df; nrows = 2,
         mapping = (; col = :condition),
         axis = (; titlesize = 20, title = &quot;Bootstrapped means&quot;, xlabel = &quot;&quot;),
-        positions=pos_toposeries
-        )
+        positions = pos_toposeries,
+    )
     display(fig)
 end
 draw_topoplots(rng, df_toposeries)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">CairoMakie.Screen{IMAGE}
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../mult_vis_in_fig/">« Include multiple figures in one</a><a class="docs-footer-nextpage" href="../customize_labels/">Customize channel labels »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Thursday 3 April 2025 13:07">Thursday 3 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../mult_vis_in_fig/">« Include multiple figures in one</a><a class="docs-footer-nextpage" href="../customize_labels/">Customize channel labels »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Thursday 3 April 2025 13:37">Thursday 3 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
