@@ -1,3 +1,4 @@
+using Base: channeled_tasks
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
@@ -161,3 +162,24 @@ record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
 end;
 
 # ![](bootstrap_toposeries_easing.mp4)
+
+# # Static version of animation 
+function draw_topoplots(rng, df_toposeries)
+    fig = Figure(size = (800, 600))
+
+    merged_df = DataFrame()
+    for i in 1:2, j in 1:3
+        boo = bootstrap_toposeries(rng, df_toposeries)
+        boo.condition .= string((i - 1) * 3 + j) # Assign condition number
+        merged_df = vcat(merged_df, boo);
+        
+    end
+    plot_topoplotseries!(fig, merged_df; nrows = 2, 
+        mapping = (; col = :condition), 
+        axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
+        positions=pos_toposeries
+        )
+    display(fig)
+end
+draw_topoplots(rng, df_toposeries)
+
