@@ -1,3 +1,4 @@
+using Base: channeled_tasks
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
@@ -29,7 +30,8 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
 # noiselevel is important for adding variability it your data
-df_toposeries, pos_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries, pos_toposeries =
+    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1)
 
@@ -167,18 +169,17 @@ function draw_topoplots(rng, df_toposeries)
     fig = Figure(size = (800, 600))
 
     merged_df = DataFrame()
-    for i in 1:2, j in 1:3
+    for i = 1:2, j = 1:3
         boo = bootstrap_toposeries(rng, df_toposeries)
         boo.condition .= string((i - 1) * 3 + j) # Assign condition number
-        merged_df = vcat(merged_df, boo);
-        
+        merged_df = vcat(merged_df, boo)
+
     end
-    plot_topoplotseries!(fig, merged_df; nrows = 2, 
-        mapping = (; col = :condition), 
+    plot_topoplotseries!(fig, merged_df; nrows = 2,
+        mapping = (; col = :condition),
         axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
-        positions=pos_toposeries
-        )
+        positions = pos_toposeries,
+    )
     display(fig)
 end
 draw_topoplots(rng, df_toposeries)
-
