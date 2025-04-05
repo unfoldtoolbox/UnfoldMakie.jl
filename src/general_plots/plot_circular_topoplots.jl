@@ -92,7 +92,7 @@ function plot_circular_topoplots!(
 
     Colorbar(f[1, 2]; colorrange = (min, max), config.colorbar...)
     topo_attributes =
-    update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
+        update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
 
     plot_topo_plots!(
         f[1, 1],
