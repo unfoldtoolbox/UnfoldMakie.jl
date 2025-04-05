@@ -37,7 +37,6 @@ function plot_splines!(
     superlabel_config = (;),
     kwargs...,
 )
-@debug "test"
     config = PlotConfig(:splines)
     config_kwargs!(config; kwargs...)
     spline_axis, density_axis, superlabel_config =
