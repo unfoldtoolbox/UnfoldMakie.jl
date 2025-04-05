@@ -80,9 +80,8 @@ example_data(args...; kwargs...) =
 example_montage(args...; kwargs...) =
     error("This function is only available after importing UnfoldSim") 
 
-
-public example_data
-public example_montage
+export example_data
+export example_montage
 
 export PlotConfig
 
