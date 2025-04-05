@@ -109,3 +109,13 @@ end
     )
     f
 end
+
+@testset "circularplot: label_scatter = false" begin
+    plot_circular_topoplots(
+        d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
+        positions = positions,
+        predictor = :time,
+        predictor_bounds = [-0.3, 0.5],
+        topo_attributes = (label_scatter = false,),
+    )
+end
