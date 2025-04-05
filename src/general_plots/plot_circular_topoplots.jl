@@ -1,5 +1,6 @@
 """
     plot_circular_topoplots!(f, data::DataFrame; kwargs...)
+using ColorSchemes: topo
     plot_circular_topoplots(data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
@@ -24,6 +25,10 @@ Plot a circular EEG topoplot.
     The radius of the circular topoplot series plot calucalted by formula: `radius = (minwidth * plot_radius) / 2`.
 - `labels::Vector{String} = nothing`\\
     Labels for the [`plot_topoplots`](@ref topo_vis).
+- `topo_attributes::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot interoplation.\\
+    To see all options just type `?Topoplot.topoplot` in REPL.\\
+    Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 
 $(_docstring(:circtopos))
 
@@ -43,6 +48,7 @@ function plot_circular_topoplots!(
     labels = nothing,
     center_label = "",
     plot_radius = 0.8,
+    topo_attributes = (;),
     kwargs...,
 )
     config = PlotConfig(:circtopos)
@@ -84,11 +90,10 @@ function plot_circular_topoplots!(
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
-    Colorbar(
-        f[1, 2];
-        colorrange = (min, max),
-        config.colorbar...,
-    )
+    Colorbar(f[1, 2]; colorrange = (min, max), config.colorbar...)
+    topo_attributes =
+    update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
+
     plot_topo_plots!(
         f[1, 1],
         data[:, config.mapping.y],
@@ -99,6 +104,7 @@ function plot_circular_topoplots!(
         max,
         labels,
         plot_radius,
+        topo_attributes,
     )
 
     apply_layout_settings!(config; ax = ax)
@@ -183,6 +189,7 @@ function plot_topo_plots!(
     globalmax,
     labels,
     plot_radius,
+    topo_attributes,
 )
     df = DataFrame(:e => data, :p => predictor_values)
     gp = groupby(df, :p)
@@ -210,6 +217,7 @@ function plot_topo_plots!(
             positions = positions,
             colorrange = (globalmin, globalmax),
             enlarge = 1,
+            topo_attributes...,
         )
         hidedecorations!(eeg_axis, label = false)
         hidespines!(eeg_axis)
