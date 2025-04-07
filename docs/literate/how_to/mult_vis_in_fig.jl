@@ -147,6 +147,7 @@ begin
         results;
         :stderror => true,
         mapping = (; color = :coefname => "Conditions"),
+        axis = (; xlabel = "Time [ms]"),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
@@ -155,6 +156,7 @@ begin
         d_topo;
         positions = pos,
         topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        axis = (; xlabel = "Time [ms]"),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
@@ -179,11 +181,11 @@ begin
         ge,
         data[:, :, 1],
         positions;
-        axis = (; ylabel = "µV", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
+        axis = (; ylabel = "µV", xlabel = "Time [ms]", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
     )
 
     dat_e, evts, times = UnfoldMakie.example_data("sort_data")
-    plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
+    plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency, axis = (; xlabel = "Time [ms]"),)
     m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
     plot_splines!(gg, m1)
     r1, positions = UnfoldMakie.example_data()
@@ -197,6 +199,7 @@ begin
         mapping = (; color = :coefname),
         normalize = :minmax,
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
+        axis = (; ylabel = "Time [ms]")
     )
     df_circ = DataFrame(
         :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
@@ -214,7 +217,7 @@ begin
         predictor_bounds = [80, 320],
         colorbar = (; height = 180),
     )
-    plot_channelimage!(gj, data[1:30, :, 1], positions[1:30], channels_30;)
+    plot_channelimage!(gj, data[1:30, :, 1], positions[1:30], channels_30; axis = (; xlabel = "Time [ms]"))
 
     for (label, layout) in
         zip(
