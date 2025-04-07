@@ -12,7 +12,7 @@ results = coeftable(uf)
 uf_5chan = UnfoldMakie.example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
 data, positions = TopoPlots.example_data()
 dat_e, evts, times = UnfoldMakie.example_data(&quot;sort_data&quot;)
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Progress:   4%|█▉                                       |  ETA: 0:00:07Progress: 100%|█████████████████████████████████████████| Time: 0:00:00</code></pre><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>. Also we used a specified theme <code>fresh</code>.</p><pre><code class="language-julia hljs">f = Figure()
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Progress:   4%|█▉                                       |  ETA: 0:00:08Progress: 100%|█████████████████████████████████████████| Time: 0:00:00</code></pre><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>. Also we used a specified theme <code>fresh</code>.</p><pre><code class="language-julia hljs">f = Figure()
 with_theme(theme_ggthemr(:fresh)) do
 
     plot_erp!(f[1, 1], coeftable(uf_deconv))
@@ -97,6 +97,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         results;
         :stderror =&gt; true,
         mapping = (; color = :coefname =&gt; &quot;Conditions&quot;),
+        axis = (; xlabel = &quot;Time [ms]&quot;),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
@@ -105,6 +106,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         d_topo;
         positions = pos,
         topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        axis = (; xlabel = &quot;Time [ms]&quot;),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
@@ -129,11 +131,11 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         ge,
         data[:, :, 1],
         positions;
-        axis = (; ylabel = &quot;µV&quot;, ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
+        axis = (; ylabel = &quot;µV&quot;, xlabel = &quot;Time [ms]&quot;, ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
     )
 
     dat_e, evts, times = UnfoldMakie.example_data(&quot;sort_data&quot;)
-    plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
+    plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency, axis = (; xlabel = &quot;Time [ms]&quot;),)
     m1 = UnfoldMakie.example_data(&quot;UnfoldLinearModelwith1Spline&quot;)
     plot_splines!(gg, m1)
     r1, positions = UnfoldMakie.example_data()
@@ -147,6 +149,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         mapping = (; color = :coefname),
         normalize = :minmax,
         ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;C5&quot;, &quot;P3&quot;, &quot;P7&quot;],
+        axis = (; ylabel = &quot;Time [ms]&quot;)
     )
     df_circ = DataFrame(
         :estimate =&gt; eachcol(Float64.(data[:, 100:40:300, 1])),
@@ -164,7 +167,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         predictor_bounds = [80, 320],
         colorbar = (; height = 180),
     )
-    plot_channelimage!(gj, data[1:30, :, 1], positions[1:30], channels_30;)
+    plot_channelimage!(gj, data[1:30, :, 1], positions[1:30], channels_30; axis = (; xlabel = &quot;Time [ms]&quot;))
 
     for (label, layout) in
         zip(
@@ -180,4 +183,4 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
             halign = :right,
         )
     end
-end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="012f4a84.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide decorations and axis spines</a><a class="docs-footer-nextpage" href="../uncertain_topo/">Visualize uncertainty in topoplot series »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Monday 7 April 2025 13:33">Monday 7 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="993297cc.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide decorations and axis spines</a><a class="docs-footer-nextpage" href="../uncertain_topo/">Visualize uncertainty in topoplot series »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Monday 7 April 2025 13:43">Monday 7 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
