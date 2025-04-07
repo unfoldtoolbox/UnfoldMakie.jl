@@ -63,47 +63,49 @@ With so many plots at once, it's better to set a fixed resolution in your image 
 # <details>
 # <summary>Click to expand</summary>
 # ```
-f = Figure(size = (2000, 2000))
+begin  
+    f = Figure(size = (2000, 2000))
 
-plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
+    plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
 
-pvals = DataFrame(
-    from = [0.1, 0.15],
-    to = [0.2, 0.5], # if coefname not specified, line should be black
-    coefname = ["(Intercept)", "category: face"],
-)
-plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
+    pvals = DataFrame(
+        from = [0.1, 0.15],
+        to = [0.2, 0.5], # if coefname not specified, line should be black
+        coefname = ["(Intercept)", "category: face"],
+    )
+    plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
 
-plot_designmatrix!(f[2, 3], designmatrix(uf))
+    plot_designmatrix!(f[2, 3], designmatrix(uf))
 
-plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
-plot_topoplotseries!(
-    f[4, 1:3],
-    d_topo;
-    bin_width = 0.1,
-    positions = positions,
-    mapping = (; label = :channel),
-)
+    plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
+    plot_topoplotseries!(
+        f[4, 1:3],
+        d_topo;
+        bin_width = 0.1,
+        positions = positions,
+        mapping = (; label = :channel),
+    )
 
-res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
 
-plot_erp!(
-    f[2, 4:5],
-    res_effects;
-    mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
-    legend = (; nbanks = 2),
-)
+    plot_erp!(
+        f[2, 4:5],
+        res_effects;
+        mapping = (; y = :yhat, color = :continuous, group = :continuous => nonnumeric),
+        legend = (; nbanks = 2),
+    )
 
-plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))
+    plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))
 
-plot_erpimage!(f[1, 4:5], times, d_singletrial)
-plot_circular_topoplots!(
-    f[3:4, 4:5],
-    d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-    positions = positions,
-    predictor = :time,
-    predictor_bounds = [-0.3, 0.5],
-)
+    plot_erpimage!(f[1, 4:5], times, d_singletrial)
+    plot_circular_topoplots!(
+        f[3:4, 4:5],
+        d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
+        positions = positions,
+        predictor = :time,
+        predictor_bounds = [-0.3, 0.5],
+    )
+end
 # ```@raw html
 # </details >
 # ```
@@ -228,10 +230,10 @@ begin
             halign = :right,
         )
     end
+end
     # ```@raw html
     # </details >
     # ```
-    f
-end
-#
-# save("my_figure.png", f)
+
+f
+
