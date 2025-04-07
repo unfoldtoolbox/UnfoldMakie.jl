@@ -147,8 +147,36 @@ end
     data_2 = data_1 .* 100
     min, max = minimum(data_2[:, 5, 1]), maximum(data_2[:, 5, 1])
 
-	f = Figure()
-	plot_topoplot!(f[1,1], data_1[:,5,1], positions=positions, visual=(; limits=(min,max)), layout = (; use_colorbar = false)) # how to increase the gap?
-	plot_topoplot!(f[1,2], data_2[:,5,1], positions=positions, visual=(; limits=(min,max)))
-	f
+    f = Figure()
+    plot_topoplot!(
+        f[1, 1],
+        data_1[:, 5, 1],
+        positions = positions,
+        visual = (; limits = (min, max)),
+        layout = (; use_colorbar = false),
+    ) # how to increase the gap?
+    plot_topoplot!(
+        f[1, 2],
+        data_2[:, 5, 1],
+        positions = positions,
+        visual = (; limits = (min, max)),
+    )
+    f
+end
+
+@testset "topoplot: markers as random arrows" begin
+    random_rotations = rand(64) .* 2π
+    plot_topoplot(
+        dat[:, 50, 1];
+        positions,
+        axis = (; xlabel = "50 ms"),
+        topo_attributes = (;
+            label_scatter = (;
+                markersize = 20,
+                marker = '↑',
+                color = :black,
+                rotation = random_rotations,
+            )
+        ),
+    )
 end
