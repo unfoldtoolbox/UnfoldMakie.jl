@@ -30,7 +30,12 @@ dat, positions = TopoPlots.example_data();
 
 # Here we select a time point in 340 msec and the mean estimate. 
 df = DataFrame(:estimate => dat[:, 340, 1])
-plot_topoplot(df; positions = positions, axis = (; xlabel = "340 ms"), colorbar = (; height = 350),)
+plot_topoplot(
+    df;
+    positions = positions,
+    axis = (; xlabel = "340 ms"),
+    colorbar = (; height = 350),
+)
 
 # ## Setting sensor positions
 
@@ -101,7 +106,7 @@ begin
 end
 
 # # Highlighting channels
-plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "340 ms"),)
+plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "340 ms"))
 
 
 # # Horizontal colorbars
@@ -111,6 +116,22 @@ plot_topoplot(
     positions,
     axis = (; xlabel = "50 ms"),
     colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+)
+
+# # Advanced markers
+random_rotations = rand(64) .* 2π
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (;
+            markersize = 20,
+            marker = '↑',
+            color = :black,
+            rotation = random_rotations,
+        )
+    ),
 )
 
 # # Configurations of Topoplot
