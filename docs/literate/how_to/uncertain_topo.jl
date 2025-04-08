@@ -192,7 +192,10 @@ function draw_topoplots(rng, df_toposeries)
         merged_df = vcat(merged_df, boo)
 
     end
-    plot_topoplotseries!(fig, merged_df; nrows = 2,
+    plot_topoplotseries!(
+        fig,
+        merged_df;
+        nrows = 2,
         mapping = (; col = :condition),
         axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
         positions = pos_toposeries,
