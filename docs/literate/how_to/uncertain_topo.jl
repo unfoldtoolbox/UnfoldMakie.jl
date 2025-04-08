@@ -32,7 +32,7 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 # noiselevel is important for adding variability it your data
 df_toposeries, pos_toposeries =
     UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
-df_toposeries = df_toposeries[df_toposeries.trial .<= 15, :];
+df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1)
 
 # # Uncertainty via additional row
@@ -57,6 +57,23 @@ plot_topoplotseries!(
     colorbar = (; label = "Voltage uncertainty"),
 )
 f
+# # Markers for uncertainty
+
+df_uncert_chan = groupby(df_uncert[df_uncert.time.==50, :], [:channel])
+df_uncert_chan = combine(df_uncert_chan, :estimate => mean => :estimate)
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (;
+            markersize = df_uncert.estimate * 300,
+            marker = :circle,
+            color = :white,
+            strokecolor = :tomato,
+        )
+    ),
+)
 
 # # Uncertainty via animation 
 

@@ -119,6 +119,10 @@ plot_topoplot(
 )
 
 # # Advanced markers
+# You can use markers and their proeprties as additional information dimension. For instance, to map uncertaitny or some other value to the marker size, color or rotation.
+# This is done by setting the `topo_attributes` kwarg. The following example shows how to set the marker size and color based on the data values.
+# Check more [here](https://docs.makie.org/dev/reference/plots/scatter#markers).
+
 random_rotations = rand(64) .* 2π
 plot_topoplot(
     dat[:, 50, 1];
@@ -130,6 +134,19 @@ plot_topoplot(
             marker = '↑',
             color = :black,
             rotation = random_rotations,
+        )
+    ),
+)
+
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (;
+            markersize = random_rotations,
+            marker = :circle,
+            color = :black,
         )
     ),
 )
