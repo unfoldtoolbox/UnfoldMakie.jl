@@ -28,7 +28,13 @@ plot_erpgrid(data, pos; axis = (; xlabel = "s", ylabel = "µV"))
 plot_erpgrid(data, pos; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
 
 # But you can also use predefined vector of channel labels. 
-plot_erpgrid(data, pos, channels_64; drawlabels = true, axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(
+    data,
+    pos,
+    channels_64;
+    drawlabels = true,
+    axis = (; xlabel = "s", ylabel = "µV"),
+)
 
 # # Customizing coordinates
 # You can adjust the coordinates of subplots to improve their alignment.

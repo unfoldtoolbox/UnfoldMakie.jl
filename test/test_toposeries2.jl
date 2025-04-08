@@ -38,7 +38,8 @@ end
 
 @testset "error checking: bin_width or bin_num with categorical columns" begin
     @test_throws ErrorException begin
-        df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+        df =
+            UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
         df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
         plot_topoplotseries(
             df;

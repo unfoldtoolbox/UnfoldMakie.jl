@@ -1,3 +1,4 @@
+using Base: channeled_tasks
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
@@ -29,7 +30,8 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
 # noiselevel is important for adding variability it your data
-df_toposeries, pos_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries, pos_toposeries =
+    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1)
 
@@ -55,6 +57,23 @@ plot_topoplotseries!(
     colorbar = (; label = "Voltage uncertainty"),
 )
 f
+# # Markers for uncertainty
+
+df_uncert_chan = groupby(df_uncert[df_uncert.time .== 50, :], [:channel])
+df_uncert_chan = combine(df_uncert_chan, :estimate => mean => :estimate)
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (;
+            markersize = df_uncert.estimate * 300,
+            marker = :circle,
+            color = :white,
+            strokecolor = :tomato,
+        )
+    ),
+)
 
 # # Uncertainty via animation 
 
@@ -161,3 +180,27 @@ record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
 end;
 
 # ![](bootstrap_toposeries_easing.mp4)
+
+# # Static version of animation 
+function draw_topoplots(rng, df_toposeries)
+    fig = Figure(size = (800, 600))
+
+    merged_df = DataFrame()
+    for i = 1:2, j = 1:3
+        boo = bootstrap_toposeries(rng, df_toposeries)
+        boo.condition .= string((i - 1) * 3 + j) # Assign condition number
+        merged_df = vcat(merged_df, boo)
+
+    end
+    plot_topoplotseries!(
+        fig,
+        merged_df;
+        nrows = 2,
+        mapping = (; col = :condition),
+        axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
+        positions = pos_toposeries,
+    )
+    fig
+end
+
+draw_topoplots(rng, df_toposeries)
