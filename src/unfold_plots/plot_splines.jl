@@ -27,10 +27,10 @@ Dashed lines indicate spline knots.
 $(_docstring(:splines))
 **Return Value:** `Figure` with splines and their density for basis functions.
 """
-plot_splines(m::UnfoldModel; kwargs...) = plot_splines(Figure(), m; kwargs...)
+plot_splines(m::UnfoldModel; kwargs...) = plot_splines!(Figure(), m; kwargs...)
 
-function plot_splines(
-    f::Union{GridPosition,GridLayout,Figure},
+function plot_splines!(
+    f::Union{GridPosition,GridLayout,GridLayoutBase.GridSubposition,Figure},
     m::UnfoldModel;
     spline_axis = (;),
     density_axis = (;),

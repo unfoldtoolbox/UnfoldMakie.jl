@@ -103,9 +103,10 @@ function plot_parallelcoordinates(
 
     outer_axis = Axis(f[1, 1]; config.axis...)
     outer_axis.title = "" # we dont want a title here
- 
+
     f1, outer_axis, axlist, hlines = parallel_coordinates(
-        f, outer_axis,
+        f,
+        outer_axis,
         d5;
         normalize = normalize,
         color = c,

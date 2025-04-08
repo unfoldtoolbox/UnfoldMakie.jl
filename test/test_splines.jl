@@ -19,6 +19,12 @@ end
     plot_splines(m1)
 end
 
+
+@testset "Spline plot: GridLayout" begin
+    f = Figure()
+    plot_splines!(f, m1)
+end
+
 @testset "Spline plot: two spline terms" begin
     plot_splines(m2)
 end
@@ -34,3 +40,4 @@ end
 @testset "Spline plot: superlabel_axis check" begin
     plot_splines(m2; superlabel_config = (; fontsize = 60))
 end
+
