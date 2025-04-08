@@ -12,7 +12,7 @@ results = coeftable(uf)
 uf_5chan = UnfoldMakie.example_data(&quot;UnfoldLinearModelMultiChannel&quot;)
 data, positions = TopoPlots.example_data()
 dat_e, evts, times = UnfoldMakie.example_data(&quot;sort_data&quot;)
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Progress:   4%|█▉                                       |  ETA: 0:00:09Progress: 100%|█████████████████████████████████████████| Time: 0:00:00</code></pre><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>. Also we used a specified theme <code>fresh</code>.</p><pre><code class="language-julia hljs">f = Figure()
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Progress:   4%|█▉                                       |  ETA: 0:00:08Progress: 100%|█████████████████████████████████████████| Time: 0:00:00</code></pre><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p><code>f = Figure()</code></p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>. Also we used a specified theme <code>fresh</code>.</p><pre><code class="language-julia hljs">f = Figure()
 with_theme(theme_ggthemr(:fresh)) do
 
     plot_erp!(f[1, 1], coeftable(uf_deconv))
@@ -67,139 +67,145 @@ f</code></pre><img src="dcc7623a.png" alt="Example block output"/><h1 id="Very-c
         predictor_bounds = [-0.3, 0.5],
     )
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridPosition(GridLayout[4, 5] (9 children), GridLayoutBase.Span(3:4, 4:5), GridLayoutBase.Inner())</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="f259d802.png" alt="Example block output"/><h1 id="Complex-figure-in-two-columns"><a class="docs-heading-anchor" href="#Complex-figure-in-two-columns">Complex figure in two columns</a><a id="Complex-figure-in-two-columns-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-two-columns" title="Permalink"></a></h1><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
-    with_theme(backgroundcolor = colorant&quot;#F4F3EF&quot;) do
-        f = Figure(size = (1200, 1700), backgroundcolor = colorant&quot;#F4F3EF&quot;)
-        ga = f[1, 1]
-        gc = f[2, 1]
-        ge = f[3, 1]
-        gg = f[4, 1]
-        gi = f[5:6, 1]
-        gb = f[1, 2]
-        gd = f[2, 2]
-        gf = f[3, 2]
-        gh = f[4, 2]
-        gj = f[5:6, 2]
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function complex_figure3()
+    f = Figure(size = (1200, 1700))
+    ga = f[1, 1]
+    gc = f[2, 1]
+    ge = f[3, 1]
+    gg = f[4, 1]
+    gi = f[5:6, 1]
+    gb = f[1, 2]
+    gd = f[2, 2]
+    gf = f[3, 2]
+    gh = f[4, 2]
+    gj = f[5:6, 2]
 
-        d_topo, pos = UnfoldMakie.example_data(&quot;TopoPlots.jl&quot;)
-        data, positions = TopoPlots.example_data()
-        df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-        channels_30 = UnfoldMakie.example_montage(&quot;channels_30&quot;)
+    d_topo, pos = UnfoldMakie.example_data(&quot;TopoPlots.jl&quot;)
+    data, positions = TopoPlots.example_data()
+    df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    channels_30 = UnfoldMakie.example_montage(&quot;channels_30&quot;)
 
-        m = UnfoldMakie.example_data(&quot;UnfoldLinearModel&quot;)
-        results = coeftable(m)
+    m = UnfoldMakie.example_data(&quot;UnfoldLinearModel&quot;)
+    results = coeftable(m)
 
-        results.coefname =
-            replace(results.coefname, &quot;condition: face&quot; =&gt; &quot;face&quot;, &quot;(Intercept)&quot; =&gt; &quot;car&quot;)
-        results = filter(row -&gt; row.coefname != &quot;continuous&quot;, results)
+    results.coefname =
+        replace(results.coefname, &quot;condition: face&quot; =&gt; &quot;face&quot;, &quot;(Intercept)&quot; =&gt; &quot;car&quot;)
+    results = filter(row -&gt; row.coefname != &quot;continuous&quot;, results)
 
-        plot_erp!(
-            ga,
-            results;
-            :stderror =&gt; true,
-            mapping = (; color = :coefname =&gt; &quot;Conditions&quot;),
-            axis = (; xlabel = &quot;Time [ms]&quot;),
-        )
-        hlines!(0, color = :gray, linewidth = 1)
-        vlines!(0, color = :gray, linewidth = 1)
-        plot_butterfly!(
-            gb,
-            d_topo;
-            positions = pos,
-            topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
-            axis = (; xlabel = &quot;Time [ms]&quot;),
-        )
-        hlines!(0, color = :gray, linewidth = 1)
-        vlines!(0, color = :gray, linewidth = 1)
-        plot_topoplot!(
-            gc,
-            data[:, 340, 1];
-            positions = positions,
-            axis = (; xlabel = &quot;[340 ms]&quot;),
-        )
+    plot_erp!(
+        ga,
+        results;
+        :stderror =&gt; true,
+        mapping = (; color = :coefname =&gt; &quot;Conditions&quot;),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, xlabel = &quot;Time [ms]&quot;),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    plot_butterfly!(
+        gb,
+        d_topo;
+        positions = pos,
+        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, xlabel = &quot;Time [ms]&quot;),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    plot_topoplot!(
+        gc,
+        data[:, 340, 1];
+        positions = positions,
+        topo_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        axis = (; xlabel = &quot;[340 ms]&quot;),
+    )
 
-        plot_topoplotseries!(
-            gd,
-            df;
-            bin_width = 80,
-            positions = positions,
-            visual = (label_scatter = false,),
-            layout = (; use_colorbar = true),
-            axis = (; xlabel = &quot;Time [ms]&quot;),
-        )
+    plot_topoplotseries!(
+        gd,
+        df;
+        bin_width = 80,
+        positions = positions,
+        visual = (label_scatter = false,),
+        layout = (; use_colorbar = true),
+        topo_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, xlabel = &quot;Time [ms]&quot;),
+    )
 
-        plot_erpgrid!(
-            ge,
-            data[:, :, 1],
-            positions;
-            axis = (;
-                ylabel = &quot;µV&quot;,
-                xlabel = &quot;Time [ms]&quot;,
-                ylim = [-0.05, 0.6],
-                xlim = [-0.04, 1],
-            ),
-        )
+    plot_erpgrid!(
+        ge,
+        data[:, :, 1],
+        positions;
+        indicator_grid_axis = (;
+            ylabel = &quot;µV&quot;,
+            xlabel = &quot;Time [ms]&quot;,
+            ylim = [-0.05, 0.6],
+            xlim = [-0.04, 1],
+        ),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;,),
+    )
 
-        dat_e, evts, times = UnfoldMakie.example_data(&quot;sort_data&quot;)
-        plot_erpimage!(
-            gf,
-            times,
-            dat_e;
-            sortvalues = evts.Δlatency,
-            axis = (; xlabel = &quot;Time [ms]&quot;),
-        )
-        m1 = UnfoldMakie.example_data(&quot;UnfoldLinearModelwith1Spline&quot;)
-        plot_splines!(gg, m1)
-        r1, positions = UnfoldMakie.example_data()
-        r2 = deepcopy(r1)
-        r2.coefname .= &quot;B&quot; # create a second category
-        r2.estimate .+= rand(length(r2.estimate)) * 0.1
-        results_plot = vcat(r1, r2)
-        plot_parallelcoordinates(
-            gh,
-            subset(results_plot, :channel =&gt; x -&gt; x .&lt; 8, :time =&gt; x -&gt; x .&lt; 0);
-            mapping = (; color = :coefname),
-            normalize = :minmax,
-            ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;C5&quot;, &quot;P3&quot;, &quot;P7&quot;],
-            axis = (; ylabel = &quot;Time [ms]&quot;),
-        )
-        df_circ = DataFrame(
-            :estimate =&gt; eachcol(Float64.(data[:, 100:40:300, 1])),
-            :circular_variable =&gt; [0, 50, 80, 120, 180, 210],
-            :time =&gt; 100:40:300,
-        )
-        df_circ = flatten(df_circ, :estimate)
-        plot_circular_topoplots!(
-            gi,
-            df_circ;
-            positions = pos,
-            center_label = &quot;Time [s]&quot;,
-            predictor = :time,
-            topo_attributes = (label_scatter = false,),
-            predictor_bounds = [80, 320],
-            colorbar = (; height = 180),
-        )
-        plot_channelimage!(
-            gj,
-            data[1:30, :, 1],
-            positions[1:30],
-            channels_30;
-            axis = (; xlabel = &quot;Time [ms]&quot;),
-        )
+    dat_e, evts, times = UnfoldMakie.example_data(&quot;sort_data&quot;)
+    plot_erpimage!(
+        gf,
+        times,
+        dat_e;
+        sortvalues = evts.Δlatency,
+        axis = (; xlabel = &quot;Time [ms]&quot;),
+    )
+    m1 = UnfoldMakie.example_data(&quot;UnfoldLinearModelwith1Spline&quot;)
+    plot_splines!(gg, m1; axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;))
+    r1, positions = UnfoldMakie.example_data()
+    r2 = deepcopy(r1)
+    r2.coefname .= &quot;B&quot; # create a second category
+    r2.estimate .+= rand(length(r2.estimate)) * 0.1
+    results_plot = vcat(r1, r2)
+    plot_parallelcoordinates(
+        gh,
+        subset(results_plot, :channel =&gt; x -&gt; x .&lt; 8, :time =&gt; x -&gt; x .&lt; 0);
+        mapping = (; color = :coefname),
+        normalize = :minmax,
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;C5&quot;, &quot;P3&quot;, &quot;P7&quot;],
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, ylabel = &quot;Time [ms]&quot;),
+    )
+    df_circ = DataFrame(
+        :estimate =&gt; eachcol(Float64.(data[:, 100:40:300, 1])),
+        :circular_variable =&gt; [0, 50, 80, 120, 180, 210],
+        :time =&gt; 100:40:300,
+    )
+    df_circ = flatten(df_circ, :estimate)
+    plot_circular_topoplots!(
+        gi,
+        df_circ;
+        positions = pos,
+        center_label = &quot;Time [s]&quot;,
+        predictor = :time,
+        topo_attributes = (; label_scatter = false,),
+        topo_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        predictor_bounds = [80, 320],
+        colorbar = (; height = 180),
+    )
+    plot_channelimage!(
+        gj,
+        data[1:30, :, 1],
+        positions[1:30],
+        channels_30;
+        axis = (; xlabel = &quot;Time [ms]&quot;),
+    )
 
-        for (label, layout) in
-            zip(
-            [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;],
-            [ga, gb, gc, gd, ge, gf, gg, gh, gi, gj],
+    for (label, layout) in
+        zip(
+        [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;],
+        [ga, gb, gc, gd, ge, gf, gg, gh, gi, gj],
+    )
+        Label(
+            layout[1, 1, TopLeft()],
+            label,
+            fontsize = 26,
+            font = :bold,
+            padding = (20, 20, 22, 0),
+            halign = :right,
         )
-            Label(
-                layout[1, 1, TopLeft()],
-                label,
-                fontsize = 26,
-                font = :bold,
-                padding = (20, 20, 22, 0),
-                halign = :right,
-            )
-        end
     end
-end</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="f259d802-001.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide decorations and axis spines</a><a class="docs-footer-nextpage" href="../uncertain_topo/">Visualize uncertainty in topoplot series »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Tuesday 8 April 2025 16:16">Tuesday 8 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    f
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">complex_figure3 (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">with_theme(Theme(; backgroundcolor = colorant&quot;#F4F3EF&quot;)) do
+    complex_figure3()
+end</code></pre><img src="b9855bfb.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hide_deco/">« Hide decorations and axis spines</a><a class="docs-footer-nextpage" href="../uncertain_topo/">Visualize uncertainty in topoplot series »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Tuesday 8 April 2025 16:51">Tuesday 8 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
