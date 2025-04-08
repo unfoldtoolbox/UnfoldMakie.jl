@@ -30,6 +30,12 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
             valign = 0.95,
             aspect = 1,
         )
+    elseif cfg_symb == :topo_default_single_circular
+        return (;
+            width = Relative(0.2), # size of bboxes
+            height = Relative(0.2),
+            aspect = 1,
+        )
     elseif cfg_symb == :topo_default_attributes_butterfly
         return (;
             head = (color = :black, linewidth = 1),
