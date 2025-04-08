@@ -30,8 +30,8 @@ UnfoldSim = "ed8ae6d2-84d3-44c6-ab46-0baf21700804"
 XML2_jll = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
 
 [compat]
-AlgebraOfGraphics = "0.8, 0.9"
-BSplineKit = "0.16, 0.17, 0.18"
+AlgebraOfGraphics = "0.8, 0.9, 0.10"
+BSplineKit = "0.16, 0.17, 0.18, 0.19"
 CairoMakie = "0.11, 0.12, 0.13"
 Colors = "0.12, 0.13"
 Makie = "0.21, 0.22"
