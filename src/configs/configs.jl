@@ -68,10 +68,7 @@ function PlotConfig(T::Val{:circtopos})
             colormap = Reverse(:RdBu),
         ),
         mapping = (;),
-        axis = (;
-            label = ""
-            #backgroundcolor = RGB(0.98, 0.98, 0.98),
-        ),
+        axis = (; aspect = 1),
     )
     return cfg
 end
