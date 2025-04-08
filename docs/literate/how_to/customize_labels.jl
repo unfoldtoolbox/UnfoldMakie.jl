@@ -5,7 +5,7 @@ using UnfoldMakie
 # Changing fonts and font size
 
 dat, positions = TopoPlots.example_data()
-labels = ["s$i" for i in 1:size(dat, 1)]
+labels = ["s$i" for i = 1:size(dat, 1)]
 
 with_theme(Theme(; fontsize = 25, fonts = (; regular = "Courier New"))) do
     plot_topoplot(
@@ -13,7 +13,6 @@ with_theme(Theme(; fontsize = 25, fonts = (; regular = "Courier New"))) do
         labels,
         positions,
         visual = (; label_text = true),
-        axis = (; xlabel = "340 ms")
+        axis = (; xlabel = "340 ms"),
     )
 end
-

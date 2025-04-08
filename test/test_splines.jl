@@ -40,3 +40,4 @@ end
 @testset "Spline plot: superlabel_axis check" begin
     plot_splines(m2; superlabel_config = (; fontsize = 60))
 end
+

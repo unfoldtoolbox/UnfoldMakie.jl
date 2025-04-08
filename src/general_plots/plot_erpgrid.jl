@@ -148,14 +148,14 @@ end
 
 # Draw an axis indicator in the bottom-left corner.
 function axis_indicator(f, config)
-    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05),)
+    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05))
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
 
     # Set the x and y axis limits based on the provided `config`
     xlims!(ax2, config.axis.xlim)
     ylims!(ax2, config.axis.ylim)
-    
+
     # Define the starting points for arrows (origin at (0, 0) for both directions)
     xstart = [Point2f(0), Point2f(0)]
     # Define the direction vectors for the arrows (one pointing right and the other pointing up)

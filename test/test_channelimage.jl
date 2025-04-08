@@ -56,8 +56,7 @@ end
 
 @testset "Channel image: error of unequal sorting_variables and sorting_reverse" begin
     err1 = nothing
-    t() =
-        error(plot_channelimage(dat[1:30, :], pos, channels_30; sorting_variables = [:y]))
+    t() = error(plot_channelimage(dat[1:30, :], pos, channels_30; sorting_variables = [:y]))
     try
         t()
     catch err1
