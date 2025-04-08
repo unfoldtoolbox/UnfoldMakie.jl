@@ -15,5 +15,5 @@ UnfoldSim = "ed8ae6d2-84d3-44c6-ab46-0baf21700804"
 
 [compat]
 AlgebraOfGraphics = "0.7, 0.8, 0.9, 0.10"
-BSplineKit = "0.16, 0.17, 0.18"
+BSplineKit = "0.16, 0.17, 0.18, 0.19"
 UnfoldSim = "0.4"
