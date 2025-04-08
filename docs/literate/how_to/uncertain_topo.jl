@@ -59,7 +59,7 @@ plot_topoplotseries!(
 f
 # # Markers for uncertainty
 
-df_uncert_chan = groupby(df_uncert[df_uncert.time .== 50, :], [:channel])
+df_uncert_chan = groupby(df_uncert[df_uncert.time.==50, :], [:channel])
 df_uncert_chan = combine(df_uncert_chan, :estimate => mean => :estimate)
 plot_topoplot(
     dat[:, 50, 1];

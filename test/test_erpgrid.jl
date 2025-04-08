@@ -93,7 +93,7 @@ end
 
 @testset "erpgrid: change x and y labels" begin
     f = Figure()
-    plot_erpgrid!(f[1, 1], dat, pos; axis = (; xlabel = "s", ylabel = "µV"))
+    plot_erpgrid!(f[1, 1], dat, pos; indicator_grid_axis = (; xlabel = "s", ylabel = "µV"))
     f
 end
 
@@ -104,7 +104,7 @@ end
     gd = f[2, 2] = GridLayout()
     gc = f[3, 1] = GridLayout()
     ge = f[4, 1] = GridLayout()
-    plot_erpgrid!(gb, dat, pos; axis = (; xlabel = "s", ylabel = "µV"))
+    plot_erpgrid!(gb, dat, pos; indicator_grid_axis = (; xlabel = "s", ylabel = "µV"))
     for (label, layout) in zip(["A", "B", "C", "D", "E"], [ga, gb, gc, gd, ge])
         Label(
             layout[1, 1, TopLeft()],
@@ -118,6 +118,11 @@ end
     f
 end
 
+@testset "erpgrid: change background" begin
+    f = Figure()
+    plot_erpgrid!(f[1, 1], dat, pos; axis = (; backgroundcolor = colorant"#F4F3EF"))
+    f
+end
 
 @testset "erpgrid: error of unequal data and positions" begin
     err1 = nothing

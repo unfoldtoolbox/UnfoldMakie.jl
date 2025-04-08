@@ -224,11 +224,8 @@ function PlotConfig(T::Val{:erpgrid})
         colorbar = (;),
         mapping = (;),
         axis = (
-            xlabel = "Time",
-            ylabel = "Voltage [µV]",
-            xlim = [-0.04, 1],
-            ylim = [-0.04, 1],
-            fontsize = 12,
+            width = Relative(1.05), 
+            height = Relative(1.05),
         ),
     )
     return cfg

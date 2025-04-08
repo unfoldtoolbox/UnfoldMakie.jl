@@ -29,11 +29,13 @@ Plot an ERP image.
     Here you can flexibly change configurations of the labels on all subaxes.\\
     To see all options just type `?text` in REPL.\\
     Defaults: $(supportive_defaults(:labels_grid_default))
+- `indicator_grid_axis::NamedTuple = (;)`\\
+    Here you can change configurations of inidcator axis.\\
+    Defaults: $(supportive_defaults(:indicator_grid_default))
 - `subaxes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of all subaxes. F.e. make them wider or shorter\\
     To see all options just type `?Axis` in REPL.\\
     Defaults: $(supportive_defaults(:subaxes_default))
-        
 ## Keyword arguments (kwargs)
 - `drawlabels::Bool = false`\\
     Draw channels labels over each waveform. 
@@ -72,6 +74,7 @@ function plot_erpgrid!(
     hlines_grid_axis = (;),
     vlines_grid_axis = (;),
     lines_grid_axis = (;),
+    indicator_grid_axis = (;),
     subaxes = (;),
     kwargs...,
 )
@@ -92,6 +95,9 @@ function plot_erpgrid!(
         update_axis(supportive_defaults(:vlines_grid_default); vlines_grid_axis...)
     lines_grid_axis =
         update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
+    indicator_grid_axis =
+        update_axis(supportive_defaults(:indicator_grid_default); indicator_grid_axis...)
+        
     subaxes = update_axis(supportive_defaults(:subaxes_default); subaxes...)
 
     for (ix, p) in enumerate(eachcol(positions))
@@ -115,7 +121,7 @@ function plot_erpgrid!(
     hidedecorations!.(axlist)
     hidespines!.(axlist)
 
-    ax2 = axis_indicator(f, config)
+    ax2 = axis_indicator(f, config, indicator_grid_axis)
     f
 end
 
@@ -147,14 +153,15 @@ function normalize_positions(positions)
 end
 
 # Draw an axis indicator in the bottom-left corner.
-function axis_indicator(f, config)
-    ax2 = Axis(f[1, 1], width = Relative(1.05), height = Relative(1.05))
+function axis_indicator(f, config, indicator_grid_axis)
+    ax2 = Axis(f[1, 1];  config.axis...)
+
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
 
     # Set the x and y axis limits based on the provided `config`
-    xlims!(ax2, config.axis.xlim)
-    ylims!(ax2, config.axis.ylim)
+    xlims!(ax2, indicator_grid_axis.xlim)
+    ylims!(ax2, indicator_grid_axis.ylim)
 
     # Define the starting points for arrows (origin at (0, 0) for both directions)
     xstart = [Point2f(0), Point2f(0)]
@@ -166,16 +173,16 @@ function axis_indicator(f, config)
     text!(
         0.02,
         0,
-        text = config.axis.xlabel,
-        fontsize = config.axis.fontsize,
+        text = indicator_grid_axis.xlabel,
+        fontsize = indicator_grid_axis.fontsize,
         align = (:left, :top),
     )
     # Add the y-axis label
     text!(
         -0.008,
         0.01,
-        text = config.axis.ylabel,
-        fontsize = config.axis.fontsize,
+        text = indicator_grid_axis.ylabel,
+        fontsize = indicator_grid_axis.fontsize,
         align = (:left, :baseline),
         rotation = π / 2,
     )

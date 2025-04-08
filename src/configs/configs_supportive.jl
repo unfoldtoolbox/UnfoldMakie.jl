@@ -63,7 +63,9 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
         return (; width = Relative(0.1), height = Relative(0.1))
     elseif cfg_symb == :labels_grid_default
         return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
-        # plot_topoplot 
+    elseif cfg_symb == :indicator_grid_default
+        return (; fontsize = 12, xlabel = "Time", ylabel = "Voltage [µV]", xlim = [-0.04, 1], ylim = [-0.04, 1])
+    # plot_topoplot 
     elseif cfg_symb == :topo_default_single
         return (;
             width = Relative(1),
