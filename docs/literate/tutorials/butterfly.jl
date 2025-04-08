@@ -29,11 +29,11 @@ first(df, 3)
 
 # The default butterfly plot:
 
-plot_butterfly(df, axis = (; xlabel = "Time [s]"),)
+plot_butterfly(df, axis = (; xlabel = "Time [s]"))
 
 # The butterfly plot with corresponding topoplot. You need to provide the channel positions.
 
-plot_butterfly(df; positions = pos, axis = (; xlabel = "Time [s]"),)
+plot_butterfly(df; positions = pos, axis = (; xlabel = "Time [s]"))
 
 # You want to change size of topoplot markers and size of topoplot:
 
@@ -48,7 +48,7 @@ plot_butterfly(
 # You want to add vline and hline:
 
 f = Figure()
-plot_butterfly!(f, df; positions = pos, axis = (; xlabel = "Time [s]"),)
+plot_butterfly!(f, df; positions = pos, axis = (; xlabel = "Time [s]"))
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
 f

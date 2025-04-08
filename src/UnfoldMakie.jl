@@ -78,7 +78,7 @@ include("general_plots/plot_channelimage.jl")
 example_data(args...; kwargs...) =
     error("This function is only available after importing UnfoldSim")
 example_montage(args...; kwargs...) =
-    error("This function is only available after importing UnfoldSim") 
+    error("This function is only available after importing UnfoldSim")
 
 export example_data
 export example_montage

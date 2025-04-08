@@ -92,7 +92,12 @@ plot_topoplotseries(
 # Using `colgap` in `with_theme` helps to adjust column gaps.
 
 with_theme(colgap = 5) do
-    plot_topoplotseries(df, bin_num = 5; positions = positions, axis = (; xlabel = "Time windows [s]"),)
+    plot_topoplotseries(
+        df,
+        bin_num = 5;
+        positions = positions,
+        axis = (; xlabel = "Time windows [s]"),
+    )
 end
 
 # However it doesn't work with subsets. Here you need to use `topoplot_axes.limits`.
