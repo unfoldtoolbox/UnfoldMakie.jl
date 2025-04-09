@@ -7,7 +7,7 @@ using UnfoldMakie
 dat, positions = TopoPlots.example_data()
 labels = ["s$i" for i = 1:size(dat, 1)]
 
-with_theme(Theme(; fontsize = 25, fonts = (; regular = "Courier New"))) do
+with_theme(Theme(; fontsize = 25, fonts = (; regular = "Ubuntu Mono"))) do
     plot_topoplot(
         dat[:, 340, 1];
         labels,
