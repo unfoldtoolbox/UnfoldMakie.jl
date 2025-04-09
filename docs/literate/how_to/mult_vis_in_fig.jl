@@ -48,7 +48,9 @@ with_theme(theme_ggthemr(:fresh)) do
         effects(Dict(:condition => ["car", "face"]), uf_deconv),
         mapping = (; color = :condition),
     )
-    plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
+    plot_butterfly!(f[2, 1:2], d_topo; positions = positions,
+        topo_attributes = (; label_scatter = (; markersize = 5)),
+        topo_axis = (; height = Relative(0.5), width = Relative(0.5)))
 end
 f
 
