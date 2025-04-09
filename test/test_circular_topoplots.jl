@@ -85,6 +85,7 @@ end
         predictor = :time,
         predictor_bounds = [80, 320],
         labels = labels,
+        plot_radius = 0.99,
     )
     f
 end
