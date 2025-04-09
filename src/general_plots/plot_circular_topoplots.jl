@@ -201,19 +201,18 @@ function plot_topo_plots!(
 )
     df = DataFrame(:e => data, :p => predictor_values)
     gp = groupby(df, :p)
+    label_index = 0
     for g in gp
         bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds, plot_radius)
         eeg_axis = Axis(
             f; # this creates an axis at the same grid location of the current axis
-            width = Relative(0.2), # size of bboxes
-            height = Relative(0.2), # size of bboxes
             halign = bbox.origin[1] + bbox.widths[1] / 2, # coordinates 
             valign = bbox.origin[2] + bbox.widths[2] / 2,
             topo_axis...,
         )
 
         if !isnothing(labels)
-            eeg_axis.xlabel = labels[i]
+            eeg_axis.xlabel = labels[label_index + 1]
         end
 
         TopoPlots.eeg_topoplot!(
