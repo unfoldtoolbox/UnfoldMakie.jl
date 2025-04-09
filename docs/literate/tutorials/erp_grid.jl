@@ -84,6 +84,22 @@ plot_erpgrid(
 )
 
 # Hint: you can ask any AI assistant to generate a montage coordinates and channel names you wish. They are quite good at that.
+
+# Customizing coordinates inidcator
+
+plot_erpgrid(
+    data,
+    pos;
+    indicator_grid_axis = (;
+        arrows_start = [Point2f(0, 0.95), Point2f(0, 0.95)], # Top-left corner
+        arrows_dir = [Vec2f(0, -0.1), Vec2f(0.1, 0)], # Downward and right
+        text_x_coords = (0.004, 0.996), # Position for the x-axis label (to the left of the x-arrow)
+        text_y_coords = (-0.01, 0.85),  # Position for the y-axis label (above the y-arrow)
+        text_x_kwargs = (; text = "everything", color = :red),
+        text_y_kwargs = (; text = "is possible", color = :green),
+    ),
+)
+
 # # Configurations for Channel image
 
 # ```@docs
