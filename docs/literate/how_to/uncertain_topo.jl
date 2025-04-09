@@ -23,7 +23,8 @@ using Animations
 # 1) Subjects can vary in phisological or behavioral characteristics; 
 # 2) Something can change between trials (electrode connection can get worse, etc.).
 
-# Data input
+# # Data input
+
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
@@ -53,12 +54,11 @@ plot_topoplotseries!(
     bin_num = 5,
     positions = positions,
     visual = (; colormap = :viridis),
-    axis = (; xlabel = "50 ms"),
     colorbar = (; label = "Voltage uncertainty"),
 )
 f
 # # Markers for uncertainty
-
+# In this case we will use the marker size to show the uncertainty of the estimate.
 df_uncert_chan = groupby(df_uncert[df_uncert.time.==50, :], [:channel])
 df_uncert_chan = combine(df_uncert_chan, :estimate => mean => :estimate)
 plot_topoplot(
