@@ -43,5 +43,10 @@ end
 
 @testset "Spline plot: backgroundcolor" begin
     f = Figure(backgroundcolor = colorant"#F4F3EF")
-    plot_splines!(f, m1; spline_axis = (; backgroundcolor = colorant"#F4F3EF"), density_axis = (; backgroundcolor = colorant"#F4F3EF"))    
+    plot_splines!(
+        f,
+        m1;
+        spline_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        density_axis = (; backgroundcolor = colorant"#F4F3EF"),
+    )
 end

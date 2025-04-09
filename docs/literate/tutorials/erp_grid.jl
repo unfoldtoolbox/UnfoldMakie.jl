@@ -21,11 +21,26 @@ channels_32, positions_32 = UnfoldMakie.example_montage("montage_32")
 channels_64, positions_64 = UnfoldMakie.example_montage("montage_64")
 
 
-plot_erpgrid(data, pos; indicator_grid_axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(
+    data,
+    pos;
+    indicator_grid_axis = (;
+        text_x_kwargs = (; text = "s"),
+        text_y_kwargs = (; text = "µV"),
+    ),
+)
 
 # # Adding labels
 # By default labels are just numbers.
-plot_erpgrid(data, pos; drawlabels = true, indicator_grid_axis = (; xlabel = "s", ylabel = "µV"))
+plot_erpgrid(
+    data,
+    pos;
+    drawlabels = true,
+    indicator_grid_axis = (;
+        text_x_kwargs = (; text = "s"),
+        text_y_kwargs = (; text = "µV"),
+    ),
+)
 
 # But you can also use predefined vector of channel labels. 
 plot_erpgrid(
@@ -47,7 +62,10 @@ plot_erpgrid(
     pos_new,
     channels_32;
     drawlabels = true,
-    indicator_grid_axis = (; xlabel = "s", ylabel = "µV"),
+    indicator_grid_axis = (;
+        text_x_kwargs = (; text = "s"),
+        text_y_kwargs = (; text = "µV"),
+    ),
 )
 
 # To manually adjust the position of a specific subplot, modify its coordinates using `Point()` with arithmetic operations.
@@ -59,7 +77,10 @@ plot_erpgrid(
     pos_new,
     channels_32;
     drawlabels = true,
-    indicator_grid_axis = (; xlabel = "s", ylabel = "µV"),
+    indicator_grid_axis = (;
+        text_x_kwargs = (; text = "s"),
+        text_y_kwargs = (; text = "µV"),
+    ),
 )
 
 # Hint: you can ask any AI assistant to generate a montage coordinates and channel names you wish. They are quite good at that.

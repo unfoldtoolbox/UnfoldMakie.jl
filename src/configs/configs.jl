@@ -224,7 +224,7 @@ function PlotConfig(T::Val{:erpgrid})
         colorbar = (;),
         mapping = (;),
         axis = (
-            width = Relative(1.05), 
+            width = Relative(1.05),
             height = Relative(1.05),
         ),
     )

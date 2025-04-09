@@ -97,7 +97,7 @@ function plot_erpgrid!(
         update_axis(supportive_defaults(:lines_grid_default); lines_grid_axis...)
     indicator_grid_axis =
         update_axis(supportive_defaults(:indicator_grid_default); indicator_grid_axis...)
-        
+
     subaxes = update_axis(supportive_defaults(:subaxes_default); subaxes...)
 
     for (ix, p) in enumerate(eachcol(positions))
@@ -154,7 +154,7 @@ end
 
 # Draw an axis indicator in the bottom-left corner.
 function axis_indicator(f, config, indicator_grid_axis)
-    ax2 = Axis(f[1, 1];  config.axis...)
+    ax2 = Axis(f[1, 1]; config.axis...)
 
     hidespines!(ax2)
     hidedecorations!(ax2, label = false)
@@ -163,28 +163,26 @@ function axis_indicator(f, config, indicator_grid_axis)
     xlims!(ax2, indicator_grid_axis.xlim)
     ylims!(ax2, indicator_grid_axis.ylim)
 
-    # Define the starting points for arrows (origin at (0, 0) for both directions)
-    xstart = [Point2f(0), Point2f(0)]
-    # Define the direction vectors for the arrows (one pointing right and the other pointing up)
-    xdir = [Vec2f(0, 0.1), Vec2f(0.1, 0)]
     # Draw the arrows with the specified starting points and directions
-    arrows!(xstart, xdir, arrowsize = 10)
+    arrows!(
+        indicator_grid_axis.arrows_start,
+        indicator_grid_axis.arrows_dir;
+        indicator_grid_axis.arrows_kwargs...,
+    )
+
+    # Merge default and user-provided values for text_x_kwargs and text_y_kwargs
+    text_x_kwargs = merge(
+        supportive_defaults(:indicator_grid_default).text_x_kwargs,
+        indicator_grid_axis.text_x_kwargs,
+    )
+    text_y_kwargs = merge(
+        supportive_defaults(:indicator_grid_default).text_y_kwargs,
+        indicator_grid_axis.text_y_kwargs,
+    )
+
     # Add the x-axis label
-    text!(
-        0.02,
-        0,
-        text = indicator_grid_axis.xlabel,
-        fontsize = indicator_grid_axis.fontsize,
-        align = (:left, :top),
-    )
+    text!(indicator_grid_axis.text_x_coords; text_x_kwargs...)
     # Add the y-axis label
-    text!(
-        -0.008,
-        0.01,
-        text = indicator_grid_axis.ylabel,
-        fontsize = indicator_grid_axis.fontsize,
-        align = (:left, :baseline),
-        rotation = π / 2,
-    )
+    text!(indicator_grid_axis.text_y_coords; text_y_kwargs...)
     return ax2
 end

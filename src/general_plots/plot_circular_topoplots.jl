@@ -212,7 +212,7 @@ function plot_topo_plots!(
         )
 
         if !isnothing(labels)
-            eeg_axis.xlabel = labels[label_index + 1]
+            eeg_axis.xlabel = labels[label_index+1]
         end
 
         TopoPlots.eeg_topoplot!(

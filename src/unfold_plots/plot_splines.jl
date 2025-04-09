@@ -41,7 +41,7 @@ function plot_splines!(
     config_kwargs!(config; kwargs...)
     spline_axis, density_axis, superlabel_config =
         supportive_axes_management(spline_axis, density_axis, superlabel_config)
-    
+
     ga = f[1, 1] = GridLayout()
     terms = Unfold.terms(Unfold.formulas(m)[1].rhs)
     spl_title = join(terms, " + ")

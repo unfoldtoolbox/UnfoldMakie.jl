@@ -184,10 +184,8 @@ function complex_figure3()
         data[:, :, 1],
         positions;
         indicator_grid_axis = (;
-            ylabel = "µV",
-            xlabel = "Time [ms]",
-            ylim = [-0.05, 0.6],
-            xlim = [-0.04, 1],
+            ylim = [-0.05, 0.6], xlim = [-0.04, 1], text_x_kwargs = (; text = "s"),
+            text_y_kwargs = (; text = "µV"),
         ),
         axis = (; backgroundcolor = colorant"#F4F3EF",),
     )
@@ -201,7 +199,12 @@ function complex_figure3()
         axis = (; xlabel = "Time [ms]"),
     )
     m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
-    plot_splines!(gg, m1; spline_axis = (; backgroundcolor = colorant"#F4F3EF"), density_axis = (; backgroundcolor = colorant"#F4F3EF"))
+    plot_splines!(
+        gg,
+        m1;
+        spline_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        density_axis = (; backgroundcolor = colorant"#F4F3EF"),
+    )
     r1, positions = UnfoldMakie.example_data()
     r2 = deepcopy(r1)
     r2.coefname .= "B" # create a second category
