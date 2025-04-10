@@ -12,8 +12,3 @@ TopoPlots = "2bdbdf9c-dbd8-403f-947b-1a4e0dd41a7a"
 Unfold = "181c99d8-e21b-4ff3-b70b-c233eddec679"
 UnfoldMakie = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
 UnfoldSim = "ed8ae6d2-84d3-44c6-ab46-0baf21700804"
-
-[compat]
-AlgebraOfGraphics = "0.7, 0.8, 0.9"
-BSplineKit = "0.16, 0.17, 0.18"
-UnfoldSim = "0.4"
