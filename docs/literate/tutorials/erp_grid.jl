@@ -83,8 +83,7 @@ plot_erpgrid(
     ),
 )
 
-# Hint: You can ask any AI assistant to generate simple montage coordinates and channel names you wish. They are quite good at that.
-# If you need something more professional standard montages check them out [here](https://mne.tools/dev/generated/mne.channels.get_builtin_montages.html#mne.channels.get_builtin_montages)
+# Hint: If you need to generate simple montage coordinates and channel names check them out [here](https://mne.tools/dev/generated/mne.channels.get_builtin_montages.html#mne.channels.get_builtin_montages)
 
 # # Customizing coordinates inidcator
 
