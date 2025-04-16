@@ -75,7 +75,7 @@ function eeg_topoplot_series!(
     if row_labels !== nothing && length(to_value(row_labels)) != r_max
         throw(
             ArgumentError(
-                "Length of row_labels must be equal to the number of rows in layout",
+                "Length of row_labels must be equal to the number of rows in layout. Currently: $(length(to_value(row_labels))) != $r_max",
             ),
         )
     end
@@ -88,14 +88,16 @@ function eeg_topoplot_series!(
 
         if row_labels !== nothing
             if c == 1
-                ax.ylabel = to_value(row_labels)[r]
+                ax.ylabel = string(to_value(row_labels)[r])
             end
             if r == r_max
                 ax.xlabel =
-                    isnothing(topoplot_xlabels) ? "" : to_value(topoplot_xlabels)[t_idx]
+                    isnothing(topoplot_xlabels) ? "" :
+                    string(to_value(topoplot_xlabels)[t_idx])
             end
         else
-            ax.xlabel = isnothing(topoplot_xlabels) ? "" : to_value(topoplot_xlabels)[t_idx]
+            ax.xlabel =
+                isnothing(topoplot_xlabels) ? "" : string(to_value(topoplot_xlabels)[t_idx])
         end
 
         # select data

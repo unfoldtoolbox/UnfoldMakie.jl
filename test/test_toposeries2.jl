@@ -217,3 +217,28 @@ end
 
     f
 end
+
+@testset "float conditions" begin
+    channels = 1:64
+    times = collect(-0.1:0.1:0.7)
+    conditions = [0.0, 0.1, 0.2]
+
+    aggregated_effects = DataFrame(
+        eventname = repeat(
+            ["eventA"],
+            inner = length(channels) * length(times) * length(conditions),
+        ),
+        channel = repeat(channels, outer = length(times) * length(conditions)),
+        time = repeat(times, inner = length(channels), outer = length(conditions)),
+        continuous = repeat(conditions, inner = length(channels) * length(times)),
+        estimate = 2 .* randn(length(channels) * length(times) * length(conditions)),
+    )
+
+    plot_topoplotseries(
+        aggregated_effects;
+        bin_width = 0.1,
+        positions = positions,
+        axis = (; xlabel = "Conditions"),
+        mapping = (; y = :estimate, row = :continuous),
+    )
+end

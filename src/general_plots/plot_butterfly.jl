@@ -58,7 +58,6 @@ function plot_butterfly!(
     mapping = (;),
     kwargs...,
 )
-
     config = PlotConfig(:butterfly)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data) # to avoid change of data in REPL
