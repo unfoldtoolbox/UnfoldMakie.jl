@@ -27,6 +27,10 @@ end
     plot_erp(dat[1, :, 1])
 end
 
+@testset "ERP plot: no color" begin
+    plot_erp(zeros(10, 10), mapping = (; color = nothing))
+end
+
 @testset "ERP plot: rename xlabel" begin
     plot_erp(results; axis = (; xlabel = "test"))
 end

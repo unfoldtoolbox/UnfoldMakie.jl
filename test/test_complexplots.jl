@@ -61,7 +61,10 @@
         ge,
         data[:, :, 1],
         positions;
-        axis = (; ylabel = "µV", ylim = [-0.05, 0.6], xlim = [-0.04, 1]),
+        indicator_grid_axis = (;
+            text_x_kwargs = (; text = "s"),
+            text_y_kwargs = (; text = "µV"),
+        ),
     )
 
     dat_e, evts, times = UnfoldMakie.example_data("sort_data")
