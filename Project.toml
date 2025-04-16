@@ -1,7 +1,7 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
 authors = ["Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner", "Furkan Lokman", "Benedikt Ehinger"]
-version = "0.5.16"
+version = "0.5.17"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
@@ -38,7 +38,7 @@ UnfoldMakieUnfoldSimExt = "UnfoldSim"
 
 [compat]
 AlgebraOfGraphics = "0.7, 0.8, 0.9, 0.10"
-BSplineKit = "0.16, 0.17, 0.18"
+BSplineKit = "0.16, 0.17, 0.18, 0.19"
 CategoricalArrays = "0.10"
 ColorSchemes = "3"
 ColorTypes = "0.11, 0.12"

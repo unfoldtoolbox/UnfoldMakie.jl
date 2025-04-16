@@ -48,7 +48,9 @@ with_theme(theme_ggthemr(:fresh)) do
         effects(Dict(:condition => ["car", "face"]), uf_deconv),
         mapping = (; color = :condition),
     )
-    plot_butterfly!(f[2, 1:2], d_topo; positions = positions)
+    plot_butterfly!(f[2, 1:2], d_topo; positions = positions,
+        topo_attributes = (; label_scatter = (; markersize = 5)),
+        topo_axis = (; height = Relative(0.5), width = Relative(0.5)))
 end
 f
 
@@ -117,144 +119,152 @@ f
 # <details>
 # <summary>Click to expand</summary>
 # ```
-begin
-    with_theme(backgroundcolor = colorant"#F4F3EF") do
-        f = Figure(size = (1200, 1700), backgroundcolor = colorant"#F4F3EF")
-        ga = f[1, 1]
-        gc = f[2, 1]
-        ge = f[3, 1]
-        gg = f[4, 1]
-        gi = f[5:6, 1]
-        gb = f[1, 2]
-        gd = f[2, 2]
-        gf = f[3, 2]
-        gh = f[4, 2]
-        gj = f[5:6, 2]
+function complex_figure3()
+    f = Figure(size = (1200, 1700))
+    ga = f[1, 1]
+    gc = f[2, 1]
+    ge = f[3, 1]
+    gg = f[4, 1]
+    gi = f[5:6, 1]
+    gb = f[1, 2]
+    gd = f[2, 2]
+    gf = f[3, 2]
+    gh = f[4, 2]
+    gj = f[5:6, 2]
 
-        d_topo, pos = UnfoldMakie.example_data("TopoPlots.jl")
-        data, positions = TopoPlots.example_data()
-        df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-        channels_30 = UnfoldMakie.example_montage("channels_30")
+    d_topo, pos = UnfoldMakie.example_data("TopoPlots.jl")
+    data, positions = TopoPlots.example_data()
+    df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+    channels_30 = UnfoldMakie.example_montage("channels_30")
 
-        m = UnfoldMakie.example_data("UnfoldLinearModel")
-        results = coeftable(m)
+    m = UnfoldMakie.example_data("UnfoldLinearModel")
+    results = coeftable(m)
 
-        results.coefname =
-            replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-        results = filter(row -> row.coefname != "continuous", results)
+    results.coefname =
+        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
+    results = filter(row -> row.coefname != "continuous", results)
 
-        plot_erp!(
-            ga,
-            results;
-            :stderror => true,
-            mapping = (; color = :coefname => "Conditions"),
-            axis = (; xlabel = "Time [ms]"),
-        )
-        hlines!(0, color = :gray, linewidth = 1)
-        vlines!(0, color = :gray, linewidth = 1)
-        plot_butterfly!(
-            gb,
-            d_topo;
-            positions = pos,
-            topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
-            axis = (; xlabel = "Time [ms]"),
-        )
-        hlines!(0, color = :gray, linewidth = 1)
-        vlines!(0, color = :gray, linewidth = 1)
-        plot_topoplot!(
-            gc,
-            data[:, 340, 1];
-            positions = positions,
-            axis = (; xlabel = "[340 ms]"),
-        )
+    plot_erp!(
+        ga,
+        results;
+        :stderror => true,
+        mapping = (; color = :coefname => "Conditions"),
+        axis = (; backgroundcolor = colorant"#F4F3EF", xlabel = "Time [ms]"),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    plot_butterfly!(
+        gb,
+        d_topo;
+        positions = pos,
+        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        axis = (; backgroundcolor = colorant"#F4F3EF", xlabel = "Time [ms]"),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    plot_topoplot!(
+        gc,
+        data[:, 340, 1];
+        positions = positions,
+        topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        axis = (; xlabel = "[340 ms]"),
+    )
 
-        plot_topoplotseries!(
-            gd,
-            df;
-            bin_width = 80,
-            positions = positions,
-            visual = (label_scatter = false,),
-            layout = (; use_colorbar = true),
-            axis = (; xlabel = "Time [ms]"),
-        )
+    plot_topoplotseries!(
+        gd,
+        df;
+        bin_width = 80,
+        positions = positions,
+        visual = (label_scatter = false,),
+        layout = (; use_colorbar = true),
+        topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        axis = (; backgroundcolor = colorant"#F4F3EF", xlabel = "Time [ms]"),
+    )
 
-        plot_erpgrid!(
-            ge,
-            data[:, :, 1],
-            positions;
-            axis = (;
-                ylabel = "µV",
-                xlabel = "Time [ms]",
-                ylim = [-0.05, 0.6],
-                xlim = [-0.04, 1],
-            ),
-        )
+    plot_erpgrid!(
+        ge,
+        data[:, :, 1],
+        positions;
+        indicator_grid_axis = (;
+            ylim = [-0.05, 0.6], xlim = [-0.04, 1], text_x_kwargs = (; text = "s"),
+            text_y_kwargs = (; text = "µV"),
+        ),
+        axis = (; backgroundcolor = colorant"#F4F3EF",),
+    )
 
-        dat_e, evts, times = UnfoldMakie.example_data("sort_data")
-        plot_erpimage!(
-            gf,
-            times,
-            dat_e;
-            sortvalues = evts.Δlatency,
-            axis = (; xlabel = "Time [ms]"),
-        )
-        m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
-        plot_splines!(gg, m1)
-        r1, positions = UnfoldMakie.example_data()
-        r2 = deepcopy(r1)
-        r2.coefname .= "B" # create a second category
-        r2.estimate .+= rand(length(r2.estimate)) * 0.1
-        results_plot = vcat(r1, r2)
-        plot_parallelcoordinates(
-            gh,
-            subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
-            mapping = (; color = :coefname),
-            normalize = :minmax,
-            ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
-            axis = (; ylabel = "Time [ms]"),
-        )
-        df_circ = DataFrame(
-            :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
-            :circular_variable => [0, 50, 80, 120, 180, 210],
-            :time => 100:40:300,
-        )
-        df_circ = flatten(df_circ, :estimate)
-        plot_circular_topoplots!(
-            gi,
-            df_circ;
-            positions = pos,
-            center_label = "Time [s]",
-            predictor = :time,
-            topo_attributes = (label_scatter = false,),
-            predictor_bounds = [80, 320],
-            colorbar = (; height = 180),
-        )
-        plot_channelimage!(
-            gj,
-            data[1:30, :, 1],
-            positions[1:30],
-            channels_30;
-            axis = (; xlabel = "Time [ms]"),
-        )
+    dat_e, evts, times = UnfoldMakie.example_data("sort_data")
+    plot_erpimage!(
+        gf,
+        times,
+        dat_e;
+        sortvalues = evts.Δlatency,
+        axis = (; xlabel = "Time [ms]"),
+    )
+    m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
+    plot_splines!(
+        gg,
+        m1;
+        spline_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        density_axis = (; backgroundcolor = colorant"#F4F3EF"),
+    )
+    r1, positions = UnfoldMakie.example_data()
+    r2 = deepcopy(r1)
+    r2.coefname .= "B" # create a second category
+    r2.estimate .+= rand(length(r2.estimate)) * 0.1
+    results_plot = vcat(r1, r2)
+    plot_parallelcoordinates(
+        gh,
+        subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
+        mapping = (; color = :coefname),
+        normalize = :minmax,
+        ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
+        axis = (; backgroundcolor = colorant"#F4F3EF", ylabel = "Time [ms]"),
+    )
+    df_circ = DataFrame(
+        :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
+        :circular_variable => [0, 50, 80, 120, 180, 210],
+        :time => 100:40:300,
+    )
+    df_circ = flatten(df_circ, :estimate)
+    plot_circular_topoplots!(
+        gi,
+        df_circ;
+        positions = pos,
+        center_label = "Time [s]",
+        predictor = :time,
+        topo_attributes = (; label_scatter = false,),
+        topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        axis = (; backgroundcolor = colorant"#F4F3EF"),
+        predictor_bounds = [80, 320],
+        colorbar = (; height = 180),
+    )
+    plot_channelimage!(
+        gj,
+        data[1:30, :, 1],
+        positions[1:30],
+        channels_30;
+        axis = (; xlabel = "Time [ms]"),
+    )
 
-        for (label, layout) in
-            zip(
-            ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
-            [ga, gb, gc, gd, ge, gf, gg, gh, gi, gj],
+    for (label, layout) in
+        zip(
+        ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+        [ga, gb, gc, gd, ge, gf, gg, gh, gi, gj],
+    )
+        Label(
+            layout[1, 1, TopLeft()],
+            label,
+            fontsize = 26,
+            font = :bold,
+            padding = (20, 20, 22, 0),
+            halign = :right,
         )
-            Label(
-                layout[1, 1, TopLeft()],
-                label,
-                fontsize = 26,
-                font = :bold,
-                padding = (20, 20, 22, 0),
-                halign = :right,
-            )
-        end
     end
+    f
 end
 # ```@raw html
 # </details >
 # ```
-
-f
+with_theme(Theme(; backgroundcolor = colorant"#F4F3EF")) do
+    complex_figure3()
+end

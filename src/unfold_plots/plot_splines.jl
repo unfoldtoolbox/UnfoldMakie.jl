@@ -43,7 +43,6 @@ function plot_splines!(
         supportive_axes_management(spline_axis, density_axis, superlabel_config)
 
     ga = f[1, 1] = GridLayout()
-
     terms = Unfold.terms(Unfold.formulas(m)[1].rhs)
     spl_title = join(terms, " + ")
 
@@ -88,6 +87,7 @@ function plot_splines!(
         subplot_id = subplot_id + 1
     end
     Label(ga[1, 1:end, Top()], spl_title; superlabel_config...)
+    apply_layout_settings!(config; fig = f)
     f
 end
 
