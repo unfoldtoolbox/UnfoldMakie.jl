@@ -19,13 +19,10 @@ For more detailed instructions please refer to [Installing Julia & Unfold Packag
 ## Usage example
 
 ## Key features 
-# Highlights of UnfoldMakie.jl
 
 ```@raw html
 <img src="assets/complex_plot.png" width="300" align="right"/>
 ```
-
-[UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl) excels in various fields:
 
 - **Focused.** [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl) focuses exclusively on visualizing (r)ERPs, unlike other toolboxes such as [EEGLAB](https://sccn.ucsd.edu/eeglab/), [FieldTrip](https://www.fieldtriptoolbox.org/), `Brainstorm`, or [MNE](http://mne.tools). This makes it easier to understand, use, and maintain the package in the future.
 
@@ -65,9 +62,8 @@ For more detailed instructions please refer to [Installing Julia & Unfold Packag
 
 ## Statement of need
 
+UnfoldMakie.jl is a Julia package for visualization of electroencephalography (EEG) data, with a focus on event-related potentials (ERPs) and regression-ERPs (rERPs). UnfoldMakie.jl fills a gap as one of the only dedicated EEG visualization libraries and offers ease of use, customization, speed, and detailed documentation. It allows for both explorative analysis (zooming/panning) and export to publication-ready vector graphics. This is achieved via multiple backends of [Makie.jl](https://makie.juliaplots.org/): vector graphics with **CairoMakie.jl**, GPU-accelerated interactive graphics with **GLMakie.jl**, and the browser-based **WGLMakie.jl**.
 
-```@raw html
-<!---
-Note: The statement of need is also used in the `README.md`. Make sure that they are synchronized.
--->
-```
+In an earlier study ([Mikheev et al., 2024](#)), we asked novice and expert practitioners for insights into their ERP visualization practices. The results of this survey were used to develop and improve UnfoldMakie.jl. Further, UnfoldMakie.jl is agnostic (independent) of any specific analysis framework, but it nicely accompanies the rERP analysis package [**Unfold.jl**](https://github.com/unfoldtoolbox/Unfold.jl) ([Ehinger & Dimigen, 2019](https://peerj.com/articles/7838/)).
+
+The target audience of this package is anyone working with EEG, MEG, ERP, iEEG or other time-series data.
