@@ -7,12 +7,10 @@
 # # Setup
 # Package loading
 
-using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 using TopoPlots
-using DataFrames
 
 # Data loading
 
