@@ -19,6 +19,7 @@ For more detailed instructions please refer to [Installing Julia & Unfold Packag
 ## Usage example
 Start with simple plots
 ```@example quickstart
+using UnfoldMakie
 using DataFrames
 using TopoPlots
 
