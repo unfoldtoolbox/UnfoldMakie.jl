@@ -17,12 +17,23 @@ julia> using Pkg; Pkg.add("UnfoldMakie")
 For more detailed instructions please refer to [Installing Julia & Unfold Packages](https://unfoldtoolbox.github.io/UnfoldDocs/main/installation/).
 
 ## Usage example
+Start with simple plots
+```@example quickstart
+using DataFrames
+using TopoPlots
 
-## Key features 
+dat, positions = TopoPlots.example_data();
+df = DataFrame(:estimate => dat[:, 340, 1])
+plot_topoplot(df; positions = positions, axis = (; xlabel = "340 ms"), colorbar = (; height = 350),)
+```
+
+... and master complicated ones!
 
 ```@raw html
 <img src="assets/complex_plot.png" width="300" align="right"/>
 ```
+
+## Key features 
 
 - **Focused.** [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl) focuses exclusively on visualizing (r)ERPs, unlike other toolboxes such as [EEGLAB](https://sccn.ucsd.edu/eeglab/), [FieldTrip](https://www.fieldtriptoolbox.org/), `Brainstorm`, or [MNE](http://mne.tools). This makes it easier to understand, use, and maintain the package in the future.
 
@@ -47,16 +58,16 @@ For more detailed instructions please refer to [Installing Julia & Unfold Packag
 
 ## Where to start: Learning roadmap
 ### 1. First step
-📌 Goal: 
-🔗
+📌 Goal: Check why we need multiple plot types for Event-related potentials and what kind of plot types exist. 
+🔗 [Plot types](@ref) | [Include multiple figures in one](@ref)
 
 ### 2. Intermediate topics
-📌 Goal: 
-🔗
+📌 Goal: Check the most popular plots.
+🔗 [ERP plot](@ref) | [Topoplot](@ref)
 
 ### 3. Advanced topics
-📌 Goal: 
-🔗
+📌 Goal: Learn about advanced customization
+🔗 [Visualize uncertainty in topoplot series](@ref)
 
 
 
