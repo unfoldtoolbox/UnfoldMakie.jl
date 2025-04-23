@@ -212,9 +212,9 @@ function PlotConfig(T::Val{:erp})
         colorbar = (; label = "", flipaxis = true),
         visual = (; colormap = :roma, color = Makie.wong_colors()),
     )
-
     return cfg
 end
+
 function PlotConfig(T::Val{:erpgrid})
     cfg = PlotConfig()
 
