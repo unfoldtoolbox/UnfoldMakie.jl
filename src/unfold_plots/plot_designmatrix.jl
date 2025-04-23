@@ -8,10 +8,11 @@ Plot a designmatrix.
     `Figure`, `GridLayout`, or `GridPosition` to draw the plot.
 - `data::Unfold.DesignMatrix`\\
     Data for the plot visualization.
+
 ## Keyword arguments (kwargs)
-- `standardize_data::Bool = true`\\
+- `standardize_data::Bool = false`\\
     Indicates whether the data is standardized by pointwise division of the data with its sampled standard deviation.
-- `sort_data::Bool = true`\\
+- `sort_data::Bool = false`\\
     Indicates whether the data is sorted. It uses `sortslices()` of Base Julia. 
 - `xticks::Num = nothing`\\
     Returns the number of labels on the x axis.
@@ -34,6 +35,7 @@ function plot_designmatrix!(f, data::Vector{<:AbstractDesignMatrix}; kwargs...)
     end
     plot_designmatrix!(f, data[1]; kwargs...)
 end
+
 function plot_designmatrix!(
     f::Union{GridPosition,GridLayout,Figure},
     data::AbstractDesignMatrix;
