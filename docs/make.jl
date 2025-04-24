@@ -55,7 +55,7 @@ makedocs(;
         "How To" => [
             "Change colormap of butterfly plot" => "generated/how_to/position2color.md",
             "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
-            "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
+            "Include multiple figures in one" => "generated/how_to/complex_figures.md",
             "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",
             "Customize channel labels" => "generated/how_to/customize_labels.md",
             "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
@@ -65,8 +65,10 @@ makedocs(;
             "Code principles" => "generated/intro/code_principles.md",
             "Benchmarking" => "generated/intro/speed.md",
         ],
-        "API / DocStrings" => "api.md",
-        "Utilities" => "helper.md",
+        "API" => [
+            "DocStrings" => "api.md",
+            "Utilities" => "helper.md",
+        ]
     ],
 )
 

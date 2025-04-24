@@ -1,4 +1,4 @@
-# # [Include multiple Visualizations in one Figure](@id ht_mvf)
+# # [Include Mltiple Visualizations in one Figure](@id ht_mvf)
 
 #=
 This section discusses how users can incorporate multiple plots into a single figure.
