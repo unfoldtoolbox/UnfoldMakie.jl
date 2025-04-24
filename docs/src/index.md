@@ -26,7 +26,7 @@ using TopoPlots
 
 dat, positions = TopoPlots.example_data();
 df = DataFrame(:estimate => dat[:, 340, 1])
-f = Figure(; size = (500, 400))
+f = Figure(; size = (300, 200))
 plot_topoplot!(f, df; positions = positions, axis = (; xlabel = "340 ms"), colorbar = (; height = 350),)
 f
 ```
@@ -34,7 +34,7 @@ f
 ... and master complicated ones!
 
 ```@raw html
-<img src="assets/complex_plot.png" width="400"/>
+<img src="assets/complex_plot.png" width="500" align="center"/>
 ```
 
 ## Key features 
@@ -63,15 +63,15 @@ f
 ## Where to start: Learning roadmap
 ### 1. First step
 📌 Goal: Check why we need multiple plot types for Event-related potentials and what kind of plot types exist. 
-🔗 [Plot types](@ref) | [Include Mltiple Visualizations in one Figure](@ref)
+🔗 [Plot types](@ref) | [Include Multiple Visualizations in one Figure](#ht_mvf)
 
 ### 2. Intermediate topics
 📌 Goal: Check the most popular plots.
-🔗 [ERP plot](@ref) | [Topoplot](@ref)
+🔗 [ERP plot](#erp_vis) | [Topoplot](#topo_vis)
 
 ### 3. Advanced topics
 📌 Goal: Learn about advanced customization
-🔗 [Visualize uncertainty in topoplot series](@ref)
+🔗 [Visualize uncertainty in topoplot series](#)
 
 
 
