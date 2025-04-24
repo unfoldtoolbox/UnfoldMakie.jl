@@ -5,7 +5,7 @@ This section discusses how users can incorporate multiple plots into a single fi
 =#
 
 # # Setup
-# ## Library load
+# Library load
 
 using UnfoldMakie
 using CairoMakie
@@ -16,7 +16,7 @@ using MakieThemes
 using TopoPlots
 
 
-# ## Data input
+# Data input
 d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
 uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
 uf = UnfoldMakie.example_data("UnfoldLinearModel")
@@ -24,8 +24,7 @@ results = coeftable(uf)
 uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 data, positions = TopoPlots.example_data()
 dat_e, evts, times = UnfoldMakie.example_data("sort_data")
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
-nothing #hide
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
 
 # # Basic complex figure
 
@@ -113,7 +112,7 @@ end
 # ```
 f
 
-# # Complex figure in two columns
+# # Complex figure in two columns and with backgroundcolor
 
 # ```@raw html
 # <details>
