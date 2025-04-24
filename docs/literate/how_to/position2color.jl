@@ -11,7 +11,7 @@ using CairoMakie
 using DataFramesMeta
 using Colors
 
-results, positions = UnfoldMakie.example_data("TopoPlots.jl")
+results, positions = UnfoldMakie.example_data("TopoPlots.jl");
 # By default the plot looks like this:
 plot_butterfly(results; positions = positions)
 

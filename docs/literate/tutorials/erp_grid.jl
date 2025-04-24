@@ -14,7 +14,7 @@ using UnfoldSim
 using TopoPlots
 
 
-# ** Data **
+# **Data**
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 channels_32, positions_32 = UnfoldMakie.example_montage("montage_32")
