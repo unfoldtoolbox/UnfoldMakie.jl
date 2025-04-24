@@ -1,4 +1,4 @@
-# # [ERP Plot](@id erp_vis)
+# # [ERP plot](@id erp_vis)
 
 # **ERP plot** is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/). 
 # It can fully represent time and experimental condition dimensions using lines.
