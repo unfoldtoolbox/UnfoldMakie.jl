@@ -35,13 +35,8 @@ makedocs(;
         sidebar_sitename = false,
     ),
     pages = [
-        "Intro" => [
-            "UnfoldMakie Highlights" => "index.md",
-            "Installation" => "generated/intro/installation.md",
-            "Plot types" => "generated/intro/plot_types.md",
-            "Code principles" => "generated/intro/code_principles.md",
-            "Benchmarking" => "generated/intro/speed.md",
-        ],
+        "Home" => "index.md",
+        "Installing Julia & UnfoldMakie.jl" => "generated/intro/installation.md",
         "ERP Visualizations" => [
             "ERP plot" => "generated/tutorials/erp.md",
             "Butterfly plot" => "generated/tutorials/butterfly.md",
@@ -63,9 +58,12 @@ makedocs(;
             "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
             "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",
             "Customize channel labels" => "generated/how_to/customize_labels.md",
+            "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
         ],
         "Explanations" => [
-            "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
+            "Plot types" => "generated/intro/plot_types.md",
+            "Code principles" => "generated/intro/code_principles.md",
+            "Benchmarking" => "generated/intro/speed.md",
         ],
         "API / DocStrings" => "api.md",
         "Utilities" => "helper.md",
