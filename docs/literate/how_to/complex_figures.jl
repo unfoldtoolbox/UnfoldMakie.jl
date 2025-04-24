@@ -19,7 +19,7 @@ using TopoPlots
 # **Data input**
 d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
 uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
-uf = UnfoldMakie.example_data("UnfoldLinearModel")
+uf = UnfoldMakie.example_data("UnfoldLinearModel");
 results = coeftable(uf)
 uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 data, positions = TopoPlots.example_data()
@@ -32,8 +32,6 @@ d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
 By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot that combines several figures.
 =#
 # We will start by creating a figure with `Makie.Figure`.
-
-# `f = Figure()`
 
 # Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
 # Also we used a specified theme `fresh`.
