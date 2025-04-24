@@ -11,8 +11,8 @@ using CairoMakie
 using DataFramesMeta
 using Colors
 
-# By default the plot looks like this:
 results, positions = UnfoldMakie.example_data("TopoPlots.jl")
+# By default the plot looks like this:
 plot_butterfly(results; positions = positions)
 
 # # Color schemes

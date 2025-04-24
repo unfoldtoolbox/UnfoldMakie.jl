@@ -8,7 +8,6 @@
 # # Setup
 # **Package loading**
 
-
 using Unfold
 using UnfoldMakie
 using CairoMakie
@@ -18,11 +17,10 @@ using Statistics
 # **Data input**
 
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-plot_erpimage(dat, axis = (; xlabel = "Time [s]"))
 
 # # Plot ERP image
 
-# The following code will result in the default configuration. 
+plot_erpimage(dat, axis = (; xlabel = "Time [s]"))
 
 # # Sorted ERP image
 
