@@ -28,7 +28,7 @@ m = fit(
     evts,
     data,
     solver = se_solver,
-)
+);
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 
