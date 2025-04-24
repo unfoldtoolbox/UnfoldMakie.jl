@@ -5,7 +5,7 @@
 # This plot type is not as popular because it is too cluttered. 
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -13,14 +13,14 @@ using CairoMakie
 using UnfoldSim
 using TopoPlots
 
-# # Plot ERP grid
 
+# ** Data **
 data, pos = TopoPlots.example_data()
 data = data[:, :, 1]
 channels_32, positions_32 = UnfoldMakie.example_montage("montage_32")
 channels_64, positions_64 = UnfoldMakie.example_montage("montage_64")
 
-
+# # Plot ERP grid
 plot_erpgrid(
     data,
     pos;

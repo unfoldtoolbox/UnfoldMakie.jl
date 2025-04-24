@@ -6,7 +6,7 @@
 # Dashed lines indicate spline knots.
 
 # # Setup
-# Package and data loading
+# **Package and data loading**
 
 using Unfold, UnfoldMakie
 import BSplineKit, DataFrames

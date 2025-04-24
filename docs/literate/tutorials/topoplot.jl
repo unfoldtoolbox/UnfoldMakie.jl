@@ -5,14 +5,14 @@
 # The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
 
 # # Setup
-# Package loading
+# P**ackage loading**
 
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 using TopoPlots
 
-# Data loading
+# **Data loading**
 
 dat, positions = TopoPlots.example_data();
 
