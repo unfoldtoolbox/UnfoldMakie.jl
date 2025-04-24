@@ -54,7 +54,7 @@ makedocs(;
         ],
         "How To" => [
             "Include multiple figures in one" => "generated/how_to/complex_figures.md",
-            "Customize channel labels" => "generated/how_to/customize_labels.md",   
+            "Customize channel labels" => "generated/how_to/customize_labels.md",
             "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
             "Change colormap of butterfly plot" => "generated/how_to/position2color.md",
             "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",

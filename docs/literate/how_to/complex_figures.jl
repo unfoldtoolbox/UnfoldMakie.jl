@@ -1,4 +1,4 @@
-# # [Include Mltiple Visualizations in one Figure](@id ht_mvf)
+# # [Include Multiple Visualizations in one Figure](@id ht_mvf)
 
 #=
 This section discusses how users can incorporate multiple plots into a single figure.
@@ -29,7 +29,7 @@ d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
 # # Basic complex figure
 
 #=
-By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
+By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot that combines several figures.
 =#
 # We will start by creating a figure with `Makie.Figure`.
 
@@ -53,11 +53,11 @@ with_theme(theme_ggthemr(:fresh)) do
 end
 f
 
-# # Very complex figure
+# # A very complex figure
 #=
 We can create a large figure with any type of plot using predefined data.
 
-With so many plots at once, it's better to set a fixed resolution in your image to order the plots evenly.
+With so many plots at once, it's better to set a fixed resolution in your image to arrange the plots evenly.
 =#
 
 # ```@raw html
@@ -112,7 +112,7 @@ end
 # ```
 f
 
-# # Complex figure in two columns and with backgroundcolor
+# # Complex figure in two columns and with background color
 
 # ```@raw html
 # <details>
