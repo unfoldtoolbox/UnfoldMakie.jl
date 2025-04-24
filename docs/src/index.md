@@ -71,7 +71,7 @@ f
 
 ### 3. Advanced topics
 📌 Goal: Learn about advanced customization
-🔗 [Visualize uncertainty in topoplot series](#)
+🔗 [Visualize uncertainty in topoplot series](@ref)
 
 
 
