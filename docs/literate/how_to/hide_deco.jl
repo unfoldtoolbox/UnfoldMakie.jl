@@ -1,6 +1,6 @@
 # # Hiding decorations and spines
 # You have several options for efficiently hiding decorations and axis spines in a plot.
-# # Package input
+# **Packages and data**
 
 using TopoPlots
 using UnfoldMakie

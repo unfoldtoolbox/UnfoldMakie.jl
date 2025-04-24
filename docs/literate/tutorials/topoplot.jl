@@ -5,7 +5,7 @@
 # The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
 
 # # Setup
-# P**ackage loading**
+# **Package loading**
 
 using UnfoldMakie
 using DataFrames

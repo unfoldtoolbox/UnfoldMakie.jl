@@ -11,7 +11,7 @@ using CairoMakie
 # **Data**
 uf = UnfoldMakie.example_data("UnfoldLinearModel");
 
-# # Plot Designmatrices
+# # Plot Design Matrices
 
 # The following code will result in the default configuration. 
 

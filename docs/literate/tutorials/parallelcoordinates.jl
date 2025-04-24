@@ -7,7 +7,7 @@
 # Each line represents a trial, each colour represents a condition. 
 
 # # Setup
-# P**ackage loading**
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -20,7 +20,6 @@ r2 = deepcopy(r1)
 r2.coefname .= "B" # create a second category
 r2.estimate .+= rand(length(r2.estimate)) * 0.1
 results_plot = vcat(r1, r2);
-nothing #hide
 
 # # Plot PCPs
 

@@ -5,7 +5,7 @@ This section discusses how users can incorporate multiple plots into a single fi
 =#
 
 # # Setup
-# Library load
+# **Library load**
 
 using UnfoldMakie
 using CairoMakie
@@ -16,7 +16,7 @@ using MakieThemes
 using TopoPlots
 
 
-# Data input
+# **Data input**
 d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
 uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
 uf = UnfoldMakie.example_data("UnfoldLinearModel")
