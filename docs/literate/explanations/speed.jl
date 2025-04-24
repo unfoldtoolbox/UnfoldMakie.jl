@@ -9,11 +9,11 @@
 # Note that the results of benchmarking on your computer and on Github may differ. 
 using UnfoldMakie
 using TopoPlots
-using PyMNE
-using PythonPlot
 using BenchmarkTools
 using Observables
-using CairoMakie;
+using CairoMakie
+using PythonPlot
+using PyMNE;
 
 # Data input 
 dat, positions = TopoPlots.example_data()
@@ -66,7 +66,7 @@ end
     )
 end
 
-# MNE
+# **MNE**
 easycap_montage = PyMNE.channels.make_standard_montage("standard_1020")
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
 info = PyMNE.create_info(PyList(ch_names), ch_types = "eeg", sfreq = 1)
@@ -92,7 +92,7 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 timestamps = range(1, 50, step = 1)
 framerate = 50
 
-# UnfoldMakie with .gif
+# **UnfoldMakie with .gif**
 
 @benchmark begin
     f = Makie.Figure()
