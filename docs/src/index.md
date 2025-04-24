@@ -25,13 +25,15 @@ using TopoPlots
 
 dat, positions = TopoPlots.example_data();
 df = DataFrame(:estimate => dat[:, 340, 1])
-plot_topoplot(df; positions = positions, axis = (; xlabel = "340 ms"), colorbar = (; height = 350),)
+f = Figure(; size = (500, 400))
+plot_topoplot!(f, df; positions = positions, axis = (; xlabel = "340 ms"), colorbar = (; height = 350),)
+f
 ```
 
 ... and master complicated ones!
 
 ```@raw html
-<img src="assets/complex_plot.png" width="300" align="right"/>
+<img src="assets/complex_plot.png" width="400"/>
 ```
 
 ## Key features 
