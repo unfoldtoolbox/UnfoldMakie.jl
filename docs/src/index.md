@@ -63,11 +63,11 @@ f
 ## Where to start: Learning roadmap
 ### 1. First step
 📌 Goal: Check why we need multiple plot types for Event-related potentials and what kind of plot types exist. 
-🔗 [Plot types](@ref) | [Include Multiple Visualizations in one Figure](#ht_mvf)
+🔗 [Plot types](@ref) | [Complex figures](@ref)
 
 ### 2. Intermediate topics
 📌 Goal: Check the most popular plots.
-🔗 [ERP plot](#erp_vis) | [Topoplot](#topo_vis)
+🔗 [ERP plot](@ref erp_vis) | [Topoplot](@ref topo_vis)
 
 ### 3. Advanced topics
 📌 Goal: Learn about advanced customization

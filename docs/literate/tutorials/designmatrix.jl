@@ -1,14 +1,14 @@
 # # Design matrix
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-# Data
+# **Data**
 uf = UnfoldMakie.example_data("UnfoldLinearModel");
 
 # # Plot Designmatrices
