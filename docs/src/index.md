@@ -20,6 +20,7 @@ For more detailed instructions please refer to [Installing Julia & Unfold Packag
 Start with simple plots
 ```@example quickstart
 using UnfoldMakie
+using CairoMakie
 using DataFrames
 using TopoPlots
 
@@ -62,7 +63,7 @@ f
 ## Where to start: Learning roadmap
 ### 1. First step
 📌 Goal: Check why we need multiple plot types for Event-related potentials and what kind of plot types exist. 
-🔗 [Plot types](@ref) | [Include multiple figures in one](@ref)
+🔗 [Plot types](@ref) | [Include Mltiple Visualizations in one Figure](@ref)
 
 ### 2. Intermediate topics
 📌 Goal: Check the most popular plots.
