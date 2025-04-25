@@ -2,17 +2,11 @@
 CurrentModule = UnfoldMakie
 ```
 # UnfoldMakie.jl Documentation
-Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a Julia package for visualizations of EEG/ERP data and Unfold.jl models. It i
+Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a Julia package for visualizations of EEG/ERP data and Unfold.jl models.
 
 ```@raw html
-<p align="center">
+<div style="width:100%; margin: auto;">
   <img src="docs/build/assets/UM_plots.gif" width="300">
-</p>
-```
-
-```@raw html
-<div style="width:60%; margin: auto;">
-
 </div>
 ```
 
