@@ -9,6 +9,7 @@ Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a 
   <img src="docs/build/assets/UM_plots.gif" width="300">
 </div>
 ```
+![](docs/build/assets/UM_plots.gif)
 
 ## Key features 
 - 🎯 **Focused**: Specialized for (r)ERP visualization — simpler than EEGLAB, MNE, etc.
