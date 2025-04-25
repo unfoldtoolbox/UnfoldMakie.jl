@@ -37,7 +37,8 @@ makedocs(;
     pages = [
         "Home" => "index.md",
         "Installing Julia & UnfoldMakie.jl" => "generated/explanations/installation.md",
-        "ERP Visualizations" => [
+        "Tutorials" => [
+            "ERP Visualizations" => [
             "ERP plot" => "generated/tutorials/erp.md",
             "Butterfly plot" => "generated/tutorials/butterfly.md",
             "Topoplot" => "generated/tutorials/topoplot.md",
@@ -47,10 +48,11 @@ makedocs(;
             "Channel image" => "generated/tutorials/channel_image.md",
             "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
             "Circular topoplots" => "generated/tutorials/circ_topo.md",
-        ],
-        "Unfold-specific Visualisations" => [
-            "Design matrix" => "generated/tutorials/designmatrix.md",
-            "Spline plot" => "generated/tutorials/splines.md",
+            ],
+            "Unfold-specific Visualisations" => [
+                "Design matrix" => "generated/tutorials/designmatrix.md",
+                "Spline plot" => "generated/tutorials/splines.md",
+            ]
         ],
         "How To" => [
             "Include multiple figures in one" => "generated/how_to/complex_figures.md",
@@ -62,12 +64,12 @@ makedocs(;
         ],
         "Explanations" => [
             "Plot types" => "generated/explanations/plot_types.md",
-            "Code principles" => "generated/explanations/code_principles.md",
-            "Benchmarking" => "generated/explanations/speed.md",
+            "Code principles" => "generated/explanations/code_principles.md", 
         ],
-        "API" => [
-            "DocStrings" => "api.md",
-            "Utilities" => "helper.md",
+        "Reference" => [
+            "Benchmarks" => "generated/explanations/speed.md",
+            "API: Functons" => "api.md",
+            "API: Utilities" => "helper.md",
         ]
     ],
 )
