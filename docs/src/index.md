@@ -34,8 +34,8 @@ For more detailed instructions please refer to [Installing Julia & Unfold Packag
 ## Usage example
 Start with ERP plot and topopplot series. 
 ```@example erp
-using UnfoldMakie, CairoMakie
-results = coeftable(UnfoldMakie.example_data("UnfoldLinearModel"))
+using UnfoldMakie, CairoMakie, Unfold
+results = Unfold.coeftable(UnfoldMakie.example_data("UnfoldLinearModel"))
 plot_erp(
     results,
     mapping = (; col = :coefname, color = :coefname => "Conditions"),
@@ -44,11 +44,10 @@ plot_erp(
 ```
 
 ```@example topoplot_series
+using UnfoldMakie, CairoMakie
 dat, positions = UnfoldMakie.example_data()
 plot_topoplotseries(
-    dat;
-    bin_num = 16,
-    nrows = 4,
+    dat; bin_num = 16, nrows = 4,
     positions = positions,
     visual = (; label_scatter = false, contours = false),
     axis = (; xlabel = "Time windows [s]"),
