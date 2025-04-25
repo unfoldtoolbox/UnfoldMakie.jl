@@ -38,21 +38,21 @@ makedocs(;
         "Home" => "index.md",
         "Installing Julia & UnfoldMakie.jl" => "generated/explanations/installation.md",
         "Tutorials" => [
-            "ERP Visualizations" => [
-            "ERP plot" => "generated/tutorials/erp.md",
-            "Butterfly plot" => "generated/tutorials/butterfly.md",
-            "Topoplot" => "generated/tutorials/topoplot.md",
-            "Topoplot series" => "generated/tutorials/topoplotseries.md",
-            "ERP grid" => "generated/tutorials/erp_grid.md",
-            "ERP image" => "generated/tutorials/erpimage.md",
-            "Channel image" => "generated/tutorials/channel_image.md",
-            "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
-            "Circular topoplots" => "generated/tutorials/circ_topo.md",
+                "ERP Visualizations" => [
+                "ERP plot" => "generated/tutorials/erp.md",
+                "Butterfly plot" => "generated/tutorials/butterfly.md",
+                "Topoplot" => "generated/tutorials/topoplot.md",
+                "Topoplot series" => "generated/tutorials/topoplotseries.md",
+                "ERP grid" => "generated/tutorials/erp_grid.md",
+                "ERP image" => "generated/tutorials/erpimage.md",
+                "Channel image" => "generated/tutorials/channel_image.md",
+                "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
+                "Circular topoplots" => "generated/tutorials/circ_topo.md",
             ],
             "Unfold-specific Visualisations" => [
                 "Design matrix" => "generated/tutorials/designmatrix.md",
                 "Spline plot" => "generated/tutorials/splines.md",
-            ]
+            ],
         ],
         "How To" => [
             "Include multiple figures in one" => "generated/how_to/complex_figures.md",
@@ -64,13 +64,14 @@ makedocs(;
         ],
         "Explanations" => [
             "Plot types" => "generated/explanations/plot_types.md",
-            "Code principles" => "generated/explanations/code_principles.md", 
+            "Key features" => "generated/explanations/key_features.md",
+            "Code principles" => "generated/explanations/code_principles.md",
         ],
         "Reference" => [
             "Benchmarks" => "generated/explanations/speed.md",
             "API: Functons" => "api.md",
             "API: Utilities" => "helper.md",
-        ]
+        ],
     ],
 )
 
