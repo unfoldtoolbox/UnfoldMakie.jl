@@ -15,14 +15,12 @@ Plot a designmatrix.
 - `sort_data::Bool = false`\\
     Indicates whether the data is sorted. It uses `sortslices()` of Base Julia. 
 - `xticks::Num = nothing`\\
-    Returns the number of labels on the x axis.
-    - `xticks` = 0: no labels are placed.
-    - `xticks` = 1: first possible label is placed.
-    - `xticks` = 2: first and last possible labels are placed.
-    - 2 < `xticks` < `number of labels`: equally distribute the labels.
-    - `xticks` ≥ `number of labels`: all labels are placed.
-- tick_step::Int = 10\\
-    Show every `tick_step`-th label on the x-axis.
+    Specifies the number of labels displayed on the x-axis.
+    - `xticks = 0`: No labels are displayed.
+    - `xticks = 1`: Only the first label is displayed.
+    - `xticks = 2`: The first and last labels are displayed.
+    - `2 < xticks < number of labels`: The labels are evenly distributed across the axis.
+    - `xticks ≥ number of labels`: All labels are displayed.
 $(_docstring(:designmat))
 **Return Value:** `Figure` displaying the Design matrix. 
 """
