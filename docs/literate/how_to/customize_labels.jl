@@ -1,4 +1,5 @@
-# Customizing channel labels
+# # Customizing channel labels
+
 using CairoMakie, TopoPlots, MakieThemes
 using UnfoldMakie
 

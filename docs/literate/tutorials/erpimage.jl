@@ -6,8 +6,7 @@
 # The ERP image can also be sorted by specific experimental variables, which helps to reveal important correlations. 
 
 # # Setup
-# Package loading
-
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -15,14 +14,13 @@ using CairoMakie
 using UnfoldSim
 using Statistics
 
-# Data input
+# **Data input**
 
 dat, evts = UnfoldSim.predef_eeg(; noiselevel = 10, return_epoched = true)
-plot_erpimage(dat, axis = (; xlabel = "Time [s]"))
 
 # # Plot ERP image
 
-# The following code will result in the default configuration. 
+plot_erpimage(dat, axis = (; xlabel = "Time [s]"))
 
 # # Sorted ERP image
 

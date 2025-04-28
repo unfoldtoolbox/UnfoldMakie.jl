@@ -9,11 +9,11 @@
 # Note that the results of benchmarking on your computer and on Github may differ. 
 using UnfoldMakie
 using TopoPlots
-using PyMNE
-using PythonPlot
 using BenchmarkTools
 using Observables
 using CairoMakie
+using PythonPlot;
+using PyMNE;
 
 # Data input 
 dat, positions = TopoPlots.example_data()
@@ -21,17 +21,17 @@ df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions
 
 # # Topoplots
 
-# UnfoldMakie.jl
+# **UnfoldMakie.jl**
 @benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)
 
-# UnfoldMakie.jl with DelaunayMesh
+# **UnfoldMakie.jl with DelaunayMesh**
 @benchmark plot_topoplot(
     dat[:, 320, 1];
     positions = positions,
     topo_interpolation = (; interpolation = DelaunayMesh()),
 )
 
-# MNE
+# **MNE**
 posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])')
 pypos = Py(posmat).to_numpy()
 pydat = Py(dat[:, 320, 1])
@@ -56,7 +56,7 @@ end
 # UnfoldMakie in `plot_topoplot` averages over time samples. 
 # MNE in `plot_topopmap` displays single samples without averaging.
 #
-# UnfoldMakie.jl
+# **UnfoldMakie.jl**
 @benchmark begin
     plot_topoplotseries(
         df;
@@ -66,7 +66,7 @@ end
     )
 end
 
-# MNE
+# **MNE**
 easycap_montage = PyMNE.channels.make_standard_montage("standard_1020")
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
 info = PyMNE.create_info(PyList(ch_names), ch_types = "eeg", sfreq = 1)
@@ -75,7 +75,7 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
 @benchmark simulated_epochs.plot_topomap(1:50)
 
-# MATLAB
+# **MATLAB**
 #
 # Running MATLAB on a GitHub Action is not easy. 
 # So we benchmarked three consecutive executions (on a screenshot) on a server with an AMD EPYC 7452 32-core processor.
@@ -92,7 +92,7 @@ simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 timestamps = range(1, 50, step = 1)
 framerate = 50
 
-# UnfoldMakie with .gif
+# **UnfoldMakie with .gif**
 
 @benchmark begin
     f = Makie.Figure()
@@ -105,7 +105,7 @@ end
 
 # ![](topoplot_animation_UM.gif)
 
-# MNE with .gif
+# **MNE with .gif**
 
 @benchmark begin
     fig, anim = simulated_epochs.animate_topomap(

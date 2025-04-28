@@ -1,10 +1,10 @@
-# # [ERP Plot](@id erp_vis)
+# # [ERP plot](@id erp_vis)
 
 # **ERP plot** is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/). 
 # It can fully represent time and experimental condition dimensions using lines.
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -14,7 +14,7 @@ using DataFramesMeta
 using UnfoldSim
 using UnfoldMakie
 
-# Data generation
+# **Data generation**
 
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
 data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
@@ -28,7 +28,7 @@ m = fit(
     evts,
     data,
     solver = se_solver,
-)
+);
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m);
 

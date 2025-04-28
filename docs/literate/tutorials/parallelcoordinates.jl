@@ -7,20 +7,19 @@
 # Each line represents a trial, each colour represents a condition. 
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-# Data generation
+# **Data generation**
 r1, positions = UnfoldMakie.example_data();
 r2 = deepcopy(r1)
 r2.coefname .= "B" # create a second category
 r2.estimate .+= rand(length(r2.estimate)) * 0.1
 results_plot = vcat(r1, r2);
-nothing #hide
 
 # # Plot PCPs
 

@@ -3,9 +3,7 @@
 # 1. Code should be clear and concise.  
 # 2. Variables in the code should have meaningful names.  
 # 3. Function naming should follow established theories and naming conventions.  
-# 4. Avoid functions longer than 50 lines to improve code readability.  
-# 4.1. Write modular code by breaking complex tasks into smaller, reusable functions.  
-# 4.2. Avoid deep nesting of loops and conditionals.  
+# 4. Avoid functions longer than 50 lines to improve code readability. Write modular code by breaking complex tasks into smaller, reusable functions. Avoid deep nesting of loops and conditionals.  
 # 5. Avoid putting more than 5 functions in a single file.  
 # 6. Avoid pull requests that affect more than 10 files.  
 # 7. Maintain consistent indentation and formatting across all files. Enforce it with linters (e.g., JuliaFormatter).  
