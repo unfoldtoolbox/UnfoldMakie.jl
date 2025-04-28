@@ -7,20 +7,19 @@
 # Each line represents a trial, each colour represents a condition. 
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 
-# Data generation
-r1, positions = example_data();
+# **Data generation**
+r1, positions = UnfoldMakie.example_data();
 r2 = deepcopy(r1)
 r2.coefname .= "B" # create a second category
 r2.estimate .+= rand(length(r2.estimate)) * 0.1
 results_plot = vcat(r1, r2);
-nothing #hide
 
 # # Plot PCPs
 
@@ -50,7 +49,7 @@ begin
         subset(results_plot, :channel => x -> x .< 10);
         mapping = (; color = :coefname),
         axis = (; ylabel = "Time [s]", xlabel = "", title = "normalize = nothing"),
-    );
+    )
     plot_parallelcoordinates(
         f[2, 1],
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "T7", "CP3", "P3", "P7", "O1"],
@@ -58,7 +57,7 @@ begin
         mapping = (; color = :coefname),
         normalize = :minmax,
         axis = (; ylabel = "Time [s]", title = "normalize = :minmax"),
-    );
+    )
     f
 end
 
@@ -76,7 +75,7 @@ begin
         mapping = (; color = :coefname),
         visual = (; colormap = :tab10),
         axis = (; ylabel = "Time [s]", xlabel = "", title = "colormap = tab10"),
-    );
+    )
     plot_parallelcoordinates(
         f[2, 1],
         ax_labels = ["Fz", "Cz", "O1", "O2", "Pz"],
@@ -84,7 +83,7 @@ begin
         mapping = (; color = :coefname),
         visual = (; colormap = :Accent_3),
         axis = (; ylabel = "Time [s]", title = "colormap = Accent_3"),
-    );
+    )
     f
 end
 # ## Labels
@@ -95,7 +94,7 @@ plot_parallelcoordinates(
     subset(results_plot, :channel => x -> x .< 5);
     visual = (; color = :steelblue1),
     ax_labels = ["Fz", "Cz", "O1", "O2"],
-    axis = (; ylabel = "Time [s]")
+    axis = (; ylabel = "Time [s]"),
 )
 
 # ## Tick labels
@@ -111,8 +110,13 @@ begin
         ax_ticklabels = :all,
         normalize = :minmax,
         visual = (; color = :burlywood1),
-        axis = (; xlabel = "", ylabel = "Time [s]", ylabelpadding = 40, title = "ax_ticklabels = :all"),
-    ); # show all ticks on all axes
+        axis = (;
+            xlabel = "",
+            ylabel = "Time [s]",
+            ylabelpadding = 40,
+            title = "ax_ticklabels = :all",
+        ),
+    ) # show all ticks on all axes
     plot_parallelcoordinates(
         f[2, 1],
         subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
@@ -120,8 +124,13 @@ begin
         ax_ticklabels = :left,
         normalize = :minmax,
         visual = (; color = :cyan3),
-        axis = (; xlabel = "", ylabel = "Time [s]", ylabelpadding = 40, title = "ax_ticklabels = :left"),
-    ); # show all ticks on the left axis, but only extremities on others 
+        axis = (;
+            xlabel = "",
+            ylabel = "Time [s]",
+            ylabelpadding = 40,
+            title = "ax_ticklabels = :left",
+        ),
+    ) # show all ticks on the left axis, but only extremities on others 
     plot_parallelcoordinates(
         f[3, 1],
         subset(results_plot, :channel => x -> x .< 5, :time => x -> x .< 0);
@@ -129,8 +138,13 @@ begin
         ax_ticklabels = :outmost,
         normalize = :minmax,
         visual = (; color = :burlywood1),
-        axis = (; xlabel = "", ylabel = "Time [s]", ylabelpadding = 40, title = "ax_ticklabels = :outmost"),
-    ); # show ticks on extremities of all axes
+        axis = (;
+            xlabel = "",
+            ylabel = "Time [s]",
+            ylabelpadding = 40,
+            title = "ax_ticklabels = :outmost",
+        ),
+    ) # show ticks on extremities of all axes
 
     plot_parallelcoordinates(
         f[4, 1],
@@ -140,7 +154,7 @@ begin
         normalize = :minmax,
         visual = (; color = :cyan3),
         axis = (; ylabel = "Time [s]", ylabelpadding = 40, title = "ax_ticklabels = :none"),
-    ); #  disable all ticks
+    ) #  disable all ticks
     f
 end
 # ## Bending the parallel plot
@@ -155,7 +169,7 @@ begin
         subset(results_plot, :channel => x -> x .< 10),
         visual = (; color = :plum),
         axis = (; title = "bend = false", xlabel = "", ylabel = "Time [s]"),
-    );
+    )
     plot_parallelcoordinates(
         f[2, 1],
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "T7", "CP3", "P3", "P7", "O1"],
@@ -163,14 +177,14 @@ begin
         bend = true, # here
         visual = (; color = :plum),
         axis = (; title = "bend = true", ylabel = "Time [s]"),
-    );
+    )
     f
 end
 
 
 # ## Transparancy 
 
-uf_5chan = example_data("UnfoldLinearModelMultiChannel")
+uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 
 begin
     f = Figure()
@@ -180,8 +194,13 @@ begin
         mapping = (; color = :coefname),
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3"],
         visual = (; alpha = 0.1),
-        axis = (; title = "alpha = 0.1", xlabel = "", ylabel = "Time [s]", ylabelpadding = 20),
-    );
+        axis = (;
+            title = "alpha = 0.1",
+            xlabel = "",
+            ylabel = "Time [s]",
+            ylabelpadding = 20,
+        ),
+    )
     plot_parallelcoordinates(
         f[2, 1],
         uf_5chan,
@@ -189,7 +208,7 @@ begin
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3"],
         visual = (; alpha = 0.9),
         axis = (; title = "alpha = 0.9", ylabel = "Time [s]", ylabelpadding = 20),
-    );
+    )
     f
 end
 

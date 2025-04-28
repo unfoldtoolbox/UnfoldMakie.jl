@@ -1,5 +1,8 @@
 """
     plot_circular_topoplots!(f, data::DataFrame; kwargs...)
+using ColorSchemes: topo
+using ColorSchemes: topo
+using ColorSchemes: topo
     plot_circular_topoplots(data::DataFrame; kwargs...)
 
 Plot a circular EEG topoplot.
@@ -24,6 +27,14 @@ Plot a circular EEG topoplot.
     The radius of the circular topoplot series plot calucalted by formula: `radius = (minwidth * plot_radius) / 2`.
 - `labels::Vector{String} = nothing`\\
     Labels for the [`plot_topoplots`](@ref topo_vis).
+- `topo_axis::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot axis.\\
+    To see all options just type `?Axis` in REPL.\\
+    Defaults: $(supportive_defaults(:topo_default_single_circular))
+- `topo_attributes::NamedTuple = (;)`\\
+    Here you can flexibly change configurations of the topoplot interoplation.\\
+    To see all options just type `?Topoplot.topoplot` in REPL.\\
+    Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 
 $(_docstring(:circtopos))
 
@@ -43,6 +54,8 @@ function plot_circular_topoplots!(
     labels = nothing,
     center_label = "",
     plot_radius = 0.8,
+    topo_attributes = (;),
+    topo_axis = (;),
     kwargs...,
 )
     config = PlotConfig(:circtopos)
@@ -71,7 +84,7 @@ function plot_circular_topoplots!(
         @warn "insert the predictor values in degrees instead of radian, or change predictor_bounds"
     end
 
-    ax = Axis(f[1, 1]; aspect = 1)
+    ax = Axis(f[1, 1]; config.axis...)
 
     hidedecorations!(ax)
     hidespines!(ax)
@@ -84,11 +97,12 @@ function plot_circular_topoplots!(
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
-    Colorbar(
-        f[1, 2];
-        colorrange = (min, max),
-        config.colorbar...,
-    )
+    Colorbar(f[1, 2]; colorrange = (min, max), config.colorbar...)
+    topo_axis =
+        update_axis(supportive_defaults(:topo_default_single_circular); topo_axis...)
+    topo_attributes =
+        update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
+
     plot_topo_plots!(
         f[1, 1],
         data[:, config.mapping.y],
@@ -99,10 +113,9 @@ function plot_circular_topoplots!(
         max,
         labels,
         plot_radius,
+        topo_attributes,
+        topo_axis,
     )
-
-    apply_layout_settings!(config; ax = ax)
-    # set the scene's background color according to config
     return f
 end
 
@@ -183,25 +196,23 @@ function plot_topo_plots!(
     globalmax,
     labels,
     plot_radius,
+    topo_attributes,
+    topo_axis,
 )
     df = DataFrame(:e => data, :p => predictor_values)
     gp = groupby(df, :p)
-    i = 0
+    label_index = 0
     for g in gp
-        i += 1
         bbox = calculate_BBox([0, 0], [1, 1], g.p[1], predictor_bounds, plot_radius)
         eeg_axis = Axis(
-            f, # this creates an axis at the same grid location of the current axis
-            aspect = 1,
-            width = Relative(0.2), # size of bboxes
-            height = Relative(0.2), # size of bboxes
+            f; # this creates an axis at the same grid location of the current axis
             halign = bbox.origin[1] + bbox.widths[1] / 2, # coordinates 
             valign = bbox.origin[2] + bbox.widths[2] / 2,
-            #backgroundcolor = nothing,
+            topo_axis...,
         )
 
         if !isnothing(labels)
-            eeg_axis.xlabel = labels[i]
+            eeg_axis.xlabel = labels[label_index+1]
         end
 
         TopoPlots.eeg_topoplot!(
@@ -210,6 +221,7 @@ function plot_topo_plots!(
             positions = positions,
             colorrange = (globalmin, globalmax),
             enlarge = 1,
+            topo_attributes...,
         )
         hidedecorations!(eeg_axis, label = false)
         hidespines!(eeg_axis)

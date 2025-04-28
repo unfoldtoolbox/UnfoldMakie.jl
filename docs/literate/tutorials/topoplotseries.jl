@@ -5,7 +5,7 @@
 # Basically, it is a series of Topoplots.
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -14,7 +14,7 @@ using CairoMakie
 using TopoPlots
 using Statistics
 
-# Data input
+# **Data input**
 
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
@@ -92,7 +92,12 @@ plot_topoplotseries(
 # Using `colgap` in `with_theme` helps to adjust column gaps.
 
 with_theme(colgap = 5) do
-    plot_topoplotseries(df, bin_num = 5; positions = positions, axis = (; xlabel = "Time windows [s]"),)
+    plot_topoplotseries(
+        df,
+        bin_num = 5;
+        positions = positions,
+        axis = (; xlabel = "Time windows [s]"),
+    )
 end
 
 # However it doesn't work with subsets. Here you need to use `topoplot_axes.limits`.

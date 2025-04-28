@@ -5,14 +5,14 @@
 # The topoplot is a 2D projection and interpolation of the 3D distributed sensor activity. The name stems from physical geography, but instead of height, the contour lines represent voltage levels. 
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using UnfoldMakie
 using DataFrames
 using CairoMakie
 using TopoPlots
 
-# Data loading
+# **Data loading**
 
 dat, positions = TopoPlots.example_data();
 
@@ -28,7 +28,12 @@ dat, positions = TopoPlots.example_data();
 
 # Here we select a time point in 340 msec and the mean estimate. 
 df = DataFrame(:estimate => dat[:, 340, 1])
-plot_topoplot(df; positions = positions, axis = (; xlabel = "340 ms"), colorbar = (; height = 350),)
+plot_topoplot(
+    df;
+    positions = positions,
+    axis = (; xlabel = "340 ms"),
+    colorbar = (; height = 350),
+)
 
 # ## Setting sensor positions
 
@@ -99,7 +104,7 @@ begin
 end
 
 # # Highlighting channels
-plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "340 ms"),)
+plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "340 ms"))
 
 
 # # Horizontal colorbars
@@ -109,6 +114,35 @@ plot_topoplot(
     positions,
     axis = (; xlabel = "50 ms"),
     colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+)
+
+# # Advanced markers
+# You can use markers and their proeprties as additional information dimension. For instance, to map uncertaitny or some other value to the marker size, color or rotation.
+# This is done by setting the `topo_attributes` kwarg. The following example shows how to set the marker size and color based on the data values.
+# Check more [here](https://docs.makie.org/dev/reference/plots/scatter#markers).
+
+random_rotations = rand(64) .* 2π
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (;
+            markersize = 20,
+            marker = '↑',
+            color = :black,
+            rotation = random_rotations,
+        )
+    ),
+)
+
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (; markersize = random_rotations, marker = :circle, color = :black)
+    ),
 )
 
 # # Configurations of Topoplot

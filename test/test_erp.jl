@@ -1,13 +1,13 @@
 using Unfold: stderror
 using AlgebraOfGraphics: group
-m = example_data("UnfoldLinearModel")
+m = UnfoldMakie.example_data("UnfoldLinearModel")
 
 results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
 dat, positions = TopoPlots.example_data()
 
-m7 = example_data("7channels")
+m7 = UnfoldMakie.example_data("7channels")
 results7 = coeftable(m7)
 pvals = DataFrame(
     from = [0.01, 0.2, 0.1],
@@ -25,6 +25,10 @@ end
 
 @testset "ERP plot: Array data" begin
     plot_erp(dat[1, :, 1])
+end
+
+@testset "ERP plot: no color" begin
+    plot_erp(zeros(10, 10), mapping = (; color = nothing))
 end
 
 @testset "ERP plot: rename xlabel" begin

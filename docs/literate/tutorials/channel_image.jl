@@ -5,7 +5,7 @@
 # Y-axis represents all channels, x-axis represents time, while color represents voltage. 
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -20,7 +20,7 @@ using TopoPlots
 dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 pos = pos[1:30]
-channels_30 = example_montage("channels_30");
+channels_30 = UnfoldMakie.example_montage("channels_30");
 
 
 plot_channelimage(dat[1:30, :], pos, channels_30; axis = (; xlabel = "Time [s]"))

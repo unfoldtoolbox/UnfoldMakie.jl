@@ -1,4 +1,4 @@
-df, pos = example_data("TopoPlots.jl")
+df, pos = UnfoldMakie.example_data("TopoPlots.jl")
 
 tmp = DataFrame(channel = df.channel, estimate = df.estimate)
 grouped = groupby(tmp, :channel)

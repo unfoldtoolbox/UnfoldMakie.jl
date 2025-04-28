@@ -1,7 +1,7 @@
 import BSplineKit, Unfold
-m0 = example_data("UnfoldLinearModel")
-m1 = example_data("UnfoldLinearModelwith1Spline")
-m2 = example_data("UnfoldLinearModelwith2Splines")
+m0 = UnfoldMakie.example_data("UnfoldLinearModel")
+m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
+m2 = UnfoldMakie.example_data("UnfoldLinearModelwith2Splines")
 
 @testset "Spline plot: no splines" begin
     err1 = nothing
@@ -19,6 +19,12 @@ end
     plot_splines(m1)
 end
 
+
+@testset "Spline plot: GridLayout" begin
+    f = Figure()
+    plot_splines!(f, m1)
+end
+
 @testset "Spline plot: two spline terms" begin
     plot_splines(m2)
 end
@@ -33,4 +39,14 @@ end
 
 @testset "Spline plot: superlabel_axis check" begin
     plot_splines(m2; superlabel_config = (; fontsize = 60))
+end
+
+@testset "Spline plot: backgroundcolor" begin
+    f = Figure(backgroundcolor = colorant"#F4F3EF")
+    plot_splines!(
+        f,
+        m1;
+        spline_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        density_axis = (; backgroundcolor = colorant"#F4F3EF"),
+    )
 end

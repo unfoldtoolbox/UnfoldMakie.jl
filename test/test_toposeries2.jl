@@ -38,7 +38,8 @@ end
 
 @testset "error checking: bin_width or bin_num with categorical columns" begin
     @test_throws ErrorException begin
-        df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
+        df =
+            UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
         df.condition = repeat(["A", "B"], size(df, 1) ÷ 2)
         plot_topoplotseries(
             df;
@@ -215,4 +216,29 @@ end
     )
 
     f
+end
+
+@testset "float conditions" begin
+    channels = 1:64
+    times = collect(-0.1:0.1:0.7)
+    conditions = [0.0, 0.1, 0.2]
+
+    aggregated_effects = DataFrame(
+        eventname = repeat(
+            ["eventA"],
+            inner = length(channels) * length(times) * length(conditions),
+        ),
+        channel = repeat(channels, outer = length(times) * length(conditions)),
+        time = repeat(times, inner = length(channels), outer = length(conditions)),
+        continuous = repeat(conditions, inner = length(channels) * length(times)),
+        estimate = 2 .* randn(length(channels) * length(times) * length(conditions)),
+    )
+
+    plot_topoplotseries(
+        aggregated_effects;
+        bin_width = 0.1,
+        positions = positions,
+        axis = (; xlabel = "Conditions"),
+        mapping = (; y = :estimate, row = :continuous),
+    )
 end

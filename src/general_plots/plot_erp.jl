@@ -133,7 +133,6 @@ function plot_erp!(
         end
         is_categorical = true
     else
-
         # Determine color mapping
         is_symbolic_color = isa(config.mapping.color, Symbol)
         color_type =

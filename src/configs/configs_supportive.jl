@@ -30,6 +30,12 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
             valign = 0.95,
             aspect = 1,
         )
+    elseif cfg_symb == :topo_default_single_circular
+        return (;
+            width = Relative(0.2), # size of bboxes
+            height = Relative(0.2),
+            aspect = 1,
+        )
     elseif cfg_symb == :topo_default_attributes_butterfly
         return (;
             head = (color = :black, linewidth = 1),
@@ -57,6 +63,23 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
         return (; width = Relative(0.1), height = Relative(0.1))
     elseif cfg_symb == :labels_grid_default
         return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
+    elseif cfg_symb == :indicator_grid_default
+        return (; fontsize = 12,
+            xlim = [-0.04, 1], ylim = [-0.04, 1],
+            arrows_start = [Point2f(0), Point2f(0)], # Define the starting points for arrows (origin at (0, 0) for both directions)
+            arrows_dir = [Vec2f(0, 0.1), Vec2f(0.1, 0)], # Define the direction vectors for the arrows (one pointing right and the other pointing up)
+            arrows_kwargs = (arrowsize = 10,), # Size of the arrows
+            text_x_coords = (0.02, 0),
+            text_x_kwargs = (text = "Time [s]", align = (:left, :top), fontsize = 12),
+            text_y_coords = (-0.008, 0.01),
+            text_y_kwargs = (
+                text = "Voltage [µV]",
+                align = (:left, :baseline),
+                fontsize = 12,
+                rotation = π / 2,
+            ),
+        )
+
         # plot_topoplot 
     elseif cfg_symb == :topo_default_single
         return (;
