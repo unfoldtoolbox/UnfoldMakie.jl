@@ -35,46 +35,49 @@ makedocs(;
         sidebar_sitename = false,
     ),
     pages = [
-        "Intro" => [
-            "UnfoldMakie Highlights" => "index.md",
-            "Installation" => "generated/intro/installation.md",
-            "Plot types" => "generated/intro/plot_types.md",
-            "Code principles" => "generated/intro/code_principles.md",
-            "Benchmarking" => "generated/intro/speed.md",
-        ],
-        "ERP Visualizations" => [
-            "ERP plot" => "generated/tutorials/erp.md",
-            "Butterfly plot" => "generated/tutorials/butterfly.md",
-            "Topoplot" => "generated/tutorials/topoplot.md",
-            "Topoplot series" => "generated/tutorials/topoplotseries.md",
-            "ERP grid" => "generated/tutorials/erp_grid.md",
-            "ERP image" => "generated/tutorials/erpimage.md",
-            "Channel image" => "generated/tutorials/channel_image.md",
-            "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
-            "Circular topoplots" => "generated/tutorials/circ_topo.md",
-        ],
-        "Unfold-specific Visualisations" => [
-            "Design matrix" => "generated/tutorials/designmatrix.md",
-            "Spline plot" => "generated/tutorials/splines.md",
+        "Home" => "index.md",
+        "Installing Julia & UnfoldMakie.jl" => "generated/explanations/installation.md",
+        "Tutorials" => [
+                "ERP Visualizations" => [
+                "ERP plot" => "generated/tutorials/erp.md",
+                "Butterfly plot" => "generated/tutorials/butterfly.md",
+                "Topoplot" => "generated/tutorials/topoplot.md",
+                "Topoplot series" => "generated/tutorials/topoplotseries.md",
+                "ERP grid" => "generated/tutorials/erp_grid.md",
+                "ERP image" => "generated/tutorials/erpimage.md",
+                "Channel image" => "generated/tutorials/channel_image.md",
+                "Parallel coordinates" => "generated/tutorials/parallelcoordinates.md",
+                "Circular topoplots" => "generated/tutorials/circ_topo.md",
+            ],
+            "Unfold-specific Visualisations" => [
+                "Design matrix" => "generated/tutorials/designmatrix.md",
+                "Spline plot" => "generated/tutorials/splines.md",
+            ],
         ],
         "How To" => [
-            "Change colormap of butterfly plot" => "generated/how_to/position2color.md",
-            "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
-            "Include multiple figures in one" => "generated/how_to/mult_vis_in_fig.md",
-            "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",
+            "Include multiple figures in one" => "generated/how_to/complex_figures.md",
             "Customize channel labels" => "generated/how_to/customize_labels.md",
+            "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
+            "Change colormap of butterfly plot" => "generated/how_to/position2color.md",
+            "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",
+            "Convert electrode positions from 3D to 2D" => "generated/how_to/positions.md",
         ],
         "Explanations" => [
-            "Convert electrode positions from 3D to 2D" => "generated/explanations/positions.md",
+            "Plot types" => "generated/explanations/plot_types.md",
+            "Key features" => "generated/explanations/key_features.md",
+            "Code principles" => "generated/explanations/code_principles.md",
         ],
-        "API / DocStrings" => "api.md",
-        "Utilities" => "helper.md",
+        "Reference" => [
+            "Benchmarks" => "generated/explanations/speed.md",
+            "API: Functons" => "api.md",
+            "API: Utilities" => "helper.md",
+        ],
     ],
 )
 
 deploydocs(;
     repo = "github.com/unfoldtoolbox/UnfoldMakie.jl",
     devbranch = "main",
-    versions = "v#.#",
+    versions = ["stable" => "v#.#", "dev" => "main"],
     push_preview = true,
 )

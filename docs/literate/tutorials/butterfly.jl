@@ -6,7 +6,7 @@
 # The configurations of [ERP plots](@ref erp_vis) and Butterfly plots are somehow similar.
 
 # # Setup
-# Package loading
+# **Package loading**
 
 # The following modules are necessary for run this tutorial:
 
@@ -18,7 +18,7 @@ using Colors
 
 # Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
-# Data
+# **Data**
 
 # We filter the data to make it more clearly represented:
 

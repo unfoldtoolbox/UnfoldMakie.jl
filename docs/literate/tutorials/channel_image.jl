@@ -5,7 +5,7 @@
 # Y-axis represents all channels, x-axis represents time, while color represents voltage. 
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie

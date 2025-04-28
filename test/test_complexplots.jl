@@ -151,7 +151,7 @@ end
 end
 
 
-@testset "testing combined figure (a Figure from mult_viz_in_fig from docs)" begin
+@testset "testing combined figure (a Figure from complex_plot from docs)" begin
     d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
     uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
     uf = UnfoldMakie.example_data("UnfoldLinearModel")

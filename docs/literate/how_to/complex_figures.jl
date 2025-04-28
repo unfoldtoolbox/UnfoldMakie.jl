@@ -1,11 +1,11 @@
-# # [Include multiple Visualizations in one Figure](@id ht_mvf)
+# # Complex figures
 
 #=
 This section discusses how users can incorporate multiple plots into a single figure.
 =#
 
 # # Setup
-# ## Library load
+# **Library load**
 
 using UnfoldMakie
 using CairoMakie
@@ -16,25 +16,22 @@ using MakieThemes
 using TopoPlots
 
 
-# ## Data input
+# **Data input**
 d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
 uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
-uf = UnfoldMakie.example_data("UnfoldLinearModel")
+uf = UnfoldMakie.example_data("UnfoldLinearModel");
 results = coeftable(uf)
 uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 data, positions = TopoPlots.example_data()
 dat_e, evts, times = UnfoldMakie.example_data("sort_data")
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
-nothing #hide
+d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
 
 # # Basic complex figure
 
 #=
-By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot combining several figures.
+By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot that combines several figures.
 =#
 # We will start by creating a figure with `Makie.Figure`.
-
-# `f = Figure()`
 
 # Now any plot can be added to `f` by placing a grid position, such as `f[1, 1]`.
 # Also we used a specified theme `fresh`.
@@ -54,11 +51,11 @@ with_theme(theme_ggthemr(:fresh)) do
 end
 f
 
-# # Very complex figure
+# # A very complex figure
 #=
 We can create a large figure with any type of plot using predefined data.
 
-With so many plots at once, it's better to set a fixed resolution in your image to order the plots evenly.
+With so many plots at once, it's better to set a fixed resolution in your image to arrange the plots evenly.
 =#
 
 # ```@raw html
@@ -113,7 +110,7 @@ end
 # ```
 f
 
-# # Complex figure in two columns
+# # Complex figure in two columns and with background color
 
 # ```@raw html
 # <details>

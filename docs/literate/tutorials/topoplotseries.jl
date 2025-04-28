@@ -5,7 +5,7 @@
 # Basically, it is a series of Topoplots.
 
 # # Setup
-# Package loading
+# **Package loading**
 
 using Unfold
 using UnfoldMakie
@@ -14,7 +14,7 @@ using CairoMakie
 using TopoPlots
 using Statistics
 
-# Data input
+# **Data input**
 
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));

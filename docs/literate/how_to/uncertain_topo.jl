@@ -1,8 +1,10 @@
-using Base: channeled_tasks
+# # Visualize uncertainty in topoplot series
+
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
 # ```
+using Base: channeled_tasks
 using Unfold
 using UnfoldMakie
 using UnfoldSim
@@ -33,8 +35,8 @@ df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(po
 # noiselevel is important for adding variability it your data
 df_toposeries, pos_toposeries =
     UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
-df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
-rng = MersenneTwister(1)
+df_toposeries = df_toposeries[df_toposeries.trial .<= 15, :];
+rng = MersenneTwister(1);
 
 # # Uncertainty via additional row
 # In this case we alread have two datasets: `df` with mean estimates and `df_uncert` with variability estimation.
