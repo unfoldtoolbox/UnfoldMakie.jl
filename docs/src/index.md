@@ -6,10 +6,13 @@ Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a 
 
 ![Visualization of EEG data](https://github.com/unfoldtoolbox/UnfoldMakie.jl/raw/main/docs/build/assets/UM_plots.gif)
 
+```@raw html
+<div style="width:60%; margin: auto;">
 
-<div style="width:100%; margin: auto;">
-<img src="https://github.com/unfoldtoolbox/UnfoldMakie.jl/raw/main/docs/build/assets/UM_plots.gif" style="width:45%;">
+<img src="https://github.com/unfoldtoolbox/UnfoldMakie.jl/raw/main/docs/build/assets/UM_plots.gif"/>
 </div>
+```
+
 ## Key features 
 - 🎯 **Focused**: Specialized for (r)ERP visualization — simpler than EEGLAB, MNE, etc.
 - 🎨 **Customizable**: Full control over colors, lines, layouts via Makie.jl flexibility.
