@@ -77,28 +77,22 @@ function plot_topoplot!(
         x = zeros(length(positions))
         isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
         clist = [:gray, high_color][Int.(x .+ 1)] #color for highlighting
-        eeg_topoplot!(
-            inner_axis,
-            data;
-            labels = labels,
-            positions,
-            config.visual...,
-            topo_attributes...,
-            label_scatter = (;
+        label_scatter = (;
                 color = clist,
                 markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustable
-            ),
-        )
+            )
     else
-        eeg_topoplot!(
+        label_scatter = (;)
+    end
+    eeg_topoplot!(
             inner_axis,
             data;
             labels = labels,
             positions,
             config.visual...,
             topo_attributes...,
-        )
-    end
+            label_scatter...,
+    )
 
     # Set the color limits (`clims`) either from the config if specified by user or dynamically based on the data.
     if haskey(config.visual, :limits)
