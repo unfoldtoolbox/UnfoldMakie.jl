@@ -37,6 +37,7 @@ plot_erp(
     results,
     mapping = (; col = :coefname, color = :coefname => "Conditions"),
     axis = (; xlabel = "Time [s]"),
+    stderror = true,
 )
 ```
 
