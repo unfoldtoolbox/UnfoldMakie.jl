@@ -1,7 +1,10 @@
+# # Visualize uncertainty in topoplot series
+
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
 # ```
+using Base: channeled_tasks
 using Unfold
 using UnfoldMakie
 using UnfoldSim
@@ -22,16 +25,18 @@ using Animations
 # 1) Subjects can vary in phisological or behavioral characteristics; 
 # 2) Something can change between trials (electrode connection can get worse, etc.).
 
-# Data input
+# # Data input
+
 dat, positions = TopoPlots.example_data()
 df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
 df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
 
 # Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
 # noiselevel is important for adding variability it your data
-df_toposeries, pos_toposeries = example_data("bootstrap_toposeries"; noiselevel = 7);
-df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
-rng = MersenneTwister(1)
+df_toposeries, pos_toposeries =
+    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries = df_toposeries[df_toposeries.trial .<= 15, :];
+rng = MersenneTwister(1);
 
 # # Uncertainty via additional row
 # In this case we alread have two datasets: `df` with mean estimates and `df_uncert` with variability estimation.
@@ -51,10 +56,26 @@ plot_topoplotseries!(
     bin_num = 5,
     positions = positions,
     visual = (; colormap = :viridis),
-    axis = (; xlabel = "50 ms"),
     colorbar = (; label = "Voltage uncertainty"),
 )
 f
+# # Markers for uncertainty
+# In this case we will use the marker size to show the uncertainty of the estimate.
+df_uncert_chan = groupby(df_uncert[df_uncert.time.==50, :], [:channel])
+df_uncert_chan = combine(df_uncert_chan, :estimate => mean => :estimate)
+plot_topoplot(
+    dat[:, 50, 1];
+    positions,
+    axis = (; xlabel = "50 ms"),
+    topo_attributes = (;
+        label_scatter = (;
+            markersize = df_uncert.estimate * 300,
+            marker = :circle,
+            color = :white,
+            strokecolor = :tomato,
+        )
+    ),
+)
 
 # # Uncertainty via animation 
 
@@ -161,3 +182,27 @@ record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
 end;
 
 # ![](bootstrap_toposeries_easing.mp4)
+
+# # Static version of animation 
+function draw_topoplots(rng, df_toposeries)
+    fig = Figure(size = (800, 600))
+
+    merged_df = DataFrame()
+    for i = 1:2, j = 1:3
+        boo = bootstrap_toposeries(rng, df_toposeries)
+        boo.condition .= string((i - 1) * 3 + j) # Assign condition number
+        merged_df = vcat(merged_df, boo)
+
+    end
+    plot_topoplotseries!(
+        fig,
+        merged_df;
+        nrows = 2,
+        mapping = (; col = :condition),
+        axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
+        positions = pos_toposeries,
+    )
+    fig
+end
+
+draw_topoplots(rng, df_toposeries)

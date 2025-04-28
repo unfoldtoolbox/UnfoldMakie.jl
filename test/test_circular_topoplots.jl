@@ -9,7 +9,7 @@ df = DataFrame(
 labels = ["s$i" for i = 1:size(dat, 1)]
 df = flatten(df, :estimate)
 
-d_topo, positions = example_data("TopoPlots.jl")
+d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
 
 @testset "error cases and warns" begin
     @testset "out of error bounds" begin
@@ -85,6 +85,7 @@ end
         predictor = :time,
         predictor_bounds = [80, 320],
         labels = labels,
+        plot_radius = 0.99,
     )
     f
 end
@@ -109,3 +110,24 @@ end
     )
     f
 end
+
+@testset "circularplot: label_scatter = false" begin
+    plot_circular_topoplots(
+        d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
+        positions = positions,
+        predictor = :time,
+        predictor_bounds = [-0.3, 0.5],
+        topo_attributes = (label_scatter = false,),
+    )
+end
+
+#@testset "circularplot: change backgroundcolor" begin
+plot_circular_topoplots(
+    d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
+    positions = positions,
+    predictor = :time,
+    predictor_bounds = [-0.3, 0.5],
+    axis = (; backgroundcolor = colorant"#F4F3EF",),
+    topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
+)
+#end

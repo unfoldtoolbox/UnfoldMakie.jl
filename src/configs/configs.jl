@@ -62,12 +62,13 @@ function PlotConfig(T::Val{:circtopos})
     config_kwargs!(
         cfg;
         layout = (; show_legend = false),
-        colorbar = (; labelrotation = -π / 2, label = "Voltage [µV]", colormap = Reverse(:RdBu)),
-        mapping = (;),
-        axis = (;
-            label = ""
-            #backgroundcolor = RGB(0.98, 0.98, 0.98),
+        colorbar = (;
+            labelrotation = -π / 2,
+            label = "Voltage [µV]",
+            colormap = Reverse(:RdBu),
         ),
+        mapping = (;),
+        axis = (; aspect = 1),
     )
     return cfg
 end
@@ -223,11 +224,8 @@ function PlotConfig(T::Val{:erpgrid})
         colorbar = (;),
         mapping = (;),
         axis = (
-            xlabel = "Time",
-            ylabel = "Voltage [µV]",
-            xlim = [-0.04, 1],
-            ylim = [-0.04, 1],
-            fontsize = 12,
+            width = Relative(1.05),
+            height = Relative(1.05),
         ),
     )
     return cfg
@@ -264,7 +262,13 @@ function PlotConfig(T::Val{:paracoord})
             color = :black, # default linecolor
             alpha = 0.3,
         ),
-        axis = (; xlabel = "Channels", ylabel = "Time", title = "", xlabelpadding = 14, ylabelpadding = 26),
+        axis = (;
+            xlabel = "Channels",
+            ylabel = "Time",
+            title = "",
+            xlabelpadding = 14,
+            ylabelpadding = 26,
+        ),
         legend = (; title = "Conditions", merge = true, framevisible = false), # fontsize = 14),
         mapping = (; x = :channel),
         layout = (; show_legend = true),

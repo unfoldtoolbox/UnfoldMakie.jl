@@ -3,7 +3,7 @@ dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 pos = pos[1:30]
 
-df, pos2 = example_data("TopoPlots.jl")
+df, pos2 = UnfoldMakie.example_data("TopoPlots.jl")
 
 
 @testset "Channel image: 3 arguments, data as Matrix" begin
@@ -56,8 +56,7 @@ end
 
 @testset "Channel image: error of unequal sorting_variables and sorting_reverse" begin
     err1 = nothing
-    t() =
-        error(plot_channelimage(dat[1:30, :], pos, channels_30; sorting_variables = [:y]))
+    t() = error(plot_channelimage(dat[1:30, :], pos, channels_30; sorting_variables = [:y]))
     try
         t()
     catch err1

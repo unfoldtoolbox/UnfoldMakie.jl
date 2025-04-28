@@ -6,7 +6,7 @@
 # The configurations of [ERP plots](@ref erp_vis) and Butterfly plots are somehow similar.
 
 # # Setup
-# Package loading
+# **Package loading**
 
 # The following modules are necessary for run this tutorial:
 
@@ -18,22 +18,22 @@ using Colors
 
 # Note that `DataFramesMeta` is also used here in order to be able to use `@subset` for testing (filtering).
 
-# Data
+# **Data**
 
 # We filter the data to make it more clearly represented:
 
-df, pos = example_data("TopoPlots.jl")
+df, pos = UnfoldMakie.example_data("TopoPlots.jl")
 first(df, 3)
 
 # # Plot Butterfly Plots
 
 # The default butterfly plot:
 
-plot_butterfly(df, axis = (; xlabel = "Time [s]"),)
+plot_butterfly(df, axis = (; xlabel = "Time [s]"))
 
 # The butterfly plot with corresponding topoplot. You need to provide the channel positions.
 
-plot_butterfly(df; positions = pos, axis = (; xlabel = "Time [s]"),)
+plot_butterfly(df; positions = pos, axis = (; xlabel = "Time [s]"))
 
 # You want to change size of topoplot markers and size of topoplot:
 
@@ -48,7 +48,7 @@ plot_butterfly(
 # You want to add vline and hline:
 
 f = Figure()
-plot_butterfly!(f, df; positions = pos, axis = (; xlabel = "Time [s]"),)
+plot_butterfly!(f, df; positions = pos, axis = (; xlabel = "Time [s]"))
 hlines!(0, color = :gray, linewidth = 1)
 vlines!(0, color = :gray, linewidth = 1)
 f

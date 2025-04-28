@@ -113,7 +113,7 @@ We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
-        
+
         ticks = @lift LinRange($clims[1], $clims[2], 5)
         rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
         @lift config_kwargs!(
