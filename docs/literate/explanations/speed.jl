@@ -12,7 +12,7 @@ using TopoPlots
 using BenchmarkTools
 using Observables
 using CairoMakie
-using PythonPlot
+using PythonPlot;
 using PyMNE;
 
 # Data input 
