@@ -46,7 +46,11 @@ Multiple miniature topoplots in regular distances.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
-
+- `topolabels_rounding = (; sigdigits = 3)`\\
+    Rounding of the topo_axis labels.\\
+    `sigdigits` - number of significant digits.\\
+    `digits` - number of digits after the decimal point.\\
+    Only one of `sigdigits` or `digits` should be provided.\\
 $(_docstring(:topoplotseries))
 
 **Return Value:** `Figure` displaying the Topoplot series.

@@ -12,10 +12,10 @@ Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a 
 ```
 
 ## Key features 
-- 🎯 **Focused**: Specialized for (r)ERP visualization — simpler than EEGLAB, MNE, etc.
+- 🎯 **Focused**: Specialized for (r)ERP visualization.
 - 🎨 **Customizable**: Full control over colors, lines, layouts via Makie.jl flexibility.
 - ⚡ **Fast**: Complex figures (e.g., 50 topoplots) generated ~20× faster than EEGLAB.
-- 🔄 **Interactive**: Built-in support for Observables.jl, enabling dynamic plots.
+- 🔄 **Interactive**: Partial support for Observables.jl, enabling dynamic plots.
 - 🗺️ **Smart aesthetics**: Scientific color maps by default (no misleading rainbows!).
 - 📚 **Well-documented**: Extensive examples and user guides.
 
@@ -33,22 +33,25 @@ Start with ERP plot and topopplot series.
 ```@example erp
 using UnfoldMakie, CairoMakie, Unfold
 results = Unfold.coeftable(UnfoldMakie.example_data("UnfoldLinearModel"))
-plot_erp(
+f = Figure(size=(550, 300))
+plot_erp!(f,
     results,
     mapping = (; col = :coefname, color = :coefname => "Conditions"),
     axis = (; xlabel = "Time [s]"),
     stderror = true,
 )
+f
 ```
 
 ```@example topoplot_series
 using UnfoldMakie, CairoMakie
 dat, positions = UnfoldMakie.example_data()
 plot_topoplotseries(
-    dat; bin_num = 16, nrows = 4,
+    dat; bin_num = 9, nrows = 3,
     positions = positions,
     visual = (; label_scatter = false, contours = false),
     axis = (; xlabel = "Time windows [s]"),
+    topolabels_rounding = (; digits = 2),
 )
 ```
 
