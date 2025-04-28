@@ -21,6 +21,8 @@ Plot a designmatrix.
     - `xticks` = 2: first and last possible labels are placed.
     - 2 < `xticks` < `number of labels`: equally distribute the labels.
     - `xticks` ≥ `number of labels`: all labels are placed.
+- tick_step::Int = 10\\
+    Show every `tick_step`-th label on the x-axis.
 $(_docstring(:designmat))
 **Return Value:** `Figure` displaying the Design matrix. 
 """
@@ -63,10 +65,12 @@ function plot_designmatrix!(
     if sort_data
         designmat = Base.sortslices(designmat, dims = 1)
     end
-    labels0 = replace.(Unfold.get_coefnames(data), r"\s*:" => ":")
+    xlabels_raw = replace.(Unfold.get_coefnames(data), r"\s*:" => ":")
 
-    if length(split(labels0[1], ": ")) > 1
-        labels = map(x -> join(split(x, ": ")[3]), labels0)
+    xlabel_terms_n = length(split(xlabels_raw[1], ": "))
+    if xlabel_terms_n > 1
+        xlabels = map(x -> join(split(x, ": ")[end]), xlabels_raw)
+        #xlabels = parse.(Float64, xlabels)
         labels_top1 = Unfold.extract_coef_info(Unfold.get_coefnames(data), 2)
         unique_names = String[]
         labels_top2 = String[""]
@@ -79,41 +83,43 @@ function plot_designmatrix!(
             end
         end
     end
-    lLength = length(labels0)
+    xlabels_n = length(xlabels_raw)
+
     # only change xticks if we want less then all
-    if (xticks !== nothing && xticks < lLength)
+    if (xticks !== nothing && xticks < xlabels_n)
         @assert(xticks >= 0, "xticks shouldn't be negative")
         # sections between xticks
-        section_size = (lLength - 2) / (xticks - 1)
+        section_size = (xlabels_n - 2) / (xticks - 1)
         new_labels = []
 
         # first tick. Empty if 0 ticks
         if xticks >= 1
-            push!(new_labels, labels0[1])
+            push!(new_labels, xlabels[1])
         else
-            push!(new_labels, "")
+            push!(new_labels, "")# no ticks
         end
 
         # fill in ticks in the middle
-        for i = 1:(lLength-2)
+        for i = 1:(xlabels_n-2)
             # checks if we're at the end of a section, but NO tick on the very last section
             if i % section_size < 1 && i < ((xticks - 1) * section_size)
-                push!(new_labels, labels0[i+1])
+                push!(new_labels, xlabels[i+1])
             else
                 push!(new_labels, "")
             end
         end
-
         # last tick at the end
         if xticks >= 2
-            push!(new_labels, labels0[lLength-1])
+            push!(new_labels, xlabels[xlabels_n-1])
+        elseif xticks == 2
+            push!(new_labels, xlabels[end])
         else
-            push!(new_labels, "")
+            push!(new_labels, "") # no ticks
         end
-
-        labels0 = new_labels
+        xlabels = new_labels
     end
-    if length(split(labels0[1], ": ")) > 1
+
+    if length(split(xlabels_raw[1], ": ")) > 1
         ax2 = Axis(
             f[1, 1],
             xticklabelcolor = :red,
@@ -124,11 +130,11 @@ function plot_designmatrix!(
         hidexdecorations!(ax2, ticklabels = false, ticks = false)
         hm = heatmap!(ax2, designmat'; config.visual...)
     else
-        labels = labels0
+        xlabels = xlabels_raw
     end
 
-    # plot Designmatrix
-    config.axis = merge(config.axis, (; xticks = (1:length(labels), labels)))
+    # set xlabels
+    config.axis = merge(config.axis, (; xticks = (1:length(xlabels), xlabels)))
     ax = Axis(f[1, 1]; config.axis...)
     hm = heatmap!(ax, designmat'; config.visual...)
 
