@@ -127,9 +127,9 @@ function plot_erp!(
     end
 
     if !haskey(config.mapping, :color)
-        if !haskey(config.visual, :color)
+        if !haskey(config.visual, :color) || config.visual.color isa AbstractVector
             config_kwargs!(config; visual = (; colormap = nothing, color = :black))
-            @warn """By default we used `black` color for lines. If you need something else, please specify `config.visual.color`."""
+            #By default we used `black` color for lines. If you need something else, please specify `config.visual.color`.
         end
         is_categorical = true
     else
