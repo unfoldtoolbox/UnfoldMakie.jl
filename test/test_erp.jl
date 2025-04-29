@@ -27,8 +27,16 @@ end
     plot_erp(dat[1, :, 1])
 end
 
-@testset "ERP plot: no color" begin
+@testset "ERP plot: zero matrix with color mapping" begin
+    plot_erp(zeros(10, 10))
+end
+
+@testset "ERP plot: zero matrix with no color mapping" begin
     plot_erp(zeros(10, 10), mapping = (; color = nothing))
+end
+
+@testset "ERP plot: zero matrix with solid color" begin
+    plot_erp(zeros(10, 10), mapping = (; color = nothing), visual = (; color = "red"))
 end
 
 @testset "ERP plot: rename xlabel" begin

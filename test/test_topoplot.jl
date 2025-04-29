@@ -31,11 +31,11 @@ end
     plot_topoplot(d1; positions = rand(Point2f, 10))
 end
 
-@testset "topoplot: highliht an electrode" begin
+@testset "topoplot: highlight an electrode" begin
     plot_topoplot(dat[:, 50, 1]; positions, high_chan = 2)
 end
 
-@testset "topoplot: highliht several electrodes" begin
+@testset "topoplot: highlight several electrodes" begin
     plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
 end
 
