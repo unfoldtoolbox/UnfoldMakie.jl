@@ -38,7 +38,7 @@ makedocs(;
         "Home" => "index.md",
         "Installing Julia & UnfoldMakie.jl" => "generated/explanations/installation.md",
         "Tutorials" => [
-                "ERP Visualizations" => [
+            "ERP Visualizations" => [
                 "ERP plot" => "generated/tutorials/erp.md",
                 "Butterfly plot" => "generated/tutorials/butterfly.md",
                 "Topoplot" => "generated/tutorials/topoplot.md",
