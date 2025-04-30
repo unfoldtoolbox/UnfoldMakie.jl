@@ -11,7 +11,7 @@
 #
 # - **Flexible data input.** All functions support basic `Arrays` and tidy `DataFrames`.
 #
-# - **Fast.** Julia and `Makie.jl` allow fast plotting of figures with very complex layouts. For example, it can plot one figure with 50 topoplots in 1.9 seconds (1.6 sec with DelaunayMesh interpolation), which is approximately 20 times faster compared to [EEGLAB](https://sccn.ucsd.edu/eeglab/). (Although the Python-based [MNE](http://mne.tools) is faster by one second.) For more details, see [this page](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/generated/intro/speed/).
+# - **Fast.** Julia and `Makie.jl` allow fast plotting of figures with very complex layouts. For example, it can plot one figure with 50 topoplots in 1.9 seconds (1.6 sec with DelaunayMesh interpolation), which is approximately 20 times faster compared to [EEGLAB](https://sccn.ucsd.edu/eeglab/). (Although the Python-based [MNE](http://mne.tools) is faster by one second.) For more details, see [this page](https://unfoldtoolbox.github.io/UnfoldMakie.jl/dev/generated/explanations/speed/).
 #
 # - **Faster updating.** `Makie.jl` is incredibly fast at updating figures, which is beneficial for developing interactive tools and creating animations. [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl) can create and save a topoplot gif file with 50 frames in 1.7 times less time than [MNE](http://mne.tools) (Table 2).
 #

@@ -55,7 +55,6 @@ plot_topoplotseries(
 )
 ```
 
-
 ## Where to start: Learning roadmap
 ### 1. First step
 📌 Goal: Check why we need multiple plot types for Event-related potentials and what kind of plot types exist. 
