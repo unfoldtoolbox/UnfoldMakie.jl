@@ -121,6 +121,7 @@ plot_topoplot(
 # This is done by setting the `topo_attributes` kwarg. The following example shows how to set the marker size and color based on the data values.
 # Check more [here](https://docs.makie.org/dev/reference/plots/scatter#markers).
 
+# Markers as arrows
 random_rotations = rand(64) .* 2π
 plot_topoplot(
     dat[:, 50, 1];
@@ -136,6 +137,7 @@ plot_topoplot(
     ),
 )
 
+# Marker size change
 plot_topoplot(
     dat[:, 50, 1];
     positions,
