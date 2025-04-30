@@ -12,7 +12,6 @@ using DataFrames
 using CairoMakie
 using DataFramesMeta
 using UnfoldSim
-using UnfoldMakie
 
 # **Data generation**
 
