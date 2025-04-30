@@ -69,7 +69,7 @@ makedocs(;
         ],
         "Reference" => [
             "Benchmarks" => "generated/explanations/speed.md",
-            "API: Functons" => "api.md",
+            "API: Functions" => "api.md",
             "API: Utilities" => "helper.md",
         ],
     ],
