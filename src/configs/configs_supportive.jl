@@ -91,7 +91,7 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
         )
     elseif cfg_symb == :topo_default_attributes
         if docstring == false
-            return (; interp_resolution = (128, 128), interpolation = CloughTocher())
+            return (; interp_resolution = (128, 128), interpolation = CloughTocher(), label_scatter = (;))
         else
             return string("interp_resolution = (128, 128), interpolation = CloughTocher()")
         end
