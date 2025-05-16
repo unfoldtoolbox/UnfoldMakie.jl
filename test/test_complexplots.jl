@@ -111,7 +111,7 @@ end
     )
     plot_erp!(f[1, 1], results, significance = pvals, stderror = true)
 
-    plot_butterfly!(f[1, 2], d_topo, positions)
+    plot_butterfly!(f[1, 2], d_topo; positions)
     plot_topoplot!(f[2, 1], data[:, 150, 1]; positions)
     plot_topoplotseries!(
         f[2, 2],
