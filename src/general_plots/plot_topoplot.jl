@@ -74,15 +74,14 @@ function plot_topoplot!(
     inner_axis = Axis(f[1:4, 1:2]; topo_axis...)
 
     if isa(high_chan, Int) || isa(high_chan, Vector{Int64})
-        x = zeros(length(positions))
-        isa(high_chan, Int) ? x[high_chan] = 1 : x[high_chan] .= 1
-        clist = [:gray, high_color][Int.(x .+ 1)] #color for highlighting
+        highlighter = zeros(length(positions))
+        isa(high_chan, Int) ? highlighter[high_chan] = 1 : highlighter[high_chan] .= 1
+        clist = [:gray, high_color][Int.(highlighter .+ 1)] #color for highlighting
         label_scatter = (;
-            color = clist,
-            markersize = ((x .+ 0.25) .* 40) ./ 5, # make adjustable
+            strokecolor = clist,
+            markersize = ((highlighter .+ 0.25) .* 40) ./ 5, # make adjustable
         )
-    else
-        label_scatter = (;)
+        #topo_attributes = merge(topo_attributes, (; label_scatter...))
     end
     eeg_topoplot!(
         inner_axis,
@@ -91,7 +90,7 @@ function plot_topoplot!(
         positions,
         config.visual...,
         topo_attributes...,
-        label_scatter...,
+        #label_scatter...,
     )
 
     # Set the color limits (`clims`) either from the config if specified by user or dynamically based on the data.
