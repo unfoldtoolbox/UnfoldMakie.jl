@@ -1,3 +1,16 @@
+d_topo, _ = UnfoldMakie.example_data("TopoPlots.jl")
+data, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
+results = coeftable(UnfoldMakie.example_data("UnfoldLinearModel"))
+
+begin
+    r1, positions = UnfoldMakie.example_data()
+    r2 = deepcopy(r1)
+    r2.coefname .= "B" # create a second category
+    r2.estimate .+= rand(length(r2.estimate)) * 0.1
+    results_plot = vcat(r1, r2)
+end
+
 @testset "8 plots" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1]
@@ -8,17 +21,6 @@
     gd = f[2, 2]
     gf = f[3, 2]
     gh = f[4, 2]
-
-    d_topo, pos = UnfoldMakie.example_data("TopoPlots.jl")
-    data, positions = TopoPlots.example_data()
-    df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)))
-
-    m = UnfoldMakie.example_data("UnfoldLinearModel")
-    results = coeftable(m)
-
-    results.coefname =
-        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-    results = filter(row -> row.coefname != "continuous", results)
 
     plot_erp!(
         ga,
@@ -31,7 +33,7 @@
     plot_butterfly!(
         gb,
         d_topo;
-        positions = pos,
+        positions,
         topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
     )
     hlines!(0, color = :gray, linewidth = 1)
@@ -39,7 +41,7 @@
     plot_topoplot!(
         gc,
         data[:, 340, 1];
-        positions = positions,
+        positions,
         axis = (; xlabel = "[340 ms]"),
     )
 
@@ -47,7 +49,7 @@
         gd,
         df;
         bin_width = 80,
-        positions = positions,
+        positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
     )
@@ -70,11 +72,7 @@
     dat_e, evts, times = UnfoldMakie.example_data("sort_data")
     plot_erpimage!(gf, times, dat_e; sortvalues = evts.Δlatency)
     plot_channelimage!(gg, data[1:30, :, 1], positions[1:30], channels_30;)
-    r1, positions = UnfoldMakie.example_data()
-    r2 = deepcopy(r1)
-    r2.coefname .= "B" # create a second category
-    r2.estimate .+= rand(length(r2.estimate)) * 0.1
-    results_plot = vcat(r1, r2)
+
     plot_parallelcoordinates(
         gh,
         subset(results_plot, :channel => x -> x .< 8, :time => x -> x .< 0);
@@ -102,10 +100,6 @@ end
 @testset "8 plots with a Figure" begin
     f = Figure(size = (1200, 1400))
 
-    d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
-    data, positions = TopoPlots.example_data()
-    uf = UnfoldMakie.example_data("UnfoldLinearModel")
-    results = coeftable(uf)
     uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
 
@@ -117,13 +111,13 @@ end
     )
     plot_erp!(f[1, 1], results, significance = pvals, stderror = true)
 
-    plot_butterfly!(f[1, 2], d_topo, positions = positions)
-    plot_topoplot!(f[2, 1], data[:, 150, 1]; positions = positions)
+    plot_butterfly!(f[1, 2], d_topo; positions)
+    plot_topoplot!(f[2, 1], data[:, 150, 1]; positions)
     plot_topoplotseries!(
         f[2, 2],
         d_topo;
         bin_width = 0.1,
-        positions = positions,
+        positions,
         visual = (label_scatter = false,),
         layout = (; use_colorbar = true),
     )
@@ -152,18 +146,14 @@ end
 
 
 @testset "testing combined figure (a Figure from complex_plot from docs)" begin
-    d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
     uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
-    uf = UnfoldMakie.example_data("UnfoldLinearModel")
-    results = coeftable(uf)
     uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
     d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true)
-    data, positions = TopoPlots.example_data()
     times = -0.099609375:0.001953125:1.0
 
     f = Figure(size = (2000, 2000))
 
-    plot_butterfly!(f[1, 1:3], d_topo; positions = positions)
+    plot_butterfly!(f[1, 1:3], d_topo; positions)
 
     pvals = DataFrame(
         from = [0.1, 0.15],
@@ -175,12 +165,12 @@ end
 
     plot_designmatrix!(f[2, 3], designmatrix(uf))
 
-    plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
+    plot_topoplot!(f[3, 1], data[:, 150, 1]; positions)
     plot_topoplotseries!(
         f[4, 1:3],
         d_topo;
         bin_width = 0.1,
-        positions = positions,
+        positions,
         mapping = (; label = :channel),
     )
 
@@ -198,7 +188,7 @@ end
     plot_circular_topoplots!(
         f[3:4, 4:5],
         d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-        positions = positions,
+        positions,
         predictor = :time,
         predictor_bounds = [-0.3, 0.5],
     )

@@ -8,5 +8,6 @@
 /Manifest.toml
 /docs/build/
 /docs/src/generated
+/experiments/
 paper-UnfoldMakie/
 runner.jl
