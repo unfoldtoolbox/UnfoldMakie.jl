@@ -179,7 +179,7 @@ function PlotConfig(T::Val{:butterfly})
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
             group = (:channel,),
         ),
-        axis = (xlabel = "Time", ylabel = "Voltage [µV]", yticklabelsize = 14),
+        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
         visual = (; color = nothing, colormap = nothing),
     )
     return cfg
@@ -204,7 +204,7 @@ function PlotConfig(T::Val{:erp})
         ),
         legend = (; framevisible = false),
         axis = (
-            xlabel = "Time",
+            xlabel = "Time [s]",
             ylabel = "Voltage [µV]",
             yticklabelsize = 14,
             xtickformat = "{:.1f}",

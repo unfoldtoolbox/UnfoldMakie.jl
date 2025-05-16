@@ -9,7 +9,7 @@ dat, positions = TopoPlots.example_data()
 
 m7 = UnfoldMakie.example_data("7channels")
 results7 = coeftable(m7)
-pvals = DataFrame(
+significancevalues = DataFrame(
     from = [0.01, 0.2, 0.1],
     to = [0.3, 0.4, 0.2],
     coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
@@ -111,22 +111,22 @@ end
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
-    pvals = DataFrame(
+    significancevalues = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],
         # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(ga, results; significance = pvals, stderror = true)
+    plot_erp!(ga, results; significance = significancevalues, stderror = true)
     f
 end
 
 @testset "ERP plot with significance" begin
-    plot_erp(results; :significance => pvals)
+    plot_erp(results; :significance => significancevalues)
 end
 
 #= @testset "ERP plot with significance 2" begin
-    plot_erp(results; :significance => pvals, sigtype = :vspan)
+    plot_erp(results; :significance => significancevalues, sigtype = :vspan)
 end =#
 
 @testset "ERP plot: 7 channels faceted" begin
