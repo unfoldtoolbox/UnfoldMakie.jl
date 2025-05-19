@@ -75,23 +75,17 @@ function plot_erp!(
         `group` is now automatically cast to nonnumeric."
     end
     plot_data = deepcopy(plot_data)
-    yticks =
-        round.(
-            LinRange(minimum(plot_data.estimate), maximum(plot_data.estimate), 5),
-            digits = 2,
-        )
-
     config = PlotConfig(:erp)
-    config_kwargs!(config; mapping, axis = (; yticks = yticks), kwargs...)
+    config_kwargs!(config; mapping,  kwargs...)
 
     if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
         plot_data = eeg_array_to_dataframe(plot_data')
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
 
-
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -99,7 +93,11 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
-
+    yticks =  round.(
+        LinRange(minimum(plot_data[!, config.mapping.y]), maximum(plot_data[!, config.mapping.y]), 5),
+        digits = 2,
+    )
+    config_kwargs!(config; axis = (; yticks = yticks))
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
         plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
