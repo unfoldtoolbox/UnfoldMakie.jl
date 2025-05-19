@@ -33,10 +33,15 @@ Plot an ERP plot.
     Enable or disable legend and colorbar.\\
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
-    F.i. `mapping = (; col = :group)` will make a column for each group.
+    F.e. `mapping = (; col = :group)` will make a column for each group.
 - `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
     For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
-
+- `significance_axis::NamedTuple = (;)`\\
+    Here you can flexibly configure the appearance of significance polygons:\\
+    * `height` – controls the height of the polygons. By default, they are very short and may appear as lines.\\
+    * `gap` – defines the vertical spacing between stacked polygons.\\
+    * `alpha` – sets the transparency of the polygons.\\
+    Defaults: $(supportive_defaults(:erp_significance_default))
 $(_docstring(:erp))
 
 **Return Value:** `Figure` displaying the ERP plot.
@@ -60,7 +65,7 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
-    significance_plotgeom = :line,
+    significance_axis = (; alpha = 0.9, height = 0.005, gap = 0.1),
     mapping = (;),
     kwargs...,
 )
@@ -69,13 +74,22 @@ function plot_erp!(
         To switch to categorical colors, please use `mapping(..., color = :mycolorcolum => nonnumeric)`.
         `group` is now automatically cast to nonnumeric."
     end
-    config = PlotConfig(:erp)
-    config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data)
+    yticks =
+        round.(
+            LinRange(minimum(plot_data.estimate), maximum(plot_data.estimate), 5),
+            digits = 2,
+        )
+
+    config = PlotConfig(:erp)
+    config_kwargs!(config; mapping, axis = (; yticks = yticks), kwargs...)
+
     if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
         plot_data = eeg_array_to_dataframe(plot_data')
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
+
+
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
     #remove mapping values with `nothing`
@@ -164,8 +178,12 @@ function plot_erp!(
 
     # add the p-values
     if !isnothing(significance)
+        significance_axis = update_axis(
+            supportive_defaults(:erp_significance_default);
+            significance_axis...,
+        )
         basic =
-            basic + add_significance(plot_data, significance, config, significance_plotgeom)
+            basic + add_significance(plot_data, significance, config, significance_axis)
     end
     plot_equation = basic * mapp
 
@@ -196,7 +214,7 @@ function plot_erp!(
     return f
 end
 
-function add_significance(plot_data, significance, config, significance_plotgeom)
+function add_significance(plot_data, significance, config, significance_axis)
     p = deepcopy(significance)
 
     # for now, add them to the fixed effect
@@ -218,26 +236,33 @@ function add_significance(plot_data, significance, config, significance_plotgeom
     else
         p[!, :signindex] .= 1
     end
-    # define an index to dodge the lines vertically
 
-    scaleY = [minimum(plot_data.estimate), maximum(plot_data.estimate)]
-    stepY = scaleY[2] - scaleY[1] # gap between significance rectangles
-    posY = stepY * -0.05 + scaleY[1]
-    Δt = diff(plot_data.time[1:2])[1] # added length of significance polygone
+    # ERP range
+    height_extrema = [minimum(plot_data.estimate), maximum(plot_data.estimate)]
+    erp_height = height_extrema[2] - height_extrema[1]
 
-    if significance_plotgeom == :line
-        Δy = 0.01 # height of significance polygone
-    else
-        Δy = 0.5
-        stepY = stepY - 3
-    end
+    # Use significance_axis.height as the relative height of each band
+    band_height = significance_axis.height * erp_height         # controls thickness
+    gap = significance_axis.gap                                 # vertical space between bands
+    stack_step = band_height + gap                              # full vertical step
+
+    # Anchor all significance bands below the ERP curve
+    significance_base_y = height_extrema[1] - 0.05 * erp_height
+
+    # Time resolution
+    time_resolution = diff(plot_data.time[1:2])[1]
+
+    # Create rectangles
     p[!, :segments] = [
-        Makie.Rect(
-            Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
-            Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
-        ) for (x, y, n) in zip(p.from, p.to, p.signindex)
+        let
+            band_bottom = significance_base_y + stack_step * (n - 1)      # position of each band
+            Makie.Rect(
+                Makie.Vec(x1, band_bottom),
+                Makie.Vec(x2 - x1 + time_resolution, band_height),
+            )
+        end
+        for (x1, x2, n) in zip(p.from, p.to, p.signindex)
     ]
-
-    res = data(p) * mapping(:segments) * visual(Poly, alpha = 0.5)
+    res = data(p) * mapping(:segments) * visual(Poly, alpha = significance_axis.alpha)
     return (res)
 end

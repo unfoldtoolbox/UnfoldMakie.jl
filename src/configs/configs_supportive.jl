@@ -19,8 +19,12 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
         )
     elseif cfg_symb == :density_default
         return (; xautolimitmargin = (0, 0), ylabel = "Density value")
+        # plot_erp
+    elseif cfg_symb == :erp_significance_default
+        return (; alpha = 0.9, height = 0.005, gap = 0.1)
     elseif cfg_symb == :superlabel_default
         return (; fontsize = 20, padding = (0, 0, 40, 0))
+
         # plot_butterfly
     elseif cfg_symb == :topo_default_single_butterfly
         return (;
@@ -91,7 +95,11 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
         )
     elseif cfg_symb == :topo_default_attributes
         if docstring == false
-            return (; interp_resolution = (128, 128), interpolation = CloughTocher(), label_scatter = (;))
+            return (;
+                interp_resolution = (128, 128),
+                interpolation = CloughTocher(),
+                label_scatter = (;),
+            )
         else
             return string("interp_resolution = (128, 128), interpolation = CloughTocher()")
         end

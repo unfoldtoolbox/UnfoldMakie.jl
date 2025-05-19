@@ -125,9 +125,22 @@ end
     plot_erp(results; :significance => significancevalues)
 end
 
-#= @testset "ERP plot with significance 2" begin
-    plot_erp(results; :significance => significancevalues, sigtype = :vspan)
-end =#
+@testset "ERP plot with significance_axis" begin
+    plot_erp(
+        results;
+        :significance => significancevalues,
+        significance_axis = (; alpha = 0.5, height = 0.2,
+            gap = 0.8),
+    )
+end
+
+@testset "ERP plot with significance_axis 2" begin
+    plot_erp(
+        results;
+        :significance => significancevalues,
+        significance_axis = (; alpha = 0.5, height = 0.2),
+    )
+end
 
 @testset "ERP plot: 7 channels faceted" begin
     plot_erp(results7, mapping = (; col = :channel, group = :channel))
