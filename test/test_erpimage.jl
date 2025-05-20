@@ -214,3 +214,7 @@ end
 @testset "ERP image with user-setted colorrange" begin
     plot_erpimage(dat, colorbar = (; colorrange = (-0.75, 0.75)))
 end
+
+@testset "ERP image: yticklabelsvisible" begin
+    plot_erpimage(dat; axis = (; yticklabelsvisible = false))
+end
