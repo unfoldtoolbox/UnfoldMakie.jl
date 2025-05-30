@@ -1,8 +1,6 @@
 # # Parallel Coordinates
 
-### Parallel Coordinates Plot (PCP)
-
-# A Parallel Coordinates Plot (PCP) is a visualization technique used to represent EEG activity across multiple channels.
+# **Parallel Coordinates Plot** (PCP) is a visualization technique used to represent EEG activity across multiple channels.
 #
 # - Trial dimension: Each line corresponds to a single trial. Alternatively, trials can be averaged to reduce visual complexity.
 # - Channel dimension: Each vertical axis is a channel. Although all channels can be shown, typically only a selected subset is visualized to avoid clutter.
