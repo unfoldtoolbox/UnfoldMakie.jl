@@ -115,14 +115,7 @@ function plot_erp!(
             digits = 2,
         )
     xticks =
-        round.(
-            LinRange(
-                minimum(plot_data.time),
-                maximum(plot_data.time),
-                5,
-            ),
-            digits = 2,
-        )
+        round.(LinRange(minimum(plot_data.time), maximum(plot_data.time), 5), digits = 2)
     config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
 
     # turn "nothing" from group columns into :fixef
