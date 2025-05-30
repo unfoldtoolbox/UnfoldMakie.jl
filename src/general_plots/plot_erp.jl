@@ -105,15 +105,14 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
-    yticks =
-        round.(
-            LinRange(
-                minimum(plot_data[!, config.mapping.y]),
-                maximum(plot_data[!, config.mapping.y]),
-                5,
-            ),
-            digits = 2,
-        )
+    yticks = round.(
+        LinRange(
+            minimum(plot_data[!, config.mapping.y]),
+            maximum(plot_data[!, config.mapping.y]),
+            5,
+        ),
+        digits = 2,
+    )
     xticks =
         round.(LinRange(minimum(plot_data.time), maximum(plot_data.time), 5), digits = 2)
     config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
