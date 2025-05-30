@@ -56,8 +56,6 @@ plot_erp(
 )
 
 # ## Significance Indicators
-
-# ## Significance Indicators
 #
 # Significance indicators visually highlight time intervals where model effects 
 # (e.g., regression coefficients) are statistically significant.
