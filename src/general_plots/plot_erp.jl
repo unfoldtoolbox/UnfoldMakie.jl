@@ -36,12 +36,12 @@ Plot an ERP plot.
     F.e. `mapping = (; col = :group)` will make a column for each group.
 - `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
     For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
-- `significance_axis::NamedTuple = (;)`\\
+- `significance_lines::NamedTuple = (;)`\\
     Here you can flexibly configure the appearance of significance polygons:\\
     * `height` – controls the height of the polygons. By default, they are very short and may appear as lines.\\
     * `gap` – defines the vertical spacing between stacked polygons.\\
     * `alpha` – sets the transparency of the polygons.\\
-    Defaults: $(supportive_defaults(:erp_significance_default))
+    Defaults: $(supportive_defaults(:erp_significance_l_default))
 $(_docstring(:erp))
 
 **Return Value:** `Figure` displaying the ERP plot.
@@ -65,7 +65,9 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
-    significance_axis = (; alpha = 0.9, height = 0.005, gap = 0.1),
+    significance_mode::Symbol = :vspan,
+    significance_lines = (;),
+    significance_vspan = (;),
     mapping = (;),
     kwargs...,
 )
@@ -76,7 +78,7 @@ function plot_erp!(
     end
     plot_data = deepcopy(plot_data)
     config = PlotConfig(:erp)
-    config_kwargs!(config; mapping,  kwargs...)
+    config_kwargs!(config; mapping, kwargs...)
 
     if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
         plot_data = eeg_array_to_dataframe(plot_data')
@@ -93,10 +95,15 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
-    yticks =  round.(
-        LinRange(minimum(plot_data[!, config.mapping.y]), maximum(plot_data[!, config.mapping.y]), 5),
-        digits = 2,
-    )
+    yticks =
+        round.(
+            LinRange(
+                minimum(plot_data[!, config.mapping.y]),
+                maximum(plot_data[!, config.mapping.y]),
+                5,
+            ),
+            digits = 2,
+        )
     config_kwargs!(config; axis = (; yticks = yticks))
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
@@ -174,14 +181,17 @@ function plot_erp!(
 
     basic = basic * data(plot_data)
 
-    # add the p-values
+    # add significance values
     if !isnothing(significance)
-        significance_axis = update_axis(
-            supportive_defaults(:erp_significance_default);
-            significance_axis...,
+        basic = significance_context(
+            basic,
+            plot_data,
+            significance,
+            config,
+            significance_mode,
+            significance_lines,
+            significance_vspan,
         )
-        basic =
-            basic + add_significance(plot_data, significance, config, significance_axis)
     end
     plot_equation = basic * mapp
 
@@ -212,55 +222,106 @@ function plot_erp!(
     return f
 end
 
-function add_significance(plot_data, significance, config, significance_axis)
-    p = deepcopy(significance)
+function significance_context(
+    basic,
+    plot_data,
+    significance,
+    config,
+    significance_mode,
+    significance_lines,
+    significance_vspan,
+)
+    valid_modes = (:lines, :vspan, :both)
+    if !(significance_mode in valid_modes)
+        error("Invalid `significance_mode`: $significance_mode. Choose from: $valid_modes")
+    end
 
-    # for now, add them to the fixed effect
-    if "group" ∉ names(p)
-        # group not specified using first
+    # Compute shared context
+    y = plot_data[!, config.mapping.y]
+    ymin, ymax = minimum(y), maximum(y)
+    time_col = config.mapping.x isa Pair ? config.mapping.x[1] : config.mapping.x
+    time_resolution = diff(plot_data[!, time_col][1:2])[1]
+
+
+    if significance_mode in (:lines, :both)
+        significance_lines = update_axis(
+            supportive_defaults(:erp_significance_l_default); significance_lines...,
+        )
+        basic += add_lines(
+            plot_data, significance, config, significance_lines;
+            ymin = ymin, ymax = ymax, time_resolution = time_resolution,
+        )
+    end
+
+    if significance_mode in (:vspan, :both)
+        significance_vspan = update_axis(
+            supportive_defaults(:erp_significance_v_default); significance_vspan...,
+        )
+        basic += add_vspan(
+            plot_data, significance, config, significance_vspan;
+            ymin = ymin, ymax = ymax, time_resolution = time_resolution,
+        )
+    end
+
+    return basic
+end
+
+function add_lines(plot_data, significance, config, significance_lines;
+    ymin, ymax, time_resolution)
+
+    signif_data = deepcopy(significance)
+
+    # Fallback group logic
+    if "group" ∉ names(signif_data)
         if "group" ∈ names(plot_data)
-            p[!, :group] .= plot_data[1, :group]
+            signif_data[!, :group] .= plot_data[1, :group]
             if length(unique(plot_data.group)) > 1
                 @warn "multiple groups found, choosing first one"
             end
         else
-            p[!, :group] .= 1
+            signif_data[!, :group] .= 1
         end
     end
+
+    # Significance index mapping
     if :color ∈ keys(config.mapping)
         c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
-        un = unique(p[!, c])
-        p[!, :signindex] .= [findfirst(un .== x) for x in p.coefname]
+        un = unique(signif_data[!, c])
+        signif_data[!, :signindex] .= [findfirst(un .== x) for x in signif_data.coefname]
     else
-        p[!, :signindex] .= 1
+        signif_data[!, :signindex] .= 1
     end
 
-    # ERP range
-    height_extrema = [minimum(plot_data.estimate), maximum(plot_data.estimate)]
-    erp_height = height_extrema[2] - height_extrema[1]
+    erp_height = ymax - ymin
+    linewidth = significance_lines.linewidth * erp_height
+    gap = significance_lines.gap
+    stack_step = linewidth + gap
+    base_y = ymin - 0.05 * erp_height
 
-    # Use significance_axis.height as the relative height of each band
-    band_height = significance_axis.height * erp_height         # controls thickness
-    gap = significance_axis.gap                                 # vertical space between bands
-    stack_step = band_height + gap                              # full vertical step
-
-    # Anchor all significance bands below the ERP curve
-    significance_base_y = height_extrema[1] - 0.05 * erp_height
-
-    # Time resolution
-    time_resolution = diff(plot_data.time[1:2])[1]
-
-    # Create rectangles
-    p[!, :segments] = [
-        let
-            band_bottom = significance_base_y + stack_step * (n - 1)      # position of each band
-            Makie.Rect(
-                Makie.Vec(x1, band_bottom),
-                Makie.Vec(x2 - x1 + time_resolution, band_height),
-            )
-        end
-        for (x1, x2, n) in zip(p.from, p.to, p.signindex)
+    signif_data[!, :segments] = [
+        Makie.Rect(
+            Makie.Vec(from, base_y + stack_step * (n - 1)),
+            Makie.Vec(to - from + time_resolution, linewidth),
+        ) for
+        (from, to, n) in zip(signif_data.from, signif_data.to, signif_data.signindex)
     ]
-    res = data(p) * mapping(:segments) * visual(Poly, alpha = significance_axis.alpha)
-    return (res)
+
+    return data(signif_data) * mapping(:segments) *
+           visual(Poly, alpha = significance_lines.alpha)
+end
+
+function add_vspan(plot_data, significance, config, significance_vspan;
+    ymin, ymax, time_resolution)
+
+    vspan_data = deepcopy(significance)
+
+    vspan_data[!, :vspan] = [
+        Makie.Rect(
+            Makie.Vec(from, ymin),
+            Makie.Vec(to - from + time_resolution, ymax - ymin),
+        ) for (from, to) in zip(significance.from, significance.to)
+    ]
+
+    return data(vspan_data) * mapping(:vspan) *
+           visual(Poly; alpha = significance_vspan.alpha)
 end
