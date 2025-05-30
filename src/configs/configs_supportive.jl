@@ -20,8 +20,10 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
     elseif cfg_symb == :density_default
         return (; xautolimitmargin = (0, 0), ylabel = "Density value")
         # plot_erp
-    elseif cfg_symb == :erp_significance_default
-        return (; alpha = 0.9, height = 0.005, gap = 0.1)
+    elseif cfg_symb == :erp_significance_l_default
+        return (; alpha = 1, linewidth = 0.005, gap = 0.1)
+    elseif cfg_symb == :erp_significance_v_default
+        return (; alpha = 0.3)
     elseif cfg_symb == :superlabel_default
         return (; fontsize = 20, padding = (0, 0, 40, 0))
 

@@ -125,20 +125,38 @@ end
     plot_erp(results; :significance => significancevalues)
 end
 
-@testset "ERP plot with significance_axis" begin
+@testset "ERP plot with significance_vspan" begin
     plot_erp(
         results;
-        :significance => significancevalues,
-        significance_axis = (; alpha = 0.5, height = 0.2,
-            gap = 0.8),
+        :significance => DataFrame(
+            from = [0.01, 0.25, 0.45],
+            to = [0.2, 0.29, 0.5],
+            coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
+        ),
+        significance_vspan = (; alpha = 0.1),
     )
 end
 
-@testset "ERP plot with significance_axis 2" begin
+@testset "ERP plot with significance_lines" begin
     plot_erp(
         results;
         :significance => significancevalues,
-        significance_axis = (; alpha = 0.5, height = 0.2),
+        significance_mode = :lines,
+        significance_lines = (; height = 0.001, gap = 0.2),
+    )
+end
+
+@testset "ERP plot with both significance" begin
+    plot_erp(
+        results;
+        :significance => DataFrame(
+            from = [0.01, 0.25, 0.45],
+            to = [0.2, 0.29, 0.5],
+            coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
+        ),
+        significance_mode = :both,
+        significance_vspan = (; alpha = 0.1),
+        significance_lines = (; height = 0.001, gap = 0.2),
     )
 end
 
