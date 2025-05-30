@@ -1,10 +1,13 @@
 # # Parallel Coordinates
 
-# **Parallel Coordinates Plot** (PCP) is a plot type used to visualize EEG activity for some channels. 
-# It can fully represent condition and channel dimensions using lines. It can also partially represent time and trials.
+### Parallel Coordinates Plot (PCP)
 
-# Each vertical axis represents a voltage level for a channel.
-# Each line represents a trial, each colour represents a condition. 
+# A Parallel Coordinates Plot (PCP) is a visualization technique used to represent EEG activity across multiple channels.
+#
+# - Trial dimension: Each line corresponds to a single trial. Alternatively, trials can be averaged to reduce visual complexity.
+# - Channel dimension: Each vertical axis is a channel. Although all channels can be shown, typically only a selected subset is visualized to avoid clutter.
+# - Condition and time dimensions: These can be encoded using the color or style of the lines to distinguish between experimental conditions or time windows.
+# - Voltage (EEG amplitude): Represented along the y-axis of each vertical axis. The scale can either be fixed across all channels or adjusted per channel, depending on the analysis goal.
 
 # # Setup
 # **Package loading**
@@ -27,7 +30,6 @@ plot_parallelcoordinates(
     subset(results_plot, :channel => x -> x .<= 5);
     mapping = (; color = :coefname),
     ax_labels = ["FP1", "F3", "F7", "FC3", "C3"],
-    axis = (; ylabel = "Time [s]"),
 )
 
 # # Additional features
@@ -48,7 +50,7 @@ begin
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "T7", "CP3", "P3", "P7", "O1"],
         subset(results_plot, :channel => x -> x .< 10);
         mapping = (; color = :coefname),
-        axis = (; ylabel = "Time [s]", xlabel = "", title = "normalize = nothing"),
+        axis = (; xlabel = "", title = "normalize = nothing"),
     )
     plot_parallelcoordinates(
         f[2, 1],
@@ -56,7 +58,7 @@ begin
         subset(results_plot, :channel => x -> x .< 10);
         mapping = (; color = :coefname),
         normalize = :minmax,
-        axis = (; ylabel = "Time [s]", title = "normalize = :minmax"),
+        axis = (; title = "normalize = :minmax"),
     )
     f
 end
@@ -74,7 +76,7 @@ begin
         subset(results_plot, :channel => x -> x .<= 5);
         mapping = (; color = :coefname),
         visual = (; colormap = :tab10),
-        axis = (; ylabel = "Time [s]", xlabel = "", title = "colormap = tab10"),
+        axis = (; xlabel = "", title = "colormap = tab10"),
     )
     plot_parallelcoordinates(
         f[2, 1],
@@ -82,7 +84,7 @@ begin
         subset(results_plot, :channel => x -> x .<= 5);
         mapping = (; color = :coefname),
         visual = (; colormap = :Accent_3),
-        axis = (; ylabel = "Time [s]", title = "colormap = Accent_3"),
+        axis = (; title = "colormap = Accent_3"),
     )
     f
 end
@@ -94,7 +96,6 @@ plot_parallelcoordinates(
     subset(results_plot, :channel => x -> x .< 5);
     visual = (; color = :steelblue1),
     ax_labels = ["Fz", "Cz", "O1", "O2"],
-    axis = (; ylabel = "Time [s]"),
 )
 
 # ## Tick labels
@@ -112,7 +113,6 @@ begin
         visual = (; color = :burlywood1),
         axis = (;
             xlabel = "",
-            ylabel = "Time [s]",
             ylabelpadding = 40,
             title = "ax_ticklabels = :all",
         ),
@@ -126,7 +126,6 @@ begin
         visual = (; color = :cyan3),
         axis = (;
             xlabel = "",
-            ylabel = "Time [s]",
             ylabelpadding = 40,
             title = "ax_ticklabels = :left",
         ),
@@ -140,7 +139,6 @@ begin
         visual = (; color = :burlywood1),
         axis = (;
             xlabel = "",
-            ylabel = "Time [s]",
             ylabelpadding = 40,
             title = "ax_ticklabels = :outmost",
         ),
@@ -153,7 +151,7 @@ begin
         ax_ticklabels = :none,
         normalize = :minmax,
         visual = (; color = :cyan3),
-        axis = (; ylabel = "Time [s]", ylabelpadding = 40, title = "ax_ticklabels = :none"),
+        axis = (; ylabelpadding = 40, title = "ax_ticklabels = :none"),
     ) #  disable all ticks
     f
 end
@@ -168,7 +166,7 @@ begin
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "T7", "CP3", "P3", "P7", "O1"],
         subset(results_plot, :channel => x -> x .< 10),
         visual = (; color = :plum),
-        axis = (; title = "bend = false", xlabel = "", ylabel = "Time [s]"),
+        axis = (; title = "bend = false", xlabel = ""),
     )
     plot_parallelcoordinates(
         f[2, 1],
@@ -176,7 +174,7 @@ begin
         subset(results_plot, :channel => x -> x .< 10),
         bend = true, # here
         visual = (; color = :plum),
-        axis = (; title = "bend = true", ylabel = "Time [s]"),
+        axis = (; title = "bend = true"),
     )
     f
 end
@@ -197,7 +195,6 @@ begin
         axis = (;
             title = "alpha = 0.1",
             xlabel = "",
-            ylabel = "Time [s]",
             ylabelpadding = 20,
         ),
     )
@@ -207,7 +204,7 @@ begin
         mapping = (; color = :coefname),
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3"],
         visual = (; alpha = 0.9),
-        axis = (; title = "alpha = 0.9", ylabel = "Time [s]", ylabelpadding = 20),
+        axis = (; title = "alpha = 0.9", ylabelpadding = 20),
     )
     f
 end
