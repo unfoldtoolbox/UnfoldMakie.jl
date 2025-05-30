@@ -114,7 +114,6 @@ end
     significancevalues = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],
-        # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
     plot_erp!(ga, results; significance = significancevalues, stderror = true)
@@ -129,8 +128,8 @@ end
     plot_erp(
         results;
         :significance => DataFrame(
-            from = [0.01, 0.25, 0.45],
-            to = [0.2, 0.29, 0.5],
+            from = [0.01, 0.25, 0.35],
+            to = [0.2, 0.29, 0.4],
             coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
         ),
         significance_vspan = (; alpha = 0.1),
@@ -146,12 +145,21 @@ end
     )
 end
 
+@testset "ERP plot with significance_lines 2" begin
+    plot_erp(
+        results;
+        :significance => significancevalues,
+        significance_mode = :lines,
+        significance_lines = (; height = 0.00001, gap = 0.6),
+    )
+end
+
 @testset "ERP plot with both significance" begin
     plot_erp(
         results;
         :significance => DataFrame(
-            from = [0.01, 0.25, 0.45],
-            to = [0.2, 0.29, 0.5],
+            from = [0.01, 0.25, 0.35],
+            to = [0.2, 0.29, 0.4],
             coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
         ),
         significance_mode = :both,

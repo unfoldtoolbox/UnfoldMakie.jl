@@ -36,12 +36,21 @@ Plot an ERP plot.
     F.e. `mapping = (; col = :group)` will make a column for each group.
 - `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
     For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
+- `significance_mode::Symbol = :vspan`\\
+    How to display significance intervals. Options:\\
+    * `:vspan` – draw vertical shaded spans (default)\\
+    * `:lines` – draw horizontal bands below ERP lines\\
+    * `:both` – draw both.\\
 - `significance_lines::NamedTuple = (;)`\\
-    Here you can flexibly configure the appearance of significance polygons:\\
-    * `height` – controls the height of the polygons. By default, they are very short and may appear as lines.\\
-    * `gap` – defines the vertical spacing between stacked polygons.\\
-    * `alpha` – sets the transparency of the polygons.\\
+    Configure the appearance of significance lines:\\
+    * `linewidth` – thickness of each line (not working)\\
+    * `gap` – vertical space between stacked lines\\
+    * `alpha` – transparency of the lines.\\
     Defaults: $(supportive_defaults(:erp_significance_l_default))
+- `significance_vspan::NamedTuple = (;)`\\
+    Control appearance of vertical significance spans:\\
+    * `alpha` – transparency of the shaded area.\\
+    Defaults: $(supportive_defaults(:erp_significance_v_default))
 $(_docstring(:erp))
 
 **Return Value:** `Figure` displaying the ERP plot.
@@ -54,7 +63,8 @@ plot_erp(
     times,
     plot_data::Union{DataFrame,AbstractMatrix,AbstractVector{<:Number}};
     kwargs...,
-) = plot_erp(plot_data; axis = (; xticks = times), kwargs...)
+) = plot_erp(plot_data; #axis = (; xticks = times), 
+    kwargs...)
 
 function plot_erp!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -104,7 +114,17 @@ function plot_erp!(
             ),
             digits = 2,
         )
-    config_kwargs!(config; axis = (; yticks = yticks))
+    xticks =
+        round.(
+            LinRange(
+                minimum(plot_data.time),
+                maximum(plot_data.time),
+                5,
+            ),
+            digits = 2,
+        )
+    config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
+
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
         plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
@@ -241,7 +261,6 @@ function significance_context(
     ymin, ymax = minimum(y), maximum(y)
     time_col = config.mapping.x isa Pair ? config.mapping.x[1] : config.mapping.x
     time_resolution = diff(plot_data[!, time_col][1:2])[1]
-
 
     if significance_mode in (:lines, :both)
         significance_lines = update_axis(

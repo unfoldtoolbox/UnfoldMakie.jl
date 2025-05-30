@@ -55,23 +55,52 @@ plot_erp(
     axis = (; xlabel = "Time [s]"),
 )
 
-# ## Significance lines
+# ## Significance Indicators
 
-# - `significance::Array = []` - show a significance (see below). 
+# ## Significance Indicators
+#
+# Significance indicators visually highlight time intervals where model effects 
+# (e.g., regression coefficients) are statistically significant.
+#
+# Indicators are specified via a `significance` DataFrame with at least:
+# - `from` and `to`: the time interval to annotate (in seconds or samples)
+# - optionally `coefname`: to label and color different effects
+#
+# The display is controlled using `significance_mode`, with options:
+# - `:lines` — draw horizontal bars below the ERP curve
+# - `:vspan` — draw vertical shaded spans over the time axis
+# - `:both` — show both
+# - `:none` — disable significance indicators entirely
+#
+# These visual indicators support interpretation of when and where effects occur.
 
-# Here we manually specify p-value lines. If array is not empty, plot shows colored lines under the plot representing the p-values. 
-# Below is an example in which p-values are given:
+# By default, significance is shown as vertical shaded spans.
 
 m = UnfoldMakie.example_data("UnfoldLinearModel")
 results = coeftable(m)
 significancevalues = DataFrame(
-    from = [0.01, 0.2],
-    to = [0.3, 0.4],
+    from = [0.01, 0.25],
+    to = [0.2, 0.29],
     coefname = ["(Intercept)", "condition: face"], # if coefname not specified, line should be black
 )
 plot_erp(
     results;
     :significance => significancevalues,
+    mapping = (; color = :coefname => "Conditions"),
+    axis = (; xlabel = "Time [s]"),
+)
+# This version shows both horizontal bands and vertical spans
+#
+# Additional styling is applied:
+# - Vertical spans: lower alpha (transparency)
+# - Horizontal bands: increased gap between stacked bands
+
+plot_erp(
+    results;
+    significance = significancevalues,
+    significance_mode = :both,
+    significance_vspan = (; alpha = 0.2),
+    significance_lines = (; gap = 0.05, alpha = 0.8),
     mapping = (; color = :coefname => "Conditions"),
     axis = (; xlabel = "Time [s]"),
 )
