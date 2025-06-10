@@ -141,7 +141,7 @@ end
         results;
         :significance => significancevalues,
         sigifnicance_visual = :lines,
-        significance_lines = (; height = 0.001, gap = 0.2),
+        significance_lines = (; linewidth = 0.001, gap = 0.1),
     )
 end
 
@@ -150,7 +150,7 @@ end
         results;
         :significance => significancevalues,
         sigifnicance_visual = :lines,
-        significance_lines = (; height = 0.00001, gap = 0.6),
+        significance_lines = (; linewidth = 0.01, gap = 0.6),
     )
 end
 
@@ -164,7 +164,7 @@ end
         ),
         sigifnicance_visual = :both,
         significance_vspan = (; alpha = 0.1),
-        significance_lines = (; height = 0.001, gap = 0.2),
+        significance_lines = (; linewidth = 0.001, gap = 0.2),
     )
 end
 
