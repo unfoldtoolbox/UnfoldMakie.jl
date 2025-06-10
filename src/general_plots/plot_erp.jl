@@ -36,7 +36,7 @@ Plot an ERP plot.
     F.e. `mapping = (; col = :group)` will make a column for each group.
 - `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
     For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
-- `significance_mode::Symbol = :vspan`\\
+- `sigifnicance_visual::Symbol = :vspan`\\
     How to display significance intervals. Options:\\
     * `:vspan` – draw vertical shaded spans (default)\\
     * `:lines` – draw horizontal bands below ERP lines\\
@@ -74,7 +74,7 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
-    significance_mode::Symbol = :vspan,
+    sigifnicance_visual::Symbol = :vspan,
     significance_lines = (;),
     significance_vspan = (;),
     mapping = (;),
@@ -199,7 +199,7 @@ function plot_erp!(
             plot_data,
             significance,
             config,
-            significance_mode,
+            sigifnicance_visual,
             significance_lines,
             significance_vspan,
         )
@@ -238,22 +238,22 @@ function significance_context(
     plot_data,
     significance,
     config,
-    significance_mode,
+    sigifnicance_visual,
     significance_lines,
     significance_vspan,
 )
     valid_modes = (:lines, :vspan, :both)
-    if !(significance_mode in valid_modes)
-        error("Invalid `significance_mode`: $significance_mode. Choose from: $valid_modes")
+    if !(sigifnicance_visual in valid_modes)
+        error("Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes")
     end
 
     # Compute shared context
     y = plot_data[!, config.mapping.y]
     ymin, ymax = minimum(y), maximum(y)
-    time_col = config.mapping.x isa Pair ? config.mapping.x[1] : config.mapping.x
+    time_col = config.mapping.x
     time_resolution = diff(plot_data[!, time_col][1:2])[1]
 
-    if significance_mode in (:lines, :both)
+    if sigifnicance_visual in (:lines, :both)
         significance_lines = update_axis(
             supportive_defaults(:erp_significance_l_default); significance_lines...,
         )
@@ -263,7 +263,7 @@ function significance_context(
         )
     end
 
-    if significance_mode in (:vspan, :both)
+    if sigifnicance_visual in (:vspan, :both)
         significance_vspan = update_axis(
             supportive_defaults(:erp_significance_v_default); significance_vspan...,
         )
