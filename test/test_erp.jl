@@ -49,7 +49,7 @@ end
 
 @testset "ERP plot: Array data with times vector" begin
     times = range(0, step = 100, length = size(dat, 2))
-    plot_erp(times, dat[1, :, 1], axis = (; xtickformat = "{:d}"))
+    plot_erp(times, dat[1, :, 1])
 end
 
 @testset "ERP plot: stderror error" begin
@@ -114,7 +114,6 @@ end
     significancevalues = DataFrame(
         from = [0.1, 0.15],
         to = [0.2, 0.5],
-        # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
     plot_erp!(ga, results; significance = significancevalues, stderror = true)
@@ -125,9 +124,49 @@ end
     plot_erp(results; :significance => significancevalues)
 end
 
-#= @testset "ERP plot with significance 2" begin
-    plot_erp(results; :significance => significancevalues, sigtype = :vspan)
-end =#
+@testset "ERP plot with significance_vspan" begin
+    plot_erp(
+        results;
+        :significance => DataFrame(
+            from = [0.01, 0.25, 0.35],
+            to = [0.2, 0.29, 0.4],
+            coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
+        ),
+        significance_vspan = (; alpha = 0.1),
+    )
+end
+
+@testset "ERP plot with significance_lines" begin
+    plot_erp(
+        results;
+        :significance => significancevalues,
+        sigifnicance_visual = :lines,
+        significance_lines = (; linewidth = 0.001, gap = 0.1),
+    )
+end
+
+@testset "ERP plot with significance_lines 2" begin
+    plot_erp(
+        results;
+        :significance => significancevalues,
+        sigifnicance_visual = :lines,
+        significance_lines = (; linewidth = 0.01, gap = 0.6),
+    )
+end
+
+@testset "ERP plot with both significance" begin
+    plot_erp(
+        results;
+        :significance => DataFrame(
+            from = [0.01, 0.25, 0.35],
+            to = [0.2, 0.29, 0.4],
+            coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
+        ),
+        sigifnicance_visual = :both,
+        significance_vspan = (; alpha = 0.1),
+        significance_lines = (; linewidth = 0.001, gap = 0.2),
+    )
+end
 
 @testset "ERP plot: 7 channels faceted" begin
     plot_erp(results7, mapping = (; col = :channel, group = :channel))

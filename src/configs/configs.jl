@@ -264,7 +264,7 @@ function PlotConfig(T::Val{:paracoord})
         ),
         axis = (;
             xlabel = "Channels",
-            ylabel = "Time",
+            ylabel = "Voltage [µV]",
             title = "",
             xlabelpadding = 14,
             ylabelpadding = 26,
