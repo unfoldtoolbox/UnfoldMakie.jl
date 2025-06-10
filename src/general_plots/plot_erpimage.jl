@@ -105,7 +105,6 @@ function plot_erpimage!(
     ax = Axis(ga[1:4, 1:4]; config.axis...)
     ax.yticks = round.(LinRange(1, size(data.val, 2), 5))
     ax.xticks = round.(LinRange(minimum(times.val), maximum(times.val), 5), digits = 2)
-    ax.yticklabelsvisible = true
 
     # get() retrieves the value of :colorrange from config.colorbar if it exists; 
     # otherwise, it uses the default value, which is the @lift expression.

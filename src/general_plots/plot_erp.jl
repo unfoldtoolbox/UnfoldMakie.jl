@@ -33,10 +33,24 @@ Plot an ERP plot.
     Enable or disable legend and colorbar.\\
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
-    F.i. `mapping = (; col = :group)` will make a column for each group.
+    F.e. `mapping = (; col = :group)` will make a column for each group.
 - `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
     For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
-
+- `sigifnicance_visual::Symbol = :vspan`\\
+    How to display significance intervals. Options:\\
+    * `:vspan` – draw vertical shaded spans (default);\\
+    * `:lines` – draw horizontal bands below ERP lines;\\
+    * `:both` – draw both.\\
+- `significance_lines::NamedTuple = (;)`\\
+    Configure the appearance of significance lines:\\
+    * `linewidth` – thickness of each line (not working);\\
+    * `gap` – vertical space between stacked lines. Computed as `stack_step = linewidth + gap`;\\
+    * `alpha` – transparency of the lines.\\
+    Defaults: $(supportive_defaults(:erp_significance_l_default))
+- `significance_vspan::NamedTuple = (;)`\\
+    Control appearance of vertical significance spans:\\
+    * `alpha` – transparency of the shaded area.\\
+    Defaults: $(supportive_defaults(:erp_significance_v_default))
 $(_docstring(:erp))
 
 **Return Value:** `Figure` displaying the ERP plot.
@@ -60,24 +74,29 @@ function plot_erp!(
     categorical_group = nothing,
     stderror = false, # XXX if it exists, should be plotted
     significance = nothing,
-    significance_plotgeom = :line,
+    sigifnicance_visual::Symbol = :vspan,
+    significance_lines = (;),
+    significance_vspan = (;),
     mapping = (;),
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
         @warn "categorical_color and categorical_group have been deprecated.
-        To switch to categorical colors, please use `mapping(..., color = :mycolorcolum => nonnumeric)`.
+        To switch to categorical colors, please use `mapping(..., color = :mycolorcolumn => nonnumeric)`.
         `group` is now automatically cast to nonnumeric."
     end
+    plot_data = deepcopy(plot_data)
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
-    plot_data = deepcopy(plot_data)
+
     if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
         plot_data = eeg_array_to_dataframe(plot_data')
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
+
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
         NamedTuple{filter(x -> x ∉ keys, names)}(nt)
@@ -85,6 +104,17 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
+    yticks = round.(
+        LinRange(
+            minimum(plot_data[!, config.mapping.y]),
+            maximum(plot_data[!, config.mapping.y]),
+            5,
+        ),
+        digits = 2,
+    )
+    xticks =
+        round.(LinRange(minimum(plot_data.time), maximum(plot_data.time), 5), digits = 2)
+    config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
 
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
@@ -162,10 +192,17 @@ function plot_erp!(
 
     basic = basic * data(plot_data)
 
-    # add the p-values
+    # add significance values
     if !isnothing(significance)
-        basic =
-            basic + add_significance(plot_data, significance, config, significance_plotgeom)
+        basic = significance_context(
+            basic,
+            plot_data,
+            significance,
+            config,
+            sigifnicance_visual,
+            significance_lines,
+            significance_vspan,
+        )
     end
     plot_equation = basic * mapp
 
@@ -196,48 +233,104 @@ function plot_erp!(
     return f
 end
 
-function add_significance(plot_data, significance, config, significance_plotgeom)
-    p = deepcopy(significance)
+function significance_context(
+    basic,
+    plot_data,
+    significance,
+    config,
+    sigifnicance_visual,
+    significance_lines,
+    significance_vspan,
+)
+    valid_modes = (:lines, :vspan, :both)
+    if !(sigifnicance_visual in valid_modes)
+        error("Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes")
+    end
 
-    # for now, add them to the fixed effect
-    if "group" ∉ names(p)
-        # group not specified using first
+    # Compute shared context
+    y = plot_data[!, config.mapping.y]
+    ymin, ymax = minimum(y), maximum(y)
+    time_col = config.mapping.x
+    time_resolution = diff(plot_data[!, time_col][1:2])[1]
+
+    if sigifnicance_visual in (:lines, :both)
+        significance_lines = update_axis(
+            supportive_defaults(:erp_significance_l_default); significance_lines...,
+        )
+        basic += add_lines(
+            plot_data, significance, config, significance_lines;
+            ymin = ymin, ymax = ymax, time_resolution = time_resolution,
+        )
+    end
+
+    if sigifnicance_visual in (:vspan, :both)
+        significance_vspan = update_axis(
+            supportive_defaults(:erp_significance_v_default); significance_vspan...,
+        )
+        basic += add_vspan(
+            plot_data, significance, config, significance_vspan;
+            ymin = ymin, ymax = ymax, time_resolution = time_resolution,
+        )
+    end
+
+    return basic
+end
+
+function add_lines(plot_data, significance, config, significance_lines;
+    ymin, ymax, time_resolution)
+
+    signif_data = deepcopy(significance)
+
+    # Fallback group logic
+    if "group" ∉ names(signif_data)
         if "group" ∈ names(plot_data)
-            p[!, :group] .= plot_data[1, :group]
+            signif_data[!, :group] .= plot_data[1, :group]
             if length(unique(plot_data.group)) > 1
                 @warn "multiple groups found, choosing first one"
             end
         else
-            p[!, :group] .= 1
+            signif_data[!, :group] .= 1
         end
     end
+
+    # Significance index mapping
     if :color ∈ keys(config.mapping)
         c = config.mapping.color isa Pair ? config.mapping.color[1] : config.mapping.color
-        un = unique(p[!, c])
-        p[!, :signindex] .= [findfirst(un .== x) for x in p.coefname]
+        un = unique(signif_data[!, c])
+        signif_data[!, :signindex] .= [findfirst(un .== x) for x in signif_data.coefname]
     else
-        p[!, :signindex] .= 1
+        signif_data[!, :signindex] .= 1
     end
-    # define an index to dodge the lines vertically
 
-    scaleY = [minimum(plot_data.estimate), maximum(plot_data.estimate)]
-    stepY = scaleY[2] - scaleY[1] # gap between significance rectangles
-    posY = stepY * -0.05 + scaleY[1]
-    Δt = diff(plot_data.time[1:2])[1] # added length of significance polygone
+    erp_height = ymax - ymin
+    linewidth = significance_lines.linewidth * erp_height
+    stack_step = linewidth + significance_lines.gap
+    base_y = ymin - 0.05 * erp_height
 
-    if significance_plotgeom == :line
-        Δy = 0.01 # height of significance polygone
-    else
-        Δy = 0.5
-        stepY = stepY - 3
-    end
-    p[!, :segments] = [
+    signif_data[!, :segments] = [
         Makie.Rect(
-            Makie.Vec(x, posY + stepY * (Δy * (n - 1))),
-            Makie.Vec(y - x + Δt, 0.5 * Δy * stepY),
-        ) for (x, y, n) in zip(p.from, p.to, p.signindex)
+            Makie.Vec(from, base_y + stack_step * (n - 1)),
+            Makie.Vec(to - from + time_resolution, linewidth),
+        ) for
+        (from, to, n) in zip(signif_data.from, signif_data.to, signif_data.signindex)
     ]
 
-    res = data(p) * mapping(:segments) * visual(Poly, alpha = 0.5)
-    return (res)
+    return data(signif_data) * mapping(:segments) *
+           visual(Poly, alpha = significance_lines.alpha)
+end
+
+function add_vspan(plot_data, significance, config, significance_vspan;
+    ymin, ymax, time_resolution)
+
+    vspan_data = deepcopy(significance)
+
+    vspan_data[!, :vspan] = [
+        Makie.Rect(
+            Makie.Vec(from, ymin),
+            Makie.Vec(to - from + time_resolution, ymax - ymin),
+        ) for (from, to) in zip(significance.from, significance.to)
+    ]
+
+    return data(vspan_data) * mapping(:vspan) *
+           visual(Poly; alpha = significance_vspan.alpha)
 end
