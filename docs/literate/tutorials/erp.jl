@@ -64,7 +64,7 @@ plot_erp(
 # - `from` and `to`: the time interval to annotate (in seconds or samples)
 # - optionally `coefname`: to label and color different effects
 #
-# The display is controlled using `significance_mode`, with options:
+# The display is controlled using `sigifnicance_visual`, with options:
 # - `:lines` — draw horizontal bars below the ERP curve
 # - `:vspan` — draw vertical shaded spans over the time axis
 # - `:both` — show both
@@ -96,7 +96,7 @@ plot_erp(
 plot_erp(
     results;
     significance = significancevalues,
-    significance_mode = :both,
+    sigifnicance_visual = :both,
     significance_vspan = (; alpha = 0.2),
     significance_lines = (; gap = 0.05, alpha = 0.8),
     mapping = (; color = :coefname => "Conditions"),

@@ -49,7 +49,7 @@ end
 
 @testset "ERP plot: Array data with times vector" begin
     times = range(0, step = 100, length = size(dat, 2))
-    plot_erp(times, dat[1, :, 1], axis = (; xtickformat = "{:d}"))
+    plot_erp(times, dat[1, :, 1])
 end
 
 @testset "ERP plot: stderror error" begin
@@ -140,7 +140,7 @@ end
     plot_erp(
         results;
         :significance => significancevalues,
-        significance_mode = :lines,
+        sigifnicance_visual = :lines,
         significance_lines = (; height = 0.001, gap = 0.2),
     )
 end
@@ -149,7 +149,7 @@ end
     plot_erp(
         results;
         :significance => significancevalues,
-        significance_mode = :lines,
+        sigifnicance_visual = :lines,
         significance_lines = (; height = 0.00001, gap = 0.6),
     )
 end
@@ -162,7 +162,7 @@ end
             to = [0.2, 0.29, 0.4],
             coefname = ["(Intercept)", "condition: face", "continuous"], # if coefname not specified, line should be black
         ),
-        significance_mode = :both,
+        sigifnicance_visual = :both,
         significance_vspan = (; alpha = 0.1),
         significance_lines = (; height = 0.001, gap = 0.2),
     )
