@@ -38,13 +38,13 @@ Plot an ERP plot.
     For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
 - `sigifnicance_visual::Symbol = :vspan`\\
     How to display significance intervals. Options:\\
-    * `:vspan` – draw vertical shaded spans (default)\\
-    * `:lines` – draw horizontal bands below ERP lines\\
+    * `:vspan` – draw vertical shaded spans (default);\\
+    * `:lines` – draw horizontal bands below ERP lines;\\
     * `:both` – draw both.\\
 - `significance_lines::NamedTuple = (;)`\\
     Configure the appearance of significance lines:\\
-    * `linewidth` – thickness of each line (not working)\\
-    * `gap` – vertical space between stacked lines\\
+    * `linewidth` – thickness of each line (not working);\\
+    * `gap` – vertical space between stacked lines. Computed as `stack_step = linewidth + gap`;\\
     * `alpha` – transparency of the lines.\\
     Defaults: $(supportive_defaults(:erp_significance_l_default))
 - `significance_vspan::NamedTuple = (;)`\\
@@ -82,7 +82,7 @@ function plot_erp!(
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
         @warn "categorical_color and categorical_group have been deprecated.
-        To switch to categorical colors, please use `mapping(..., color = :mycolorcolum => nonnumeric)`.
+        To switch to categorical colors, please use `mapping(..., color = :mycolorcolumn => nonnumeric)`.
         `group` is now automatically cast to nonnumeric."
     end
     plot_data = deepcopy(plot_data)
@@ -304,8 +304,7 @@ function add_lines(plot_data, significance, config, significance_lines;
 
     erp_height = ymax - ymin
     linewidth = significance_lines.linewidth * erp_height
-    gap = significance_lines.gap
-    stack_step = linewidth + gap
+    stack_step = linewidth + significance_lines.gap
     base_y = ymin - 0.05 * erp_height
 
     signif_data[!, :segments] = [
