@@ -259,3 +259,32 @@ begin
         plot_erp(eff; mapping = (; col = :condition,), visual = (; color = :red))
     end
 end
+
+begin
+    @testset "ERP plot: legend positons right" begin
+        plot_erp(
+            results;
+            legend = (;
+                orientation = :horizontal,
+                titleposition = :left,
+                position = :right,
+            ),
+        )
+    end
+    @testset "ERP plot: legend positons bottom" begin
+        plot_erp(
+            results;
+            legend = (;
+                orientation = :horizontal,
+                titleposition = :left,
+                position = :bottom,
+            ),
+        )
+    end
+    @testset "ERP plot: legend positons bottom" begin
+        f = Figure()
+        ga = f[1, 1] = GridLayout()
+        plot_erp(results; legend = (; orientation = :horizontal, titleposition = :left))
+        f
+    end
+end
