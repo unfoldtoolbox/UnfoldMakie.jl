@@ -51,7 +51,7 @@ plot_erp(
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
-    layout = (; use_colorbar = false),
+    layout = (; use_colorbar = true),
     axis = (; xlabel = "Time [s]"),
 )
 
