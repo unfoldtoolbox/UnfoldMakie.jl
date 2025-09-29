@@ -47,7 +47,7 @@ plot_butterfly(plot_data::Union{<:AbstractDataFrame,AbstractMatrix}; kwargs...) 
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
 function plot_butterfly!(
-    f::Union{GridPosition,GridLayout,<:Figure},
+    f::Union{GridPosition,GridLayout,<:Figure,GridSubposition},
     plot_data::Union{<:AbstractDataFrame,AbstractMatrix};
     positions = nothing,
     labels = nothing,
@@ -67,6 +67,17 @@ function plot_butterfly!(
     end
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+    # --- AUTO XTICKS ---
+    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
+        xticks, xtickformat = auto_ticks(plot_data[:, config.mapping.x])
+        config.axis = merge(config.axis, (; xticks, xtickformat))
+    end
+
+    # --- AUTO YTICKS ---
+    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
+        yticks, ytickformat = auto_ticks(plot_data[:, config.mapping.y])
+        config.axis = merge(config.axis, (; yticks, ytickformat))
+    end
 
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
@@ -155,7 +166,8 @@ function plot_butterfly!(
             axis = config.axis,
         )
     end
-    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
+    #@debug drawing
+    apply_layout_settings!(config; fig = f_grid, ax = drawing, drawing = drawing)
     return f
 end
 
@@ -207,4 +219,19 @@ function eeg_head_matrix(positions, center, radius)
         0,
         1,
     )
+end
+
+
+# helper: compute 5 ticks spanning min..max, labels rounded to 2
+function auto_ticks(values; nticks = 5, digits = 2)
+    vals = Float64.(values)
+    vmin, vmax = extrema(vals)
+    # guard: avoid zero-span axis
+    if vmin == vmax
+        vmin -= 1e-6
+        vmax += 1e-6
+    end
+    tick_positions = collect(range(vmin, vmax; length = nticks))
+    tickformat = xs -> string.(round.(xs; digits = digits))
+    return (tick_positions, tickformat)
 end
