@@ -104,17 +104,18 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
-    yticks = round.(
-        LinRange(
-            minimum(plot_data[!, config.mapping.y]),
-            maximum(plot_data[!, config.mapping.y]),
-            5,
-        ),
-        digits = 2,
-    )
-    xticks =
-        round.(LinRange(minimum(plot_data.time), maximum(plot_data.time), 5), digits = 2)
-    config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
+    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
+        xticks, xtickformat = auto_ticks(plot_data[:, config.mapping.x])
+        config.axis = merge(config.axis, (; xticks, xtickformat))
+    end
+
+    # --- AUTO YTICKS ---
+    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
+        yticks, ytickformat = auto_ticks(plot_data[:, config.mapping.y])
+        config.axis = merge(config.axis, (; yticks, ytickformat))
+    end
+
+    #config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
 
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
@@ -207,13 +208,14 @@ function plot_erp!(
     plot_equation = basic * mapp
 
     f_grid = f[1, 1] = GridLayout()
+    main_area = f_grid[1, 1]
 
     # Draw the plot accordingly
     drawing = if is_categorical
-        draw!(f_grid, plot_equation; axis = config.axis)  # Categorical case
+        draw!(main_area, plot_equation; axis = config.axis)  # Categorical case
     else
         draw!(
-            f_grid,
+            main_area,
             plot_equation,
             scales(Color = (; colormap = config.visual.colormap));
             axis = config.axis,
@@ -223,7 +225,12 @@ function plot_erp!(
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true
-            legend!(f_grid[:, end+1], drawing; config.legend...)
+            if config.legend.position == :right
+                legend!(f_grid[:, end+1], drawing; config.legend...)
+            elseif config.legend.position == :bottom
+                legend!(f_grid[end+1, 1], drawing; config.legend...)
+                rowsize!(f_grid, nrows(f_grid), Auto(0.10))
+            end
         end
         if config.layout.use_colorbar == true
             colorbar!(f_grid[:, end+1], drawing; config.colorbar...)
@@ -244,7 +251,9 @@ function significance_context(
 )
     valid_modes = (:lines, :vspan, :both)
     if !(sigifnicance_visual in valid_modes)
-        error("Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes")
+        error(
+            "Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes",
+        )
     end
 
     # Compute shared context
