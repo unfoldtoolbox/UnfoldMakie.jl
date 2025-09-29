@@ -56,7 +56,6 @@ By using the !-version of the plotting function and inserting a grid position in
 
 f = Figure(size = (750, 500))
 with_theme(theme_ggthemr(:fresh)) do
-
     plot_erp!(f[1, 1], coeftable(uf_deconv); mapping = (; color = :coefname => "Conditions"))
     plot_erp!(
         f[1, 2],
@@ -134,7 +133,7 @@ f
 # <details>
 # <summary>Click to expand</summary>
 # ```
-function complex_figure3(topo_df, data, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
+function complex_figure3(topo_df, topo_array, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
     f = Figure(size = (1200, 1700))
     (ga, gc, ge, gg, gi) = (f[1, 1], f[2, 1], f[3, 1], f[4, 1], f[5:6, 1])
     (gb, gd, gf, gh, gj) = (f[1, 2], f[2, 2], f[3, 2], f[4, 2], f[5:6, 2])
