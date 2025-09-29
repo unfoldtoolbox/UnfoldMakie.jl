@@ -23,6 +23,34 @@ end
     plot_butterfly!(f[1, 1], mat; positions = pos)
 end
 
+@testset "butterfly: GridPosition for Matrix" begin
+    f = Figure()
+    (ga, gb) = (f[1, 1], f[1, 2])
+    plot_butterfly!(
+        gb,
+        mat;
+        positions = pos,
+        axis = (; backgroundcolor = colorant"#F4F3EF"),
+    )
+    f
+end
+
+@testset "butterfly: GridPosition for Matrix 2: mistery of partial background" begin
+    f = Figure()
+    (ga, gb) = (f[1, 1], f[1, 2])
+
+    plot_butterfly!(
+        gb,
+        df;
+        positions = pos,
+        #topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        axis = (; backgroundcolor = colorant"#F4F3EF",
+            xlabel = "Time [ms]", xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18,
+            yticklabelsize = 18),
+    )
+    f
+end
+
 @testset "butterfly: without topolegend" begin
     plot_butterfly(
         df;
@@ -31,6 +59,10 @@ end
         topolegend = false,
     )
     #save("dev/UnfoldMakie/basic_butterfly.png", f)
+end
+
+@testset "butterfly: xautolimitmargin" begin
+    plot_butterfly(df; positions = pos, axis = (; xautolimitmargin = (0.01, 0.01)))
 end
 
 @testset "butterfly: change of markersize" begin
