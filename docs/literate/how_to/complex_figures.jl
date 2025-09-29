@@ -20,7 +20,8 @@ using TopoPlots
 # **Data input**
 topo_df, positions = UnfoldMakie.example_data("TopoPlots.jl")
 topo_array, _ = TopoPlots.example_data()
-toposeries_df = UnfoldMakie.eeg_array_to_dataframe(data[:, :, 1], string.(1:length(positions)));
+toposeries_df = UnfoldMakie.eeg_array_to_dataframe(topo_array[:, :, 1], string.(1:length(positions)));
+channels_30 = UnfoldMakie.example_montage("channels_30");
 
 uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
 uf = UnfoldMakie.example_data("UnfoldLinearModel");
@@ -29,6 +30,19 @@ uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
 
 dat_e, evts, times = UnfoldMakie.example_data("sort_data")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
+
+m = UnfoldMakie.example_data("UnfoldLinearModel") 
+results = coeftable(m)
+results.coefname =
+    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
+results = filter(row -> row.coefname != "continuous", results)
+
+df_circ = DataFrame(
+    :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
+    :circular_variable => [0, 50, 80, 120, 180, 210],
+    :time => 100:40:300,
+)
+df_circ = flatten(df_circ, :estimate)
 
 # # Basic complex figure
 
@@ -120,21 +134,6 @@ f
 # <details>
 # <summary>Click to expand</summary>
 # ```
-
-channels_30 = UnfoldMakie.example_montage("channels_30");
-
-results = coeftable(m)
-results.coefname =
-    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-results = filter(row -> row.coefname != "continuous", results)
-
-df_circ = DataFrame(
-    :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
-    :circular_variable => [0, 50, 80, 120, 180, 210],
-    :time => 100:40:300,
-)
-df_circ = flatten(df_circ, :estimate)
-
 function complex_figure3(topo_df, data, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
     f = Figure(size = (1200, 1700))
     (ga, gc, ge, gg, gi) = (f[1, 1], f[2, 1], f[3, 1], f[4, 1], f[5:6, 1])
@@ -263,7 +262,6 @@ end
 # <details>
 # <summary>Click to expand</summary>
 # ```
-m = UnfoldMakie.example_data("UnfoldLinearModel") 
 results = coeftable(m)
 results.coefname =
     replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
@@ -271,8 +269,7 @@ results = filter(row -> row.coefname != "continuous", results)
 
 function complex_figure4(topo_df, topo_array, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
     f = Figure(size = (1800, 1000))
-    #= ga = f[1, 1] = GridLayout()
-    gb = f[1, 2] = GridLayout() =#
+
     (ga, gb, gc, gd) = (f[1, 1], f[1, 2], f[1, 3], f[1, 4])
     (ge, gf, gg, gh) = (f[2, 1], f[2, 2], f[2, 3], f[2, 4])
 
@@ -294,16 +291,6 @@ function complex_figure4(topo_df, topo_array, positions, toposeries_df, channels
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
-
-    # two columns: left = spacer, right = content
-
-   #=  gb[1, 2] = GridLayout()                # right subgrid to hold the plot
-    gb_right = gb[1, 2]
-
-    # set the spacer width (nudges butterfly to the right)
-    colsize!(gb, 1, Fixed(10))             # tune 40 -> 20/60/etc
-    colsize!(f.layout, 2, Auto(1.6))   # <-- wider   # TAKE THE REST
-    colgap!(gb, 0) =#
 
     plot_butterfly!(
         gb,
