@@ -26,23 +26,23 @@ channels_30 = UnfoldMakie.example_montage("channels_30");
 uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
 uf = UnfoldMakie.example_data("UnfoldLinearModel");
 results = coeftable(uf)
-uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel")
+uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel");
 
 dat_e, evts, times = UnfoldMakie.example_data("sort_data")
 d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
 
-m = UnfoldMakie.example_data("UnfoldLinearModel") 
-results = coeftable(m)
+m = UnfoldMakie.example_data("UnfoldLinearModel") ;
+results = coeftable(m);
 results.coefname =
-    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-results = filter(row -> row.coefname != "continuous", results)
+    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car");
+results = filter(row -> row.coefname != "continuous", results);
 
 df_circ = DataFrame(
-    :estimate => eachcol(Float64.(data[:, 100:40:300, 1])),
+    :estimate => eachcol(Float64.(topo_array[:, 100:40:300, 1])),
     :circular_variable => [0, 50, 80, 120, 180, 210],
     :time => 100:40:300,
-)
-df_circ = flatten(df_circ, :estimate)
+);
+df_circ = flatten(df_circ, :estimate);
 
 # # Basic complex figure
 
@@ -94,7 +94,7 @@ begin
 
     plot_designmatrix!(f[2, 3], designmatrix(uf))
 
-    plot_topoplot!(f[3, 1], data[:, 150, 1]; positions = positions)
+    plot_topoplot!(f[3, 1], topo_array[:, 150, 1]; positions = positions)
     plot_topoplotseries!(
         f[4, 1:3],
         topo_df;
@@ -216,7 +216,7 @@ function complex_figure3(topo_df, data, positions, toposeries_df, channels_30, r
     plot_circular_topoplots!(
         gi,
         df_circ;
-        positions = pos,
+        positions = positions,
         center_label = "Time [s]",
         predictor = :time,
         topo_attributes = (; label_scatter = false,),
@@ -295,7 +295,7 @@ function complex_figure4(topo_df, topo_array, positions, toposeries_df, channels
     plot_butterfly!(
         gb,
         topo_df;
-        positions = pos,
+        positions = positions,
         topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
         axis = (; backgroundcolor = colorant"#F4F3EF",
             xlabel = "Time [ms]", xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18,
@@ -369,7 +369,7 @@ function complex_figure4(topo_df, topo_array, positions, toposeries_df, channels
     plot_circular_topoplots!(
         gg,
         df_circ;
-        positions = pos,
+        positions = positions,
         center_label = "Time [ms]",
         predictor = :time,
         topo_attributes = (; label_scatter = false, contours = false),
@@ -392,7 +392,7 @@ function complex_figure4(topo_df, topo_array, positions, toposeries_df, channels
         ),
         colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
     )
-    #colgap!(f.layout, 0)     
+  
     for (label, layout) in
         zip(
         ["A", "B", "C", "D", "E", "F", "G", "H"],
@@ -407,10 +407,6 @@ function complex_figure4(topo_df, topo_array, positions, toposeries_df, channels
             halign = :right,
         )
     end
-#=     w = 350  # pick a number you like
-    for i in 1:4
-        col size!(f.layout, i, Fixed(w))
-    end=#
     f
 end
 # ```@raw html
