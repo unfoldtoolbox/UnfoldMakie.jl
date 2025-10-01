@@ -4,11 +4,17 @@ on:
   push:
     branches: [main]
     tags: ["*"]
+    paths-ignore:
+          - 'docs/**'
+          - '**/*.md'
   pull_request:
     # run on any PR change (new commits, reopen, etc.)
     types: [opened, synchronize, reopened, ready_for_review]
     # choose which base branches should trigger
     branches: ["main"]   # or ["**"] to allow any base
+    paths-ignore:
+          - 'docs/**'
+          - '**/*.md'
   workflow_dispatch:
 
 jobs:
