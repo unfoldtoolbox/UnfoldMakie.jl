@@ -252,7 +252,7 @@ end
 # </details >
 # ```
 with_theme(Theme(; backgroundcolor = colorant"#F4F3EF")) do
-    complex_figure3(topo_df, data, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
+    complex_figure3(topo_df, topo_array, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
 end
 
 # # Complex figure in four columns and with background color
