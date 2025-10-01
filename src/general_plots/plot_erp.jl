@@ -208,14 +208,13 @@ function plot_erp!(
     plot_equation = basic * mapp
 
     f_grid = f[1, 1] = GridLayout()
-    main_area = f_grid[1, 1]
 
     # Draw the plot accordingly
     drawing = if is_categorical
-        draw!(main_area, plot_equation; axis = config.axis)  # Categorical case
+        draw!(f_grid, plot_equation; axis = config.axis)  # Categorical case
     else
         draw!(
-            main_area,
+            f_grid,
             plot_equation,
             scales(Color = (; colormap = config.visual.colormap));
             axis = config.axis,
@@ -251,9 +250,7 @@ function significance_context(
 )
     valid_modes = (:lines, :vspan, :both)
     if !(sigifnicance_visual in valid_modes)
-        error(
-            "Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes",
-        )
+        error("Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes")
     end
 
     # Compute shared context
