@@ -11,7 +11,6 @@ using UnfoldMakie
 using DataFrames
 using CairoMakie
 using TopoPlots
-import UnfoldSim
 
 # **Data loading**
 
@@ -31,7 +30,6 @@ dat, positions = TopoPlots.example_data();
 df = DataFrame(:estimate => dat[:, 340, 1])
 plot_topoplot(
     df;
-    labels,
     positions = positions,
     axis = (; xlabel = "Time [340 ms]"),
     colorbar = (; height = 350),
