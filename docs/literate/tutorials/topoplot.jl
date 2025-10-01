@@ -11,6 +11,7 @@ using UnfoldMakie
 using DataFrames
 using CairoMakie
 using TopoPlots
+import UnfoldSim
 
 # **Data loading**
 
@@ -30,8 +31,9 @@ dat, positions = TopoPlots.example_data();
 df = DataFrame(:estimate => dat[:, 340, 1])
 plot_topoplot(
     df;
+    labels,
     positions = positions,
-    axis = (; xlabel = "340 ms"),
+    axis = (; xlabel = "Time [340 ms]"),
     colorbar = (; height = 350),
 )
 
@@ -96,7 +98,7 @@ begin
             ),
         ),
         labels = labs4,
-        axis = (; xlabel = "340 ms", title = "Markers with channel labels"),
+        axis = (; xlabel = "Time [340 ms]", title = "Markers with channel labels"),
         mapping = (; labels = labs4),
         colorbar = (; height = 100),
     )
@@ -104,7 +106,7 @@ begin
 end
 
 # # Highlighting channels
-plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "340 ms"))
+plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "Time [340 ms]"))
 
 
 # # Horizontal colorbars
@@ -112,7 +114,7 @@ plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2], axis = (; xlabel = "
 plot_topoplot(
     dat[:, 50, 1];
     positions,
-    axis = (; xlabel = "50 ms"),
+    axis = (; xlabel = "Time [50 ms]"),
     colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
 )
 
@@ -126,7 +128,7 @@ random_rotations = rand(64) .* 2π
 plot_topoplot(
     dat[:, 50, 1];
     positions,
-    axis = (; xlabel = "50 ms"),
+    axis = (; xlabel = "Time [50 ms]"),
     topo_attributes = (;
         label_scatter = (;
             markersize = 20,
@@ -141,7 +143,7 @@ plot_topoplot(
 plot_topoplot(
     dat[:, 50, 1];
     positions,
-    axis = (; xlabel = "50 ms"),
+    axis = (; xlabel = "Time [50 ms]"),
     topo_attributes = (;
         label_scatter = (; markersize = random_rotations, marker = :circle, color = :black)
     ),

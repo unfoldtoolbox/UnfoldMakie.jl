@@ -4,14 +4,7 @@ CurrentModule = UnfoldMakie
 # UnfoldMakie.jl Documentation
 Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a Julia package for visualizations of EEG/ERP data and Unfold.jl models.
 
-[Watch on YouTube](https://youtu.be/UOxVfOeS_Do)
-
-```@raw html
-<div style="width:60%; margin: auto;">
-
-<img src="https://github.com/unfoldtoolbox/UnfoldMakie.jl/raw/main/docs/build/assets/UM_plots.gif"/>
-</div>
-```
+[![Watch the overview video](https://img.youtube.com/vi/UOxVfOeS_Do/hqdefault.jpg)](https://www.youtube.com/watch?v=UOxVfOeS_Do)
 
 ## Key features 
 - 🎯 **Focused**: Specialized for (r)ERP visualization.
