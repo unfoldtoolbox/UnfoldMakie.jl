@@ -6,15 +6,15 @@ using UnfoldSim
 using Unfold
 using MakieThemes
 using TopoPlots;</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Precompiling UnfoldMakieUnfoldSimExt...
-   4023.8 ms  ? Unfold
-    633.9 ms  ? Unfold → UnfoldBSplineKitExt
-   7179.5 ms  ? UnfoldMakie
+   4148.1 ms  ? Unfold
+    648.5 ms  ? Unfold → UnfoldBSplineKitExt
+   7438.6 ms  ? UnfoldMakie
 Info Given UnfoldMakieUnfoldSimExt was explicitly requested, output will be shown live 
-┌ Warning: Module UnfoldMakie with build ID ffffffff-ffff-ffff-4fab-dd3cb0bb0911 is missing from the cache.
+┌ Warning: Module UnfoldMakie with build ID ffffffff-ffff-ffff-c100-d9f85604067f is missing from the cache.
 │ This may mean UnfoldMakie [69a5ce3b-64fb-4f22-ae69-36dd4416af2a] does not support precompilation but is imported by a module that does.
 └ @ Base loading.jl:2541
-   7190.3 ms  ? UnfoldMakie → UnfoldMakieUnfoldSimExt
-┌ Warning: Module UnfoldMakie with build ID ffffffff-ffff-ffff-4fab-dd3cb0bb0911 is missing from the cache.
+   7471.3 ms  ? UnfoldMakie → UnfoldMakieUnfoldSimExt
+┌ Warning: Module UnfoldMakie with build ID ffffffff-ffff-ffff-c100-d9f85604067f is missing from the cache.
 │ This may mean UnfoldMakie [69a5ce3b-64fb-4f22-ae69-36dd4416af2a] does not support precompilation but is imported by a module that does.
 └ @ Base loading.jl:2541</code></pre><p><strong>Data input</strong></p><details>
 <summary>Click to expand</summary><pre><code class="language-julia hljs">topo_df, positions = UnfoldMakie.example_data(&quot;TopoPlots.jl&quot;)
@@ -213,7 +213,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
     f
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">complex_figure3 (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">with_theme(Theme(; backgroundcolor = colorant&quot;#F4F3EF&quot;)) do
     complex_figure3(topo_df, topo_array, positions, toposeries_df, channels_30, results, df_circ, dat_e, evts, times)
-end</code></pre><img src="e7aa9155.png" alt="Example block output"/><h1 id="Complex-figure-in-four-columns-and-with-background-color"><a class="docs-heading-anchor" href="#Complex-figure-in-four-columns-and-with-background-color">Complex figure in four columns and with background color</a><a id="Complex-figure-in-four-columns-and-with-background-color-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-four-columns-and-with-background-color" title="Permalink"></a></h1><details>
+end</code></pre><img src="486bc322.png" alt="Example block output"/><h1 id="Complex-figure-in-four-columns-and-with-background-color"><a class="docs-heading-anchor" href="#Complex-figure-in-four-columns-and-with-background-color">Complex figure in four columns and with background color</a><a id="Complex-figure-in-four-columns-and-with-background-color-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-four-columns-and-with-background-color" title="Permalink"></a></h1><details>
 <summary>Click to expand</summary><pre><code class="language-julia hljs">results = coeftable(m)
 results.coefname =
     replace(results.coefname, &quot;condition: face&quot; =&gt; &quot;face&quot;, &quot;(Intercept)&quot; =&gt; &quot;car&quot;)
@@ -365,4 +365,4 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
 end
 
 
-#save(&quot;complex_figure4.png&quot;, f)</code></pre><img src="19a63944.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/splines/">« Spline plot</a><a class="docs-footer-nextpage" href="../customize_labels/">Customize channel labels »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Tuesday 7 October 2025 15:48">Tuesday 7 October 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+#save(&quot;complex_figure4.png&quot;, f)</code></pre><img src="99395492.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/splines/">« Spline plot</a><a class="docs-footer-nextpage" href="../customize_labels/">Customize channel labels »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Tuesday 7 October 2025 16:37">Tuesday 7 October 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
