@@ -31,6 +31,9 @@ Plot an ERP plot.
     Enable or disable legend.\\
 - `layout.show_legend = true`\\
     Enable or disable legend and colorbar.\\
+- `tick_formatter::Function = default_ticks`\\
+    Function used to compute automatic tick positions and labels for both axes.\\
+    Example: `tick_formatter = v -> default_ticks(v; nticks = 6)`.
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
     F.e. `mapping = (; col = :group)` will make a column for each group.
@@ -78,6 +81,7 @@ function plot_erp!(
     significance_lines = (;),
     significance_vspan = (;),
     mapping = (;),
+    tick_formatter = default_ticks,
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
@@ -105,13 +109,13 @@ function plot_erp!(
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
     if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
-        xticks, xtickformat = auto_ticks(plot_data[:, config.mapping.x])
+        xticks, xtickformat = tick_formatter(plot_data[:, config.mapping.x])
         config.axis = merge(config.axis, (; xticks, xtickformat))
     end
 
     # --- AUTO YTICKS ---
     if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
-        yticks, ytickformat = auto_ticks(plot_data[:, config.mapping.y])
+        yticks, ytickformat = tick_formatter(plot_data[:, config.mapping.y])
         config.axis = merge(config.axis, (; yticks, ytickformat))
     end
 

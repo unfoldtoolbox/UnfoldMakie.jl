@@ -222,3 +222,7 @@ end =#
         topo_attributes = (; label_text = true, label_scatter = (; markersize = 10)),
     )
 end
+
+@testset "butterfly: default_ticks usage" begin
+    plot_butterfly(df; positions = pos, tick_formatter = x -> UnfoldMakie.default_ticks(x; nticks = 6))
+end
