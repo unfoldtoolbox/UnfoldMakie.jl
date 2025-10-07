@@ -70,7 +70,7 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
     elseif cfg_symb == :labels_grid_default
         return (; color = :gray, fontsize = 12, align = (:left, :top), space = :relative)
     elseif cfg_symb == :indicator_grid_default
-        return (; fontsize = 12,
+        return (;
             xlim = [-0.04, 1], ylim = [-0.04, 1],
             arrows_start = [Point2f(0), Point2f(0)], # Define the starting points for arrows (origin at (0, 0) for both directions)
             arrows_dir = [Vec2f(0, 0.1), Vec2f(0.1, 0)], # Define the direction vectors for the arrows (one pointing right and the other pointing up)
