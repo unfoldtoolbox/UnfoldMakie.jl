@@ -1,8 +1,8 @@
 # # [ERP plot](@id erp_vis)
 
-# **ERP plot** is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/). 
-# It can fully represent time and experimental condition dimensions using lines.
-
+# **ERP plot** is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/) nad also regression-ERPs. 
+# It can fully represent such data features as time and experimental conditions using lines.
+# Its key feature is the ability to display not only the ERPs themselves but also how they vary as a function of categorical or continuous predictors.
 # # Setup
 # **Package loading**
 
@@ -16,23 +16,23 @@ using UnfoldSim
 # **Data generation**
 
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
-data, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-data = reshape(data, (1, size(data)...))
+erp_df, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+erp_df = reshape(erp_df, (1, size(erp_df)...))
 f = @formula 0 ~ 1 + condition + continuous
 se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true);
 
 m = fit(
     UnfoldModel,
-    Dict(Any => (f, range(0, step = 1 / 100, length = size(data, 2)))),
+    Dict(Any => (f, range(0, step = 1 / 100, length = size(erp_df, 2)))),
     evts,
-    data,
+    erp_df,
     solver = se_solver,
 );
 results = coeftable(m)
-res_effects = effects(Dict(:continuous => -5:0.5:5), m);
+res_effects = effects(Dict(:continuous => -5:0.5:5), m); 
 
 # ## Figure plotting
-# This is default figure:
+# This is default figure. It shows ERP (here "Intercept"), ERP when condition is "face", and the ERP corresponding to a specific value of a continuous predictor.
 plot_erp(results)
 
 # To change legend title use `mapping.color`:
@@ -46,7 +46,7 @@ plot_erp(
 
 # ## Effect plot
 
-# Effect plot shows how ERP voltage is affected by variation of some variable (here: `:contionous`).
+# Effect plot shows how ERP is affected by variation of some variable (here: `:contionous`).
 
 plot_erp(
     res_effects;
@@ -162,8 +162,9 @@ m7 = UnfoldMakie.example_data("7channels")
 results7 = coeftable(m7)
 plot_erp(
     results7,
-    mapping = (; col = :channel, group = :channel, color = :coefname => "Conditions"),
+    mapping = (; row = :coefname, col = :channel, color = :channel),
     axis = (; xlabel = "Time [s]"),
+    tick_formatter = tick_formatter = x -> UnfoldMakie.default_ticks(x; nticks = 3)
 )
 
 # # Configurations of ERP plot
