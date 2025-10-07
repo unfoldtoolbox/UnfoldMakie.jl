@@ -65,7 +65,6 @@ fmt(ticks)
 # → ["0.0", "20.0", "40.0", "60.0", "80.0", "100.0"]
 """
 function default_ticks(values; nticks = 5, digits = 2)
-    @debug nticks
     vals = Float64.(values)
     vmin, vmax = extrema(vals)
     # guard: avoid zero-span axis
