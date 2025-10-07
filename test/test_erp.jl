@@ -288,3 +288,7 @@ begin
         f
     end
 end
+
+@testset "ERP plot: default_ticks usage" begin
+    plot_erp(results; tick_formatter = x -> UnfoldMakie.default_ticks(x; nticks = 6))
+end

@@ -22,6 +22,9 @@ Plot a Butterfly plot.
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
+- `tick_formatter::Function = default_ticks`\\
+    Function used to compute automatic tick positions and labels for both axes.\\
+    Example: `tick_formatter = v -> default_ticks(v; nticks = 6)`.
 - `topolegend::Bool = true`\\
     Show an inlay topoplot with corresponding electrodes. Requires `positions`.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
@@ -56,6 +59,7 @@ function plot_butterfly!(
     topo_axis = (;),
     topo_attributes = (;),
     mapping = (;),
+    tick_formatter = default_ticks,
     kwargs...,
 )
     config = PlotConfig(:butterfly)
@@ -69,13 +73,13 @@ function plot_butterfly!(
     config.mapping = resolve_mappings(plot_data, config.mapping)
     # --- AUTO XTICKS ---
     if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
-        xticks, xtickformat = auto_ticks(plot_data[:, config.mapping.x])
+        xticks, xtickformat = tick_formatter(plot_data[:, config.mapping.x])
         config.axis = merge(config.axis, (; xticks, xtickformat))
     end
 
     # --- AUTO YTICKS ---
     if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
-        yticks, ytickformat = auto_ticks(plot_data[:, config.mapping.y])
+        yticks, ytickformat = tick_formatter(plot_data[:, config.mapping.y])
         config.axis = merge(config.axis, (; yticks, ytickformat))
     end
 
@@ -166,7 +170,6 @@ function plot_butterfly!(
             axis = config.axis,
         )
     end
-    #@debug drawing
     apply_layout_settings!(config; fig = f_grid, ax = drawing, drawing = drawing)
     return f
 end
@@ -219,19 +222,4 @@ function eeg_head_matrix(positions, center, radius)
         0,
         1,
     )
-end
-
-
-# helper: compute 5 ticks spanning min..max, labels rounded to 2
-function auto_ticks(values; nticks = 5, digits = 2)
-    vals = Float64.(values)
-    vmin, vmax = extrema(vals)
-    # guard: avoid zero-span axis
-    if vmin == vmax
-        vmin -= 1e-6
-        vmax += 1e-6
-    end
-    tick_positions = collect(range(vmin, vmax; length = nticks))
-    tickformat = xs -> string.(round.(xs; digits = digits))
-    return (tick_positions, tickformat)
 end
