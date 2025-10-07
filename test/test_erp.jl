@@ -180,7 +180,6 @@ end
         axis = (title = "Bad example", titlegap = 12),
         mapping = (; color = :coefname => "Conditions"),
     )
-    f
 end
 
 @testset "ERP plot: Facet sorting" begin
@@ -208,7 +207,6 @@ end
     )
     f
 end
-
 
 @testset "ERP plot: colors and lines in cycled theme" begin
     with_theme(
