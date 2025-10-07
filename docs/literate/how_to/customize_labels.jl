@@ -18,4 +18,4 @@ with_theme(Theme(; fontsize = 25, fonts = (; regular = "Ubuntu Mono"))) do
     )
 end
 
-# # But also check that the font you choose is available on your PC or GitHub.
+# But also check that the font you choose is available on your PC or GitHub.

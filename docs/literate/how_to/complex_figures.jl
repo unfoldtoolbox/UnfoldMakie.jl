@@ -8,16 +8,19 @@ This section discusses how users can incorporate multiple plots into a single fi
 # # Setup
 # **Library load**
 
-using UnfoldMakie
+using UnfoldMakie;
 using CairoMakie
 using DataFramesMeta
 using UnfoldSim
 using Unfold
 using MakieThemes
-using TopoPlots
-
+using TopoPlots;
 
 # **Data input**
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 topo_df, positions = UnfoldMakie.example_data("TopoPlots.jl")
 topo_array, _ = TopoPlots.example_data()
 toposeries_df = UnfoldMakie.eeg_array_to_dataframe(topo_array[:, :, 1], string.(1:length(positions)));
@@ -43,7 +46,9 @@ df_circ = DataFrame(
     :time => 100:40:300,
 );
 df_circ = flatten(df_circ, :estimate);
-
+# ```@raw html
+# </details >
+# ```
 # # Basic complex figure
 
 #=
