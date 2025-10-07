@@ -3,6 +3,7 @@ CurrentModule = UnfoldMakie
 ```
 # UnfoldMakie.jl Documentation
 Welcome to [UnfoldMakie.jl](https://github.com/unfoldtoolbox/UnfoldMakie.jl): a Julia package for visualizations of EEG/ERP data and Unfold.jl models.
+Check this YouTube video for overview:
 
 [![Watch the overview video](https://img.youtube.com/vi/UOxVfOeS_Do/hqdefault.jpg)](https://www.youtube.com/watch?v=UOxVfOeS_Do)
 
@@ -28,10 +29,10 @@ Start with ERP plot and topopplot series.
 ```@example erp
 using UnfoldMakie, CairoMakie, Unfold
 results = Unfold.coeftable(UnfoldMakie.example_data("UnfoldLinearModel"))
-f = Figure(size=(550, 300))
+f = Figure(size=(500, 350))
 plot_erp!(f,
     results,
-    mapping = (; col = :coefname, color = :coefname => "Conditions"),
+    mapping = (; row = :coefname, color = :coefname => "Conditions"),
     axis = (; xlabel = "Time [s]"),
     stderror = true,
 )
