@@ -31,6 +31,9 @@ Plot an ERP plot.
     Enable or disable legend.\\
 - `layout.show_legend = true`\\
     Enable or disable legend and colorbar.\\
+- `tick_formatter::Function = default_ticks`\\
+    Function used to compute automatic tick positions and labels for both axes.\\
+    Example: `tick_formatter = v -> default_ticks(v; nticks = 6)`.
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
     F.e. `mapping = (; col = :group)` will make a column for each group.
@@ -78,6 +81,7 @@ function plot_erp!(
     significance_lines = (;),
     significance_vspan = (;),
     mapping = (;),
+    tick_formatter = default_ticks,
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
@@ -104,17 +108,18 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
-    yticks = round.(
-        LinRange(
-            minimum(plot_data[!, config.mapping.y]),
-            maximum(plot_data[!, config.mapping.y]),
-            5,
-        ),
-        digits = 2,
-    )
-    xticks =
-        round.(LinRange(minimum(plot_data.time), maximum(plot_data.time), 5), digits = 2)
-    config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
+    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
+        xticks, xtickformat = tick_formatter(plot_data[:, config.mapping.x])
+        config.axis = merge(config.axis, (; xticks, xtickformat))
+    end
+
+    # --- AUTO YTICKS ---
+    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
+        yticks, ytickformat = tick_formatter(plot_data[:, config.mapping.y])
+        config.axis = merge(config.axis, (; yticks, ytickformat))
+    end
+
+    #config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
 
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
@@ -223,7 +228,12 @@ function plot_erp!(
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true
-            legend!(f_grid[:, end+1], drawing; config.legend...)
+            if config.legend.position == :right
+                legend!(f_grid[:, end+1], drawing; config.legend...)
+            elseif config.legend.position == :bottom
+                legend!(f_grid[end+1, 1], drawing; config.legend...)
+                rowsize!(f_grid, nrows(f_grid), Auto(0.10))
+            end
         end
         if config.layout.use_colorbar == true
             colorbar!(f_grid[:, end+1], drawing; config.colorbar...)

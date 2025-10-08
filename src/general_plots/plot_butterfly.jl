@@ -22,6 +22,9 @@ Plot a Butterfly plot.
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
+- `tick_formatter::Function = default_ticks`\\
+    Function used to compute automatic tick positions and labels for both axes.\\
+    Example: `tick_formatter = v -> default_ticks(v; nticks = 6)`.
 - `topolegend::Bool = true`\\
     Show an inlay topoplot with corresponding electrodes. Requires `positions`.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
@@ -47,7 +50,7 @@ plot_butterfly(plot_data::Union{<:AbstractDataFrame,AbstractMatrix}; kwargs...) 
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
 function plot_butterfly!(
-    f::Union{GridPosition,GridLayout,<:Figure},
+    f::Union{GridPosition,GridLayout,<:Figure,GridSubposition},
     plot_data::Union{<:AbstractDataFrame,AbstractMatrix};
     positions = nothing,
     labels = nothing,
@@ -56,6 +59,7 @@ function plot_butterfly!(
     topo_axis = (;),
     topo_attributes = (;),
     mapping = (;),
+    tick_formatter = default_ticks,
     kwargs...,
 )
     config = PlotConfig(:butterfly)
@@ -67,6 +71,17 @@ function plot_butterfly!(
     end
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+    # --- AUTO XTICKS ---
+    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
+        xticks, xtickformat = tick_formatter(plot_data[:, config.mapping.x])
+        config.axis = merge(config.axis, (; xticks, xtickformat))
+    end
+
+    # --- AUTO YTICKS ---
+    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
+        yticks, ytickformat = tick_formatter(plot_data[:, config.mapping.y])
+        config.axis = merge(config.axis, (; yticks, ytickformat))
+    end
 
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
@@ -155,7 +170,7 @@ function plot_butterfly!(
             axis = config.axis,
         )
     end
-    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
+    apply_layout_settings!(config; fig = f_grid, ax = drawing, drawing = drawing)
     return f
 end
 
