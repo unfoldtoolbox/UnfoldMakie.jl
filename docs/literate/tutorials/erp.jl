@@ -1,6 +1,6 @@
 # # [ERP plot](@id erp_vis)
 
-# **ERP plot** is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/) nad also regression-ERPs. 
+# **ERP plot** is plot type for visualisation of [Event-related potentials](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3016705/) and also regression-ERPs. 
 # It can fully represent such data features as time and experimental conditions using lines.
 # Its key feature is the ability to display not only the ERPs themselves but also how they vary as a function of categorical or continuous predictors.
 # # Setup
