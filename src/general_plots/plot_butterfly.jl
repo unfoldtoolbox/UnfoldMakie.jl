@@ -170,7 +170,7 @@ function plot_butterfly!(
             axis = config.axis,
         )
     end
-    apply_layout_settings!(config; fig = f_grid, ax = drawing, drawing = drawing)
+    apply_layout_settings!(config; fig = f, ax = drawing, drawing = drawing)
     return f
 end
 

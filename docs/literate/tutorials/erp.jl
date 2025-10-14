@@ -16,16 +16,16 @@ using UnfoldSim
 # **Data generation**
 
 # Let's generate some data. We'll fit a model with a 2 level categorical predictor and a continuous predictor with interaction.
-erp_df, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
-erp_df = reshape(erp_df, (1, size(erp_df)...))
+erp_matrix, evts = UnfoldSim.predef_eeg(; noiselevel = 12, return_epoched = true)
+erp_matrix = reshape(erp_matrix, (1, size(erp_matrix)...))
 f = @formula 0 ~ 1 + condition + continuous
 se_solver = (x, y) -> Unfold.solver_default(x, y, stderror = true);
 
 m = fit(
     UnfoldModel,
-    Dict(Any => (f, range(0, step = 1 / 100, length = size(erp_df, 2)))),
+    Dict(Any => (f, range(0, step = 1 / 100, length = size(erp_matrix, 2)))),
     evts,
-    erp_df,
+    erp_matrix,
     solver = se_solver,
 );
 results = coeftable(m)
