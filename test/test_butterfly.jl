@@ -223,6 +223,12 @@ end =#
     )
 end
 
-@testset "butterfly: default_ticks usage" begin
-    plot_butterfly(df; positions = pos, tick_formatter = x -> UnfoldMakie.default_ticks(x; nticks = 6))
+@testset "butterfly: nticks for x and y" begin
+    plot_butterfly(df; positions=pos, nticks=6)                  # both axes 6
+    plot_butterfly(df; positions=pos, nticks=(5, 7))             # x=5, y=7
+    plot_butterfly(df; positions=pos, nticks=(x=5, y=7))         # explicit
+end
+
+@testset "butterfly: xtickformat usage" begin
+    plot_butterfly(df; positions = pos, axis = (; xtickformat = "{:.2f}ms"))
 end

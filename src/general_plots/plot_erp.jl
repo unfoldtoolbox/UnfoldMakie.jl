@@ -19,6 +19,9 @@ Plot an ERP plot.
 
 ## Keyword arguments (kwargs)
 
+- `nticks::Union{Int,Tuple{Int,Int}, NamedTuple{(:x,:y),Tuple{Int,Int}}}` = 5\\
+    Set the number of tick positions (x,y). Acepts 3 types fo arguments: 6 (=both axes are 6), (5,7), or (x=5, y=7). 
+    Controls positions only (use xtickformat/ytickformat for labels).
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `significance::DataFrame = nothing`\\
@@ -81,7 +84,7 @@ function plot_erp!(
     significance_lines = (;),
     significance_vspan = (;),
     mapping = (;),
-    tick_formatter = default_ticks,
+    nticks = (; x=5, y=5),
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
@@ -108,18 +111,15 @@ function plot_erp!(
         config.mapping,
         keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
     )
+    nt = _normalize_nticks(nticks)  # (x::Union{Int,Nothing}, y::Union{Int,Nothing})
     if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
-        xticks, xtickformat = tick_formatter(plot_data[:, config.mapping.x])
-        config.axis = merge(config.axis, (; xticks, xtickformat))
+        xticks_auto = default_tick_positions(plot_data[:, config.mapping.x]; nticks = nt.x)
+        config.axis = merge(config.axis, (; xticks = xticks_auto))
     end
-
-    # --- AUTO YTICKS ---
     if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
-        yticks, ytickformat = tick_formatter(plot_data[:, config.mapping.y])
-        config.axis = merge(config.axis, (; yticks, ytickformat))
+        yticks_auto = default_tick_positions(plot_data[:, config.mapping.y]; nticks = nt.y)
+        config.axis = merge(config.axis, (; yticks = yticks_auto))
     end
-
-    #config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
 
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)

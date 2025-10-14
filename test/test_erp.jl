@@ -268,6 +268,12 @@ begin
     end
 end
 
-@testset "ERP plot: default_ticks usage" begin
-    plot_erp(results; tick_formatter = x -> UnfoldMakie.default_ticks(x; nticks = 6))
+@testset "erp: nticks for x and y" begin
+    plot_erp(results; nticks = 6)                   # both axes 6
+    plot_erp(results; nticks = (5, 7))              # x=5, y=7
+    plot_erp(results; nticks = (x=5, y=7))          # explicit
+end
+
+@testset "erp: xtickformat usage" begin
+    plot_erp(results; axis = (; xtickformat = "{:.2f}ms"))
 end

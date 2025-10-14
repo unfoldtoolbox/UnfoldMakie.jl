@@ -95,8 +95,9 @@ end
     f = Figure()
     plot_erpgrid!(f[1, 1], dat, pos;
         indicator_grid_axis = (;
-            text_x_kwargs = (; text = "s"),
-            text_y_kwargs = (; text = "µV"),
+            text_x_kwargs = (; text = "s", fontsize = 20),
+            text_y_kwargs = (; text = "µV", fontsize = 20),
+            ylim = [-0.05, 1],
         ))
     f
 end
