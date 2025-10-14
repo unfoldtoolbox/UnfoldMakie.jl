@@ -85,7 +85,6 @@ function plot_circular_topoplots!(
     end
 
     ax = Axis(f[1, 1]; config.axis...)
-
     hidedecorations!(ax)
     hidespines!(ax)
 
