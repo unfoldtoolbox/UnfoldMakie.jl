@@ -22,6 +22,9 @@ Plot a Butterfly plot.
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
+- `nticks::Union{Int,Tuple{Int,Int}, NamedTuple{(:x,:y),Tuple{Int,Int}}}` = 5\\
+    Set the number of tick positions (x,y). Acepts 3 types fo arguments: 6 (=both axes are 6), (5,7), or (x=5, y=7). 
+    Controls positions only (use xtickformat/ytickformat for labels).
 - `topolegend::Bool = true`\\
     Show an inlay topoplot with corresponding electrodes. Requires `positions`.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
@@ -47,7 +50,7 @@ plot_butterfly(plot_data::Union{<:AbstractDataFrame,AbstractMatrix}; kwargs...) 
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
 function plot_butterfly!(
-    f::Union{GridPosition,GridLayout,<:Figure},
+    f::Union{GridPosition,GridLayout,<:Figure,GridSubposition},
     plot_data::Union{<:AbstractDataFrame,AbstractMatrix};
     positions = nothing,
     labels = nothing,
@@ -56,6 +59,7 @@ function plot_butterfly!(
     topo_axis = (;),
     topo_attributes = (;),
     mapping = (;),
+    nticks = (; x=5, y=5),
     kwargs...,
 )
     config = PlotConfig(:butterfly)
@@ -67,6 +71,16 @@ function plot_butterfly!(
     end
     # resolve columns with data
     config.mapping = resolve_mappings(plot_data, config.mapping)
+
+    nt = _normalize_nticks(nticks)  # (x::Union{Int,Nothing}, y::Union{Int,Nothing})
+    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
+        xticks_auto = default_tick_positions(plot_data[:, config.mapping.x]; nticks = nt.x)
+        config.axis = merge(config.axis, (; xticks = xticks_auto))
+    end
+    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
+        yticks_auto = default_tick_positions(plot_data[:, config.mapping.y]; nticks = nt.y)
+        config.axis = merge(config.axis, (; yticks = yticks_auto))
+    end
 
     #remove mapping values with `nothing`
     deleteKeys(nt::NamedTuple{names}, keys) where {names} =
