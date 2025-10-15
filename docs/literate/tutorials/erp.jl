@@ -164,7 +164,7 @@ plot_erp(
     results7,
     mapping = (; row = :coefname, col = :channel, color = :channel),
     axis = (; xlabel = "Time [s]"),
-    tick_formatter = tick_formatter = x -> UnfoldMakie.default_ticks(x; nticks = 3)
+    nticks = (3, 4),
 )
 
 # # Configurations of ERP plot
