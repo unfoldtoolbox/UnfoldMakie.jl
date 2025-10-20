@@ -46,7 +46,7 @@ plot_erp(
 
 # ## Effect plot
 
-# Effect plot shows how ERP is affected by variation of some variable (here: `:contionous`).
+# Effect plot shows how the ERP is affected by variation of some variable (here: `:continuous`).
 
 plot_erp(
     res_effects;
