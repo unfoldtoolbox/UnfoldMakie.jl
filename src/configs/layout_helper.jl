@@ -41,35 +41,8 @@ function default_tick_positions(values; nticks::Int = 5)
     vals = filter(isfinite, Float64.(values))
     vmin, vmax = extrema(vals)
     if vmin == vmax
-        vmin -= 1e-6; vmax += 1e-6
+        vmin -= 1e-6
+        vmax += 1e-6
     end
     collect(range(vmin, vmax; length = nticks))
-end
-
-"""
-    _normalize_nticks(nticks)
-
-Normalize `nticks` to `(x::Int, y::Int)`. Accepts:
-- `Int` → same for both axes
-- `(Int, Int)` → `(x, y)`
-- `(x=Int, y=Int)` → as-is
-
-Errors on any other shape.
-
-**Return Value:** `NamedTuple{(:x, :y), Tuple{Int, Int}}`.
-"""
-function _normalize_nticks(nticks)
-    if nticks isa Integer
-        return (x = nticks, y = nticks)
-    elseif nticks isa Tuple{<:Integer,<:Integer}
-        return (x = nticks[1], y = nticks[2])
-    elseif nticks isa NamedTuple
-        haskey(nticks, :x) && haskey(nticks, :y) ||
-            error("nticks must have keys :x and :y")
-        nticks.x isa Integer || error("nticks.x must be Int")
-        nticks.y isa Integer || error("nticks.y must be Int")
-        return (x = nticks.x, y = nticks.y)
-    else
-        error("nticks must be Int, (Int,Int), or (x=Int,y=Int)")
-    end
 end
