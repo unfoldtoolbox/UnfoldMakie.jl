@@ -59,40 +59,18 @@ function plot_butterfly!(
     topo_axis = (;),
     topo_attributes = (;),
     mapping = (;),
-    nticks = (; x=5, y=5),
+    nticks = (; x = 5, y = 5),
     kwargs...,
 )
     config = PlotConfig(:butterfly)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data) # to avoid change of data in REPL
+
     if isa(plot_data, AbstractMatrix{<:Real})
         plot_data = eeg_array_to_dataframe(plot_data)
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
-    # resolve columns with data
-    config.mapping = resolve_mappings(plot_data, config.mapping)
-
-    nt = _normalize_nticks(nticks)  # (x::Union{Int,Nothing}, y::Union{Int,Nothing})
-    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
-        xticks_auto = default_tick_positions(plot_data[:, config.mapping.x]; nticks = nt.x)
-        config.axis = merge(config.axis, (; xticks = xticks_auto))
-    end
-    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
-        yticks_auto = default_tick_positions(plot_data[:, config.mapping.y]; nticks = nt.y)
-        config.axis = merge(config.axis, (; yticks = yticks_auto))
-    end
-
-    #remove mapping values with `nothing`
-    deleteKeys(nt::NamedTuple{names}, keys) where {names} =
-        NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    config.mapping = deleteKeys(
-        config.mapping,
-        keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
-    )
-    # turn "nothing" from group columns into :fixef
-    if "group" ∈ names(plot_data)
-        plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
-    end
+    plot_data, config = erp_butterfly_mapping(plot_data, config, nticks)
 
     if isnothing(positions) && isnothing(labels)
         topolegend = false
@@ -120,7 +98,7 @@ function plot_butterfly!(
     end
     if (
         :col ∈ keys(config.mapping) &&
-        typeof(plot_data[:, config.mapping.col]) == Vector{Int64}
+        typeof(@view(plot_data[:, config.mapping.col])) == Vector{Int64}
     )
         config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end

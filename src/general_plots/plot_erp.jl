@@ -84,7 +84,7 @@ function plot_erp!(
     significance_lines = (;),
     significance_vspan = (;),
     mapping = (;),
-    nticks = (; x=5, y=5),
+    nticks = (; x = 5, y = 5),
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
@@ -92,34 +92,15 @@ function plot_erp!(
         To switch to categorical colors, please use `mapping(..., color = :mycolorcolumn => nonnumeric)`.
         `group` is now automatically cast to nonnumeric."
     end
-    plot_data = deepcopy(plot_data)
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
+    plot_data = deepcopy(plot_data)
 
     if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
         plot_data = eeg_array_to_dataframe(plot_data')
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
-
-    # resolve columns with data
-    config.mapping = resolve_mappings(plot_data, config.mapping)
-
-    #remove mapping values with `nothing`
-    deleteKeys(nt::NamedTuple{names}, keys) where {names} =
-        NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    config.mapping = deleteKeys(
-        config.mapping,
-        keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
-    )
-    nt = _normalize_nticks(nticks)  # (x::Union{Int,Nothing}, y::Union{Int,Nothing})
-    if :x ∈ keys(config.mapping) && !haskey(config.axis, :xticks)
-        xticks_auto = default_tick_positions(plot_data[:, config.mapping.x]; nticks = nt.x)
-        config.axis = merge(config.axis, (; xticks = xticks_auto))
-    end
-    if :y ∈ keys(config.mapping) && !haskey(config.axis, :yticks)
-        yticks_auto = default_tick_positions(plot_data[:, config.mapping.y]; nticks = nt.y)
-        config.axis = merge(config.axis, (; yticks = yticks_auto))
-    end
+    plot_data, config = erp_butterfly_mapping(plot_data, config, nticks)
 
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
@@ -130,7 +111,7 @@ function plot_erp!(
     if (
         :col ∈ keys(config.mapping) &&
         !isa(config.mapping.col, Pair) &&
-        typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
+        typeof(@view(plot_data[:, config.mapping.col])) <: AbstractVector{<:Number}
     )
         config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end
@@ -138,7 +119,7 @@ function plot_erp!(
     if (
         :group ∈ keys(config.mapping) &&
         !isa(config.mapping.group, Pair) &&
-        typeof(plot_data[:, config.mapping.group]) <: AbstractVector{<:Number}
+        typeof(@view(plot_data[:, config.mapping.group])) <: AbstractVector{<:Number}
     )
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
@@ -147,8 +128,8 @@ function plot_erp!(
     # check if stderror values exist and create new columns with high and low band
     if "stderror" ∈ names(plot_data) && stderror
         plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
-        plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
-        plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
+        plot_data[!, :se_low] = @view(plot_data[:, config.mapping.y]) .- plot_data.stderror
+        plot_data[!, :se_high] = @view(plot_data[:, config.mapping.y]) .+ plot_data.stderror
     end
 
     mapp = AlgebraOfGraphics.mapping()
@@ -254,7 +235,9 @@ function significance_context(
 )
     valid_modes = (:lines, :vspan, :both)
     if !(sigifnicance_visual in valid_modes)
-        error("Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes")
+        error(
+            "Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes",
+        )
     end
 
     # Compute shared context
