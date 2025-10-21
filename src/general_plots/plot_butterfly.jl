@@ -22,6 +22,9 @@ Plot a Butterfly plot.
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
+- `nticks::Union{Int,Tuple{Int,Int}, NamedTuple{(:x,:y),Tuple{Int,Int}}}` = 5\\
+    Set the number of tick positions (x,y). Acepts 3 types fo arguments: 6 (=both axes are 6), (5,7), or (x=5, y=7). 
+    Controls positions only (use xtickformat/ytickformat for labels).
 - `topolegend::Bool = true`\\
     Show an inlay topoplot with corresponding electrodes. Requires `positions`.
 - `topopositions_to_color::x -> pos_to_color_RomaO(x)`\\
@@ -47,7 +50,7 @@ plot_butterfly(plot_data::Union{<:AbstractDataFrame,AbstractMatrix}; kwargs...) 
     plot_butterfly!(Figure(), plot_data; kwargs...)
 
 function plot_butterfly!(
-    f::Union{GridPosition,GridLayout,<:Figure},
+    f::Union{GridPosition,GridLayout,<:Figure,GridSubposition},
     plot_data::Union{<:AbstractDataFrame,AbstractMatrix};
     positions = nothing,
     labels = nothing,
@@ -56,29 +59,18 @@ function plot_butterfly!(
     topo_axis = (;),
     topo_attributes = (;),
     mapping = (;),
+    nticks = (; x = 5, y = 5),
     kwargs...,
 )
     config = PlotConfig(:butterfly)
     config_kwargs!(config; mapping, kwargs...)
     plot_data = deepcopy(plot_data) # to avoid change of data in REPL
+
     if isa(plot_data, AbstractMatrix{<:Real})
         plot_data = eeg_array_to_dataframe(plot_data)
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
-    # resolve columns with data
-    config.mapping = resolve_mappings(plot_data, config.mapping)
-
-    #remove mapping values with `nothing`
-    deleteKeys(nt::NamedTuple{names}, keys) where {names} =
-        NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    config.mapping = deleteKeys(
-        config.mapping,
-        keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
-    )
-    # turn "nothing" from group columns into :fixef
-    if "group" ∈ names(plot_data)
-        plot_data.group = plot_data.group .|> a -> isnothing(a) ? :fixef : a
-    end
+    plot_data, config = erp_butterfly_mapping(plot_data, config, nticks)
 
     if isnothing(positions) && isnothing(labels)
         topolegend = false
@@ -106,7 +98,7 @@ function plot_butterfly!(
     end
     if (
         :col ∈ keys(config.mapping) &&
-        typeof(plot_data[:, config.mapping.col]) == Vector{Int64}
+        typeof(@view(plot_data[:, config.mapping.col])) == Vector{Int64}
     )
         config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end

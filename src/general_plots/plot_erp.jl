@@ -19,6 +19,9 @@ Plot an ERP plot.
 
 ## Keyword arguments (kwargs)
 
+- `nticks::Union{Int,Tuple{Int,Int}, NamedTuple{(:x,:y),Tuple{Int,Int}}}` = 5\\
+    Set the number of tick positions (x,y). Acepts 3 types fo arguments: 6 (=both axes are 6), (5,7), or (x=5, y=7). 
+    Controls positions only (use xtickformat/ytickformat for labels).
 - `stderror::Bool = false`\\
     Add an error ribbon, with lower and upper limits based on the `:stderror` column.
 - `significance::DataFrame = nothing`\\
@@ -31,6 +34,9 @@ Plot an ERP plot.
     Enable or disable legend.\\
 - `layout.show_legend = true`\\
     Enable or disable legend and colorbar.\\
+- `tick_formatter::Function = default_ticks`\\
+    Function used to compute automatic tick positions and labels for both axes.\\
+    Example: `tick_formatter = v -> default_ticks(v; nticks = 6)`.
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
     F.e. `mapping = (; col = :group)` will make a column for each group.
@@ -78,6 +84,7 @@ function plot_erp!(
     significance_lines = (;),
     significance_vspan = (;),
     mapping = (;),
+    nticks = (; x = 5, y = 5),
     kwargs...,
 )
     if !(isnothing(categorical_color) && isnothing(categorical_group))
@@ -85,36 +92,15 @@ function plot_erp!(
         To switch to categorical colors, please use `mapping(..., color = :mycolorcolumn => nonnumeric)`.
         `group` is now automatically cast to nonnumeric."
     end
-    plot_data = deepcopy(plot_data)
     config = PlotConfig(:erp)
     config_kwargs!(config; mapping, kwargs...)
+    plot_data = deepcopy(plot_data)
 
     if isa(plot_data, Union{AbstractMatrix{<:Real},AbstractVector{<:Number}})
         plot_data = eeg_array_to_dataframe(plot_data')
         config_kwargs!(config; axis = (; xlabel = "Time [samples]"))
     end
-
-    # resolve columns with data
-    config.mapping = resolve_mappings(plot_data, config.mapping)
-
-    #remove mapping values with `nothing`
-    deleteKeys(nt::NamedTuple{names}, keys) where {names} =
-        NamedTuple{filter(x -> x ∉ keys, names)}(nt)
-    config.mapping = deleteKeys(
-        config.mapping,
-        keys(config.mapping)[findall(isnothing.(values(config.mapping)))],
-    )
-    yticks = round.(
-        LinRange(
-            minimum(plot_data[!, config.mapping.y]),
-            maximum(plot_data[!, config.mapping.y]),
-            5,
-        ),
-        digits = 2,
-    )
-    xticks =
-        round.(LinRange(minimum(plot_data.time), maximum(plot_data.time), 5), digits = 2)
-    config_kwargs!(config; axis = (; yticks = yticks, xticks = xticks))
+    plot_data, config = erp_butterfly_mapping(plot_data, config, nticks)
 
     # turn "nothing" from group columns into :fixef
     if "group" ∈ names(plot_data)
@@ -125,7 +111,7 @@ function plot_erp!(
     if (
         :col ∈ keys(config.mapping) &&
         !isa(config.mapping.col, Pair) &&
-        typeof(plot_data[:, config.mapping.col]) <: AbstractVector{<:Number}
+        typeof(@view(plot_data[:, config.mapping.col])) <: AbstractVector{<:Number}
     )
         config.mapping = merge(config.mapping, (; col = config.mapping.col => nonnumeric))
     end
@@ -133,7 +119,7 @@ function plot_erp!(
     if (
         :group ∈ keys(config.mapping) &&
         !isa(config.mapping.group, Pair) &&
-        typeof(plot_data[:, config.mapping.group]) <: AbstractVector{<:Number}
+        typeof(@view(plot_data[:, config.mapping.group])) <: AbstractVector{<:Number}
     )
         config.mapping =
             merge(config.mapping, (; group = config.mapping.group => nonnumeric))
@@ -142,8 +128,8 @@ function plot_erp!(
     # check if stderror values exist and create new columns with high and low band
     if "stderror" ∈ names(plot_data) && stderror
         plot_data.stderror = plot_data.stderror .|> a -> isnothing(a) ? 0.0 : a
-        plot_data[!, :se_low] = plot_data[:, config.mapping.y] .- plot_data.stderror
-        plot_data[!, :se_high] = plot_data[:, config.mapping.y] .+ plot_data.stderror
+        plot_data[!, :se_low] = @view(plot_data[:, config.mapping.y]) .- plot_data.stderror
+        plot_data[!, :se_high] = @view(plot_data[:, config.mapping.y]) .+ plot_data.stderror
     end
 
     mapp = AlgebraOfGraphics.mapping()
@@ -223,7 +209,12 @@ function plot_erp!(
     if config.layout.show_legend == true
         config_kwargs!(config; mapping, layout = (; show_legend = false))
         if config.layout.use_legend == true
-            legend!(f_grid[:, end+1], drawing; config.legend...)
+            if config.legend.position == :right
+                legend!(f_grid[:, end+1], drawing; config.legend...)
+            elseif config.legend.position == :bottom
+                legend!(f_grid[end+1, 1], drawing; config.legend...)
+                rowsize!(f_grid, nrows(f_grid), Auto(0.10))
+            end
         end
         if config.layout.use_colorbar == true
             colorbar!(f_grid[:, end+1], drawing; config.colorbar...)
@@ -244,7 +235,9 @@ function significance_context(
 )
     valid_modes = (:lines, :vspan, :both)
     if !(sigifnicance_visual in valid_modes)
-        error("Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes")
+        error(
+            "Invalid `sigifnicance_visual`: $sigifnicance_visual. Choose from: $valid_modes",
+        )
     end
 
     # Compute shared context

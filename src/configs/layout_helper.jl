@@ -16,7 +16,7 @@ function apply_layout_settings!(
     end
 
     if :hidespines ∈ keys(config.layout) && !isnothing(config.layout.hidespines)
-        Makie.hidespines!(ax, config.layout.hidespines...)
+        hidespines!(ax, config.layout.hidespines...)
     end
 
     if :hidedecorations ∈ keys(config.layout) && !isnothing(config.layout.hidedecorations)
@@ -28,3 +28,21 @@ Makie.hidedecorations!(ax::Matrix{AxisEntries}; kwargs...) =
 Makie.hidespines!(ax::Matrix{AxisEntries}, args...) = Makie.hidespines!.(ax, args...)
 
 Makie.hidespines!(ax::AxisEntries, args...) = Makie.hidespines!.(ax.axis, args...)
+
+"""
+    default_tick_positions(values; nticks::Int=5)
+
+Compute `nticks` evenly spaced tick positions spanning `values`.
+If all values are equal, widens the range by a tiny epsilon.
+
+**Return Value:** `Vector{Float64}` of tick positions.
+"""
+function default_tick_positions(values; nticks::Int = 5)
+    vals = filter(isfinite, Float64.(values))
+    vmin, vmax = extrema(vals)
+    if vmin == vmax
+        vmin -= 1e-6
+        vmax += 1e-6
+    end
+    collect(range(vmin, vmax; length = nticks))
+end
