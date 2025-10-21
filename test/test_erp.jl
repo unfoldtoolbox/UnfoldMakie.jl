@@ -3,9 +3,12 @@ using AlgebraOfGraphics: group
 m = UnfoldMakie.example_data("UnfoldLinearModel")
 
 results = coeftable(m)
+
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
-dat, positions = TopoPlots.example_data()
+res_effects3 = effects(Dict(:condition => ["car", "face"], :continuous => 75:20:300), m)
+topo_array, positions = TopoPlots.example_data()
+p1, evts = UnfoldSim.predef_eeg(; noiselevel = 8)
 
 m7 = UnfoldMakie.example_data("7channels")
 results7 = coeftable(m7)
@@ -20,11 +23,11 @@ significancevalues = DataFrame(
 end
 
 @testset "ERP plot: Matrix data" begin
-    plot_erp(dat[1, 1:100, 1:2]')
+    plot_erp(topo_array[1, 1:100, 1:2]')
 end
 
 @testset "ERP plot: Array data" begin
-    plot_erp(dat[1, :, 1])
+    plot_erp(topo_array[1, :, 1])
 end
 
 @testset "ERP plot: zero matrix with color mapping" begin
@@ -48,8 +51,8 @@ end
 end
 
 @testset "ERP plot: Array data with times vector" begin
-    times = range(0, step = 100, length = size(dat, 2))
-    plot_erp(times, dat[1, :, 1])
+    times = range(0, step = 100, length = size(topo_array, 2))
+    plot_erp(times, topo_array[1, :, 1])
 end
 
 @testset "ERP plot: stderror error" begin
@@ -64,34 +67,32 @@ end
 end
 
 @testset "ERP plot: faceting by two columns" begin
-    results = coeftable(m)
     results.group = push!(repeat(["A", "B"], inner = 67), "A")
     plot_erp(results; mapping = (; col = :group))
 end
 
 @testset "ERP plot: faceting by two columns with stderror" begin
-    results = coeftable(m)
     results.group = push!(repeat(["A", "B"], inner = 67), "A")
     plot_erp(results; mapping = (; col = :group), stderror = true)
 end
 
 @testset "ERP plot: with and without error ribbons" begin
-    results = coeftable(m)
-    results.coefname =
-        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-    results = filter(row -> row.coefname != "continuous", results)
+    local results2 = copy(results)
+    results2.coefname =
+        replace(results2.coefname, "condition: face" => "face", "(Intercept)" => "car")
+    results2 = filter(row -> row.coefname != "continuous", results2)
 
     f = Figure()
     plot_erp!(
         f[1, 1],
-        results;
+        results2;
         axis = (; title = "Bad example", titlegap = 12),
         stderror = false,
         mapping = (; color = :coefname => "Conditions"),
     )
     plot_erp!(
         f[2, 1],
-        results;
+        results2;
         axis = (title = "Good example", titlegap = 12),
         stderror = true,
         mapping = (; color = :coefname => "Conditions"),
@@ -107,7 +108,12 @@ end
     #save("erp.png", f)
 end
 
-@testset "ERP plot: in GridLayout" begin
+
+@testset "ERP plot with significance" begin
+    plot_erp(results; :significance => significancevalues)
+end
+
+@testset "ERP plot with significance: in GridLayout" begin
     f = Figure(size = (1200, 1400))
     ga = f[1, 1] = GridLayout()
 
@@ -118,10 +124,6 @@ end
     )
     plot_erp!(ga, results; significance = significancevalues, stderror = true)
     f
-end
-
-@testset "ERP plot with significance" begin
-    plot_erp(results; :significance => significancevalues)
 end
 
 @testset "ERP plot with significance_vspan" begin
@@ -173,60 +175,38 @@ end
 end
 
 @testset "ERP plot: rename legend" begin
-    f = Figure()
-    results = coeftable(m)
-    results.coefname =
-        replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-    results = filter(row -> row.coefname != "continuous", results)
-    plot_erp!(
-        f,
+    plot_erp(
         results;
         axis = (title = "Bad example", titlegap = 12),
         mapping = (; color = :coefname => "Conditions"),
     )
-    f
 end
 
 @testset "ERP plot: Facet sorting" begin
-    data, evts = UnfoldSim.predef_eeg()
-
-    m = fit(
-        UnfoldModel,
-        [
-            "car" => (@formula(0 ~ 1 + continuous), firbasis((-0.1, 1), 100)),
-            "face" => (@formula(0 ~ 1 + continuous), firbasis((-0.1, 1), 100)),
-        ],
-        evts,
-        data;
-        eventcolumn = :condition,
-    )
-    eff = effects(Dict(:continuous => 75:20:300), m)
-
     sorting1 = ["face", "car"] # check 
     sorting2 = ["car", "face"]
 
     f = Figure()
     plot_erp!(
         f[1, 1],
-        eff;
+        res_effects2;
         mapping = (;
-            col = :eventname => sorter(sorting1),
+            col = :condition => sorter(sorting1),
             color = :continuous,
             group = :continuous,
         ),
     )
     plot_erp!(
         f[2, 1],
-        eff;
+        res_effects2;
         mapping = (;
-            col = :eventname => sorter(sorting2),
+            col = :condition => sorter(sorting2),
             color = :continuous,
             group = :continuous,
         ),
     )
     f
 end
-
 
 @testset "ERP plot: colors and lines in cycled theme" begin
     with_theme(
@@ -241,12 +221,11 @@ end
 end
 
 begin
-    data, evts = UnfoldSim.predef_eeg(; noiselevel = 8)
     evts.condition = evts.condition .== "face"
 
     basisfunction = firbasis(τ = (-0.1, 0.5), sfreq = 100; interpolate = false)
     f = @formula 0 ~ 1 + condition + continuous
-    m = fit(UnfoldModel, [Any => (f, basisfunction)], evts, data, eventcolumn = "type")
+    m = fit(UnfoldModel, [Any => (f, basisfunction)], evts, p1, eventcolumn = "type")
     eff = effects(Dict(:condition => [true, false]), m)
     @testset "ERP plot: color with Boolean values" begin
         plot_erp(eff; mapping = (; color = :condition,))
@@ -258,4 +237,43 @@ begin
     @testset "ERP plot: color is specified" begin
         plot_erp(eff; mapping = (; col = :condition,), visual = (; color = :red))
     end
+end
+
+begin
+    @testset "ERP plot: legend positons right" begin
+        plot_erp(
+            results;
+            legend = (;
+                orientation = :horizontal,
+                titleposition = :left,
+                position = :right,
+            ),
+        )
+    end
+    @testset "ERP plot: legend positons bottom" begin
+        plot_erp(
+            results;
+            legend = (;
+                orientation = :horizontal,
+                titleposition = :left,
+                position = :bottom,
+            ),
+        )
+    end
+    @testset "ERP plot: legend positons bottom" begin
+        f = Figure()
+        ga = f[1, 1] = GridLayout()
+        plot_erp(results; legend = (; orientation = :horizontal, titleposition = :left))
+        f
+    end
+end
+
+@testset "erp: nticks for x and y" begin
+    plot_erp(results; nticks = 6)                   # both axes 6
+    plot_erp(results; nticks = (5, 7))              # x=5, y=7
+    plot_erp(results; nticks = (x=5, y=7))          # explicit
+end
+
+@testset "erp: xtickformat usage" begin
+    plot_erp(results; axis = (; xtickformat = "{:.2f}ms"))
 end

@@ -80,15 +80,11 @@ function plot_channelimage!(
     iz = mean(data, dims = 3)[sorted_indecies, :, 1]'
 
     gl = f[1, 1] = GridLayout()
-    ax = Axis(
-        gl[1, 1],
-        xlabel = config.axis.xlabel,
-        xticks = round.(LinRange(minimum(times), maximum(times), 5), digits = 2),
-        ylabel = config.axis.ylabel,
-        yticks = 1:length(ch_names),
-        ytickformat = xc -> sorted_names,
-        yticklabelsize = config.axis.yticklabelsize,
-    )
+    ax = Axis(gl[1, 1]; config.axis...)
+    ax.xticks = round.(LinRange(minimum(times), maximum(times), 5), digits = 2)
+    ax.yticks = 1:length(ch_names)
+    ax.ytickformat = xc -> sorted_names
+
 
     cb_ticks = LinRange(minimum(iz), maximum(iz), 5)
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))

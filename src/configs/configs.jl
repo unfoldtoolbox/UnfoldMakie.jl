@@ -179,7 +179,14 @@ function PlotConfig(T::Val{:butterfly})
             labels = (:labels, :label, :topoLabels, :sensor, nothing),
             group = (:channel,),
         ),
-        axis = (xlabel = "Time [s]", ylabel = "Voltage [µV]", yticklabelsize = 14),
+        axis = (
+            xlabel = "Time [s]",
+            ylabel = "Voltage [µV]",
+            yticklabelsize = 14,
+            xautolimitmargin = (0.01, 0.01),
+            xtickformat = x -> string.(round.(x; digits = 2)),
+            ytickformat = x -> string.(round.(x; digits = 2)),
+        ),
         visual = (; color = nothing, colormap = nothing),
     )
     return cfg
@@ -202,12 +209,13 @@ function PlotConfig(T::Val{:erp})
                 :ticklabels => false,
             )),
         ),
-        legend = (; framevisible = false),
+        legend = (; framevisible = false, position = :right),
         axis = (
             xlabel = "Time [s]",
             ylabel = "Voltage [µV]",
             yticklabelsize = 14,
-            xtickformat = "{:.1f}",
+            xtickformat = x -> string.(round.(x; digits = 2)),
+            ytickformat = x -> string.(round.(x; digits = 2)),
         ),
         colorbar = (; label = "", flipaxis = true),
         visual = (; colormap = :roma, color = Makie.wong_colors()),
