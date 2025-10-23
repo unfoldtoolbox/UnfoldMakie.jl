@@ -84,14 +84,13 @@ begin
             label_scatter = (; markersize = uncert_scaled, color = :transparent, strokecolor = :black,         
             strokewidth = uncert_scaled .* 0.25 )
         ),
-        visual = (; colormap = :vik, contours = false),
+        visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
         colorbar = (; labelsize = 24, ticklabelsize = 18)
     )
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
 
     group_size = [MarkerElement(
         marker = :circle, 
-        #color = :black, strokecolor = :transparent,
         color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5, 
         markersize = ms) for ms in markersizes]
     Legend(f[5, 1], group_size, ["$ms" for ms in markersizes], "Standard\ndeviation", 
@@ -127,14 +126,14 @@ begin
             )
         ),
         axis = (; xlabel = "Time point [50 ms]", xlabelsize = 24, ylabelsize = 24),
-        visual = (; colormap = :vik, contours = false),
+        visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
         colorbar = (; labelsize = 24, ticklabelsize = 18)
     )
 
-    group = [MarkerElement(marker = sym, color = :black, markersize = 20)
+    mgroup = [MarkerElement(marker = sym, color = :black, markersize = 20)
          for sym in arrow_symbols]
 
-    Legend(f[7, 1], group, labels, "Standard\ndeviation";
+    Legend(f[7, 1], mgroup, labels, "Standard\ndeviation";
         patchlabelsize = 14, framevisible = false, 
         labelsize = 18, titlesize = 20,
         orientation = :horizontal, titleposition = :left, margin = (90,0,0,0),)
@@ -186,30 +185,12 @@ plot_topoplotseries!(
     bin_num = 5,
     nrows = 2,
     positions = pos_toposeries,
-    axis = (; xlabel = "Time [msec]"),
-)
-
-# Basic toposeries
-record(f, "bootstrap_toposeries.mp4"; framerate = 2) do io
-    for i = 1:10
-        dat_obs[] = bootstrap_toposeries(rng, df_toposeries)
-        recordframe!(io)
-    end
-end;
-# ![](bootstrap_toposeries.mp4)
-
-# Toposeries without contour
-dat_obs = Observable(df_toposeries)
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    dat_obs;
-    bin_num = 5,
-    nrows = 2,
-    positions = pos_toposeries,
     visual = (; contours = false),
     axis = (; xlabel = "Time [msec]"),
 )
+
+# Basic toposeries.
+
 record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
     for i = 1:10
         dat_obs[] = bootstrap_toposeries(rng, df_toposeries)
@@ -218,7 +199,8 @@ record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
 end;
 # ![](bootstrap_toposeries_nocontours.mp4)
 
-# Toposeries with easing (smooth transition between frames)
+# Toposeries with easing.
+# Easing means smooth transition between frames.
 dat_obs = Observable(bootstrap_toposeries(rng, df_toposeries))
 f = Figure()
 plot_topoplotseries!(
