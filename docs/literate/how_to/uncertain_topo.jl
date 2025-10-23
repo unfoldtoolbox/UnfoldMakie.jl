@@ -25,57 +25,121 @@ using Animations
 # 1) Subjects can vary in phisological or behavioral characteristics; 
 # 2) Something can change between trials (electrode connection can get worse, etc.).
 
+# There are several measures of uncertainty. Here we will use `standard deviation` (x - mean(x) / N) and `t-values` (mean(x) / SE(x)).
 # # Data input
-
+# Data for customized topoplots:
 dat, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));
-df_uncert = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 2], string.(1:length(positions)));
+vec_estimate = dat[:, 340, 1];
+vec_uncert = dat[:, 340, 2];
+# Data for animation:
 
-# Generate data with 227 channels, 50 trials, 500 mseconds for bootstrapping
-# noiselevel is important for adding variability it your data
 df_toposeries, pos_toposeries =
     UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1);
+# This will generate DataFrame with 227 channels, 50 trials, 500 mseconds for bootstrapping.
+# `noiselevel` is important for adding variability it your data.
 
-# # Uncertainty via additional row
-# In this case we alread have two datasets: `df` with mean estimates and `df_uncert` with variability estimation.
+# # Adjacent topoplot
+# In this case we already have two data vectors: `vec_estimate` with mean estimates and `vec_uncert` with standard deviation.
 
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    df;
-    bin_num = 5,
-    positions = positions,
-    axis = (; xlabel = ""),
-    colorbar = (; label = "Voltage estimate"),
-)
-plot_topoplotseries!(
-    f[2, 1],
-    df_uncert;
-    bin_num = 5,
-    positions = positions,
-    visual = (; colormap = :viridis),
-    colorbar = (; label = "Voltage uncertainty"),
-)
-f
-# # Markers for uncertainty
-# In this case we will use the marker size to show the uncertainty of the estimate.
-df_uncert_chan = groupby(df_uncert[df_uncert.time.==50, :], [:channel])
-df_uncert_chan = combine(df_uncert_chan, :estimate => mean => :estimate)
-plot_topoplot(
-    dat[:, 50, 1];
-    positions,
-    axis = (; xlabel = "50 ms"),
-    topo_attributes = (;
-        label_scatter = (;
-            markersize = df_uncert.estimate * 300,
-            marker = :circle,
-            color = :white,
-            strokecolor = :tomato,
-        )
-    ),
-)
+begin
+    f = Figure()
+    ax = Axis(f[1, 1:2],  title = "Time windows [340 ms]", titlesize = 24, titlealign = :center,) 
+    
+    hidedecorations!(ax, label = false) ; hidespines!(ax)
+    plot_topoplot!(
+        f[1, 1],
+        vec_estimate;
+        positions = positions,
+        visual = (; contours = false),
+        axis = (; xlabel = ""),
+        colorbar = (; label = "Voltage [µV]", labelsize = 24, ticklabelsize = 18, vertical = false, width = 180),
+    )
+    plot_topoplot!(
+        f[1, 2],
+        vec_uncert;
+        positions = positions,
+        visual = (; colormap = (:viridis), contours = false),
+        axis = (; xlabel = "", xlabelsize = 24, ylabelsize = 24),
+        colorbar = (; label = "Standard deviation", labelsize = 24, ticklabelsize = 18, vertical = false, width = 180),
+    )
+    f
+end
+
+
+# # Uncertainty via marker size
+# We show uncertainty using donut-shaped electrode markers.
+# The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.
+begin
+    f = Figure()
+    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
+    uncert_scaled = uncert_norm * 30 .+ 10
+
+    plot_topoplot!(f,
+        vec_estimate;
+        positions,
+        axis = (; xlabel = "Time point [340 ms]", xlabelsize = 24, ylabelsize = 24),
+        topo_attributes = (;
+            label_scatter = (; markersize = uncert_scaled, color = :transparent, strokecolor = :black,         
+            strokewidth = uncert_scaled .* 0.25 )
+        ),
+        visual = (; colormap = :vik, contours = false),
+        colorbar = (; labelsize = 24, ticklabelsize = 18)
+    )
+    markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
+
+    group_size = [MarkerElement(
+        marker = :circle, 
+        #color = :black, strokecolor = :transparent,
+        color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5, 
+        markersize = ms) for ms in markersizes]
+    Legend(f[5, 1], group_size, ["$ms" for ms in markersizes], "Standard\ndeviation", 
+        patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8), framevisible = false, 
+        labelsize = 18, titlesize = 20,
+        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0))
+    f
+end
+
+# # Uncertainty via arrow rotation
+# In this case we will replace elctrode markers with arrows. The arrow direction will represent the level of uncertainty.
+# Be aware: arrows are not representing any flow or direction of the signal. They are just a way to visualize uncertainty.
+begin
+    f = Figure()
+    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
+    rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
+
+    arrow_symbols = ['↑','↗','→','↘','↓'] # 5 levels of uncertainty
+    
+    angles = range(extrema(vec_uncert)...; length=5) 
+    labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
+
+    plot_topoplot!(
+        f[1:6, 1],
+        vec_estimate;
+        positions,
+        topo_attributes = (;
+            label_scatter = (;
+                markersize = 20,
+                marker = '↑',
+                color = :gray, strokecolor = :black, strokewidth = 1,
+                rotation = rotations,
+            )
+        ),
+        axis = (; xlabel = "Time point [50 ms]", xlabelsize = 24, ylabelsize = 24),
+        visual = (; colormap = :vik, contours = false),
+        colorbar = (; labelsize = 24, ticklabelsize = 18)
+    )
+
+    group = [MarkerElement(marker = sym, color = :black, markersize = 20)
+         for sym in arrow_symbols]
+
+    Legend(f[7, 1], group, labels, "Standard\ndeviation";
+        patchlabelsize = 14, framevisible = false, 
+        labelsize = 18, titlesize = 20,
+        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0),)
+    f
+end
 
 # # Uncertainty via animation 
 
