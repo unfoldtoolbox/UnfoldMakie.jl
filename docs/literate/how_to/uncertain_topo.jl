@@ -268,7 +268,6 @@ sampling independently per channel: μ + SE * randn().
 function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
         n_boot::Int=10, rng=MersenneTwister(1))
 
-    # promote to a common float type (keeps Float32 if your inputs are Float32)
     T  = float(promote_type(eltype(mean_vec), eltype(se_vec)))
     μ  = convert(Vector{T}, mean_vec)
     se = convert(Vector{T}, se_vec)
