@@ -33,9 +33,8 @@ vec_estimate = dat[:, 340, 1];
 vec_uncert = dat[:, 340, 2];
 # Data for animation:
 
-df_toposeries, pos_toposeries =
-    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
-df_toposeries = df_toposeries[df_toposeries.trial.<=15, :];
+df_toposeries, pos_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries1 = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1);
 # This will generate DataFrame with 227 channels, 50 trials, 500 mseconds for bootstrapping.
 # `noiselevel` is important for adding variability it your data.
@@ -45,7 +44,7 @@ rng = MersenneTwister(1);
 
 begin
     f = Figure()
-    ax = Axis(f[1, 1:2],  title = "Time windows [340 ms]", titlesize = 24, titlealign = :center,) 
+    ax = Axis(f[1, 1:2], title = "Time windows [340 ms]", titlesize = 24, titlealign = :center,) 
     
     hidedecorations!(ax, label = false) ; hidespines!(ax)
     plot_topoplot!(
@@ -108,7 +107,7 @@ begin
     uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
     rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
 
-    arrow_symbols = ['↑','↗','→','↘','↓'] # 5 levels of uncertainty
+    arrow_symbols = ['↑', '↗', '→', '↘', '↓'] # 5 levels of uncertainty
     
     angles = range(extrema(vec_uncert)...; length=5) 
     labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
@@ -177,7 +176,7 @@ end
 # </details >
 # ```
 
-dat_obs = Observable(df_toposeries)
+dat_obs = Observable(df_toposeries1)
 f = Figure()
 plot_topoplotseries!(
     f[1, 1],
@@ -193,7 +192,7 @@ plot_topoplotseries!(
 
 record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
     for i = 1:10
-        dat_obs[] = bootstrap_toposeries(rng, df_toposeries)
+        dat_obs[] = bootstrap_toposeries(rng, df_toposeries1)
         recordframe!(io)
     end
 end;
@@ -201,7 +200,7 @@ end;
 
 # Toposeries with easing.
 # Easing means smooth transition between frames.
-dat_obs = Observable(bootstrap_toposeries(rng, df_toposeries))
+dat_obs = Observable(bootstrap_toposeries(rng, df_toposeries1))
 f = Figure()
 plot_topoplotseries!(
     f[1, 1],
@@ -215,7 +214,7 @@ plot_topoplotseries!(
 record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
     for n_bootstrapping = 1:10
         recordframe!(io)
-        new_df = bootstrap_toposeries(rng, df_toposeries)
+        new_df = bootstrap_toposeries(rng, df_toposeries1)
         old_estimate = deepcopy(dat_obs.val.estimate)
         for update_ratio in range(0, 1, length = 8)
 
@@ -230,12 +229,12 @@ end;
 # ![](bootstrap_toposeries_easing.mp4)
 
 # # Static version of animation 
-function draw_topoplots(rng, df_toposeries)
+function draw_topoplots(rng, df_toposeries1)
     fig = Figure(size = (800, 600))
 
     merged_df = DataFrame()
     for i = 1:2, j = 1:3
-        boo = bootstrap_toposeries(rng, df_toposeries)
+        boo = bootstrap_toposeries(rng, df_toposeries1)
         boo.condition .= string((i - 1) * 3 + j) # Assign condition number
         merged_df = vcat(merged_df, boo)
 
@@ -251,4 +250,63 @@ function draw_topoplots(rng, df_toposeries)
     fig
 end
 
-draw_topoplots(rng, df_toposeries)
+draw_topoplots(rng, df_toposeries1)
+
+# # Single topoplot with easing animation
+
+# ```@raw html
+# <details>
+# <summary>Click to expand for supportive functions</summary>
+# ```
+sd_vec(vec_uncert; n_trials) = vec_uncert .* sqrt(n_trials)
+"""
+param_bootstrap_means(mean_vec, se_vec; n_boot, rng)
+
+Return (n_channels × n_boot) matrix of bootstrap mean vectors,
+sampling independently per channel: μ + SE * randn().
+"""
+function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
+        n_boot::Int=10, rng=MersenneTwister(1))
+
+    # promote to a common float type (keeps Float32 if your inputs are Float32)
+    T  = float(promote_type(eltype(mean_vec), eltype(se_vec)))
+    μ  = convert(Vector{T}, mean_vec)
+    se = convert(Vector{T}, se_vec)
+    n_channels = length(μ)
+
+    out = Matrix{T}(undef, n_channels, n_boot)
+    for i_boot in 1:n_boot
+        out[:, i_boot] = μ .+ se .* randn(rng, T, n_channels)
+    end
+    return out
+end
+# ```@raw html
+# </details >
+# ```
+
+n_boot = 20
+boot_means = param_bootstrap_means(vec_estimate, vec_uncert; n_boot = n_boot, rng=rng)
+
+obs = Observable(boot_means[:, 1])
+f = Figure()
+plot_topoplot!(
+    f[1, 1],
+    obs;
+    positions = positions,
+    visual = (; contours = false),
+    axis = (; xlabel = "Time [100 msec]"),
+)
+f
+
+record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
+    recordframe!(io)  # first frame (original)
+    for i_boot in 1:(n_boot - 1)          # number of bootstrap targets
+        new_v = boot_means[:, i_boot + 1]
+        old_v = copy(obs[])
+        for u in range(0, 1, length=10)   # easing steps
+            obs[] = ease_between(old_v, new_v, u)
+            recordframe!(io)
+        end
+    end
+end
+# ![](bootstrap_topo_easing.mp4)
