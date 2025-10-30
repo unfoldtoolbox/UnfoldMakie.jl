@@ -308,4 +308,5 @@ record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
         end
     end
 end
-# ![](bootstrap_topo_easing.mp4)
+
+# ![](bootstrap_single_topo.mp4)
