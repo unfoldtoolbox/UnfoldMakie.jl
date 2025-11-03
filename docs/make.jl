@@ -53,11 +53,11 @@ makedocs(;
                 "Design matrix" => "generated/tutorials/designmatrix.md",
                 "Spline plot" => "generated/tutorials/splines.md",
             ],
-            "Videos" => "generated/tutorials/public.md",
+            "Videos" => "generated/tutorials/videos.md",
         ],
         "How To Do" => [
             "Complex figures" => "generated/how_to/complex_figures.md",
-            "Channel labels" => "generated/how_to/customize_labels.md",
+            #"Channel labels" => "generated/how_to/customize_labels.md",
             "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
             "Colormap of butterfly plot" => "generated/how_to/position2color.md",
             "Uncertainty in topoplots" => "generated/how_to/uncertain_topo.md",
