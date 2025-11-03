@@ -1,4 +1,4 @@
-# # Visualize uncertainty in topoplot series
+# # Visualize uncertainty in topoplots
 
 # ```@raw html
 # <details>
@@ -19,7 +19,7 @@ using Animations
 # </details >
 # ```
 # Representing uncertainty is one of the most difficult tasks in visualization. It is especially difficult for heatmaps and topoplots. 
-# Here we will present new ways to show uncertainty for topoplots series.
+# Here we will present new ways to show uncertainty for topoplots.
 
 # Uncertainty in EEG data usually comes from subjects and trials: 
 # 1) Subjects can vary in phisological or behavioral characteristics; 
@@ -268,8 +268,8 @@ sampling independently per channel: μ + SE * randn().
 function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
         n_boot::Int=10, rng=MersenneTwister(1))
 
-    T  = float(promote_type(eltype(mean_vec), eltype(se_vec)))
-    μ  = convert(Vector{T}, mean_vec)
+    T = float(promote_type(eltype(mean_vec), eltype(se_vec)))
+    μ = convert(Vector{T}, mean_vec)
     se = convert(Vector{T}, se_vec)
     n_channels = length(μ)
 
@@ -310,3 +310,5 @@ record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
 end
 
 # ![](bootstrap_single_topo.mp4)
+
+

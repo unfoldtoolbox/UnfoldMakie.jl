@@ -57,7 +57,7 @@ makedocs(;
         ],
         "How To Do" => [
             "Complex figures" => "generated/how_to/complex_figures.md",
-            "Channel labels" => "generated/how_to/topo_labels.md",
+            #"Channel labels" => "generated/how_to/topo_labels.md",
             "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
             "Colormap of butterfly plot" => "generated/how_to/position2color.md",
             "Uncertainty in topoplots" => "generated/how_to/uncertain_topo.md",
