@@ -53,7 +53,7 @@ makedocs(;
                 "Design matrix" => "generated/tutorials/designmatrix.md",
                 "Spline plot" => "generated/tutorials/splines.md",
             ],
-            "Videos" => "generated/tutorials/public.md",
+            #"Videos" => "generated/tutorials/public.md",
         ],
         "How To Do" => [
             "Complex figures" => "generated/how_to/complex_figures.md",
