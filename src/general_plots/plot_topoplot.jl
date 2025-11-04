@@ -12,8 +12,6 @@ Plot a topoplot.
     Positions used if `data` is not a `DataFrame`. Positions are generated from `labels` if `positions = nothing`.
 - `labels::Vector{String} = nothing`\\
     Labels used if `data` is not a DataFrame.
--  `high_chan = nothing` - channnel(s) to highlight by color.
--  `high_color = :darkgreen` - color for highlighting. 
 - `topo_axis::NamedTuple = (;)`\\
     Here you can flexibly change configurations of the topoplot axis.\\
     To see all options just type `?Axis` in REPL.\\
@@ -46,8 +44,6 @@ function plot_topoplot!(
     };
     labels = nothing,
     positions = nothing,
-    high_chan = nothing,
-    high_color = :darkgreen,
     topo_attributes = (;),
     topo_axis = (;),
     kwargs...,
@@ -73,16 +69,6 @@ function plot_topoplot!(
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
     inner_axis = Axis(f[1:4, 1:2]; topo_axis...)
 
-    if isa(high_chan, Int) || isa(high_chan, Vector{Int64})
-        highlighter = zeros(length(positions))
-        isa(high_chan, Int) ? highlighter[high_chan] = 1 : highlighter[high_chan] .= 1
-        clist = [:gray, high_color][Int.(highlighter .+ 1)] #color for highlighting
-        label_scatter = (;
-            strokecolor = clist,
-            markersize = ((highlighter .+ 0.25) .* 40) ./ 5, # make adjustable
-        )
-        #topo_attributes = merge(topo_attributes, (; label_scatter...))
-    end
     eeg_topoplot!(
         inner_axis,
         data;
@@ -90,7 +76,6 @@ function plot_topoplot!(
         positions,
         config.visual...,
         topo_attributes...,
-        #label_scatter...,
     )
 
     # Set the color limits (`clims`) either from the config if specified by user or dynamically based on the data.
@@ -118,6 +103,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
         if config.colorbar.vertical == true
             Colorbar(f[1:4, 2]; colormap = config.visual.colormap, config.colorbar...)
         else
+            rowgap!(f.layout, 100)
             config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
             Colorbar(f[5, 1:2]; colormap = config.visual.colormap, config.colorbar...)
         end

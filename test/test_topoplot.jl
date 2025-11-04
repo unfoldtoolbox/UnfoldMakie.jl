@@ -31,14 +31,6 @@ end
     plot_topoplot(d1; positions = rand(Point2f, 10))
 end
 
-@testset "topoplot: highlight an electrode" begin
-    plot_topoplot(dat[:, 50, 1]; positions, high_chan = 2)
-end
-
-@testset "topoplot: highlight several electrodes" begin
-    plot_topoplot(dat[:, 50, 1]; positions, high_chan = [1, 2])
-end
-
 @testset "topoplot: no legend" begin
     plot_topoplot(dat[:, 50, 1]; positions = positions, layout = (; use_colorbar = false))
 end
@@ -116,7 +108,7 @@ end
     plot_topoplot(
         dat[:, 50, 1];
         positions,
-        colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+        colorbar = (; vertical = false, width = 180),
         axis = (; xlabel = "50 ms"),
     )
 end
@@ -127,7 +119,7 @@ end
         f[:, 1],
         dat[:, 50, 1];
         positions,
-        colorbar = (; vertical = false, width = 180, label = "Voltage estimate"),
+        colorbar = (; vertical = false, width = 180),
         axis = (; xlabel = "50 ms"),
     )
     plot_topoplot!(
