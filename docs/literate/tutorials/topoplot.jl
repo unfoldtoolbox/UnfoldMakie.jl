@@ -98,7 +98,7 @@ end
 # Create per-channel styles
 colors = fill(:black, 64)      # default
 sizes  = fill(8, 64)           # default size
-strokes = fill(0.5, 64)        # default width
+strokes = fill(0.5, 64);        # default width
 
 # Highlight first two
 colors[1:2] .= (:red, :red)
