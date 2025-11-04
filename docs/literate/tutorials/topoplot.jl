@@ -145,7 +145,7 @@ plot_topoplot(
     positions = topo_positions,
     axis = (; xlabel = "Time [50 ms]"),
     topo_attributes = (;
-        label_scatter = (; markersize = random_rotations, marker = :circle, color = :black)
+        label_scatter = (; markersize = rand(64) .* 2π, marker = :circle, color = :black)
     ),
 )
 
