@@ -7,8 +7,8 @@ Arguments:\\
 - `noiselevel::Int64 = 10` - noise level for EEG data. Will be sent to `UnfoldSim.predef_eeg` function.\\
 
 Datasets:\\
-- `TopoPlots.jl` (default) - provide 2 outputs from `TopoPlots.jl`:\\
-    - `Array{Float32, 3}` with 64 channels, 800 ms time range and 3 types of values (estimate, sterror and pvalue).\\
+- `TopoPlots.jl` (default) - provide 2 objects from `TopoPlots.jl`:\\
+    - `Array{Float32, 3}` with 64 channels, 800 ms time range and 3 types of values (mean estimate, sterror and pvalue).\\
     - `Vector{Point{2, Float32}}` with posiions for 64 electrodes.
 - `UnfoldLinearModelMultiChannel` - DataFrame with 5 channels, 3 coefnames, sterror, time and estimate.
 - `sort_data` - 2 DataFrames: 
@@ -192,7 +192,7 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
         )
 
         hart = headmodel() # 227 electrodes
-        less_hart = magnitude(hart)[:, 1] # extract 1 lead field and 64 electrodes
+        less_hart = magnitude(hart)[:, 1] 
 
         mc = UnfoldSim.MultichannelComponent(c, less_hart)
 
@@ -207,10 +207,6 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
             return_epoched = true,
         )
 
-        # Create the DataFrame
-        #= Unfold.result_to_table(eff::Vector{<:AbstractArray}, events::Vector{<:DataFrame},
-            times::Vector, eventnames::Vector)
-        Unfold.result_to_table(rand(5,11,13), [DataFrame(:trial=>1:13)], [1:11], ["myevent"]) =#
         df_toposeries = Unfold.result_to_table(
             dat,
             [DataFrame(:trial => 1:size(dat, 3))],
@@ -219,10 +215,11 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
         )
         rename!(df_toposeries, :yhat => :estimate)
         # chosing positions
-        pos3d = hart.electrodes["pos"]
-        pos2d = to_positions(pos3d')
-        pos_toposeries = [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in pos2d]
-        return df_toposeries, pos_toposeries
+        pos_toposeries =
+            hart.electrodes["pos"] |>
+            x -> to_positions(x') |>
+            x -> [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in x]
+        return df_toposeries, pos_toposeries, hart.electrodes["label"]
     else
         error("unknown example data")
     end

@@ -12,13 +12,13 @@ using UnfoldMakie, UnfoldSim
 
 # We have some predefined data with 227 channels:
 
-df_toposeries, df_positions = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries, pos_toposeries, lab_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_trial1_t50 = filter(row -> row.trial == 1 && row.time == 50, df_toposeries)
 
 plot_topoplot(
     df_trial1_t50.estimate;
-    labels = hart.electrodes["label"],
-    positions = df_positions,
+    labels = lab_toposeries,
+    positions = pos_toposeries,
     visual = (; label_text = true, enlarge = 0.5, label_scatter = false),
     axis = (; xlabel = "100 ms", limits = ((0, 1), (0, 0.9))),
 )
