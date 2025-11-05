@@ -79,7 +79,8 @@ end
 # # Channel labels
 # Changing fonts and font size
 # Here we sue arbitrary labels "s1", "s2", ..., "s64" for demonstration. 
-# To learn how to use the real channel names, check the section Topo labels.
+# To learn how to use the real channel names, check the [dedicated page about channel labels](@ref topo_labels).
+
 labels = ["s$i" for i = 1:size(topo_array, 1)]
 
 with_theme(Theme(; fontsize = 25, fonts = (; regular = "Ubuntu Mono"))) do
