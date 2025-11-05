@@ -34,14 +34,15 @@ plot_topoplot(
     colorbar = (; height = 350),
 )
 
-# Typical topoplot constist of: 
-# 1) the head outline representing time at certain time point or time window;
-# 2) colorbar representing the voltage;
-# 3) markers and labels for each channel (aka sensors, electrodes).
+# A typical topoplot consists of:
+# 1) a head outline showing the voltage at a given time point or over a time window;
+# 2) a colorbar for the voltage scale;
+# 3) channel markers and labels (sensors/electrodes).
 
 # # Horizontal colorbars
-# Colorbars could be vertical or horizontal (practical for multiple topoplots). 
-# Just switch `colorbar.vertical` to `false` to make it horizontal.
+# Topoplot colorbars can be vertical or horizontal. Horizontal colorbars are useful when displaying multiple plots side by side.
+# Set `colorbar.vertical = false` to switch to a horizontal orientation.
+
 plot_topoplot(
     topo_array[:, 50, 1];
     positions = topo_positions,
@@ -50,10 +51,10 @@ plot_topoplot(
 )
 
 # # Colormaps
-# Rules for choosing a good colormap for topoplots:
-# 1) It should be "scientific", with a linear progression and a natural ordering of colors;
-# 2) It should be diverging;
-# 3) It should be color-blind friendly.
+# When choosing a colormap for topoplots, it should:
+# 1) Be “scientific”: perceptually linear, with a meaningful and ordered color scale;
+# 2) Be diverging (to distinguish positive vs. negative effects);
+# 3) Be color-blind friendly.
 
 begin
     f = Figure(size = (700, 700))
@@ -78,8 +79,8 @@ end
 
 # # Channel labels
 # Changing fonts and font size
-# Here we sue arbitrary labels "s1", "s2", ..., "s64" for demonstration. 
-# To learn how to use the real channel names, check the [dedicated page about channel labels](@ref topo_labels).
+# Here we use arbitrary labels "s1", "s2", ..., "s64" for demonstration.
+# To learn how to use real channel names, check the [dedicated page about channel labels](@ref topo_labels).
 
 labels = ["s$i" for i = 1:size(topo_array, 1)]
 
@@ -103,7 +104,7 @@ sizes  = fill(8, 64)           # default size
 strokes = fill(0.5, 64);        # default width
 
 # Highlight first two
-colors[1:2] .= (:red, :red)
+colors[1:2] .= (:orange, :orange)
 sizes[1:2] .= (14, 14)
 strokes[1:2] .= (3, 3)
 
@@ -111,6 +112,7 @@ plot_topoplot(
     topo_array[:, 50, 1];
     positions = topo_positions,
     axis = (; xlabel = "Time [50 ms]"),
+    visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256),
     topo_attributes = (;
         label_scatter = (; 
             markersize = sizes,
