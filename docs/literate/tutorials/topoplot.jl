@@ -35,8 +35,9 @@ plot_topoplot(
 )
 
 # Typical topoplot constist of: 
-# 1) the head outline representing time at certain time point or time window, 
-# 2) colorbar representing the voltage, 3) markers and labels for each channel (aka sensors, electrodes).
+# 1) the head outline representing time at certain time point or time window;
+# 2) colorbar representing the voltage;
+# 3) markers and labels for each channel (aka sensors, electrodes).
 
 # # Horizontal colorbars
 # Colorbars could be vertical or horizontal (practical for multiple topoplots). 

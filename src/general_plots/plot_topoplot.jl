@@ -51,7 +51,8 @@ function plot_topoplot!(
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
-    outer_axis = Axis(f[1:4, 1:2]; config.axis...)
+    great_axis = f[1, 1] = GridLayout()
+    outer_axis = Axis(great_axis[1:4, 1:2]; config.axis...)
     hidespines!(outer_axis)
     hidedecorations!(outer_axis, label = false)
 
@@ -67,7 +68,7 @@ function plot_topoplot!(
     topo_attributes =
         update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
-    inner_axis = Axis(f[1:4, 1:2]; topo_axis...)
+    inner_axis = Axis(great_axis[1:4, 1:2]; topo_axis...)
 
     eeg_topoplot!(
         inner_axis,
@@ -101,11 +102,11 @@ Note: The identical min and max may cause an interpolation error when plotting t
     end
     if config.layout.use_colorbar == true
         if config.colorbar.vertical == true
-            Colorbar(f[1:4, 2]; colormap = config.visual.colormap, config.colorbar...)
+            Colorbar(great_axis[1:4, 2]; colormap = config.visual.colormap, config.colorbar...)
         else
-            rowgap!(f.layout, 100)
             config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
-            Colorbar(f[5, 1:2]; colormap = config.visual.colormap, config.colorbar...)
+            Colorbar(great_axis[5, 1:2]; colormap = config.visual.colormap, config.colorbar...)
+            rowgap!(great_axis, 4, 0)
         end
     end
     apply_layout_settings!(config; fig = f)
