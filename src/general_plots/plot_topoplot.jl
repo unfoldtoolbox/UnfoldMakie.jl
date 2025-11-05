@@ -22,6 +22,10 @@ Plot a topoplot.
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 $(_docstring(:topoplot))
 
+To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
+To set different sizes for each electrode, provide a vector of sizes with length equal 
+to the number of electrodes.
+
 **Return Value:** `Figure` displaying the Topoplot.
 """
 plot_topoplot(
@@ -30,7 +34,7 @@ plot_topoplot(
         <:Observable{<:AbstractVector},
         <:AbstractDataFrame,
         <:AbstractVector,
-    };
+    }; 
     kwargs...,
 ) = plot_topoplot!(Figure(), data; kwargs...)
 

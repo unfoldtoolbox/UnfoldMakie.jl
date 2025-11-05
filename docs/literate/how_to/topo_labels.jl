@@ -1,4 +1,4 @@
-# # Adding labels to topoplots
+# # [Adding labels to topoplot channels](@ref topo_labels)
 
 using TopoPlots, MakieThemes
 using UnfoldMakie, UnfoldSim
