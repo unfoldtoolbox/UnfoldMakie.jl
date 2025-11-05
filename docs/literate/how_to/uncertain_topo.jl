@@ -75,7 +75,8 @@ begin
     uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
     uncert_scaled = uncert_norm * 30 .+ 10
 
-    plot_topoplot!(f,
+    plot_topoplot!(
+        f[1:4, 1],
         vec_estimate;
         positions,
         axis = (; xlabel = "Time point [340 ms]", xlabelsize = 24, ylabelsize = 24),
