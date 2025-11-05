@@ -1,4 +1,4 @@
-# # [Adding labels to topoplot channels](@ref topo_labels)
+# # [Adding labels to topoplot channels](@id topo_labels)
 
 using TopoPlots
 using CairoMakie, MakieThemes

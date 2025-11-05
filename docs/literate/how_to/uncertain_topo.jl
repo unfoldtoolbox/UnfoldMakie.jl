@@ -259,7 +259,6 @@ draw_topoplots(rng, df_toposeries1)
 # <details>
 # <summary>Click to expand for supportive functions</summary>
 # ```
-sd_vec(vec_uncert; n_trials) = vec_uncert .* sqrt(n_trials)
 """
 param_bootstrap_means(mean_vec, se_vec; n_boot, rng)
 
@@ -284,8 +283,9 @@ end
 # </details >
 # ```
 
+se_vec = vec_uncert ./ sqrt(15) # 15 subject accroding to paper
 n_boot = 20
-boot_means = param_bootstrap_means(vec_estimate, vec_uncert; n_boot = n_boot, rng=rng)
+boot_means = param_bootstrap_means(vec_estimate, se_vec; n_boot = n_boot, rng = rng)
 
 obs = Observable(boot_means[:, 1])
 f = Figure()
@@ -296,7 +296,6 @@ plot_topoplot!(
     visual = (; contours = false),
     axis = (; xlabel = "Time [100 msec]"),
 )
-f
 
 record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
     recordframe!(io)  # first frame (original)
