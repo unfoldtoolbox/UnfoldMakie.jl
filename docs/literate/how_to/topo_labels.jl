@@ -1,6 +1,7 @@
 # # [Adding labels to topoplot channels](@ref topo_labels)
 
-using TopoPlots, MakieThemes
+using TopoPlots
+using CairoMakie, MakieThemes
 using UnfoldMakie, UnfoldSim
 
 # You need 3 vectors to add labels to topoplots: of channel labels, of channel positions, and of voltage estimates.
