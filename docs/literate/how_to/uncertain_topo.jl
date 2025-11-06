@@ -100,46 +100,6 @@ begin
     f
 end
 
-# # Uncertainty via arrow rotation
-# In this case we will replace elctrode markers with arrows. The arrow direction will represent the level of uncertainty.
-# Be aware: arrows are not representing any flow or direction of the signal. They are just a way to visualize uncertainty.
-begin
-    f = Figure()
-    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
-    rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
-
-    arrow_symbols = ['↑', '↗', '→', '↘', '↓'] # 5 levels of uncertainty
-    
-    angles = range(extrema(vec_uncert)...; length=5) 
-    labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
-
-    plot_topoplot!(
-        f[1:6, 1],
-        vec_estimate;
-        positions,
-        topo_attributes = (;
-            label_scatter = (;
-                markersize = 20,
-                marker = '↑',
-                color = :gray, strokecolor = :black, strokewidth = 1,
-                rotation = rotations,
-            )
-        ),
-        axis = (; xlabel = "Time point [50 ms]", xlabelsize = 24, ylabelsize = 24),
-        visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
-        colorbar = (; labelsize = 24, ticklabelsize = 18)
-    )
-
-    mgroup = [MarkerElement(marker = sym, color = :black, markersize = 20)
-         for sym in arrow_symbols]
-
-    Legend(f[7, 1], mgroup, labels, "Standard\ndeviation";
-        patchlabelsize = 14, framevisible = false, 
-        labelsize = 18, titlesize = 20,
-        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0),)
-    f
-end
-
 # # Uncertainty via animation 
 
 # In this case, we need to boostrap the data, so we'll use raw data with single trials. 
@@ -229,30 +189,6 @@ end;
 
 # ![](bootstrap_toposeries_easing.mp4)
 
-# # Static version of animation 
-function draw_topoplots(rng, df_toposeries1)
-    fig = Figure(size = (800, 600))
-
-    merged_df = DataFrame()
-    for i = 1:2, j = 1:3
-        boo = bootstrap_toposeries(rng, df_toposeries1)
-        boo.condition .= string((i - 1) * 3 + j) # Assign condition number
-        merged_df = vcat(merged_df, boo)
-
-    end
-    plot_topoplotseries!(
-        fig,
-        merged_df;
-        nrows = 2,
-        mapping = (; col = :condition),
-        axis = (; titlesize = 20, title = "Bootstrapped means", xlabel = ""),
-        positions = pos_toposeries,
-    )
-    fig
-end
-
-draw_topoplots(rng, df_toposeries1)
-
 # # Single topoplot with easing animation
 
 # ```@raw html
@@ -283,7 +219,7 @@ end
 # </details >
 # ```
 
-se_vec = vec_uncert ./ sqrt(15) # 15 subject accroding to paper
+se_vec = vec_uncert ./ sqrt(15) # 15 subject according to paper
 n_boot = 20
 boot_means = param_bootstrap_means(vec_estimate, se_vec; n_boot = n_boot, rng = rng)
 
