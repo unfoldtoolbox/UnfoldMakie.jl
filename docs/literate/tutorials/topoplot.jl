@@ -129,19 +129,42 @@ plot_topoplot(
 # Check more [here](https://docs.makie.org/dev/reference/plots/scatter#markers).
 
 # Markers as arrows
-plot_topoplot(
-    topo_array[:, 50, 1];
-    positions = topo_positions,
-    axis = (; xlabel = "Time [50 ms]"),
-    topo_attributes = (;
-        label_scatter = (;
-            markersize = 20,
-            marker = '↑',
-            color = :black,
-            rotation = rand(64) .* 2π,
-        )
-    ),
-)
+begin
+    f = Figure()
+    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
+    rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
+
+    arrow_symbols = ['↑', '↗', '→', '↘', '↓'] # 5 levels of uncertainty
+    
+    angles = range(extrema(vec_uncert)...; length=5) 
+    labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
+
+    plot_topoplot!(
+        f[1:6, 1],
+        vec_estimate;
+        positions,
+        topo_attributes = (;
+            label_scatter = (;
+                markersize = 20,
+                marker = '↑',
+                color = :gray, strokecolor = :black, strokewidth = 1,
+                rotation = rotations,
+            )
+        ),
+        axis = (; xlabel = "Time point [50 ms]", xlabelsize = 24, ylabelsize = 24),
+        visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
+        colorbar = (; labelsize = 24, ticklabelsize = 18)
+    )
+
+    mgroup = [MarkerElement(marker = sym, color = :black, markersize = 20)
+         for sym in arrow_symbols]
+
+    Legend(f[7, 1], mgroup, labels, "Some\nmeasure";
+        patchlabelsize = 14, framevisible = false, 
+        labelsize = 18, titlesize = 20,
+        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0),)
+    f
+end
 
 # Marker size change
 plot_topoplot(
