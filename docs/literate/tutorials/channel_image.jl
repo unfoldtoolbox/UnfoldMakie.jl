@@ -20,10 +20,10 @@ using TopoPlots
 dat, pos = TopoPlots.example_data()
 dat = dat[:, :, 1]
 pos = pos[1:30]
-channels_30 = UnfoldMakie.example_montage("channels_30");
+labels_30 = UnfoldMakie.example_montage("labels_30");
 
 
-plot_channelimage(dat[1:30, :], pos, channels_30; axis = (; xlabel = "Time [s]"))
+plot_channelimage(dat[1:30, :], pos, labels_30; axis = (; xlabel = "Time [s]"))
 
 # # Configurations for Channel image
 

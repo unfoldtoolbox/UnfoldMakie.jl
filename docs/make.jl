@@ -53,14 +53,15 @@ makedocs(;
                 "Design matrix" => "generated/tutorials/designmatrix.md",
                 "Spline plot" => "generated/tutorials/splines.md",
             ],
+            "Videos" => "generated/tutorials/videos.md",
         ],
-        "How To" => [
-            "Include multiple figures in one" => "generated/how_to/complex_figures.md",
-            "Customize channel labels" => "generated/how_to/customize_labels.md",
+        "How To Do" => [
+            "Complex figures" => "generated/how_to/complex_figures.md",
+            "Channel labels" => "generated/how_to/topo_labels.md",
             "Hide decorations and axis spines" => "generated/how_to/hide_deco.md",
-            "Change colormap of butterfly plot" => "generated/how_to/position2color.md",
-            "Visualize uncertainty in topoplot series" => "generated/how_to/uncertain_topo.md",
-            "Convert electrode positions from 3D to 2D" => "generated/how_to/positions.md",
+            "Colormap of butterfly plot" => "generated/how_to/position2color.md",
+            "Uncertainty in topoplots" => "generated/how_to/uncertain_topo.md",
+            "Electrode positions from 3D to 2D" => "generated/how_to/positions.md",
         ],
         "Explanations" => [
             "Plot types" => "generated/explanations/plot_types.md",
