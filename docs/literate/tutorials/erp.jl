@@ -32,7 +32,7 @@ results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m); 
 
 # ## Figure plotting
-# This figure shows the rERP coeffiecients. The "Intercept" reflects the reference-category, e.g. the ERP of a "car". The condition "face" reflects the difference to the intercept when a face is shown, and the continuous predictor reflects the slope associated with the linear effect of `continuous`.
+# This figure shows the rERP coeffiecients. The "Intercept" reflects the reference category, e.g. the ERP of a "car". The condition "face" reflects the difference to the intercept when a face is shown, and the continuous predictor reflects the slope associated with the linear effect of `continuous`.
 plot_erp(results)
 
 # To change legend title use `mapping.color`:
