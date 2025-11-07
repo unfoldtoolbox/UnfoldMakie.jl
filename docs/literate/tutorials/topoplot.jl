@@ -131,17 +131,17 @@ plot_topoplot(
 # Markers as arrows
 begin
     f = Figure()
-    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
+    uncert_norm = (dat[:, 340, 2] .- minimum(dat[:, 340, 2])) ./ (maximum(dat[:, 340, 2]) - minimum(dat[:, 340, 2])) 
     rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
 
     arrow_symbols = ['↑', '↗', '→', '↘', '↓'] # 5 levels of uncertainty
     
-    angles = range(extrema(vec_uncert)...; length=5) 
+    angles = range(extrema(dat[:, 340, 2])...; length=5) 
     labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
 
     plot_topoplot!(
         f[1:6, 1],
-        vec_estimate;
+        topo_array[:, 340, 1];
         positions,
         topo_attributes = (;
             label_scatter = (;
