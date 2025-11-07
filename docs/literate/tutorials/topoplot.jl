@@ -142,7 +142,7 @@ begin
     plot_topoplot!(
         f[1:6, 1],
         topo_array[:, 340, 1];
-        positions,
+        positions = topo_positions,
         topo_attributes = (;
             label_scatter = (;
                 markersize = 20,
