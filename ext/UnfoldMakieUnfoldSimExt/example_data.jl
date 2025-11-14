@@ -192,7 +192,7 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
         )
 
         hart = headmodel() # 227 electrodes
-        less_hart = magnitude(hart)[:, 1] 
+        less_hart = magnitude(hart)[:, 1]
 
         mc = UnfoldSim.MultichannelComponent(c, less_hart)
 
@@ -217,8 +217,9 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
         # chosing positions
         pos_toposeries =
             hart.electrodes["pos"] |>
-            x -> to_positions(x') |>
-            x -> [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in x]
+            x ->
+                to_positions(x') |>
+                x -> [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in x]
         return df_toposeries, pos_toposeries, hart.electrodes["label"]
     else
         error("unknown example data")
