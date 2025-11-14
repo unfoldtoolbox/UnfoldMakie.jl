@@ -33,7 +33,8 @@ vec_estimate = dat[:, 340, 1];
 vec_uncert = dat[:, 340, 2];
 # Data for animation:
 
-df_toposeries, pos_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries, pos_toposeries =
+    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_toposeries1 = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1);
 # This will generate DataFrame with 227 channels, 50 trials, 500 mseconds for bootstrapping.
@@ -44,16 +45,28 @@ rng = MersenneTwister(1);
 
 begin
     f = Figure()
-    ax = Axis(f[1, 1:2], title = "Time windows [340 ms]", titlesize = 24, titlealign = :center,) 
-    
-    hidedecorations!(ax, label = false) ; hidespines!(ax)
+    ax = Axis(
+        f[1, 1:2],
+        title = "Time windows [340 ms]",
+        titlesize = 24,
+        titlealign = :center,
+    )
+
+    hidedecorations!(ax, label = false)
+    hidespines!(ax)
     plot_topoplot!(
         f[1, 1],
         vec_estimate;
         positions = positions,
         visual = (; contours = false),
         axis = (; xlabel = ""),
-        colorbar = (; label = "Voltage [µV]", labelsize = 24, ticklabelsize = 18, vertical = false, width = 180),
+        colorbar = (;
+            label = "Voltage [µV]",
+            labelsize = 24,
+            ticklabelsize = 18,
+            vertical = false,
+            width = 180,
+        ),
     )
     plot_topoplot!(
         f[1, 2],
@@ -61,7 +74,13 @@ begin
         positions = positions,
         visual = (; colormap = (:viridis), contours = false),
         axis = (; xlabel = "", xlabelsize = 24, ylabelsize = 24),
-        colorbar = (; label = "Standard deviation", labelsize = 24, ticklabelsize = 18, vertical = false, width = 180),
+        colorbar = (;
+            label = "Standard deviation",
+            labelsize = 24,
+            ticklabelsize = 18,
+            vertical = false,
+            width = 180,
+        ),
     )
     f
 end
@@ -72,7 +91,8 @@ end
 # The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.
 begin
     f = Figure()
-    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert)) 
+    uncert_norm =
+        (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert))
     uncert_scaled = uncert_norm * 30 .+ 10
 
     plot_topoplot!(
@@ -81,22 +101,26 @@ begin
         positions,
         axis = (; xlabel = "Time point [340 ms]", xlabelsize = 24, ylabelsize = 24),
         topo_attributes = (;
-            label_scatter = (; markersize = uncert_scaled, color = :transparent, strokecolor = :black,         
-            strokewidth = uncert_scaled .* 0.25 )
+            label_scatter = (; markersize = uncert_scaled, color = :transparent,
+                strokecolor = :black,
+                strokewidth = uncert_scaled .* 0.25)
         ),
         visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
-        colorbar = (; labelsize = 24, ticklabelsize = 18)
+        colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
 
-    group_size = [MarkerElement(
-        marker = :circle, 
-        color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5, 
-        markersize = ms) for ms in markersizes]
-    Legend(f[5, 1], group_size, ["$ms" for ms in markersizes], "Standard\ndeviation", 
-        patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8), framevisible = false, 
+    group_size = [
+        MarkerElement(
+            marker = :circle,
+            color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5,
+            markersize = ms) for ms in markersizes
+    ]
+    Legend(f[5, 1], group_size, ["$ms" for ms in markersizes], "Standard\ndeviation",
+        patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8),
+        framevisible = false,
         labelsize = 18, titlesize = 20,
-        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0))
+        orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
     f
 end
 
@@ -202,7 +226,7 @@ Return (n_channels × n_boot) matrix of bootstrap mean vectors,
 sampling independently per channel: μ + SE * randn().
 """
 function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
-        n_boot::Int=10, rng=MersenneTwister(1))
+    n_boot::Int = 10, rng = MersenneTwister(1))
 
     T = float(promote_type(eltype(mean_vec), eltype(se_vec)))
     μ = convert(Vector{T}, mean_vec)
@@ -210,7 +234,7 @@ function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     n_channels = length(μ)
 
     out = Matrix{T}(undef, n_channels, n_boot)
-    for i_boot in 1:n_boot
+    for i_boot = 1:n_boot
         out[:, i_boot] = μ .+ se .* randn(rng, T, n_channels)
     end
     return out
@@ -235,10 +259,10 @@ plot_topoplot!(
 
 record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
     recordframe!(io)  # first frame (original)
-    for i_boot in 1:(n_boot - 1)          # number of bootstrap targets
-        new_v = boot_means[:, i_boot + 1]
+    for i_boot = 1:(n_boot-1)          # number of bootstrap targets
+        new_v = boot_means[:, i_boot+1]
         old_v = copy(obs[])
-        for u in range(0, 1, length=10)   # easing steps
+        for u in range(0, 1, length = 10)   # easing steps
             obs[] = ease_between(old_v, new_v, u)
             recordframe!(io)
         end
@@ -246,5 +270,3 @@ record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
 end
 
 # ![](bootstrap_single_topo.mp4)
-
-

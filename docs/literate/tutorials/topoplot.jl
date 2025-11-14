@@ -58,13 +58,18 @@ plot_topoplot(
 
 begin
     f = Figure(size = (700, 700))
-    Label(f[0, 1:3], "Topoplots with Diverging Scientific Colormaps"; fontsize = 22, halign = :center)
+    Label(
+        f[0, 1:3],
+        "Topoplots with Diverging Scientific Colormaps";
+        fontsize = 22,
+        halign = :center,
+    )
 
     colormaps = [:berlin, :roma, :lisbon, :cork, :managua, :bam]
 
     for (i, cmap) in enumerate(colormaps)
-        r = div(i-1, 3) + 1   # row index (1 or 2)
-        c = mod(i-1, 3) + 1   # column index (1 → 3)
+        r = div(i - 1, 3) + 1   # row index (1 or 2)
+        c = mod(i - 1, 3) + 1   # column index (1 → 3)
 
         plot_topoplot!(f[r, c],
             topo_array[:, 100, 1];
@@ -100,7 +105,7 @@ end
 
 # Create per-channel styles
 colors = fill(:black, 64)      # default
-sizes  = fill(8, 64)           # default size
+sizes = fill(8, 64)           # default size
 strokes = fill(0.5, 64);        # default width
 
 # Highlight first two
@@ -114,11 +119,11 @@ plot_topoplot(
     axis = (; xlabel = "Time [50 ms]"),
     visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256),
     topo_attributes = (;
-        label_scatter = (; 
+        label_scatter = (;
             markersize = sizes,
             color = colors,
             strokewidth = strokes,
-            strokecolor = colors
+            strokecolor = colors,
         )
     ),
 )
@@ -131,12 +136,14 @@ plot_topoplot(
 # Markers as arrows
 begin
     f = Figure()
-    uncert_norm = (topo_array[:, 340, 2] .- minimum(topo_array[:, 340, 2])) ./ (maximum(topo_array[:, 340, 2]) - minimum(topo_array[:, 340, 2])) 
+    uncert_norm =
+        (topo_array[:, 340, 2] .- minimum(topo_array[:, 340, 2])) ./
+        (maximum(topo_array[:, 340, 2]) - minimum(topo_array[:, 340, 2]))
     rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
 
     arrow_symbols = ['↑', '↗', '→', '↘', '↓'] # 5 levels of uncertainty
-    
-    angles = range(extrema(topo_array[:, 340, 2])...; length=5) 
+
+    angles = range(extrema(topo_array[:, 340, 2])...; length = 5)
     labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
 
     plot_topoplot!(
@@ -153,16 +160,18 @@ begin
         ),
         axis = (; xlabel = "Time point [50 ms]", xlabelsize = 24, ylabelsize = 24),
         visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
-        colorbar = (; labelsize = 24, ticklabelsize = 18)
+        colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
 
-    mgroup = [MarkerElement(marker = sym, color = :black, markersize = 20)
-         for sym in arrow_symbols]
+    mgroup = [
+        MarkerElement(marker = sym, color = :black, markersize = 20)
+        for sym in arrow_symbols
+    ]
 
     Legend(f[7, 1], mgroup, labels, "Some\nmeasure";
-        patchlabelsize = 14, framevisible = false, 
+        patchlabelsize = 14, framevisible = false,
         labelsize = 18, titlesize = 20,
-        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0),)
+        orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
     f
 end
 
