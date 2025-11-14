@@ -11,20 +11,33 @@ using Statistics
 using Random
 using Animations</code></pre></details ><p>Representing uncertainty is one of the most difficult tasks in visualization. It is especially difficult for heatmaps and topoplots. Here we will present new ways to show uncertainty for topoplots.</p><p>Uncertainty in EEG data usually comes from subjects and trials:</p><ol><li>Subjects can vary in phisological or behavioral characteristics;</li><li>Something can change between trials (electrode connection can get worse, etc.).</li></ol><p>There are several measures of uncertainty. Here we will use <code>standard deviation</code> (x - mean(x) / N) and <code>t-values</code> (mean(x) / SE(x)).</p><h1 id="Data-input"><a class="docs-heading-anchor" href="#Data-input">Data input</a><a id="Data-input-1"></a><a class="docs-heading-anchor-permalink" href="#Data-input" title="Permalink"></a></h1><p>Data for customized topoplots:</p><pre><code class="language-julia hljs">dat, positions = TopoPlots.example_data()
 vec_estimate = dat[:, 340, 1];
-vec_uncert = dat[:, 340, 2];</code></pre><p>Data for animation:</p><pre><code class="language-julia hljs">df_toposeries, pos_toposeries = UnfoldMakie.example_data(&quot;bootstrap_toposeries&quot;; noiselevel = 7);
+vec_uncert = dat[:, 340, 2];</code></pre><p>Data for animation:</p><pre><code class="language-julia hljs">df_toposeries, pos_toposeries =
+    UnfoldMakie.example_data(&quot;bootstrap_toposeries&quot;; noiselevel = 7);
 df_toposeries1 = df_toposeries[df_toposeries.trial.&lt;=15, :];
 rng = MersenneTwister(1);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Please cite: HArtMuT: Harmening Nils, Klug Marius, Gramann Klaus and Miklody Daniel - 10.1088/1741-2552/aca8ce</code></pre><p>This will generate DataFrame with 227 channels, 50 trials, 500 mseconds for bootstrapping. <code>noiselevel</code> is important for adding variability it your data.</p><h1 id="Adjacent-topoplot"><a class="docs-heading-anchor" href="#Adjacent-topoplot">Adjacent topoplot</a><a id="Adjacent-topoplot-1"></a><a class="docs-heading-anchor-permalink" href="#Adjacent-topoplot" title="Permalink"></a></h1><p>In this case we already have two data vectors: <code>vec_estimate</code> with mean estimates and <code>vec_uncert</code> with standard deviation.</p><pre><code class="language-julia hljs">begin
     f = Figure()
-    ax = Axis(f[1, 1:2], title = &quot;Time windows [340 ms]&quot;, titlesize = 24, titlealign = :center,)
+    ax = Axis(
+        f[1, 1:2],
+        title = &quot;Time windows [340 ms]&quot;,
+        titlesize = 24,
+        titlealign = :center,
+    )
 
-    hidedecorations!(ax, label = false) ; hidespines!(ax)
+    hidedecorations!(ax, label = false)
+    hidespines!(ax)
     plot_topoplot!(
         f[1, 1],
         vec_estimate;
         positions = positions,
         visual = (; contours = false),
         axis = (; xlabel = &quot;&quot;),
-        colorbar = (; label = &quot;Voltage [µV]&quot;, labelsize = 24, ticklabelsize = 18, vertical = false, width = 180),
+        colorbar = (;
+            label = &quot;Voltage [µV]&quot;,
+            labelsize = 24,
+            ticklabelsize = 18,
+            vertical = false,
+            width = 180,
+        ),
     )
     plot_topoplot!(
         f[1, 2],
@@ -32,12 +45,19 @@ rng = MersenneTwister(1);</code></pre><pre class="documenter-example-output"><co
         positions = positions,
         visual = (; colormap = (:viridis), contours = false),
         axis = (; xlabel = &quot;&quot;, xlabelsize = 24, ylabelsize = 24),
-        colorbar = (; label = &quot;Standard deviation&quot;, labelsize = 24, ticklabelsize = 18, vertical = false, width = 180),
+        colorbar = (;
+            label = &quot;Standard deviation&quot;,
+            labelsize = 24,
+            ticklabelsize = 18,
+            vertical = false,
+            width = 180,
+        ),
     )
     f
 end</code></pre><img src="a6a5ec2d.png" alt="Example block output"/><h1 id="Uncertainty-via-marker-size"><a class="docs-heading-anchor" href="#Uncertainty-via-marker-size">Uncertainty via marker size</a><a id="Uncertainty-via-marker-size-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-marker-size" title="Permalink"></a></h1><p>We show uncertainty using donut-shaped electrode markers. The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.</p><pre><code class="language-julia hljs">begin
     f = Figure()
-    uncert_norm = (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert))
+    uncert_norm =
+        (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert))
     uncert_scaled = uncert_norm * 30 .+ 10
 
     plot_topoplot!(
@@ -46,22 +66,26 @@ end</code></pre><img src="a6a5ec2d.png" alt="Example block output"/><h1 id="Unce
         positions,
         axis = (; xlabel = &quot;Time point [340 ms]&quot;, xlabelsize = 24, ylabelsize = 24),
         topo_attributes = (;
-            label_scatter = (; markersize = uncert_scaled, color = :transparent, strokecolor = :black,
-            strokewidth = uncert_scaled .* 0.25 )
+            label_scatter = (; markersize = uncert_scaled, color = :transparent,
+                strokecolor = :black,
+                strokewidth = uncert_scaled .* 0.25)
         ),
         visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
-        colorbar = (; labelsize = 24, ticklabelsize = 18)
+        colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
 
-    group_size = [MarkerElement(
-        marker = :circle,
-        color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5,
-        markersize = ms) for ms in markersizes]
+    group_size = [
+        MarkerElement(
+            marker = :circle,
+            color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5,
+            markersize = ms) for ms in markersizes
+    ]
     Legend(f[5, 1], group_size, [&quot;$ms&quot; for ms in markersizes], &quot;Standard\ndeviation&quot;,
-        patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8), framevisible = false,
+        patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8),
+        framevisible = false,
         labelsize = 18, titlesize = 20,
-        orientation = :horizontal, titleposition = :left, margin = (90,0,0,0))
+        orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
     f
 end</code></pre><img src="b18d5011.png" alt="Example block output"/><h1 id="Uncertainty-via-animation"><a class="docs-heading-anchor" href="#Uncertainty-via-animation">Uncertainty via animation</a><a id="Uncertainty-via-animation-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-animation" title="Permalink"></a></h1><p>In this case, we need to boostrap the data, so we&#39;ll use raw data with single trials.</p><p>To show the uncertainty of the estimate, we will compute 10 different means of the boostrapped data. More specifically: 1) create N boostrapped data sets using random sampling with replacement across trials; 2) compute their means; 3) do a toposeries animation iterating over these means.</p><details>
 <summary>Click to expand for supportive functions</summary><p>With this function we will bootstrap the data. <code>rng</code> - random number generated. Be sure to send the same rng from outside the function.</p><pre><code class="language-julia hljs">bootstrap_toposeries(df; kwargs...) = bootstrap_toposeries(MersenneTwister(), df; kwargs...)
@@ -124,7 +148,7 @@ Return (n_channels × n_boot) matrix of bootstrap mean vectors,
 sampling independently per channel: μ + SE * randn().
 &quot;&quot;&quot;
 function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
-        n_boot::Int=10, rng=MersenneTwister(1))
+    n_boot::Int = 10, rng = MersenneTwister(1))
 
     T = float(promote_type(eltype(mean_vec), eltype(se_vec)))
     μ = convert(Vector{T}, mean_vec)
@@ -132,7 +156,7 @@ function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     n_channels = length(μ)
 
     out = Matrix{T}(undef, n_channels, n_boot)
-    for i_boot in 1:n_boot
+    for i_boot = 1:n_boot
         out[:, i_boot] = μ .+ se .* randn(rng, T, n_channels)
     end
     return out
@@ -152,12 +176,12 @@ plot_topoplot!(
 
 record(f, &quot;bootstrap_single_topo.mp4&quot;; framerate = 12) do io
     recordframe!(io)  # first frame (original)
-    for i_boot in 1:(n_boot - 1)          # number of bootstrap targets
-        new_v = boot_means[:, i_boot + 1]
+    for i_boot = 1:(n_boot-1)          # number of bootstrap targets
+        new_v = boot_means[:, i_boot+1]
         old_v = copy(obs[])
-        for u in range(0, 1, length=10)   # easing steps
+        for u in range(0, 1, length = 10)   # easing steps
             obs[] = ease_between(old_v, new_v, u)
             recordframe!(io)
         end
     end
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;bootstrap_single_topo.mp4&quot;</code></pre><p><video src="../bootstrap_single_topo.mp4" controls="true" title><a href="../bootstrap_single_topo.mp4"></a></video></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../position2color/">« Colormap of butterfly plot</a><a class="docs-footer-nextpage" href="../positions/">Electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.0 on <span class="colophon-date" title="Friday 14 November 2025 15:57">Friday 14 November 2025</span>. Using Julia version 1.12.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;bootstrap_single_topo.mp4&quot;</code></pre><p><video src="../bootstrap_single_topo.mp4" controls="true" title><a href="../bootstrap_single_topo.mp4"></a></video></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../position2color/">« Colormap of butterfly plot</a><a class="docs-footer-nextpage" href="../positions/">Electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.0 on <span class="colophon-date" title="Friday 14 November 2025 18:27">Friday 14 November 2025</span>. Using Julia version 1.12.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
