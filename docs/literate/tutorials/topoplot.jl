@@ -185,6 +185,43 @@ plot_topoplot(
     ),
 )
 
+# # Not only voltage
+# Topoplots can be used to visualize any measure that can be mapped to sensors locations. For example, you can plot statistical values (t-values, F-values, p-values), frequency band power, connectivity measures etc.
+# Here we plot different uncertatinty estimates using topoplot.
+
+topo_se = topo_array[:, 50, 2] ./ sqrt(length(topo_array[:, 50, 2])) # standard error
+topo_tvalues = topo_array[:, 50, 1] ./ topo_se
+
+begin
+    f = Figure(size = (600, 600))
+    ax = Axis(f[1:2, 1:2]; titlesize = 22, subtitlesize = 18, 
+        title = "Uncertainty measures on topoplots", subtitle = "Time [50 ms]")
+    hidedecorations!(ax); hidespines!(ax)
+
+    panels = [
+        (topo_array[:, 50, 2], "Standard deviation"),
+        (topo_se, "Standard error"),
+        (topo_tvalues, "t-values"),
+        (topo_array[:, 50, 3], "p-values"),
+    ]
+
+    for (i, (vals, cblabel)) in enumerate(panels)
+        r = div(i - 1, 2) + 1   # rows: 1..2
+        c = mod(i - 1, 2) + 1   # cols: 1..2
+
+        plot_topoplot!(f[r, c],
+            vals;
+            positions = topo_positions,
+            axis = (; xlabel = ""),
+            colorbar = (; vertical = false, width = 180, label = cblabel),
+            visual = (; colormap = :viridis, contours = false),
+        )
+    end
+
+    f
+end
+
+
 # # Configurations of Topoplot
 
 # ```@docs
