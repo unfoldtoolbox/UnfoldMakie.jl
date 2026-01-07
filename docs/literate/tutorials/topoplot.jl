@@ -200,7 +200,7 @@ begin
 
     panels = [
         (topo_array[:, 50, 2], "Standard deviation"),
-        (topo_se, "Standard error"),
+        (topo_se .* 1e2, "Standard error (×10⁻²)"),
         (topo_tvalues, "t-values"),
         (topo_array[:, 50, 3], "p-values"),
     ]
