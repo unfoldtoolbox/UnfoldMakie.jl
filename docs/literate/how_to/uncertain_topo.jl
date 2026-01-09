@@ -40,7 +40,7 @@ rng = MersenneTwister(1);
 # <details>
 # <summary>Click to expand</summary>
 # ```
-begin
+function adjacent()
     f = Figure()
     ax = Axis(
         f[1, 1:2],
@@ -84,6 +84,7 @@ end
 # ```@raw html
 # </details >
 # ```
+adjacent()
 
 # # Uncertainty via marker size
 # We show uncertainty using donut-shaped electrode markers.
@@ -92,7 +93,7 @@ end
 # <details>
 # <summary>Click to expand</summary>
 # ```
-begin
+function marker_size_uncertainty()
     f = Figure()
     uncert_norm =
         (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert))
@@ -129,6 +130,7 @@ end
 # ```@raw html
 # </details >
 # ```
+marker_size_uncertainty()
 
 # # Uncertainty via bivariate colormap 
 # Here we use a bivariate colormap to represent both estimate and uncertainty in a single topoplot.
@@ -137,7 +139,7 @@ end
 # <details>
 # <summary>Click to expand</summary>
 # ```
-begin
+function bivariate_corners()
     n_cb = 5
     colorbox = bivariate_colormatrix_corners(
         n_cb, n_cb;
@@ -205,16 +207,16 @@ end
 # ```@raw html
 # </details >
 # ```
+bivariate_corners()
 
 # # Uncertainty via bivariate colormap (range type)
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
 # ```
-begin
-    n_cb = 5
+function bivariate_range()
     colorbox = bivariate_colormatrix_range(
-        n_rows = 4,
+        n_rows = n_cb,
         n_cols = n_cb,
         neg = colorant"#2166ac",
         mid = colorant"#FFFFBF",
@@ -226,8 +228,8 @@ begin
     xticks = round.(collect(range(extrema(vec_estimate)...; length = n_cb)), digits = 2)
     yticks = (round.(collect(range(extrema(vec_uncert)...; length = n_cb)), digits = 2))
 
-    label_inds_x = [1, 5, length(xticks)]
-    label_inds_y = [1, 4, length(xticks)]
+    label_inds_x = [1, n_cb, length(xticks)]
+    label_inds_y = [1, n_cb, length(xticks)]
     xticks_label = [
         i in label_inds_x ? string(vec_estimate) : "" for
         (i, vec_estimate) in enumerate(xticks)
@@ -278,6 +280,7 @@ end
 # ```@raw html
 # </details >
 # ```
+bivariate_range()
 
 # # Uncertainty via value-suppresing palette (VSP)
 # Here we use a specialized colormap that suppresses colors for high-uncertainty areas while keeping colors vivid for low-uncertainty areas.
@@ -286,7 +289,7 @@ end
 # <details>
 # <summary>Click to expand</summary>
 # ```
-begin
+function vsp_example()
     colormap_vsp = :berlin
     f = Figure(size = (550, 400))
     alphas = [1.0, 0.8, 0.6, 0.4]
@@ -349,10 +352,10 @@ begin
     )
     f
 end
-
 # ```@raw html
 # </details >
 # ```
+vsp_example()
 # # Uncertainty via animation 
 # In this case, we need to boostrap the data, so we'll use raw data with single trials. 
 
@@ -397,6 +400,10 @@ end
 # </details >
 # ```
 
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 se_vec = vec_uncert ./ sqrt(15) # 15 subject according to paper
 n_boot = 20
 boot_means = param_bootstrap_means(vec_estimate, se_vec; n_boot = n_boot, rng = rng)
@@ -422,5 +429,8 @@ record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
         end
     end
 end
+# ```@raw html
+# </details >
+# ```
 
 # ![](bootstrap_single_topo.mp4)
