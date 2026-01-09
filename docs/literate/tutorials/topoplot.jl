@@ -194,9 +194,10 @@ topo_tvalues = topo_array[:, 50, 1] ./ topo_se
 
 begin
     f = Figure(size = (600, 600))
-    ax = Axis(f[1:2, 1:2]; titlesize = 22, subtitlesize = 18, 
+    ax = Axis(f[1:2, 1:2]; titlesize = 22, subtitlesize = 18,
         title = "Uncertainty measures on topoplots", subtitle = "Time [50 ms]")
-    hidedecorations!(ax); hidespines!(ax)
+    hidedecorations!(ax)
+    hidespines!(ax)
 
     panels = [
         (topo_array[:, 50, 2], "Standard deviation"),

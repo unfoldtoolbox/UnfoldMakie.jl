@@ -192,12 +192,11 @@ begin
         positions = positions,
         colormap = colorbox,
         bivariate = (;
-            norm_method = :robust_minmax,         # :ecdf | :minmax | :robust_minmax
-            norm_qrange = (0.005, 0.995),      # for :robust_minmax
-            norm_flip_v = false,              # flip vertical if your palette needs it
+            norm_method = :robust_minmax,
+            norm_qrange = (0.005, 0.995),
+            norm_flip_v = false,
             sample_mode = :nearest,
         ),
-        # interpolation = NullInterpolator(), label_scatter=(; markersize = 25),
     )
     hidedecorations!(topo_axis, label = false)
     hidespines!(topo_axis)
@@ -227,8 +226,8 @@ begin
     xticks = round.(collect(range(extrema(vec_estimate)...; length = n_cb)), digits = 2)
     yticks = (round.(collect(range(extrema(vec_uncert)...; length = n_cb)), digits = 2))
 
-    label_inds_x = [1, 5, length(xticks)]   # indices to keep labels
-    label_inds_y = [1, 4, length(xticks)]   # indices to keep labels
+    label_inds_x = [1, 5, length(xticks)]
+    label_inds_y = [1, 4, length(xticks)]
     xticks_label = [
         i in label_inds_x ? string(vec_estimate) : "" for
         (i, vec_estimate) in enumerate(xticks)
@@ -266,12 +265,11 @@ begin
         positions = positions,
         colormap = colorbox,
         bivariate = (;
-            norm_method = :robust_minmax,         # :ecdf | :minmax | :robust_minmax
-            norm_qrange = (0.005, 0.995),      # for :robust_minmax
-            norm_flip_v = false,              # flip vertical if your palette needs it
+            norm_method = :robust_minmax,
+            norm_qrange = (0.005, 0.995),
+            norm_flip_v = false,
             sample_mode = :nearest,
         ),
-        #interpolation = NullInterpolator(), label_scatter=(; markersize = 25),
     )
     hidedecorations!(topo_axis, label = false)
     hidespines!(topo_axis)
@@ -293,7 +291,6 @@ begin
     f = Figure(size = (550, 400))
     alphas = [1.0, 0.8, 0.6, 0.4]
 
-    # --- data-driven labels ---
     alphas_ticks = round.(collect(range(extrema(vec_uncert)...; length = 5)), digits = 2)
     value_labels = reverse(
         string.(
@@ -305,23 +302,17 @@ begin
     )
     uncert_labels = reverse(string.(alphas_ticks))  # outer→inner to match radial order
 
-    # --- legend axis (no manual ticks here; legend will set them) ---
     vsp_axis = PolarAxis(f[1:4, 3:4]; width = 250, height = 220,
         thetalimits = (-π / 5, π / 5), theta_0 = π / 2,
         thetaticklabelsize = 20, rticklabelsize = 20)
 
-    # --- build VSP rows (rows = uncertainty rings, cols = value sectors) ---
     vsup_cmap = vsup_colormatrix(;
         cmap = cgrad(colormap_vsp), n_uncertainty = 4,
         max_desat = 0.8, pow_desat = 1.0, max_light = 0.7, pow_light = 1,
     )
 
-    # Convert the continuous vsup_cmap to ring-wise categorical rows expected by the legend
-    # Each element vsp_rows[j] is a vector of length == number of angular sectors (8 here)
-    # The 'reverse' puts the lowest-uncertainty ring outermost (matching your earlier drawing)
     vsp_rows = reverse([(vsup_cmap'[:, i]) for i = 1:size(vsup_cmap', 2)])
 
-    # --- draw the polar legend ---
     vsp_polar_legend!(vsp_axis;
         vsp_rows = vsp_rows,
         value_labels = value_labels,
@@ -330,19 +321,17 @@ begin
         theta0 = π / 2,
     )
 
-    # --- topoplot side ---
     ax_dummy, topo_axis = dummy_and_topo_axis()
 
     TopoPlots.eeg_topoplot!(topo_axis, (vec_estimate, vec_uncert);
         positions = positions,
         colormap = vsp_rows_to_colorbox(vsp_rows),
         labels = ["$(i)" for i = 1:64],
-        #interpolation = NullInterpolator(), label_scatter = (; markersize = 25),
         contours = true,
         attributes = (;
-            norm_method = :robust_minmax,         # :ecdf | :mingmax | :robust_minmax
-            norm_qrange = (0.005, 0.995),      # for :robust_minmax
-            norm_flip_v = false,              # flip vertical if your palette needs it
+            norm_method = :robust_minmax,
+            norm_qrange = (0.005, 0.995),
+            norm_flip_v = false,
             sample_mode = :nearest,
         ),
     )
