@@ -13,7 +13,7 @@ using Animations</code></pre></details ><p>Representing uncertainty is one of th
 vec_estimate = dat[:, 340, 1];
 vec_uncert = dat[:, 340, 2];
 rng = MersenneTwister(1);</code></pre><h1 id="Adjacent-topoplot"><a class="docs-heading-anchor" href="#Adjacent-topoplot">Adjacent topoplot</a><a id="Adjacent-topoplot-1"></a><a class="docs-heading-anchor-permalink" href="#Adjacent-topoplot" title="Permalink"></a></h1><p>In this case we already have two data vectors: <code>vec_estimate</code> with mean estimates and <code>vec_uncert</code> with standard deviation.</p><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function adjacent()
     f = Figure()
     ax = Axis(
         f[1, 1:2],
@@ -53,8 +53,8 @@ rng = MersenneTwister(1);</code></pre><h1 id="Adjacent-topoplot"><a class="docs-
         ),
     )
     f
-end</code></pre><img src="a6a5ec2d.png" alt="Example block output"/></details ><h1 id="Uncertainty-via-marker-size"><a class="docs-heading-anchor" href="#Uncertainty-via-marker-size">Uncertainty via marker size</a><a id="Uncertainty-via-marker-size-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-marker-size" title="Permalink"></a></h1><p>We show uncertainty using donut-shaped electrode markers. The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.</p><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">adjacent (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">adjacent()</code></pre><img src="a6a5ec2d.png" alt="Example block output"/><h1 id="Uncertainty-via-marker-size"><a class="docs-heading-anchor" href="#Uncertainty-via-marker-size">Uncertainty via marker size</a><a id="Uncertainty-via-marker-size-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-marker-size" title="Permalink"></a></h1><p>We show uncertainty using donut-shaped electrode markers. The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.</p><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function marker_size_uncertainty()
     f = Figure()
     uncert_norm =
         (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert))
@@ -87,8 +87,8 @@ end</code></pre><img src="a6a5ec2d.png" alt="Example block output"/></details ><
         labelsize = 18, titlesize = 20,
         orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
     f
-end</code></pre><img src="b18d5011.png" alt="Example block output"/></details ><h1 id="Uncertainty-via-bivariate-colormap"><a class="docs-heading-anchor" href="#Uncertainty-via-bivariate-colormap">Uncertainty via bivariate colormap</a><a id="Uncertainty-via-bivariate-colormap-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-bivariate-colormap" title="Permalink"></a></h1><p>Here we use a bivariate colormap to represent both estimate and uncertainty in a single topoplot. There are two types of such colormaps: 1) corner; 2) range.</p><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">marker_size_uncertainty (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">marker_size_uncertainty()</code></pre><img src="b18d5011.png" alt="Example block output"/><h1 id="Uncertainty-via-bivariate-colormap"><a class="docs-heading-anchor" href="#Uncertainty-via-bivariate-colormap">Uncertainty via bivariate colormap</a><a id="Uncertainty-via-bivariate-colormap-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-bivariate-colormap" title="Permalink"></a></h1><p>Here we use a bivariate colormap to represent both estimate and uncertainty in a single topoplot. There are two types of such colormaps: 1) corner; 2) range.</p><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function bivariate_corners()
     n_cb = 5
     colorbox = bivariate_colormatrix_corners(
         n_cb, n_cb;
@@ -152,11 +152,11 @@ end</code></pre><img src="b18d5011.png" alt="Example block output"/></details ><
     hidedecorations!(topo_axis, label = false)
     hidespines!(topo_axis)
     f
-end</code></pre><img src="01e9adf9.png" alt="Example block output"/></details ><h1 id="Uncertainty-via-bivariate-colormap-(range-type)"><a class="docs-heading-anchor" href="#Uncertainty-via-bivariate-colormap-(range-type)">Uncertainty via bivariate colormap (range type)</a><a id="Uncertainty-via-bivariate-colormap-(range-type)-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-bivariate-colormap-(range-type)" title="Permalink"></a></h1><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">bivariate_corners (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">bivariate_corners()</code></pre><img src="01e9adf9.png" alt="Example block output"/><h1 id="Uncertainty-via-bivariate-colormap-(range-type)"><a class="docs-heading-anchor" href="#Uncertainty-via-bivariate-colormap-(range-type)">Uncertainty via bivariate colormap (range type)</a><a id="Uncertainty-via-bivariate-colormap-(range-type)-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-bivariate-colormap-(range-type)" title="Permalink"></a></h1><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function bivariate_range()
     n_cb = 5
     colorbox = bivariate_colormatrix_range(
-        n_rows = 4,
+        n_rows = n_cb,
         n_cols = n_cb,
         neg = colorant&quot;#2166ac&quot;,
         mid = colorant&quot;#FFFFBF&quot;,
@@ -168,8 +168,8 @@ end</code></pre><img src="01e9adf9.png" alt="Example block output"/></details ><
     xticks = round.(collect(range(extrema(vec_estimate)...; length = n_cb)), digits = 2)
     yticks = (round.(collect(range(extrema(vec_uncert)...; length = n_cb)), digits = 2))
 
-    label_inds_x = [1, 5, length(xticks)]
-    label_inds_y = [1, 4, length(xticks)]
+    label_inds_x = [1, n_cb, length(xticks)]
+    label_inds_y = [1, n_cb, length(xticks)]
     xticks_label = [
         i in label_inds_x ? string(vec_estimate) : &quot;&quot; for
         (i, vec_estimate) in enumerate(xticks)
@@ -216,11 +216,10 @@ end</code></pre><img src="01e9adf9.png" alt="Example block output"/></details ><
     hidedecorations!(topo_axis, label = false)
     hidespines!(topo_axis)
     f
-end</code></pre><img src="2b884a6e.png" alt="Example block output"/></details ><h1 id="Uncertainty-via-value-suppresing-palette-(VSP)"><a class="docs-heading-anchor" href="#Uncertainty-via-value-suppresing-palette-(VSP)">Uncertainty via value-suppresing palette (VSP)</a><a id="Uncertainty-via-value-suppresing-palette-(VSP)-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-value-suppresing-palette-(VSP)" title="Permalink"></a></h1><p>Here we use a specialized colormap that suppresses colors for high-uncertainty areas while keeping colors vivid for low-uncertainty areas.</p><details>
-<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">bivariate_range (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">bivariate_range()</code></pre><img src="07ea4821.png" alt="Example block output"/><h1 id="Uncertainty-via-value-suppresing-palette-(VSP)"><a class="docs-heading-anchor" href="#Uncertainty-via-value-suppresing-palette-(VSP)">Uncertainty via value-suppresing palette (VSP)</a><a id="Uncertainty-via-value-suppresing-palette-(VSP)-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-value-suppresing-palette-(VSP)" title="Permalink"></a></h1><p>Here we use a specialized colormap that suppresses colors for high-uncertainty areas while keeping colors vivid for low-uncertainty areas.</p><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function vsp_example()
     colormap_vsp = :berlin
     f = Figure(size = (550, 400))
-    alphas = [1.0, 0.8, 0.6, 0.4]
 
     alphas_ticks = round.(collect(range(extrema(vec_uncert)...; length = 5)), digits = 2)
     value_labels = reverse(
@@ -279,7 +278,7 @@ end</code></pre><img src="2b884a6e.png" alt="Example block output"/></details ><
         ),
     )
     f
-end</code></pre><img src="25871adb.png" alt="Example block output"/></details ><h1 id="Uncertainty-via-animation"><a class="docs-heading-anchor" href="#Uncertainty-via-animation">Uncertainty via animation</a><a id="Uncertainty-via-animation-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-animation" title="Permalink"></a></h1><p>In this case, we need to boostrap the data, so we&#39;ll use raw data with single trials.</p><p>To show the uncertainty of the estimate, we will compute 10 different means of the boostrapped data. More specifically: 1) create N boostrapped data sets using random sampling with replacement across trials; 2) compute their means; 3) do a toposeries animation iterating over these means.</p><details>
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">vsp_example (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">vsp_example()</code></pre><img src="25871adb.png" alt="Example block output"/><h1 id="Uncertainty-via-animation"><a class="docs-heading-anchor" href="#Uncertainty-via-animation">Uncertainty via animation</a><a id="Uncertainty-via-animation-1"></a><a class="docs-heading-anchor-permalink" href="#Uncertainty-via-animation" title="Permalink"></a></h1><p>In this case, we need to boostrap the data, so we&#39;ll use raw data with single trials.</p><p>To show the uncertainty of the estimate, we will compute 10 different means of the boostrapped data. More specifically: 1) create N boostrapped data sets using random sampling with replacement across trials; 2) compute their means; 3) do a toposeries animation iterating over these means.</p><details>
 <summary>Click to expand for supportive functions</summary><pre><code class="language-julia hljs">&quot;&quot;&quot;
 param_bootstrap_means(mean_vec, se_vec; n_boot, rng)
 
@@ -302,7 +301,8 @@ function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Main.param_bootstrap_means</code></pre><p>function for easing - smooth transition between frames in animation. <code>update_ratio</code> - transition ratio between time1 and time2. <code>at</code> - create animation object: 0 and 1 are time points, old and new are data vectors.</p><pre><code class="language-julia hljs">function ease_between(old, new, update_ratio; easing_function = sineio())
     anim = Animation(0, old, 1, new; defaulteasing = easing_function)
     return at(anim, update_ratio)
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ease_between (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">se_vec = vec_uncert ./ sqrt(15) # 15 subject according to paper
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ease_between (generic function with 1 method)</code></pre></details ><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">se_vec = vec_uncert ./ sqrt(15) # 15 subject according to paper
 n_boot = 20
 boot_means = param_bootstrap_means(vec_estimate, se_vec; n_boot = n_boot, rng = rng)
 
@@ -326,4 +326,4 @@ record(f, &quot;bootstrap_single_topo.mp4&quot;; framerate = 12) do io
             recordframe!(io)
         end
     end
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;bootstrap_single_topo.mp4&quot;</code></pre><p><video src="../bootstrap_single_topo.mp4" controls="true" title><a href="../bootstrap_single_topo.mp4"></a></video></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../position2color/">« Colormap of butterfly plot</a><a class="docs-footer-nextpage" href="../positions/">Electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Friday 9 January 2026 20:06">Friday 9 January 2026</span>. Using Julia version 1.12.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;bootstrap_single_topo.mp4&quot;</code></pre></details ><p><video src="../bootstrap_single_topo.mp4" controls="true" title><a href="../bootstrap_single_topo.mp4"></a></video></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../position2color/">« Colormap of butterfly plot</a><a class="docs-footer-nextpage" href="../positions/">Electrode positions from 3D to 2D »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Friday 9 January 2026 21:44">Friday 9 January 2026</span>. Using Julia version 1.12.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
