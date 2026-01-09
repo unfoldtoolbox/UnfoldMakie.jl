@@ -321,7 +321,7 @@ begin
         theta0 = π / 2,
     )
 
-    ax_dummy, topo_axis = dummy_and_topo_axis()
+    ax_dummy, topo_axis = UnfoldMakie.dummy_and_topo_axis()
 
     TopoPlots.eeg_topoplot!(topo_axis, (vec_estimate, vec_uncert);
         positions = positions,
