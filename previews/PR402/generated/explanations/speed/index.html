@@ -9,257 +9,40 @@ using PyMNE;</code></pre><pre class="documenter-example-output"><code class="noh
     CondaPkg Found dependencies: /home/runner/.julia/packages/PyMNE/cNGDN/CondaPkg.toml
     CondaPkg Found dependencies: /home/runner/.julia/packages/PythonCall/83z4q/CondaPkg.toml
     CondaPkg Found dependencies: /home/runner/.julia/packages/PythonPlot/oS8x4/CondaPkg.toml
-    CondaPkg Resolving changes
-             + libstdcxx
-             + libstdcxx-ng
-             + matplotlib
-             + mne (pip)
-             + openssl
-             + python
-             + uv
-    CondaPkg Creating environment
-             │ /home/runner/.julia/artifacts/7c4ad8f2d391c6f8127c0c0f65c9ec85b80e5837/bin/micromamba
-             │ -r /home/runner/.julia/scratchspaces/0b3b1443-0f03-428d-bdfb-f27f9c1191ea/root
-             │ create
-             │ -y
-             │ -p /home/runner/work/UnfoldMakie.jl/UnfoldMakie.jl/docs/.CondaPkg/env
-             │ --override-channels
-             │ libstdcxx[version=&#39;&gt;=3.4,&lt;15.0&#39;]
-             │ libstdcxx-ng[version=&#39;&gt;=3.4,&lt;15.0&#39;]
-             │ matplotlib[version=&#39;&gt;=1&#39;]
-             │ openssl[version=&#39;&gt;=3, &lt;3.6&#39;]
-             │ python[version=&#39;&gt;=3.10,!=3.14.0,!=3.14.1,&lt;4, &gt;=3.4,&lt;4&#39;,channel=&#39;conda-forge&#39;,build=&#39;*cp*&#39;]
-             │ uv[version=&#39;&gt;=0.4&#39;]
-             │ -c conda-forge
-             └ -c anaconda
+    CondaPkg Dependencies already up to date
+Precompiling packages...
+  12907.8 ms  ? UnfoldMakie
+Info Given UnfoldMakiePyMNEExt was explicitly requested, output will be shown live 
+┌ Warning: Module UnfoldMakie with build ID ffffffff-ffff-ffff-be74-33e75054c0cd is missing from the cache.
+│ This may mean UnfoldMakie [69a5ce3b-64fb-4f22-ae69-36dd4416af2a] does not support precompilation but is imported by a module that does.
+└ @ Base loading.jl:2641
+   2549.3 ms  ? UnfoldMakie → UnfoldMakiePyMNEExt
+┌ Warning: Module UnfoldMakie with build ID ffffffff-ffff-ffff-be74-33e75054c0cd is missing from the cache.
+│ This may mean UnfoldMakie [69a5ce3b-64fb-4f22-ae69-36dd4416af2a] does not support precompilation but is imported by a module that does.
+└ @ Base loading.jl:2641</code></pre><p>Data input</p><pre><code class="language-julia hljs">dat, positions = TopoPlots.example_data()
+df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));</code></pre><h1 id="Topoplots"><a class="docs-heading-anchor" href="#Topoplots">Topoplots</a><a id="Topoplots-1"></a><a class="docs-heading-anchor-permalink" href="#Topoplots" title="Permalink"></a></h1><p><strong>UnfoldMakie.jl</strong></p><pre><code class="language-julia hljs">@benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 168 samples with 1 evaluation per sample.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">26.689 ms</span></span> … <span class="sgr35">169.120 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 63.88%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">27.276 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">29.831 ms</span></span> ± <span class="sgr32"> 17.866 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>6.08% ±  8.34%
 
-Transaction
+  <span class="sgr34">█</span><span class="sgr32">▁</span>                                                            
+  <span class="sgr34">█</span><span class="sgr32">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄ ▄
+  26.7 ms<span class="sgr90">       Histogram: <span class="sgr1">log(</span>frequency<span class="sgr1">)</span> by time</span>       156 ms <span class="sgr1">&lt;</span>
 
-  Prefix: /home/runner/work/UnfoldMakie.jl/UnfoldMakie.jl/docs/.CondaPkg/env
-
-  Updating specs:
-
-   - libstdcxx[version=&#39;&gt;=3.4,&lt;15.0&#39;]
-   - libstdcxx-ng[version=&#39;&gt;=3.4,&lt;15.0&#39;]
-   - matplotlib[version=&#39;&gt;=1&#39;]
-   - openssl[version=&#39;&gt;=3, &lt;3.6&#39;]
-   - conda-forge::python[version=&#39;&gt;=3.10,!=3.14.0,!=3.14.1,&lt;4, &gt;=3.4,&lt;4&#39;,build=*cp*]
-   - uv[version=&#39;&gt;=0.4&#39;]
-
-
-  Package                           Version  Build                 Channel           Size
-───────────────────────────────────────────────────────────────────────────────────────────
-  Install:
-───────────────────────────────────────────────────────────────────────────────────────────
-
-  + tzdata                            2025c  hc9c84f9_1            conda-forge     Cached
-  + python_abi                         3.14  8_cp314               conda-forge     Cached
-  + ca-certificates                2026.1.4  hbd8a1cb_0            conda-forge     Cached
-  + font-ttf-dejavu-sans-mono          2.37  hab24e00_0            conda-forge     Cached
-  + font-ttf-inconsolata              3.000  h77eed37_0            conda-forge     Cached
-  + font-ttf-source-code-pro          2.038  h77eed37_0            conda-forge     Cached
-  + font-ttf-ubuntu                    0.83  h77eed37_3            conda-forge     Cached
-  + fonts-conda-forge                     1  hc364b38_1            conda-forge     Cached
-  + fonts-conda-ecosystem                 1  0                     conda-forge     Cached
-  + _libgcc_mutex                       0.1  conda_forge           conda-forge     Cached
-  + libgomp                          14.3.0  he0feb66_16           conda-forge     Cached
-  + libglvnd                          1.7.0  ha4b6fd6_2            conda-forge     Cached
-  + _openmp_mutex                       4.5  2_gnu                 conda-forge     Cached
-  + libopengl                         1.7.0  ha4b6fd6_2            conda-forge     Cached
-  + libegl                            1.7.0  ha4b6fd6_2            conda-forge     Cached
-  + libgcc                           14.3.0  he0feb66_16           conda-forge     Cached
-  + libpciaccess                       0.18  hb9d3cd8_0            conda-forge     Cached
-  + libmpdec                          4.0.0  hb9d3cd8_0            conda-forge     Cached
-  + libntlm                             1.8  hb9d3cd8_0            conda-forge     Cached
-  + keyutils                          1.6.3  hb9d3cd8_0            conda-forge     Cached
-  + libgfortran5                     14.3.0  hda2acac_16           conda-forge     Cached
-  + alsa-lib                       1.2.15.2  hb03c661_0            conda-forge      584kB
-  + xorg-libice                       1.1.2  hb9d3cd8_0            conda-forge     Cached
-  + libiconv                           1.18  h3b78370_2            conda-forge     Cached
-  + xorg-libxdmcp                     1.1.5  hb03c661_1            conda-forge     Cached
-  + pthread-stubs                       0.4  hb9d3cd8_1002         conda-forge     Cached
-  + xorg-libxau                      1.0.12  hb03c661_1            conda-forge     Cached
-  + libwebp-base                      1.6.0  hd42ef1d_0            conda-forge     Cached
-  + libdeflate                         1.25  h17f619e_0            conda-forge     Cached
-  + libjpeg-turbo                     3.1.2  hb03c661_0            conda-forge     Cached
-  + libbrotlicommon                   1.2.0  hb03c661_1            conda-forge     Cached
-  + libgcc-ng                        14.3.0  h69a702a_16           conda-forge     Cached
-  + ncurses                             6.5  h2d0b736_3            conda-forge     Cached
-  + libzlib                           1.3.1  hb9d3cd8_2            conda-forge     Cached
-  + libuuid                          2.41.3  h5347b49_0            conda-forge     Cached
-  + liblzma                           5.8.1  hb9d3cd8_2            conda-forge     Cached
-  + libexpat                          2.7.3  hecca717_0            conda-forge     Cached
-  + bzip2                             1.0.8  hda65f42_8            conda-forge     Cached
-  + libffi                            3.5.2  h9ec8514_0            conda-forge     Cached
-  + openssl                           3.5.4  h26f9b46_0            conda-forge     Cached
-  + libstdcxx                        14.3.0  h934c35e_16           conda-forge     Cached
-  + libdrm                          2.4.125  hb03c661_1            conda-forge     Cached
-  + libgfortran                      14.3.0  h69a702a_16           conda-forge     Cached
-  + libxcb                           1.17.0  h8a09558_0            conda-forge     Cached
-  + libbrotlienc                      1.2.0  hb03c661_1            conda-forge     Cached
-  + libbrotlidec                      1.2.0  hb03c661_1            conda-forge     Cached
-  + libxcrypt                        4.4.36  hd590300_1            conda-forge     Cached
-  + libedit                    3.1.20250104  pl5321h7949ede_0      conda-forge     Cached
-  + readline                            8.3  h853b02a_0            conda-forge     Cached
-  + libpng                           1.6.53  h421ea60_0            conda-forge     Cached
-  + zstd                              1.5.7  hb78ec9c_6            conda-forge     Cached
-  + tk                               8.6.13  noxft_ha0e22de_103    conda-forge     Cached
-  + xorg-libsm                        1.2.6  he73a12e_0            conda-forge     Cached
-  + pcre2                             10.47  haa7fec5_0            conda-forge     Cached
-  + pixman                           0.46.4  h54a6638_1            conda-forge     Cached
-  + graphite2                        1.3.14  hecca717_2            conda-forge     Cached
-  + wayland                          1.24.0  hd6090a7_1            conda-forge     Cached
-  + icu                                78.2  h33c6efd_0            conda-forge       13MB
-  + lerc                              4.0.0  h0aef613_1            conda-forge     Cached
-  + zlib-ng                           2.3.2  hceb46e0_1            conda-forge     Cached
-  + double-conversion                 3.4.0  hecca717_0            conda-forge     Cached
-  + uv                               0.9.22  h76e24b7_0            conda-forge     Cached
-  + libstdcxx-ng                     14.3.0  hdf11a46_16           conda-forge     Cached
-  + libopenblas                      0.3.30  pthreads_h94d23a6_4   conda-forge     Cached
-  + xcb-util                          0.4.1  h4f16b4b_2            conda-forge     Cached
-  + xcb-util-wm                       0.4.2  hb711507_0            conda-forge     Cached
-  + xcb-util-keysyms                  0.4.1  hb711507_0            conda-forge     Cached
-  + xcb-util-renderutil              0.3.10  hb711507_0            conda-forge     Cached
-  + xorg-libx11                      1.8.12  h4f16b4b_0            conda-forge     Cached
-  + brotli-bin                        1.2.0  hb03c661_1            conda-forge     Cached
-  + libfreetype6                     2.14.1  h73754d4_0            conda-forge     Cached
-  + ld_impl_linux-64                   2.45  default_hbd61a6d_105  conda-forge     Cached
-  + libglib                          2.86.3  h6548e54_0            conda-forge     Cached
-  + libsqlite                        3.51.1  hf4e2dac_1            conda-forge     Cached
-  + libxml2-16                       2.15.1  hca6bf5a_1            conda-forge     Cached
-  + libtiff                           4.7.1  h9d88235_1            conda-forge     Cached
-  + krb5                             1.21.3  h659f571_0            conda-forge     Cached
-  + qhull                            2020.2  h434a139_5            conda-forge     Cached
-  + libblas                          3.11.0  5_h4a7cf45_openblas   conda-forge     Cached
-  + xcb-util-image                    0.4.0  hb711507_2            conda-forge     Cached
-  + xorg-libxfixes                    6.0.2  hb03c661_0            conda-forge     Cached
-  + xkeyboard-config                   2.46  hb03c661_0            conda-forge     Cached
-  + libglx                            1.7.0  ha4b6fd6_2            conda-forge     Cached
-  + xorg-libxrender                  0.9.12  hb9d3cd8_0            conda-forge     Cached
-  + xorg-libxext                      1.3.6  hb9d3cd8_0            conda-forge     Cached
-  + brotli                            1.2.0  hed03a55_1            conda-forge     Cached
-  + libfreetype                      2.14.1  ha770c72_0            conda-forge     Cached
-  + dbus                             1.16.2  h24cb091_1            conda-forge     Cached
-  + python                           3.14.2  h32b2ec7_100_cp314    conda-forge     Cached
-  + libxml2                          2.15.1  he237659_1            conda-forge     Cached
-  + openjpeg                          2.5.4  h55fea9a_0            conda-forge     Cached
-  + lcms2                              2.17  h717163a_0            conda-forge     Cached
-  + cyrus-sasl                       2.1.28  hd9c7081_0            conda-forge     Cached
-  + libcups                           2.3.3  hb8b1518_5            conda-forge     Cached
-  + libcblas                         3.11.0  5_h0358290_openblas   conda-forge     Cached
-  + liblapack                        3.11.0  5_h47877c9_openblas   conda-forge     Cached
-  + xcb-util-cursor                   0.1.6  hb03c661_0            conda-forge     Cached
-  + xorg-libxcomposite                0.4.6  hb9d3cd8_2            conda-forge     Cached
-  + libgl                             1.7.0  ha4b6fd6_2            conda-forge     Cached
-  + xorg-libxcursor                   1.2.3  hb9d3cd8_0            conda-forge     Cached
-  + xorg-libxi                        1.8.2  hb9d3cd8_0            conda-forge     Cached
-  + xorg-libxxf86vm                   1.1.6  hb9d3cd8_0            conda-forge     Cached
-  + xorg-libxdamage                   1.1.6  hb9d3cd8_0            conda-forge     Cached
-  + xorg-libxrandr                    1.5.4  hb9d3cd8_0            conda-forge     Cached
-  + freetype                         2.14.1  ha770c72_0            conda-forge     Cached
-  + libxkbcommon                     1.13.1  hca5e8e5_0            conda-forge     Cached
-  + libxslt                          1.1.43  h711ed8c_1            conda-forge     Cached
-  + libllvm21                        21.1.8  hf7376ad_0            conda-forge     Cached
-  + openldap                         2.6.10  he970967_0            conda-forge     Cached
-  + xorg-libxtst                      1.2.5  hb9d3cd8_3            conda-forge     Cached
-  + libvulkan-loader              1.4.328.1  h5279c79_0            conda-forge     Cached
-  + fontconfig                       2.15.0  h7e30c49_1            conda-forge     Cached
-  + libclang-cpp21.1                 21.1.8  default_h99862b1_1    conda-forge     Cached
-  + libclang13                       21.1.8  default_h746c552_1    conda-forge     Cached
-  + libpq                              18.1  hb80d175_3            conda-forge     Cached
-  + cairo                            1.18.4  he90730b_1            conda-forge     Cached
-  + harfbuzz                         12.3.0  h6083320_0            conda-forge     Cached
-  + qt6-main                         6.10.1  hb82b983_4            conda-forge     Cached
-  + pip                                25.3  pyh145f28c_0          conda-forge     Cached
-  + munkres                           1.1.4  pyhd8ed1ab_1          conda-forge     Cached
-  + six                              1.17.0  pyhe01879c_1          conda-forge     Cached
-  + pyparsing                         3.3.1  pyhcf101f3_0          conda-forge     Cached
-  + packaging                          25.0  pyh29332c3_1          conda-forge     Cached
-  + cycler                           0.12.1  pyhcf101f3_2          conda-forge     Cached
-  + python-dateutil             2.9.0.post0  pyhe01879c_2          conda-forge     Cached
-  + unicodedata2                     17.0.0  py314h5bd0f2a_1       conda-forge     Cached
-  + pyside6                          6.10.1  py314hf36963e_0       conda-forge     Cached
-  + tornado                           6.5.4  py314h7b0bd38_0       conda-forge     Cached
-  + pillow                           12.1.0  py314h8ec4b1a_0       conda-forge     Cached
-  + numpy                             2.4.0  py314h2b28147_0       conda-forge     Cached
-  + kiwisolver                        1.4.9  py314h97ea11e_2       conda-forge     Cached
-  + contourpy                         1.3.3  py314h9891dd4_3       conda-forge     Cached
-  + fonttools                        4.61.1  pyh7db6752_0          conda-forge     Cached
-  + matplotlib-base                  3.10.8  py314h1194b4b_0       conda-forge     Cached
-  + matplotlib                       3.10.8  py314hdafbbf9_0       conda-forge     Cached
-
-  Summary:
-
-  Install: 135 packages
-
-  Total download: 13MB
-
-───────────────────────────────────────────────────────────────────────────────────────────
-
-
-
-Transaction starting
-
-Transaction finished
-
-To activate this environment, use:
-
-    micromamba activate /home/runner/work/UnfoldMakie.jl/UnfoldMakie.jl/docs/.CondaPkg/env
-
-Or to execute a single command in this environment, use:
-
-    micromamba run -p /home/runner/work/UnfoldMakie.jl/UnfoldMakie.jl/docs/.CondaPkg/env mycommand
-
-    CondaPkg Installing Pip packages
-             │ /home/runner/work/UnfoldMakie.jl/UnfoldMakie.jl/docs/.CondaPkg/env/bin/uv
-             │ pip
-             │ install
-             └ mne &gt;=1.4
-Using Python 3.14.2 environment at: /home/runner/work/UnfoldMakie.jl/UnfoldMakie.jl/docs/.CondaPkg/env
-Resolved 25 packages in 198ms
-Downloading mne (7.1MiB)
-Downloading scipy (34.1MiB)
- Downloaded mne
- Downloaded scipy
-Prepared 14 packages in 562ms
-Installed 14 packages in 29ms
- + certifi==2026.1.4
- + charset-normalizer==3.4.4
- + decorator==5.2.1
- + idna==3.11
- + jinja2==3.1.6
- + lazy-loader==0.4
- + markupsafe==3.0.3
- + mne==1.11.0
- + platformdirs==4.5.1
- + pooch==1.8.2
- + requests==2.32.5
- + scipy==1.16.3
- + tqdm==4.67.1
- + urllib3==2.6.3</code></pre><p>Data input</p><pre><code class="language-julia hljs">dat, positions = TopoPlots.example_data()
-df = UnfoldMakie.eeg_array_to_dataframe(dat[:, :, 1], string.(1:length(positions)));</code></pre><h1 id="Topoplots"><a class="docs-heading-anchor" href="#Topoplots">Topoplots</a><a id="Topoplots-1"></a><a class="docs-heading-anchor-permalink" href="#Topoplots" title="Permalink"></a></h1><p><strong>UnfoldMakie.jl</strong></p><pre><code class="language-julia hljs">@benchmark plot_topoplot(dat[:, 320, 1]; positions = positions)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 136 samples with 1 evaluation per sample.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">30.815 ms</span></span> … <span class="sgr35">189.405 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 64.50%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">33.179 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">36.824 ms</span></span> ± <span class="sgr32"> 21.161 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>6.62% ±  9.24%
-
-  █<span class="sgr34">▇</span>▂<span class="sgr32">▁</span>                                                          
-  █<span class="sgr34">█</span>█<span class="sgr32">█</span>▁▆▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄▄ ▄
-  30.8 ms<span class="sgr90">       Histogram: <span class="sgr1">log(</span>frequency<span class="sgr1">)</span> by time</span>       171 ms <span class="sgr1">&lt;</span>
-
- Memory estimate<span class="sgr90">: </span><span class="sgr33">7.69 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">114691</span>.</code></pre><p><strong>UnfoldMakie.jl with DelaunayMesh</strong></p><pre><code class="language-julia hljs">@benchmark plot_topoplot(
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">7.69 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">114692</span>.</code></pre><p><strong>UnfoldMakie.jl with DelaunayMesh</strong></p><pre><code class="language-julia hljs">@benchmark plot_topoplot(
     dat[:, 320, 1];
     positions = positions,
     topo_interpolation = (; interpolation = DelaunayMesh()),
-)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 142 samples with 1 evaluation per sample.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">30.264 ms</span></span> … <span class="sgr35">192.242 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 63.13%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">33.135 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">35.293 ms</span></span> ± <span class="sgr32"> 17.747 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>4.57% ±  7.43%
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 166 samples with 1 evaluation per sample.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">26.849 ms</span></span> … <span class="sgr35">183.673 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 63.32%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">27.338 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">30.196 ms</span></span> ± <span class="sgr32"> 19.409 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>6.49% ±  8.40%
 
-  ▇<span class="sgr34">█</span><span class="sgr32"> </span>                                                           
-  █<span class="sgr34">█</span><span class="sgr32">█</span>▁▁▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄ ▄
-  30.3 ms<span class="sgr90">       Histogram: <span class="sgr1">log(</span>frequency<span class="sgr1">)</span> by time</span>       172 ms <span class="sgr1">&lt;</span>
+  <span class="sgr34">█</span>▂<span class="sgr32"> </span>                                                           
+  <span class="sgr34">█</span>█<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄ ▄
+  26.8 ms<span class="sgr90">       Histogram: <span class="sgr1">log(</span>frequency<span class="sgr1">)</span> by time</span>       159 ms <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">7.69 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">114698</span>.</code></pre><p><strong>MNE</strong></p><pre><code class="language-julia hljs">posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])&#39;)
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">7.69 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">114699</span>.</code></pre><p><strong>MNE</strong></p><pre><code class="language-julia hljs">posmat = collect(reduce(hcat, [[p[1], p[2]] for p in positions])&#39;)
 pypos = Py(posmat).to_numpy()
 pydat = Py(dat[:, 320, 1])
 
@@ -275,14 +58,14 @@ pydat = Py(dat[:, 320, 1])
         contours = 6,
     )
     f.show()
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 332 samples with 1 evaluation per sample.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">12.684 ms</span></span> … <span class="sgr35">189.498 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">13.830 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">15.064 ms</span></span> ± <span class="sgr32"> 13.855 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 401 samples with 1 evaluation per sample.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">11.710 ms</span></span> … <span class="sgr35">172.810 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">11.968 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">12.472 ms</span></span> ± <span class="sgr32">  8.120 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-    ▄▂██<span class="sgr34">▅</span>▆    <span class="sgr32"> </span>                                                 
-  ▄█████<span class="sgr34">█</span>██▇▄▃<span class="sgr32">▂</span>▁▁▂▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂ ▃
-  12.7 ms<span class="sgr90">         Histogram: frequency by time</span>           25 ms <span class="sgr1">&lt;</span>
+        ▃█<span class="sgr34">▇</span>▅▁             <span class="sgr32"> </span>                                     
+  ▄▄▅▅▅███<span class="sgr34">█</span>██▅▅▄▃▃▃▂▂▃▃▂▂▂<span class="sgr32">▂</span>▁▁▁▁▁▂▁▁▁▁▂▁▁▂▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▂▁▁▁▂ ▃
+  11.7 ms<span class="sgr90">         Histogram: frequency by time</span>         13.6 ms <span class="sgr1">&lt;</span>
 
  Memory estimate<span class="sgr90">: </span><span class="sgr33">3.30 KiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">98</span>.</code></pre><h1 id="Topoplot-series"><a class="docs-heading-anchor" href="#Topoplot-series">Topoplot series</a><a id="Topoplot-series-1"></a><a class="docs-heading-anchor-permalink" href="#Topoplot-series" title="Permalink"></a></h1><p>Note that UnfoldMakie and MNE have different defaults for displaying topoplot series. UnfoldMakie in <code>plot_topoplot</code> averages over time samples. MNE in <code>plot_topopmap</code> displays single samples without averaging.</p><p><strong>UnfoldMakie.jl</strong></p><pre><code class="language-julia hljs">@benchmark begin
     plot_topoplotseries(
@@ -291,29 +74,29 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         positions = positions,
         axis = (; xlabel = &quot;Time windows [s]&quot;),
     )
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 3 samples with 1 evaluation per sample.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">1.665 s</span></span> … <span class="sgr35">  1.822 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 6.63%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">1.720 s              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">1.735 s</span></span> ± <span class="sgr32">79.669 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>2.32% ± 3.83%
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 4 samples with 1 evaluation per sample.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">1.370 s</span></span> … <span class="sgr35">  1.519 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 7.97%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">1.460 s              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>3.92%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">1.452 s</span></span> ± <span class="sgr32">71.562 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>4.05% ± 4.50%
 
-  <span class="sgr34">█</span>                   █     <span class="sgr32"> </span>                             █  
-  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  1.66 s<span class="sgr90">         Histogram: frequency by time</span>        1.82 s <span class="sgr1">&lt;</span>
+  █                <span class="sgr34">█</span>             <span class="sgr32"> </span>                   █    █  
+  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁█ ▁
+  1.37 s<span class="sgr90">         Histogram: frequency by time</span>        1.52 s <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">310.04 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">3799879</span>.</code></pre><p><strong>MNE</strong></p><pre><code class="language-julia hljs">easycap_montage = PyMNE.channels.make_standard_montage(&quot;standard_1020&quot;)
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">310.04 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">3799975</span>.</code></pre><p><strong>MNE</strong></p><pre><code class="language-julia hljs">easycap_montage = PyMNE.channels.make_standard_montage(&quot;standard_1020&quot;)
 ch_names = pyconvert(Vector{String}, easycap_montage.ch_names)[1:64]
 info = PyMNE.create_info(PyList(ch_names), ch_types = &quot;eeg&quot;, sfreq = 1)
 info.set_montage(easycap_montage)
 simulated_epochs = PyMNE.EvokedArray(Py(dat[:, :, 1]), info)
 
-@benchmark simulated_epochs.plot_topomap(1:50)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 7 samples with 1 evaluation per sample.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">716.299 ms</span></span> … <span class="sgr35">752.771 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">726.687 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">730.799 ms</span></span> ± <span class="sgr32"> 12.670 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
+@benchmark simulated_epochs.plot_topomap(1:50)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 8 samples with 1 evaluation per sample.
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">665.217 ms</span></span> … <span class="sgr35">674.596 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>0.00% … 0.00%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">666.828 ms               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.00%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">668.606 ms</span></span> ± <span class="sgr32">  3.530 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.00% ± 0.00%
 
-  █         ██<span class="sgr34"> </span>    █      <span class="sgr32"> </span> █                █                █  
-  █▁▁▁▁▁▁▁▁▁██<span class="sgr34">▁</span>▁▁▁▁█▁▁▁▁▁▁<span class="sgr32">▁</span>▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  716 ms<span class="sgr90">           Histogram: frequency by time</span>          753 ms <span class="sgr1">&lt;</span>
+  █   █  ██<span class="sgr34"> </span> █          <span class="sgr32"> </span>        █                  █         █  
+  █▁▁▁█▁▁██<span class="sgr34">▁</span>▁█▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁█ ▁
+  665 ms<span class="sgr90">           Histogram: frequency by time</span>          675 ms <span class="sgr1">&lt;</span>
 
  Memory estimate<span class="sgr90">: </span><span class="sgr33">2.39 KiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">69</span>.</code></pre><p><strong>MATLAB</strong></p><p>Running MATLAB on a GitHub Action is not easy. So we benchmarked three consecutive executions (on a screenshot) on a server with an AMD EPYC 7452 32-core processor. Note that Github and the server we used for MATLAB benchmarking are two different computers, which can give different timing results.</p><img src="../../../assets/MATLAB_benchmarking.png" align="middle"/><h1 id="Animation"><a class="docs-heading-anchor" href="#Animation">Animation</a><a id="Animation-1"></a><a class="docs-heading-anchor-permalink" href="#Animation" title="Permalink"></a></h1><p>The main advantage of Julia is the speed with which the figures are updated.</p><pre><code class="language-julia hljs">timestamps = range(1, 50, step = 1)
 framerate = 50</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">50</code></pre><p><strong>UnfoldMakie with .gif</strong></p><pre><code class="language-julia hljs">@benchmark begin
@@ -324,15 +107,15 @@ framerate = 50</code></pre><pre class="documenter-example-output"><code class="n
         dat_obs[] = @view(dat[:, t, 1])
     end
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 2 samples with 1 evaluation per sample.
- Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">4.144 s</span></span> … <span class="sgr35">   4.290 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>1.16% … 0.44%
- Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">4.217 s               </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.79%
- Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">4.217 s</span></span> ± <span class="sgr32">103.056 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.79% ± 0.51%
+ Range <span class="sgr90">(</span><span class="sgr36"><span class="sgr1">min</span></span> … <span class="sgr35">max</span><span class="sgr90">):  </span><span class="sgr36"><span class="sgr1">3.814 s</span></span> … <span class="sgr35">  3.835 s</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>min … max<span class="sgr90">): </span>1.00% … 0.45%
+ Time  <span class="sgr90">(</span><span class="sgr34"><span class="sgr1">median</span></span><span class="sgr90">):     </span><span class="sgr34"><span class="sgr1">3.825 s              </span></span><span class="sgr90">┊</span> GC <span class="sgr90">(</span>median<span class="sgr90">):    </span>0.73%
+ Time  <span class="sgr90">(</span><span class="sgr32"><span class="sgr1">mean</span></span> ± <span class="sgr32">σ</span><span class="sgr90">):   </span><span class="sgr32"><span class="sgr1">3.825 s</span></span> ± <span class="sgr32">14.920 ms</span>  <span class="sgr90">┊</span> GC <span class="sgr90">(</span>mean ± σ<span class="sgr90">):  </span>0.73% ± 0.39%
 
-  <span class="sgr34">█</span>                            <span class="sgr32"> </span>                           █  
-  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  4.14 s<span class="sgr90">         Histogram: frequency by time</span>         4.29 s <span class="sgr1">&lt;</span>
+  <span class="sgr34">█</span>                           <span class="sgr32"> </span>                           █  
+  <span class="sgr34">█</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<span class="sgr32">▁</span>▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  3.81 s<span class="sgr90">         Histogram: frequency by time</span>        3.84 s <span class="sgr1">&lt;</span>
 
- Memory estimate<span class="sgr90">: </span><span class="sgr33">682.09 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">875016</span>.</code></pre><p><img src="../topoplot_animation_UM.gif" alt/></p><p><strong>MNE with .gif</strong></p><pre><code class="language-julia hljs">@benchmark begin
+ Memory estimate<span class="sgr90">: </span><span class="sgr33">682.12 MiB</span>, allocs estimate<span class="sgr90">: </span><span class="sgr33">876417</span>.</code></pre><p><img src="../topoplot_animation_UM.gif" alt/></p><p><strong>MNE with .gif</strong></p><pre><code class="language-julia hljs">@benchmark begin
     fig, anim = simulated_epochs.animate_topomap(
         times = Py(timestamps),
         frame_rate = framerate,
@@ -341,5 +124,5 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
     )
     anim.save(&quot;topomap_animation_mne.gif&quot;, writer = &quot;ffmpeg&quot;, fps = framerate)
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took <span class="sgr34">9.719 s</span> (0.00% GC) to evaluate,
- with a memory estimate of <span class="sgr33">3.03 KiB</span>, over <span class="sgr33">96</span> allocations.</code></pre><p>Note, that due to some bugs in (probably) <code>PythonCall</code> topoplot is black and white.</p><p><img src="../topomap_animation_mne.gif" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../code_principles/">« Code principles</a><a class="docs-footer-nextpage" href="../../../api/">API: Functions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Friday 9 January 2026 15:47">Friday 9 January 2026</span>. Using Julia version 1.12.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ Single result which took <span class="sgr34">9.056 s</span> (0.00% GC) to evaluate,
+ with a memory estimate of <span class="sgr33">3.03 KiB</span>, over <span class="sgr33">96</span> allocations.</code></pre><p>Note, that due to some bugs in (probably) <code>PythonCall</code> topoplot is black and white.</p><p><img src="../topomap_animation_mne.gif" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../code_principles/">« Code principles</a><a class="docs-footer-nextpage" href="../../../api/">API: Functions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Friday 9 January 2026 20:06">Friday 9 January 2026</span>. Using Julia version 1.12.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
