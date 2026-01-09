@@ -275,10 +275,10 @@ begin
         labels = ["$(i)" for i in 1:64],
         #interpolation = NullInterpolator(), label_scatter = (; markersize = 25),
         contours = true,
-        attributes = (; 
-            norm_method  = :robust_minmax,         # :ecdf | :minmax | :robust_minmax
-            norm_qrange  = (0.005, 0.995),      # for :robust_minmax
-            norm_flip_v  = false,              # flip vertical if your palette needs it
+        attributes = (;
+            norm_method = :robust_minmax,         # :ecdf | :minmax | :robust_minmax
+            norm_qrange = (0.005, 0.995),      # for :robust_minmax
+            norm_flip_v = false,              # flip vertical if your palette needs it
             sample_mode = :nearest,
         ),
     )
