@@ -121,7 +121,8 @@ export nonnumeric # reexport from AoG
 export bivariate_colormatrix_corners
 export bivariate_colormatrix_range
 export vsup_colormatrix
-export vsp_polar_legend    
+export vsp_polar_legend
+export vsp_polar_legend!  
 
 
 if !isdefined(Base, :get_extension)
