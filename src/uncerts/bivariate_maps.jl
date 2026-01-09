@@ -66,34 +66,40 @@ Arguments:
 
 Returns: `Matrix{RGB}` with rows=uncertainty, cols=voltage.
 """
-function bivariate_colormatrix_range(; n_rows::Int=4, n_cols::Int=9,
-    neg=colorant"#2166ac", mid=colorant"#f0f0f0", pos=colorant"#f46d43",
-    chroma_range::Tuple{Real,Real}=(1.0, 0.25),
-    lightness_offsets::Tuple{Real,Real}=(0.0, 15.0),
+function bivariate_colormatrix_range(; n_rows::Int = 4, n_cols::Int = 9,
+    neg = colorant"#2166ac", mid = colorant"#f0f0f0", pos = colorant"#f46d43",
+    chroma_range::Tuple{Real,Real} = (1.0, 0.25),
+    lightness_offsets::Tuple{Real,Real} = (0.0, 15.0),
     order_uncertainty::Symbol = :low_to_high,
-    base_cols::Union{Nothing,AbstractVector{<:Colorant}}=nothing
+    base_cols::Union{Nothing,AbstractVector{<:Colorant}} = nothing,
 )::Matrix{RGB}
 
     # Voltage palette (columns)
-    cols = isnothing(base_cols) ?
-        RGB.(cgrad([neg, mid, pos], n_cols, categorical=true)) :
-        RGB.(length(base_cols) == n_cols ? base_cols :
-             error("length(base_cols) ($(length(base_cols))) must equal n_cols ($n_cols)"))
+    cols =
+        isnothing(base_cols) ?
+        RGB.(cgrad([neg, mid, pos], n_cols, categorical = true)) :
+        RGB.(
+            length(base_cols) == n_cols ? base_cols :
+            error("length(base_cols) ($(length(base_cols))) must equal n_cols ($n_cols)")
+        )
 
     # Uncertainty ramps (rows)
-    cs_vec = collect(range(float(chroma_range[1]), float(chroma_range[2]); length=n_rows))
-    dL_vec = collect(range(float(lightness_offsets[1]), float(lightness_offsets[2]); length=n_rows))
+    cs_vec = collect(range(float(chroma_range[1]), float(chroma_range[2]); length = n_rows))
+    dL_vec = collect(
+        range(float(lightness_offsets[1]), float(lightness_offsets[2]); length = n_rows),
+    )
 
     if order_uncertainty == :high_to_low
-        cs_vec = reverse(cs_vec); dL_vec = reverse(dL_vec)
+        cs_vec = reverse(cs_vec)
+        dL_vec = reverse(dL_vec)
     elseif order_uncertainty != :low_to_high
         @warn "order_uncertainty should be :low_to_high or :high_to_low; using :low_to_high"
     end
 
     M = Matrix{RGB}(undef, n_rows, n_cols)
-    for r in 1:n_rows
+    for r = 1:n_rows
         cs, dL = cs_vec[r], dL_vec[r]
-        for c in 1:n_cols
+        for c = 1:n_cols
             M[r, c] = _mod_uncertainty_rgb(cols[c], cs, dL)
         end
     end
@@ -104,9 +110,9 @@ end
 # Linear interpolation between two colors (Lab space → RGB out)
 @inline function _lerp_lab(c1::Colorant, c2::Colorant, t::Real)
     a, b = Lab(c1), Lab(c2)
-    Lab((1-t)*a.l + t*b.l,
-        (1-t)*a.a + t*b.a,
-        (1-t)*a.b + t*b.b) |> RGB
+    Lab((1 - t) * a.l + t * b.l,
+        (1 - t) * a.a + t * b.a,
+        (1 - t) * a.b + t * b.b) |> RGB
 end
 
 """
@@ -131,7 +137,7 @@ function bivariate_colormatrix_corners(
     bot_right::Colorant,
     bot_left::Colorant,
     mid::Colorant = colorant"#e5e1e4",
-    order_vertical::Symbol = :low_to_high
+    order_vertical::Symbol = :low_to_high,
 )
     # Build top and bottom rows with horizontal diverging blend via mid
     us = range(0.0, 1.0; length = n_cols)
@@ -139,15 +145,15 @@ function bivariate_colormatrix_corners(
     top_row = Vector{RGB{Float32}}(undef, n_cols)
     bottom_row = similar(top_row)
 
-    @inbounds for j in 1:n_cols
+    @inbounds for j = 1:n_cols
         u = us[j]
         if u <= 0.5
             t = u / 0.5
-            top_row[j]    = RGB{Float32}(_lerp_lab(top_left,  mid, t))
-            bottom_row[j] = RGB{Float32}(_lerp_lab(bot_left,  mid, t))
+            top_row[j] = RGB{Float32}(_lerp_lab(top_left, mid, t))
+            bottom_row[j] = RGB{Float32}(_lerp_lab(bot_left, mid, t))
         else
             t = (u - 0.5) / 0.5
-            top_row[j]    = RGB{Float32}(_lerp_lab(mid, top_right, t))
+            top_row[j] = RGB{Float32}(_lerp_lab(mid, top_right, t))
             bottom_row[j] = RGB{Float32}(_lerp_lab(mid, bot_right, t))
         end
     end
@@ -155,9 +161,9 @@ function bivariate_colormatrix_corners(
     # Vertical sequential blend (top → bottom)
     vs = range(0.0, 1.0; length = n_rows)
     colorbox = Array{RGB{Float32}}(undef, n_rows, n_cols)
-    @inbounds for i in 1:n_rows
+    @inbounds for i = 1:n_rows
         v = vs[i]
-        for j in 1:n_cols
+        for j = 1:n_cols
             colorbox[i, j] = RGB{Float32}(_lerp_lab(top_row[j], bottom_row[j], v))
         end
     end
