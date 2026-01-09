@@ -215,6 +215,7 @@ bivariate_corners()
 # <summary>Click to expand</summary>
 # ```
 function bivariate_range()
+    n_cb = 5
     colorbox = bivariate_colormatrix_range(
         n_rows = n_cb,
         n_cols = n_cb,
@@ -292,7 +293,6 @@ bivariate_range()
 function vsp_example()
     colormap_vsp = :berlin
     f = Figure(size = (550, 400))
-    alphas = [1.0, 0.8, 0.6, 0.4]
 
     alphas_ticks = round.(collect(range(extrema(vec_uncert)...; length = 5)), digits = 2)
     value_labels = reverse(
