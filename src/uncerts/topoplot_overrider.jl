@@ -338,7 +338,9 @@ function Makie.plot!(p::TopoPlot)
 
     if p.interpolation[] isa DelaunayMesh
         # Scalar mesh path (bivariate via Delaunay not supported)
-        m = lift(delaunay_mesh, p, p.positions)
+        m = lift(p, positions) do pos
+            TopoPlots.delaunay_mesh(pos)
+        end
         mesh!(p, m; color = p.data, colorrange = colorrange, colormap = p.colormap, shading = NoShading)
     else
         mask = make_mask(p, xg, yg, geometry)
