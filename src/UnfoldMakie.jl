@@ -73,7 +73,10 @@ include("general_plots/plot_circular_topoplots.jl")
 include("general_plots/plot_erpgrid.jl")
 include("general_plots/plot_channelimage.jl")
 
-
+include("uncerts/bivariate_maps.jl")
+include("uncerts/topoplot_overrider.jl")
+include("uncerts/topoplot_overrider_sup.jl")
+include("uncerts/vs_palette.jl")
 
 # extension functions
 example_data(args...; kwargs...) =
