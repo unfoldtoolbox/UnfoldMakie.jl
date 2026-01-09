@@ -10,21 +10,22 @@ Return: (U01, V01, uinfo, vinfo)
     * for others -> [min, max] bounds (Vector{Float32} of length 2)
 """
 function normalize_bivariate(U::AbstractArray{<:Real},
-                             V::AbstractArray{<:Real},
-                             uref::AbstractVector{<:Real},
-                             vref::AbstractVector{<:Real};
-                             method::Symbol = :robust_minmax,
-                             qrange::Tuple{<:Real,<:Real} = (0.02, 0.98),
-                             fixed_u::Union{Nothing,Tuple{<:Real,<:Real}} = nothing,
-                             fixed_v::Union{Nothing,Tuple{<:Real,<:Real}} = nothing,
-                             flip_v::Bool = false)
+    V::AbstractArray{<:Real},
+    uref::AbstractVector{<:Real},
+    vref::AbstractVector{<:Real};
+    method::Symbol = :robust_minmax,
+    qrange::Tuple{<:Real,<:Real} = (0.02, 0.98),
+    fixed_u::Union{Nothing,Tuple{<:Real,<:Real}} = nothing,
+    fixed_v::Union{Nothing,Tuple{<:Real,<:Real}} = nothing,
+    flip_v::Bool = false)
 
     # helpers
     ecdf_norm(A, ref) = begin
         vals = sort(filter(isfinite, ref))
         B = similar(A, Float32)
         if isempty(vals)
-            fill!(B, 0.5f0); return B, vals
+            fill!(B, 0.5f0)
+            return B, vals
         end
         n = length(vals)
         @inbounds for I in eachindex(A)
@@ -34,12 +35,13 @@ function normalize_bivariate(U::AbstractArray{<:Real},
         return B, vals
     end
 
-    minmax_norm(A, ref; bounds=nothing) = begin
+    minmax_norm(A, ref; bounds = nothing) = begin
         B = similar(A, Float32)
         if bounds === nothing
             vals = filter(isfinite, ref)
             if isempty(vals)
-                fill!(B, 0.5f0); return B, Float32[0, 1]
+                fill!(B, 0.5f0)
+                return B, Float32[0, 1]
             end
             amin, amax = extrema(vals)
         else
@@ -53,11 +55,12 @@ function normalize_bivariate(U::AbstractArray{<:Real},
         return B, Float32[amin, amax]
     end
 
-    quantile_norm(A, ref; qrange=(0.02,0.98)) = begin
+    quantile_norm(A, ref; qrange = (0.02, 0.98)) = begin
         vals = sort(filter(isfinite, ref))
         B = similar(A, Float32)
         if isempty(vals)
-            fill!(B, 0.5f0); return B, Float32[0, 1]
+            fill!(B, 0.5f0)
+            return B, Float32[0, 1]
         end
         qmin, qmax = quantile(vals, qrange)
         r = max(Float32(qmax - qmin), eps(Float32))
@@ -73,15 +76,15 @@ function normalize_bivariate(U::AbstractArray{<:Real},
         U01, uinfo = ecdf_norm(U, uref)
         V01, vinfo = ecdf_norm(V, vref)
     elseif method === :minmax
-        U01, uinfo = minmax_norm(U, uref; bounds=fixed_u)
-        V01, vinfo = minmax_norm(V, vref; bounds=fixed_v)
+        U01, uinfo = minmax_norm(U, uref; bounds = fixed_u)
+        V01, vinfo = minmax_norm(V, vref; bounds = fixed_v)
     elseif method === :robust_minmax
-        U01, uinfo = quantile_norm(U, uref; qrange=qrange)
-        V01, vinfo = quantile_norm(V, vref; qrange=qrange)
+        U01, uinfo = quantile_norm(U, uref; qrange = qrange)
+        V01, vinfo = quantile_norm(V, vref; qrange = qrange)
     else
         @warn "Unknown norm_method=$(method); falling back to :minmax"
-        U01, uinfo = minmax_norm(U, uref; bounds=fixed_u)
-        V01, vinfo = minmax_norm(V, vref; bounds=fixed_v)
+        U01, uinfo = minmax_norm(U, uref; bounds = fixed_u)
+        V01, vinfo = minmax_norm(V, vref; bounds = fixed_v)
     end
 
     if flip_v && !isempty(V01)
@@ -130,7 +133,7 @@ function bivariate_color_edges_from_img!(
     B = Array{Float32}(undef, nx, ny)
     mask = falses(nx, ny)
 
-    @inbounds for i in 1:nx, j in 1:ny
+    @inbounds for i = 1:nx, j = 1:ny
         c = img[i, j]
         a = alpha(c)
         if isfinite(a) && a > alpha_cut
@@ -168,7 +171,7 @@ function bivariate_color_edges_from_img!(
     Abin = fill(NaN32, nx, ny)
     Bbin = fill(NaN32, nx, ny)
 
-    @inbounds for i in 1:nx, j in 1:ny
+    @inbounds for i = 1:nx, j = 1:ny
         if mask[i, j]
             lb = clamp(floor((L[i, j] - Lmin) / Lrange * nL) + 1, 1, nL)
             ab = clamp(floor((A[i, j] - Amin) / Arange * nA) + 1, 1, nA)
@@ -181,10 +184,11 @@ function bivariate_color_edges_from_img!(
 
     # Single label index (Float32 with NaNs where masked)
     Label = fill(NaN32, nx, ny)
-    @inbounds for i in 1:nx, j in 1:ny
+    @inbounds for i = 1:nx, j = 1:ny
         if mask[i, j]
             # 1..(nL*nA*nB) in row-major style
-            Label[i, j] = Lbin[i, j] + (Abin[i, j] - 1f0) * nL + (Bbin[i, j] - 1f0) * (nL * nA)
+            Label[i, j] =
+                Lbin[i, j] + (Abin[i, j] - 1.0f0) * nL + (Bbin[i, j] - 1.0f0) * (nL * nA)
         end
     end
 
@@ -197,17 +201,26 @@ function bivariate_color_edges_from_img!(
     y_c = collect(LinRange(ya, yb, ny))
 
     # cell edges (midpoints)
-    x_e = Vector{Float32}(undef, nx + 1); x_e[1] = xa; x_e[end] = xb
-    y_e = Vector{Float32}(undef, ny + 1); y_e[1] = ya; y_e[end] = yb
-    @inbounds for i in 1:(nx-1); x_e[i+1] = (x_c[i] + x_c[i+1]) / 2 end
-    @inbounds for j in 1:(ny-1); y_e[j+1] = (y_c[j] + y_c[j+1]) / 2 end
+    x_e = Vector{Float32}(undef, nx + 1)
+    x_e[1] = xa
+    x_e[end] = xb
+    y_e = Vector{Float32}(undef, ny + 1)
+    y_e[1] = ya
+    y_e[end] = yb
+    @inbounds for i = 1:(nx-1)
+        x_e[i+1] = (x_c[i] + x_c[i+1]) / 2
+    end
+    @inbounds for j = 1:(ny-1)
+        y_e[j+1] = (y_c[j] + y_c[j+1]) / 2
+    end
 
     # --- 5) Extract label-change edges as line segments ---
     segs = Point2f[]
 
     # vertical edges (between (i,j) and (i+1,j))
-    @inbounds for i in 1:(nx-1), j in 1:ny
-        l1 = Label[i, j]; l2 = Label[i+1, j]
+    @inbounds for i = 1:(nx-1), j = 1:ny
+        l1 = Label[i, j]
+        l2 = Label[i+1, j]
         if isfinite(l1) && isfinite(l2) && l1 != l2
             x = x_e[i+1]
             push!(segs, Point2f(x, y_e[j]), Point2f(x, y_e[j+1]))
@@ -215,8 +228,9 @@ function bivariate_color_edges_from_img!(
     end
 
     # horizontal edges (between (i,j) and (i,j+1))
-    @inbounds for i in 1:nx, j in 1:(ny-1)
-        l1 = Label[i, j]; l2 = Label[i, j+1]
+    @inbounds for i = 1:nx, j = 1:(ny-1)
+        l1 = Label[i, j]
+        l2 = Label[i, j+1]
         if isfinite(l1) && isfinite(l2) && l1 != l2
             y = y_e[j+1]
             push!(segs, Point2f(x_e[i], y), Point2f(x_e[i+1], y))
@@ -224,8 +238,8 @@ function bivariate_color_edges_from_img!(
     end
 
     if !isempty(segs)
-        linesegments!(p, segs; color=color, alpha=linealpha, 
-        linewidth=linewidth, linestyle = :dot)
+        linesegments!(p, segs; color = color, alpha = linealpha,
+            linewidth = linewidth, linestyle = :dot)
     end
     return nothing
 end
@@ -266,33 +280,36 @@ c1 = sample_bivariate(colorbox, 0.2, 0.7; mode=:nearest)
 c2 = sample_bivariate(colorbox, 0.2, 0.7; mode=:bilinear)
 """
 function sample_bivariate(colorbox::AbstractMatrix{<:Colorant}, u::Real, v::Real;
-    mode::Symbol=:nearest)
+    mode::Symbol = :nearest)
     nrows, ncols = size(colorbox)
     if mode === :nearest
-        xi = clamp(round(Int, 1 + u*(ncols-1)), 1, ncols)
-        yi = clamp(round(Int, 1 + v*(nrows-1)), 1, nrows)
+        xi = clamp(round(Int, 1 + u * (ncols - 1)), 1, ncols)
+        yi = clamp(round(Int, 1 + v * (nrows - 1)), 1, nrows)
         c = colorbox[yi, xi]
         C = convert(RGB{Float32}, c)
         return RGBA{Float32}(C.r, C.g, C.b, alpha(c))
     elseif mode === :bilinear
-        x = 1 .+ u*(ncols-1)
-        y = 1 .+ v*(nrows-1)
-        x0 = clamp(floor(Int, x), 1, ncols); x1 = clamp(x0 + 1, 1, ncols)
-        y0 = clamp(floor(Int, y), 1, nrows); y1 = clamp(y0 + 1, 1, nrows)
-        tx = clamp(x - x0, 0, 1); ty = clamp(y - y0, 0, 1)
+        x = 1 .+ u * (ncols - 1)
+        y = 1 .+ v * (nrows - 1)
+        x0 = clamp(floor(Int, x), 1, ncols)
+        x1 = clamp(x0 + 1, 1, ncols)
+        y0 = clamp(floor(Int, y), 1, nrows)
+        y1 = clamp(y0 + 1, 1, nrows)
+        tx = clamp(x - x0, 0, 1)
+        ty = clamp(y - y0, 0, 1)
         c00 = convert(RGB{Float32}, colorbox[y0, x0])
         c10 = convert(RGB{Float32}, colorbox[y0, x1])
         c01 = convert(RGB{Float32}, colorbox[y1, x0])
         c11 = convert(RGB{Float32}, colorbox[y1, x1])
-        C0 = RGB{Float32}((1-tx)*c00.r + tx*c10.r,
-            (1-tx)*c00.g + tx*c10.g,
-            (1-tx)*c00.b + tx*c10.b)
-        C1 = RGB{Float32}((1-tx)*c01.r + tx*c11.r,
-            (1-tx)*c01.g + tx*c11.g,
-            (1-tx)*c01.b + tx*c11.b)
-        C  = RGB{Float32}((1-ty)*C0.r + ty*C1.r,
-            (1-ty)*C0.g + ty*C1.g,
-            (1-ty)*C0.b + ty*C1.b)
+        C0 = RGB{Float32}((1 - tx) * c00.r + tx * c10.r,
+            (1 - tx) * c00.g + tx * c10.g,
+            (1 - tx) * c00.b + tx * c10.b)
+        C1 = RGB{Float32}((1 - tx) * c01.r + tx * c11.r,
+            (1 - tx) * c01.g + tx * c11.g,
+            (1 - tx) * c01.b + tx * c11.b)
+        C = RGB{Float32}((1 - ty) * C0.r + ty * C1.r,
+            (1 - ty) * C0.g + ty * C1.g,
+            (1 - ty) * C0.b + ty * C1.b)
         return RGBA{Float32}(C.r, C.g, C.b, 1)
     else
         error("sample_bivariate: unknown mode $mode")
