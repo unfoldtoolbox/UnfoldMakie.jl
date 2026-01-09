@@ -306,14 +306,14 @@ begin
         thetalimits = (-π / 5, π / 5), theta_0 = π / 2,
         thetaticklabelsize = 20, rticklabelsize = 20)
 
-    vsup_cmap = vsup_colormatrix(;
+    vsup_cmap = UnfoldMakie.vsup_colormatrix(;
         cmap = cgrad(colormap_vsp), n_uncertainty = 4,
         max_desat = 0.8, pow_desat = 1.0, max_light = 0.7, pow_light = 1,
     )
 
     vsp_rows = reverse([(vsup_cmap'[:, i]) for i = 1:size(vsup_cmap', 2)])
 
-    vsp_polar_legend!(vsp_axis;
+    UnfoldMakie.vsp_polar_legend!(vsp_axis;
         vsp_rows = vsp_rows,
         value_labels = value_labels,
         uncert_labels = uncert_labels,
@@ -337,7 +337,7 @@ begin
 
     TopoPlots.eeg_topoplot!(topo_axis, (vec_estimate, vec_uncert);
         positions = positions,
-        colormap = vsp_rows_to_colorbox(vsp_rows),
+        colormap = UnfoldMakie.vsp_rows_to_colorbox(vsp_rows),
         labels = ["$(i)" for i = 1:64],
         contours = true,
         attributes = (;
