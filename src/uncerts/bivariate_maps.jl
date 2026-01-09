@@ -36,9 +36,9 @@ RGB{Float32}(0.62, 0.69, 0.79)  # lighter and less saturated
 """
 @inline function _mod_uncertainty_rgb(c::Colorant, cs::Float64, dL::Float64)::RGB
     lch = convert(LCHab, RGB(c))
-    L   = clamp(lch.l + dL, 0.0, 100.0)
-    C   = clamp(lch.c * cs, 0.0, 150.0)
-    H   = isnan(lch.h) ? 0.0 : Float64(lch.h)
+    L = clamp(lch.l + dL, 0.0, 100.0)
+    C = clamp(lch.c * cs, 0.0, 150.0)
+    H = isnan(lch.h) ? 0.0 : Float64(lch.h)
     return RGB(LCHab(L, C, H))
 end
 
