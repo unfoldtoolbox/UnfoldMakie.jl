@@ -31,18 +31,15 @@ using Animations
 dat, positions = TopoPlots.example_data()
 vec_estimate = dat[:, 340, 1];
 vec_uncert = dat[:, 340, 2];
-# Data for animation:
-
-df_toposeries, pos_toposeries =
-    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
-df_toposeries1 = df_toposeries[df_toposeries.trial.<=15, :];
 rng = MersenneTwister(1);
-# This will generate DataFrame with 227 channels, 50 trials, 500 mseconds for bootstrapping.
-# `noiselevel` is important for adding variability it your data.
 
 # # Adjacent topoplot
 # In this case we already have two data vectors: `vec_estimate` with mean estimates and `vec_uncert` with standard deviation.
 
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 begin
     f = Figure()
     ax = Axis(
@@ -84,11 +81,17 @@ begin
     )
     f
 end
-
+# ```@raw html
+# </details >
+# ```
 
 # # Uncertainty via marker size
 # We show uncertainty using donut-shaped electrode markers.
 # The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 begin
     f = Figure()
     uncert_norm =
@@ -123,97 +126,15 @@ begin
         orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
     f
 end
-
-# # Uncertainty via animation 
-
-# In this case, we need to boostrap the data, so we'll use raw data with single trials. 
-
-# To show the uncertainty of the estimate, we will compute 10 different means of the boostrapped data. 
-# More specifically: 1) create N boostrapped data sets using random sampling with replacement across trials; 2) compute their means; 3) do a toposeries animation iterating over these means. 
-
-# ```@raw html
-# <details>
-# <summary>Click to expand for supportive functions</summary>
-# ```
-# With this function we will bootstrap the data.
-# `rng` - random number generated. Be sure to send the same rng from outside the function.
-bootstrap_toposeries(df; kwargs...) = bootstrap_toposeries(MersenneTwister(), df; kwargs...)
-function bootstrap_toposeries(rng::AbstractRNG, df)
-    df1 = groupby(df, [:time, :channel])
-    len_estimate = length(df1[1].estimate)
-    bootstrap_ix = rand(rng, 1:len_estimate, len_estimate) # random sample with replacement
-    tmp = vcat([d.estimate[bootstrap_ix] for d in df1]...)
-    df1 = DataFrame(df1)
-
-    df1.estimate .= tmp
-    return df1
-end
-
-# function for easing - smooth transition between frames in animation.
-# `update_ratio` - transition ratio between time1 and time2.
-# `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
-
-function ease_between(old, new, update_ratio; easing_function = sineio())
-    anim = Animation(0, old, 1, new; defaulteasing = easing_function)
-    return at(anim, update_ratio)
-end
 # ```@raw html
 # </details >
 # ```
 
-dat_obs = Observable(df_toposeries1)
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    dat_obs;
-    bin_num = 5,
-    nrows = 2,
-    positions = pos_toposeries,
-    visual = (; contours = false),
-    axis = (; xlabel = "Time [msec]"),
-)
+# # Uncertainty via animation 
+# In this case, we need to boostrap the data, so we'll use raw data with single trials. 
 
-# Basic toposeries.
-
-record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
-    for i = 1:10
-        dat_obs[] = bootstrap_toposeries(rng, df_toposeries1)
-        recordframe!(io)
-    end
-end;
-# ![](bootstrap_toposeries_nocontours.mp4)
-
-# Toposeries with easing.
-# Easing means smooth transition between frames.
-dat_obs = Observable(bootstrap_toposeries(rng, df_toposeries1))
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    dat_obs;
-    bin_num = 5,
-    nrows = 2,
-    positions = pos_toposeries,
-    visual = (; contours = false),
-    axis = (; xlabel = "Time [msec]"),
-)
-record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
-    for n_bootstrapping = 1:10
-        recordframe!(io)
-        new_df = bootstrap_toposeries(rng, df_toposeries1)
-        old_estimate = deepcopy(dat_obs.val.estimate)
-        for update_ratio in range(0, 1, length = 8)
-
-            dat_obs.val.estimate .=
-                ease_between(old_estimate, new_df.estimate, update_ratio)
-            notify(dat_obs)
-            recordframe!(io)
-        end
-    end
-end;
-
-# ![](bootstrap_toposeries_easing.mp4)
-
-# # Single topoplot with easing animation
+# To show the uncertainty of the estimate, we will compute 10 different means of the boostrapped data. 
+# More specifically: 1) create N boostrapped data sets using random sampling with replacement across trials; 2) compute their means; 3) do a toposeries animation iterating over these means. 
 
 # ```@raw html
 # <details>
@@ -239,6 +160,16 @@ function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     end
     return out
 end
+
+# function for easing - smooth transition between frames in animation.
+# `update_ratio` - transition ratio between time1 and time2.
+# `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
+
+function ease_between(old, new, update_ratio; easing_function = sineio())
+    anim = Animation(0, old, 1, new; defaulteasing = easing_function)
+    return at(anim, update_ratio)
+end
+
 # ```@raw html
 # </details >
 # ```
