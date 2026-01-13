@@ -43,7 +43,9 @@ function plot_splines!(
         supportive_axes_management(spline_axis, density_axis, superlabel_config)
 
     ga = f[1, 1] = GridLayout()
-    terms = Unfold.terms(Unfold.formulas(m)[1].rhs)
+
+    terms = reduce(vcat, Unfold.terms.(getfield.(Unfold.formulas(m), :rhs)))
+
     spl_title = join(terms, " + ")
 
     splFunction = Base.get_extension(Unfold, :UnfoldBSplineKitExt).splFunction
