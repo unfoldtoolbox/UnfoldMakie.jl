@@ -2,6 +2,7 @@ import BSplineKit, Unfold
 m0 = UnfoldMakie.example_data("UnfoldLinearModel")
 m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
 m2 = UnfoldMakie.example_data("UnfoldLinearModelwith2Splines")
+m3 = UnfoldMakie.example_data("UnfoldLinearModelwith1SplineSecondPlace")
 
 @testset "Spline plot: no splines" begin
     err1 = nothing
@@ -49,4 +50,8 @@ end
         spline_axis = (; backgroundcolor = colorant"#F4F3EF"),
         density_axis = (; backgroundcolor = colorant"#F4F3EF"),
     )
+end
+
+@testset "Spline plot: spline on the second place" begin
+    plot_splines(m3)
 end
