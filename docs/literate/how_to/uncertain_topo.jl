@@ -324,7 +324,7 @@ function vsp_example()
         theta0 = π / 2,
     )
 
-     ax_dummy = Axis(f[1:4, 3:4],
+    ax_dummy = Axis(f[1:4, 3:4],
         xlabel = xlabel = "Voltage [µV]",
         ylabel = ylabel = "Standard deviation",
         yaxisposition = :right,
@@ -332,11 +332,13 @@ function vsp_example()
         xlabelsize = 24, ylabelsize = 24,
         width = 230, height = 210,
     )
-    hidedecorations!(ax_dummy, label = false); hidespines!(ax_dummy)
+    hidedecorations!(ax_dummy, label = false)
+    hidespines!(ax_dummy)
 
     topo_axis = Axis(f[1:4, 1:2], aspect = DataAspect(),
         xlabel = "Time window [340 ms]", xlabelsize = 24)
-    hidedecorations!(topo_axis, label = false); hidespines!(topo_axis)
+    hidedecorations!(topo_axis, label = false)
+    hidespines!(topo_axis)
 
     TopoPlots.eeg_topoplot!(topo_axis, (vec_estimate, vec_uncert);
         positions = positions,
