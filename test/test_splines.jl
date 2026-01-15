@@ -50,3 +50,14 @@ end
         density_axis = (; backgroundcolor = colorant"#F4F3EF"),
     )
 end
+
+
+dat, evts = UnfoldSim.predef_eeg()
+m = fit(UnfoldModel,
+    [
+        "face" => (@formula(0 ~ 1), firbasis((-0.1, 0.5), 100)),
+        "car" => (@formula(0 ~ 1 + spl(continuous, 5)), firbasis((-0.1, 0.5), 100)),
+    ],
+    evts, dat, eventcolumn = :condition)
+
+plot_splines(m)

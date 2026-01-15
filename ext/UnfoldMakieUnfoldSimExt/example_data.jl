@@ -113,6 +113,12 @@ function UnfoldMakie.example_data(example = "TopoPlots.jl"; noiselevel = 10)
             data;
             solver = se_solver,
         )
+    elseif example == "UnfoldLinearModelwith1SplineSecondPlace"
+        dat, evts = UnfoldSim.predef_eeg()
+        return Unfold.fit(UnfoldModel, 
+            ["face"=>(@formula(0~1), firbasis((-0.1,0.5), 100)), 
+            "car"=>(@formula(0~1 + spl(continuous,5)), firbasis((-0.1,0.5), 100))],
+    evts, dat, eventcolumn=:condition)
     elseif example == "7channels"
         design =
             SingleSubjectDesign(conditions = Dict(:condA => ["levelA", "levelB"])) |>
