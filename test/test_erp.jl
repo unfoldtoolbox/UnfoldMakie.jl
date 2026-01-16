@@ -70,7 +70,7 @@ end
     n = nrow(results)
     results.group = repeat(["A", "B"], inner = cld(n, 2))[1:n]
     plot_erp(results; mapping = (; col = :group))
-
+end
 
 @testset "ERP plot: faceting by two columns with stderror" begin
     n = nrow(results)
