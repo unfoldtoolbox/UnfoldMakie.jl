@@ -74,7 +74,7 @@ function supportive_defaults(cfg_symb::Symbol; docstring = false)
             xlim = [-0.04, 1], ylim = [-0.04, 1],
             arrows_start = [Point2f(0), Point2f(0)], # Define the starting points for arrows (origin at (0, 0) for both directions)
             arrows_dir = [Vec2f(0, 0.1), Vec2f(0.1, 0)], # Define the direction vectors for the arrows (one pointing right and the other pointing up)
-            arrows_kwargs = (arrowsize = 10,), # Size of the arrows
+            arrows_kwargs = (tipwidth = 5, tiplength = 5, shaftwidth = 1), # Size of the arrows
             text_x_coords = (0.02, 0),
             text_x_kwargs = (text = "Time [s]", align = (:left, :top), fontsize = 12),
             text_y_coords = (-0.008, 0.01),
