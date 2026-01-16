@@ -208,13 +208,6 @@ end
     )
 end
 
-#TO DO
-# not working
-#= @testset "butterfly: with two size highlighted channels" begin
-    df.highlight = in.(df.channel, Ref([10, 12]))
-    plot_butterfly(df; positions = pos, mapping = (; linesize = :highlight))
-end =#
-
 @testset "butterfly: topoplot channel names" begin
     plot_butterfly(
         df;
@@ -224,9 +217,9 @@ end =#
 end
 
 @testset "butterfly: nticks for x and y" begin
-    plot_butterfly(df; positions=pos, nticks=6)                  # both axes 6
-    plot_butterfly(df; positions=pos, nticks=(5, 7))             # x=5, y=7
-    plot_butterfly(df; positions=pos, nticks=(x=5, y=7))         # explicit
+    plot_butterfly(df; positions = pos, nticks = 6)                  # both axes 6
+    plot_butterfly(df; positions = pos, nticks = (5, 7))             # x=5, y=7
+    plot_butterfly(df; positions = pos, nticks = (x = 5, y = 7))         # explicit
 end
 
 @testset "butterfly: xtickformat usage" begin
