@@ -164,7 +164,7 @@ function axis_indicator(f, config, indicator_grid_axis)
     ylims!(ax2, indicator_grid_axis.ylim)
 
     # Draw the arrows with the specified starting points and directions
-    arrows!(
+    arrows2d!(
         indicator_grid_axis.arrows_start,
         indicator_grid_axis.arrows_dir;
         indicator_grid_axis.arrows_kwargs...,
