@@ -34,7 +34,7 @@ plot_topoplot(
         <:Observable{<:AbstractVector},
         <:AbstractDataFrame,
         <:AbstractVector,
-    }; 
+    };
     kwargs...,
 ) = plot_topoplot!(Figure(), data; kwargs...)
 
@@ -106,10 +106,18 @@ Note: The identical min and max may cause an interpolation error when plotting t
     end
     if config.layout.use_colorbar == true
         if config.colorbar.vertical == true
-            Colorbar(great_axis[1:4, 2]; colormap = config.visual.colormap, config.colorbar...)
+            Colorbar(
+                great_axis[1:4, 2];
+                colormap = config.visual.colormap,
+                config.colorbar...,
+            )
         else
             config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
-            Colorbar(great_axis[5, 1:2]; colormap = config.visual.colormap, config.colorbar...)
+            Colorbar(
+                great_axis[5, 1:2];
+                colormap = config.visual.colormap,
+                config.colorbar...,
+            )
             rowgap!(great_axis, 4, 0)
         end
     end

@@ -13,7 +13,8 @@ using UnfoldMakie, UnfoldSim
 
 # In our case, we have predefined data with 227 channels:
 
-df_toposeries, pos_toposeries, lab_toposeries = UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
+df_toposeries, pos_toposeries, lab_toposeries =
+    UnfoldMakie.example_data("bootstrap_toposeries"; noiselevel = 7);
 df_trial1_t50 = filter(row -> row.trial == 1 && row.time == 50, df_toposeries)
 
 plot_topoplot(
@@ -37,9 +38,10 @@ labels_64 = hart.electrodes["label"][filter_idx]
 estimates_64 = df_trial1_t50.estimate[filter_idx]
 positions_64 =
     hart.electrodes["pos"] |>
-    x -> to_positions(x') |>
-    x -> [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in x] |>
-    x -> x[filter_idx];
+    x ->
+        to_positions(x') |>
+        x -> [UnfoldMakie.Point2f(p[1] + 0.5, p[2] + 0.5) for p in x] |>
+             x -> x[filter_idx];
 
 plot_topoplot(
     estimates_64;
@@ -55,7 +57,11 @@ with_theme(Theme(; fontsize = 18, fonts = (; regular = "Ubuntu Mono"))) do
         estimates_64;
         labels = labels_64,
         positions = positions_64,
-        visual = (; label_text = true, colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
+        visual = (;
+            label_text = true,
+            colormap = :diverging_tritanopic_cwr_75_98_c20_n256,
+            contours = false,
+        ),
         axis = (; xlabel = "50 ms"),
     )
 end
