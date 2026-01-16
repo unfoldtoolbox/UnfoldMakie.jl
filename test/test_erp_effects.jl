@@ -10,7 +10,8 @@ end
 
 @testset "Effect plot: faceted by channels" begin
     res_effects = effects(Dict(:continuous => -5:0.5:5), m)
-    res_effects.channel = push!(repeat(["1", "2"], 472), "1")
+    n = nrow(res_effects)
+    res_effects.channel = repeat(["1", "2"], inner = cld(n, 2))[1:n]
     plot_erp(
         res_effects;
         mapping = (; y = :yhat, color = :continuous => nonnumeric, col = :channel),

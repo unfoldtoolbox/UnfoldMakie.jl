@@ -67,12 +67,15 @@ end
 end
 
 @testset "ERP plot: faceting by two columns" begin
-    results.group = push!(repeat(["A", "B"], inner = 67), "A")
+    n = nrow(results)
+    results.group = repeat(["A", "B"], inner = cld(n, 2))[1:n]
     plot_erp(results; mapping = (; col = :group))
 end
 
+
 @testset "ERP plot: faceting by two columns with stderror" begin
-    results.group = push!(repeat(["A", "B"], inner = 67), "A")
+    n = nrow(results)
+    results.group = repeat(["A", "B"], inner = cld(n, 2))[1:n]
     plot_erp(results; mapping = (; col = :group), stderror = true)
 end
 
@@ -271,7 +274,7 @@ end
 @testset "erp: nticks for x and y" begin
     plot_erp(results; nticks = 6)                   # both axes 6
     plot_erp(results; nticks = (5, 7))              # x=5, y=7
-    plot_erp(results; nticks = (x=5, y=7))          # explicit
+    plot_erp(results; nticks = (x = 5, y = 7))          # explicit
 end
 
 @testset "erp: xtickformat usage" begin
