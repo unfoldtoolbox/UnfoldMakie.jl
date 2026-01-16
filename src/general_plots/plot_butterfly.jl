@@ -164,8 +164,8 @@ function topoplot_legend(axis, unique_val, colors, all_positions, topo_attribute
 
     topoplot = eeg_topoplot!(
         axis,
-        1:length(all_positions), # go from 1:npos
-        string.(1:length(all_positions));
+        1:length(all_positions); # go from 1:npos
+        lables = string.(1:length(all_positions)),
         positions = all_positions,
         colorrange = (0, length(all_positions)), # add the 0 for the white-first color
         colormap = special_colors,
