@@ -42,15 +42,6 @@ jobs:
       - name: Use Julia cache
         uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
-      - name: Debug Julia env
-        run: |
-          julia --project=. -e '
-            using Pkg
-            println("=== versioninfo() ===")
-            versioninfo()
-            println("\n=== Pkg.status() (project) ===")
-            Pkg.status()
-          '
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
         if: ${{ inputs.run_codecov }}
