@@ -26,8 +26,23 @@ To highlight some electrodes, you can use `topo_attributes = (; label_scatter = 
 To set different sizes for each electrode, provide a vector of sizes with length equal 
 to the number of electrodes.
 
+Colorbar limits behavior:
+- If you pass `colorbar = (; limits = (lo, hi))` or `colorbar = (; colorrange = (lo, hi))`, that range is used.
+- If neither is provided, the range is computed from the data as symmetric 5th/95th percentiles:
+  `p05 = percentile(0.05, data)`, `p95 = percentile(0.95, data)`, `m = max(abs(p05), abs(p95))`, then `(-m, m)`.
+
 **Return Value:** `Figure` displaying the Topoplot.
 """
+
+# Simple percentile without external deps (p in (0, 1]).
+function _percentile(p::Real, v::AbstractVector)
+    n = length(v)
+    n == 0 && throw(ArgumentError("percentile of empty collection"))
+    s = sort(v)
+    idx = clamp(ceil(Int, p * n), 1, n)
+    return s[idx]
+end
+
 plot_topoplot(
     data::Union{
         <:Observable{<:DataFrame},
@@ -83,43 +98,57 @@ function plot_topoplot!(
         topo_attributes...,
     )
 
-    # Set the color limits (`clims`) either from the config if specified by user or dynamically based on the data.
+    # Determine color range for ticks; respect user-provided limits/colorrange if present.
     if haskey(config.visual, :limits)
         clims = Observable(config.visual.limits)
     else
-        clims = @lift (min($data...), max($data...))
+        clims = @lift begin
+            p05 = _percentile(0.05, $data)
+            p95 = _percentile(0.95, $data)
+            m = max(abs(p05), abs(p95))
+            (-m, m)
+        end
+    end
+    colorbar_range = if haskey(config.colorbar, :limits)
+        Observable(config.colorbar.limits)
+    elseif haskey(config.colorbar, :colorrange)
+        Observable(config.colorbar.colorrange)
+    else
+        clims
     end
 
-    if clims[][1] ≈ clims[][2]
+    if colorbar_range[][1] ≈ colorbar_range[][2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
 We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
 
-        ticks = @lift LinRange($clims[1], $clims[2], 5)
+        ticks = @lift LinRange($colorbar_range[1], $colorbar_range[2], 5)
         rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
-        @lift config_kwargs!(
-            config,
-            colorbar = (; ticks = ($ticks, $rounded_ticks), limits = $clims),
-        )
-    end
-    if config.layout.use_colorbar == true
-        if config.colorbar.vertical == true
-            Colorbar(
-                great_axis[1:4, 2];
-                colormap = config.visual.colormap,
-                config.colorbar...,
-            )
+        if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
+            @lift config_kwargs!(config, colorbar = (; ticks = ($ticks, $rounded_ticks)))
         else
-            config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
-            Colorbar(
-                great_axis[5, 1:2];
-                colormap = config.visual.colormap,
-                config.colorbar...,
+            @lift config_kwargs!(
+                config,
+                colorbar = (; ticks = ($ticks, $rounded_ticks), limits = $colorbar_range),
             )
-            rowgap!(great_axis, 4, 0)
         end
+    end
+    if config.layout.use_colorbar
+        isvert = get(config.colorbar, :vertical, true)
+        cb_pos = isvert ? great_axis[1:4, 2] : great_axis[5, 1:2]
+
+        if !isvert
+            config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
+        end
+
+        Colorbar(
+            cb_pos;
+            colormap = config.visual.colormap,
+            config.colorbar...,
+        )
+        !isvert && rowgap!(great_axis, 4, 0)
     end
     apply_layout_settings!(config; fig = f)
     return f
