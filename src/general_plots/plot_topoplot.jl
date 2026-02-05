@@ -22,27 +22,18 @@ Plot a topoplot.
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 $(_docstring(:topoplot))
 
-To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
+To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`,  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
 To set different sizes for each electrode, provide a vector of sizes with length equal 
 to the number of electrodes.
 
 Colorbar limits behavior:
-- If you pass `colorbar = (; limits = (lo, hi))` or `colorbar = (; colorrange = (lo, hi))`, that range is used.
-- If neither is provided, the range is computed from the data as symmetric 5th/95th percentiles:
-  `p05 = percentile(0.05, data)`, `p95 = percentile(0.95, data)`, `m = max(abs(p05), abs(p95))`, then `(-m, m)`.
+- If you pass `colorbar = (; limits = (lo, hi))` or `colorbar = (; colorrange = (lo, hi))`, that range is used.\\
+- If neither is provided and the data includes negative values, the range is symmetric around zero using 1st/99th percentiles:
+  `p01 = percentile(0.01, data)`, `p99 = percentile(0.99, data)`, `m = max(abs(p01), abs(p99))`, then `(-m, m)`.
+- If the data is non-negative, the range defaults to `(minimum(data), maximum(data))`.
 
 **Return Value:** `Figure` displaying the Topoplot.
 """
-
-# Simple percentile without external deps (p in (0, 1]).
-function _percentile(p::Real, v::AbstractVector)
-    n = length(v)
-    n == 0 && throw(ArgumentError("percentile of empty collection"))
-    s = sort(v)
-    idx = clamp(ceil(Int, p * n), 1, n)
-    return s[idx]
-end
-
 plot_topoplot(
     data::Union{
         <:Observable{<:DataFrame},
@@ -87,9 +78,37 @@ function plot_topoplot!(
     topo_attributes =
         update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
-    inner_axis = Axis(great_axis[1:4, 1:2]; topo_axis...)
 
-    eeg_topoplot!(
+    if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
+        error(
+            "Topoplot uses a shared color range between the plot and colorbar. " *
+            "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+            "instead of `colorbar = (; limits/colorrange = ...)`.",
+        )
+    end
+
+    # Resolve a single range source, then link it to the topoplot + colorbar.
+    # Keep colorrange in Float32 to match Makie internals; avoids first tick being
+    # dropped due to Float64 ↔ Float32 rounding at the limits.
+    shared_range = if haskey(config.visual, :colorrange)
+        Observable(Float32.(config.visual.colorrange))
+        elseif haskey(config.visual, :limits)
+            Observable(Float32.(config.visual.limits))
+        else
+            @lift begin
+                if any(<(0), $data)
+                    p01 = _percentile(0.01, $data)
+                    p99 = _percentile(0.99, $data)
+                    m = max(abs(p01), abs(p99))
+                    Float32.((-m, m))
+                else
+                    Float32.((minimum($data), maximum($data)))
+                end
+            end
+    end
+    config_kwargs!(config, visual = (; colorrange = shared_range))
+    inner_axis = Axis(great_axis[1:4, 1:2]; topo_axis...)
+    h = eeg_topoplot!(
         inner_axis,
         data;
         labels = labels,
@@ -97,42 +116,16 @@ function plot_topoplot!(
         config.visual...,
         topo_attributes...,
     )
-
-    # Determine color range for ticks; respect user-provided limits/colorrange if present.
-    if haskey(config.visual, :limits)
-        clims = Observable(config.visual.limits)
-    else
-        clims = @lift begin
-            p05 = _percentile(0.05, $data)
-            p95 = _percentile(0.95, $data)
-            m = max(abs(p05), abs(p95))
-            (-m, m)
-        end
-    end
-    colorbar_range = if haskey(config.colorbar, :limits)
-        Observable(config.colorbar.limits)
-    elseif haskey(config.colorbar, :colorrange)
-        Observable(config.colorbar.colorrange)
-    else
-        clims
-    end
-
-    if colorbar_range[][1] ≈ colorbar_range[][2]
+    if shared_range[][1] ≈ shared_range[][2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
 We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
-
-        ticks = @lift LinRange($colorbar_range[1], $colorbar_range[2], 5)
-        rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
-        if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
+        if !haskey(config.colorbar, :ticks)
+            ticks = @lift LinRange($shared_range[1], $shared_range[2], 5)
+            rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
             @lift config_kwargs!(config, colorbar = (; ticks = ($ticks, $rounded_ticks)))
-        else
-            @lift config_kwargs!(
-                config,
-                colorbar = (; ticks = ($ticks, $rounded_ticks), limits = $colorbar_range),
-            )
         end
     end
     if config.layout.use_colorbar
@@ -143,13 +136,20 @@ Note: The identical min and max may cause an interpolation error when plotting t
             config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
         end
 
-        Colorbar(
-            cb_pos;
-            colormap = config.visual.colormap,
-            config.colorbar...,
-        )
+        # When linking a colorbar to a plot object, Makie forbids passing limits/colorrange.
+        cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar)
+                        if !(k in (:limits, :colorrange)))...)
+        cb = Colorbar(cb_pos, h; cb_kwargs...)
         !isvert && rowgap!(great_axis, 4, 0)
     end
     apply_layout_settings!(config; fig = f)
     return f
+end
+
+function _percentile(p::Real, v::AbstractVector)
+    n = length(v)
+    n == 0 && throw(ArgumentError("percentile of empty collection"))
+    s = sort(v)
+    idx = clamp(ceil(Int, p * n), 1, n)
+    return s[idx]
 end
