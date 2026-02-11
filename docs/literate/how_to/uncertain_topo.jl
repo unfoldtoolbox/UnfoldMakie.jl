@@ -109,6 +109,7 @@ begin
         colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
+    markerlables = round.(range(extrema(vec_uncert)...; length = 5); digits = 2)
 
     group_size = [
         MarkerElement(
@@ -116,7 +117,7 @@ begin
             color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5,
             markersize = ms) for ms in markersizes
     ]
-    Legend(f[5, 1], group_size, ["$ms" for ms in markersizes], "Standard\ndeviation",
+    Legend(f[5, 1], group_size, ["$ms" for ms in markerlables], "Standard\ndeviation",
         patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8),
         framevisible = false,
         labelsize = 18, titlesize = 20,
