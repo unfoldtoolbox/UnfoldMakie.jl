@@ -46,7 +46,7 @@ plot_topoplot(
 plot_topoplot(
     topo_array[:, 50, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time [50 ms]"),
+    axis = (; xlabel = "Time point 50"),
     colorbar = (; vertical = false, width = 180),
 )
 
@@ -116,7 +116,7 @@ strokes[1:2] .= (3, 3)
 plot_topoplot(
     topo_array[:, 50, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time [50 ms]"),
+    axis = (; xlabel = "Time point 50"),
     visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256),
     topo_attributes = (;
         label_scatter = (;
@@ -158,7 +158,7 @@ begin
                 rotation = rotations,
             )
         ),
-        axis = (; xlabel = "Time point [50 ms]", xlabelsize = 24, ylabelsize = 24),
+        axis = (; xlabel = "Time point 50", xlabelsize = 24, ylabelsize = 24),
         visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
         colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
@@ -179,14 +179,52 @@ end
 plot_topoplot(
     topo_array[:, 50, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time [50 ms]"),
+    axis = (; xlabel = "Time point 50"),
     topo_attributes = (;
         label_scatter = (; markersize = rand(64) .* 2π, marker = :circle, color = :black)
     ),
 )
+
+# # Not only voltage
+# Topoplots can be used to visualize any measure that can be mapped to sensors locations. For example, you can plot statistical values (t-values, F-values, p-values), frequency band power, connectivity measures etc.
+# Here we plot different uncertatinty estimates using topoplot.
+
+topo_se = topo_array[:, 50, 2] ./ sqrt(length(topo_array[:, 50, 2])) # standard error
+topo_tvalues = topo_array[:, 50, 1] ./ topo_se
+topo_pvalues = -log10.(clamp.(topo_array[:, 50, 3], eps(eltype(topo_array)), 1))
+
+begin
+    f = Figure(size = (600, 600))
+    ax = Axis(f[1:2, 1:2]; titlesize = 22, subtitlesize = 18, 
+        title = "Uncertainty measures on topoplots", subtitle = "Time point 50")
+    hidedecorations!(ax); hidespines!(ax)
+
+    panels = [
+        (topo_array[:, 50, 2], "Standard deviation"),
+        (topo_se .* 1e2, "Standard error (×10⁻²)"),
+        (topo_tvalues, "t-values"),
+        (topo_pvalues, "p-values (-log₁₀ scale)"),
+            ]
+
+    for (i, (vals, cblabel)) in enumerate(panels)
+        r = div(i - 1, 2) + 1   # rows: 1..2
+        c = mod(i - 1, 2) + 1   # cols: 1..2
+
+        plot_topoplot!(f[r, c],
+            vals;
+            positions = topo_positions,
+            axis = (; xlabel = ""),
+            colorbar = (; vertical = false, width = 180, label = cblabel),
+            visual = (; colormap = :viridis, contours = false),
+        )
+    end
+
+    f
+end
 
 # # Configurations of Topoplot
 
 # ```@docs
 # plot_topoplot
 # ```
+
