@@ -131,15 +131,7 @@ function plot_topoplotseries!(
         positions,
         labels,
     )
-    estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
-    cb_limits = (minimum(estimate_column), maximum(estimate_column)) # set limits for colorbar
-    cb_ticks = LinRange(cb_limits[1], cb_limits[2], 5) # set ticklables for colorbar
-    rounded_ticks = round.(cb_ticks, digits = 2)
-
-    config_kwargs!(
-        config;
-        colorbar = (; limits = cb_limits, ticks = (cb_ticks, string.(rounded_ticks))),
-    )
+    _configure_toposeries_colorbar!(config, data)
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;) 
 
@@ -153,6 +145,43 @@ function plot_topoplotseries!(
 
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
+end
+
+function _configure_toposeries_colorbar!(config::PlotConfig, data)
+    if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
+        error(
+            "Topoplot series uses a shared color range between the plots and colorbar. " *
+            "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+            "instead of `colorbar = (; limits/colorrange = ...)`.",
+        )
+    end
+
+    estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
+    shared_range = if haskey(config.visual, :colorrange)
+        config.visual.colorrange
+    elseif haskey(config.visual, :limits)
+        config.visual.limits
+    elseif any(<(0), estimate_column)
+        p01 = _percentile(0.01, estimate_column)
+        p99 = _percentile(0.99, estimate_column)
+        m = max(abs(p01), abs(p99))
+        (-m, m)
+    else
+        (minimum(estimate_column), maximum(estimate_column))
+    end
+    config_kwargs!(config, visual = (; colorrange = shared_range))
+
+    if !haskey(config.colorbar, :ticks)
+        cb_ticks = LinRange(shared_range[1], shared_range[2], 5)
+        rounded_ticks = round.(cb_ticks, digits = 2)
+        config_kwargs!(
+            config;
+            colorbar = (; limits = shared_range, ticks = (cb_ticks, string.(rounded_ticks))),
+        )
+    else
+        config_kwargs!(config; colorbar = (; limits = shared_range))
+    end
+    return nothing
 end
 
 #round(323434.2323; (; sigdigits = 3)...) - other way to implement it

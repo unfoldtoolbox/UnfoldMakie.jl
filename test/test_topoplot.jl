@@ -1,11 +1,11 @@
 dat, positions = TopoPlots.example_data()
 data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 
-#= 
 @testset "eeg_topoplot: colorbar" begin
-    f, a, h= TopoPlots.eeg_topoplot(1:10, positions=rand(Point2f, 10))
+    f, a, h = TopoPlots.eeg_topoplot(1:10, positions=rand(Point2f, 10))
     Colorbar(f[1,2], h)
-end =#
+    f
+end
 
 @testset "topoplot: basic" begin
     plot_topoplot(dat[:, 50, 1]; positions)
@@ -109,7 +109,24 @@ end
         dat[:, 50, 1];
         positions,
         colorbar = (; vertical = false, width = 180),
-        axis = (; xlabel = "50 ms"),
+        axis = (; xlabel = ""),
+    )
+end
+
+@testset "topoplot: colorbar limits and colorrange blocked" begin
+    msg = "Topoplot uses a shared color range between the plot and colorbar. " *
+          "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+          "instead of `colorbar = (; limits/colorrange = ...)`."
+    @test_throws ErrorException(msg) plot_topoplot(
+        dat[:, 50, 1];
+        positions,
+        colorbar = (; limits = (-1, 1)),
+    )
+
+    @test_throws ErrorException(msg) plot_topoplot(
+        dat[:, 50, 1];
+        positions,
+        colorbar = (; colorrange = (-1, 1)),
     )
 end
 
@@ -120,7 +137,7 @@ end
         dat[:, 50, 1];
         positions,
         colorbar = (; vertical = false, width = 180),
-        axis = (; xlabel = "50 ms"),
+        axis = (; xlabel = ""),
     )
     plot_topoplot!(
         f[:, 2],
@@ -137,21 +154,21 @@ end
 @testset "topoplot: shared colorbars" begin
     data_1, positions = TopoPlots.example_data()
     data_2 = data_1 .* 100
-    min, max = minimum(data_2[:, 5, 1]), maximum(data_2[:, 5, 1])
+    _min, _max = minimum(data_2[:, 5, 1]), maximum(data_2[:, 5, 1])
 
     f = Figure()
     plot_topoplot!(
         f[1, 1],
         data_1[:, 5, 1],
         positions = positions,
-        visual = (; limits = (min, max)),
+        visual = (; limits = (_min, _max)),
         layout = (; use_colorbar = false),
     ) # how to increase the gap?
     plot_topoplot!(
         f[1, 2],
         data_2[:, 5, 1],
         positions = positions,
-        visual = (; limits = (min, max)),
+        visual = (; limits = (_min, _max)),
     )
     f
 end
@@ -171,4 +188,8 @@ end
             )
         ),
     )
+end
+
+@testset "topoplot: categorical color" begin
+    plot_topoplot(dat[:, 40, 1]; positions, visual = (; colormap = cgrad(:managua, 10; categorical = true, rev = true)))
 end

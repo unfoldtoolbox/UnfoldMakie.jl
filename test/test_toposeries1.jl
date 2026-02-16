@@ -11,7 +11,7 @@ end
 
 @testset "eeg_topoplot_series" begin
     matrix = rand(64, 5) # simulated data
-    UnfoldMakie.eeg_topoplot_series(
+    a, b = UnfoldMakie.eeg_topoplot_series(
         matrix;
         layout = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
         positions = positions,
@@ -71,6 +71,24 @@ end
     end
     @test err1 == ErrorException(
         "You haven't specified `bin_width` or `bin_num`. Such option is available only with categorical `mapping.col` or `mapping.row`.",
+    )
+end
+
+@testset "error checking: colorbar limits and colorrange blocked" begin
+    msg = "Topoplot series uses a shared color range between the plots and colorbar. " *
+          "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+          "instead of `colorbar = (; limits/colorrange = ...)`."
+    @test_throws ErrorException(msg) plot_topoplotseries(
+        df;
+        bin_width = 80,
+        positions = positions,
+        colorbar = (; limits = (-1, 1)),
+    )
+    @test_throws ErrorException(msg) plot_topoplotseries(
+        df;
+        bin_width = 80,
+        positions = positions,
+        colorbar = (; colorrange = (-1, 1)),
     )
 end
 
