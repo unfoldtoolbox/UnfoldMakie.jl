@@ -135,13 +135,39 @@ function plot_topoplotseries!(
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;) 
 
+    main_gl = f[1, 1] = GridLayout()
+    location = get(config.colorbar, :location, :right)
+    if !(location in (:right, :left, :top, :bottom))
+        error("colorbar.location must be :right, :left, :top, or :bottom for plot_topoplotseries")
+    end
+
+    if location in (:top, :bottom) 
+        config_kwargs!(config, colorbar = (; vertical = false, labelrotation = 2π))
+    end
+
+    row_offset = location == :top ? 1 : 0
+    col_offset = location == :left ? 1 : 0
+    plot_row = 1 + row_offset
+    plot_col = 1 + col_offset
+
     ax = Axis(
-        f[1, 1];
+        main_gl[plot_row, plot_col];
         (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)..., # what it this??
     )
     if config.layout.use_colorbar == true
-        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
+        cb_pos = if location == :left
+            f[1, 0]
+        elseif location == :right
+            f[1, 2]
+        elseif location == :top
+            f[0, :]
+        else
+            f[2, 1]
+        end
+        cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :location)...)
+        Colorbar(cb_pos; colormap = config.visual.colormap, cb_kwargs...)
     end
+   # @debug  config.colorbar
 
     apply_layout_settings!(config; fig = f, ax = ax)
     return f

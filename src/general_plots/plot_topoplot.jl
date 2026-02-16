@@ -58,13 +58,11 @@ function plot_topoplot!(
     topo_axis = (;),
     kwargs...,
 )
+
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
     great_axis = f[1, 1] = GridLayout()
-    outer_axis = Axis(great_axis[1:4, 1:2]; config.axis...)
-    hidespines!(outer_axis)
-    hidedecorations!(outer_axis, label = false)
 
     if !(data isa Vector || data isa Observable{<:AbstractVector})
         config.mapping = resolve_mappings(data, config.mapping)
@@ -107,7 +105,21 @@ function plot_topoplot!(
             end
     end
     config_kwargs!(config, visual = (; colorrange = shared_range))
-    inner_axis = Axis(great_axis[1:4, 1:2]; topo_axis...)
+
+    location = get(config.colorbar, :location, nothing)
+    if !(location === nothing || location in (:right, :left, :top, :bottom))
+        error("colorbar.location must be one of :right, :left, :top, :bottom")
+    end
+
+    row_offset = location == :top ? 1 : 0
+    col_offset = location == :left ? 1 : 0
+    plot_rows = (1 + row_offset):(4 + row_offset)
+    plot_cols = (1 + col_offset):(2 + col_offset)
+
+    outer_axis = Axis(great_axis[plot_rows, plot_cols]; config.axis...)
+    hidespines!(outer_axis); hidedecorations!(outer_axis, label = false)
+
+    inner_axis = Axis(great_axis[plot_rows, plot_cols]; topo_axis...)
     h = eeg_topoplot!(
         inner_axis,
         data;
@@ -129,19 +141,37 @@ Note: The identical min and max may cause an interpolation error when plotting t
         end
     end
     if config.layout.use_colorbar
-        isvert = get(config.colorbar, :vertical, true)
-        cb_pos = isvert ? great_axis[1:4, 2] : great_axis[5, 1:2]
+        cb_pos = if location == :right
+            great_axis[plot_rows, plot_cols.stop + 1]
+        elseif location == :left
+            great_axis[plot_rows, plot_cols.start - 1]
+        elseif location == :top
+            great_axis[plot_rows.start - 1, plot_cols]
+        else
+            great_axis[plot_rows.stop + 1, plot_cols]
+        end
 
-        if !isvert
-            config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
+        if !get(config.colorbar, :vertical, true)
+            config_kwargs!(config, colorbar = (; labelrotation = 2π))
         end
 
         # When linking a colorbar to a plot object, Makie forbids passing limits/colorrange.
         cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar)
-                        if !(k in (:limits, :colorrange)))...)
+                        if !(k in (:limits, :colorrange, :location)))...)
         cb = Colorbar(cb_pos, h; cb_kwargs...)
-        !isvert && rowgap!(great_axis, 4, 0)
-    end
+    
+        if location == :top
+            rowgap!(great_axis, plot_rows.start - 1, 0)
+            rowsize!(great_axis, plot_rows.start - 1, Auto(0.1))
+        elseif location == :bottom
+            rowgap!(great_axis, plot_rows.stop, 10)
+            rowsize!(great_axis, plot_rows.stop + 1, Auto(0.1))
+            outer_axis.xlabelpadding = -6
+        elseif location == :left || location == :right
+            colgap!(great_axis, location == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
+            colsize!(great_axis, location == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
+        end
+    end 
     apply_layout_settings!(config; fig = f)
     return f
 end

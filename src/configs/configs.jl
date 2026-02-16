@@ -96,7 +96,7 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
-        colorbar = (; flipaxis = true, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, label = "Voltage [µV]", location = :right, labelrotation = -π / 2),
         axis = (; xlabel = "Time", aspect = DataAspect()),
     )
     return cfg

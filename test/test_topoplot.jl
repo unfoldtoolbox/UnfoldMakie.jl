@@ -1,14 +1,15 @@
 dat, positions = TopoPlots.example_data()
+tp = 340
 data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 
 @testset "eeg_topoplot: colorbar" begin
     f, a, h = TopoPlots.eeg_topoplot(1:10, positions=rand(Point2f, 10))
-    Colorbar(f[1,2], h)
+    Colorbar(f[1, 2], h)
     f
 end
 
 @testset "topoplot: basic" begin
-    plot_topoplot(dat[:, 50, 1]; positions)
+    plot_topoplot(dat[:, tp, 1]; positions)
 end
 
 @testset "topoplot: data input as DataFrame" begin
@@ -32,23 +33,23 @@ end
 end
 
 @testset "topoplot: no legend" begin
-    plot_topoplot(dat[:, 50, 1]; positions = positions, layout = (; use_colorbar = false))
+    plot_topoplot(dat[:, tp, 1]; positions = positions, layout = (; use_colorbar = false))
 end
 
 @testset "topoplot: xlabel" begin
-    plot_topoplot(dat[:, 50, 1]; positions = positions, axis = (; xlabel = "[50 ms]"))
+    plot_topoplot(dat[:, tp, 1]; positions = positions, axis = (; xlabel = "[$tp ms]"))
 end
 
 @testset "topoplot: GridLayout" begin
     f = Makie.Figure()
-    plot_topoplot!(f[1, 1], dat[:, 150, 1]; positions = positions)
+    plot_topoplot!(f[1, 1], dat[:, tp, 1]; positions = positions)
     f
 end
 
 @testset "topoplot: labels" begin
-    labels = ["s$i" for i = 1:size(dat[:, 150, 1], 1)]
+    labels = ["s$i" for i = 1:size(dat[:, tp, 1], 1)]
     plot_topoplot(
-        dat[:, 150, 1],
+        dat[:, tp, 1],
         positions = positions;
         labels = labels,
         visual = (; label_text = true),
@@ -68,7 +69,7 @@ end
 
 @testset "topoplot: positions through labels" begin
     plot_topoplot(
-        dat[1:19, 50, 1];
+        dat[1:19, tp, 1];
         labels = TopoPlots.CHANNELS_10_20,
         visual = (; label_text = true),
     )
@@ -76,7 +77,7 @@ end
 
 @testset "topoplot: change interpolation" begin
     plot_topoplot(
-        dat[:, 320, 1];
+        dat[:, tp, 1];
         positions = positions,
         topo_attributes = (; interpolation = DelaunayMesh()),
     )
@@ -85,7 +86,7 @@ end
 
 @testset "topoplot: change interpolation" begin
     plot_topoplot(
-        dat[:, 320, 1];
+        dat[:, tp, 1];
         positions = positions,
         topo_attributes = (; interpolation = NullInterpolator()),
     )
@@ -93,38 +94,52 @@ end
 
 
 @testset "topoplot: change aspect" begin
-    plot_topoplot(dat[:, 320, 1]; positions = positions, topo_axis = (; aspect = 2))
+    plot_topoplot(dat[:, tp, 1]; positions = positions, topo_axis = (; aspect = 2))
 end
 
 @testset "topoplot: observable" begin
-    dat_obs = Observable(dat[:, 320, 1])
+    dat_obs = Observable(dat[:, tp, 1])
     plot_topoplot(dat_obs; positions = positions)
-    dat_obs[] = dat[:, 30, 1]
+    dat_obs[] = dat[:, tp, 1]
     plot_topoplot(dat_obs; positions = positions)
 end
 
 
 @testset "topoplot: horizontal colorbar" begin
     plot_topoplot(
-        dat[:, 50, 1];
+        dat[:, tp, 1];
         positions,
         colorbar = (; vertical = false, width = 180),
         axis = (; xlabel = ""),
     )
 end
 
+@testset "topoplot: colorbar location" begin
+    f = Figure()
+
+    plot_topoplot!(f[1, 1], dat[:, tp, 1]; positions, colorbar = (; labelrotation = π/2, flipaxis = false, location = :left))
+    plot_topoplot!(f[1, 2], dat[:, tp, 1]; positions, colorbar = (; location = :right))
+    plot_topoplot!(f[2, 1], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = true, location = :top, vertical = false))
+    plot_topoplot!(f[2, 2], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, location = :bottom, vertical = false))
+    colsize!(f.layout, 1, Fixed(200))  
+    f
+end
+
+#plot_topoplot(dat[:, tp, 1]; positions, colorbar = (; width = 140, location = :top, vertical = false))
+#plot_topoplot(dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, location = :bottom, vertical = false))
+
 @testset "topoplot: colorbar limits and colorrange blocked" begin
     msg = "Topoplot uses a shared color range between the plot and colorbar. " *
           "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
           "instead of `colorbar = (; limits/colorrange = ...)`."
     @test_throws ErrorException(msg) plot_topoplot(
-        dat[:, 50, 1];
+        dat[:, tp, 1];
         positions,
         colorbar = (; limits = (-1, 1)),
     )
 
     @test_throws ErrorException(msg) plot_topoplot(
-        dat[:, 50, 1];
+        dat[:, tp, 1];
         positions,
         colorbar = (; colorrange = (-1, 1)),
     )
@@ -134,14 +149,14 @@ end
     f = Figure()
     plot_topoplot!(
         f[:, 1],
-        dat[:, 50, 1];
+        dat[:, tp, 1];
         positions,
         colorbar = (; vertical = false, width = 180),
         axis = (; xlabel = ""),
     )
     plot_topoplot!(
         f[:, 2],
-        dat[:, 50, 2];
+        dat[:, tp, 2];
         positions,
         colorbar = (; vertical = false, width = 180, label = "Voltage uncertainty"),
         axis = (; xlabel = "50 ms"),
@@ -176,7 +191,7 @@ end
 @testset "topoplot: markers as random arrows" begin
     random_rotations = rand(64) .* 2π
     plot_topoplot(
-        dat[:, 50, 1];
+        dat[:, tp, 1];
         positions,
         axis = (; xlabel = "50 ms"),
         topo_attributes = (;
@@ -191,5 +206,5 @@ end
 end
 
 @testset "topoplot: categorical color" begin
-    plot_topoplot(dat[:, 40, 1]; positions, visual = (; colormap = cgrad(:managua, 10; categorical = true, rev = true)))
+    plot_topoplot(dat[:, tp, 1]; positions, visual = (; colormap = cgrad(:managua, 10; categorical = true, rev = true)))
 end

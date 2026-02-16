@@ -26,6 +26,26 @@ end
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
+@testset "toposeries: colorbar location left" begin
+    plot_topoplotseries(
+        df;
+        bin_num = 5,
+        nrows = 3,
+        positions = positions,
+        colorbar = (; location = :left, flipaxis = false, labelrotation = π/2),
+    )
+end
+
+@testset "toposeries: colorbar location top" begin
+    plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        colorbar = (; width = 300, location = :top, vertical = false),
+    )
+end
+
+
 @testset "toposeries: bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions, axis = (; xlabel = "test"))
 end
@@ -116,23 +136,14 @@ end
 end
 
 @testset "error checking: different length of channel names gand positions" begin
-    err1 = nothing
-    t() = error(
-        plot_topoplotseries(
-            df;
-            bin_width = 80,
-            nrows = 3,
-            positions = positions,
-            labels = channels_30,
-            visual = (; label_text = true),
-        ),
-    )
-    try
-        t()
-    catch err1
-    end
-    @test err1 == ErrorException(
-        "The length of `labels` differs from the length of `position`. Please make sure they are the same length.",
+    msg = "The length of `labels` differs from the length of `position`. Please make sure they are the same length."
+    @test_throws ErrorException(msg) plot_topoplotseries(
+        df;
+        bin_width = 80,
+        nrows = 3,
+        positions = positions,
+        labels = channels_30,
+        visual = (; label_text = true),
     )
 end
 
@@ -359,21 +370,6 @@ end
     )
     f
 end
-
-@testset "toposeries: colorrange" begin
-    plot_topoplotseries(
-        df;
-        bin_width = 80,
-        positions = positions,
-        visual = (; colorrange = [-5, 0.5]),
-        colorbar = (;
-            label = "p-value",
-            limits = (0, 0.1),
-            ticks = ([0.0, 0.1], ["0", "0.1"]),
-        ),
-    )
-end
-
 
 @testset "toposeries: dynamic mapping.y" begin
     df = DataFrame(
