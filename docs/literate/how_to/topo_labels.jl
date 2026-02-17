@@ -7,7 +7,7 @@ using UnfoldMakie, UnfoldSim
 # You need 3 vectors to add labels to topoplots: of channel labels, of channel positions, and of voltage estimates.
 
 # On the internet, you can find various standard montages with channel labels.
-# For instance, see the labels and positions of [standard_1005_2D](https://raw.githubusercontent.com/sappelhoff/eeg_positions/main/data/Nz-T10-Iz-T9/standard_1005_2D.tsv).
+# For instance, see the labels and positions of [`standard_1005_2D`](https://raw.githubusercontent.com/sappelhoff/eeg_positions/main/data/Nz-T10-Iz-T9/standard_1005_2D.tsv).
 # You can find many others [here](https://github.com/mne-tools/mne-python/tree/main/mne/channels/data/montages).
 # But make sure you also have the corresponding data for them!
 
