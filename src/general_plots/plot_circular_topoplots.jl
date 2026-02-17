@@ -35,6 +35,8 @@ Plot a circular EEG topoplot.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
+- `colorbar.location = :right`\\
+     Possible options: `:right`, `:left`. Sets location of the colorbar.\\
 
 $(_docstring(:circtopos))
 
@@ -96,7 +98,13 @@ function plot_circular_topoplots!(
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
-    Colorbar(f[1, 2]; colorrange = (min, max), config.colorbar...)
+    location = get(config.colorbar, :location, :right)
+    if !(location in (:right, :left))
+        error("colorbar.location must be :right or :left for plot_circular_topoplots")
+    end
+    cb_pos = location == :left ? f[1, 0] : f[1, 2]
+    cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :location)...)
+    Colorbar(cb_pos; colorrange = (min, max), cb_kwargs...)
     topo_axis =
         update_axis(supportive_defaults(:topo_default_single_circular); topo_axis...)
     topo_attributes =
