@@ -205,7 +205,7 @@ begin
         (topo_se, "Standard error"),
         (abs.(topo_tvalues), "|t-values|"),
         (topo_pvalues, "p-values (-log₁₀ scale)"),
-            ]
+    ]
 
     for (i, (vals, cblabel)) in enumerate(panels)
         r = div(i - 1, 2) + 1   # rows: 1..2
