@@ -102,6 +102,8 @@ function plot_circular_topoplots!(
     if !(location in (:right, :left))
         error("colorbar.location must be :right or :left for plot_circular_topoplots")
     end
+    location = get(config.colorbar, :location, :right)
+
     cb_pos = location == :left ? f[1, 0] : f[1, 2]
     cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :location)...)
     Colorbar(cb_pos; colorrange = (lo, hi), cb_kwargs...)
@@ -116,8 +118,8 @@ function plot_circular_topoplots!(
         positions,
         predictor_values,
         predictor_bounds,
-        min,
-        max,
+        lo,
+        hi,
         labels,
         plot_radius,
         topo_attributes,
