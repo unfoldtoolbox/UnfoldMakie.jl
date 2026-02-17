@@ -15,6 +15,7 @@ using TopoPlots
 # **Data loading**
 
 topo_array, topo_positions = TopoPlots.example_data();
+tp = 100; # time point
 
 # The size of `topo_array` is 64×400×3. This means:
 # - 64 channels;
@@ -26,11 +27,11 @@ topo_array, topo_positions = TopoPlots.example_data();
 
 # # Plot a topoplot
 
-# Let's select a time point in 340 msec and the mean estimate. 
+# Let's select a time point in `tp` and the mean estimate. 
 plot_topoplot(
-    topo_array[:, 340, 1];
+    topo_array[:, tp, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time [340 ms]"),
+    axis = (; xlabel = "Time [$tp ms]"),
     colorbar = (; height = 350),
 )
 
@@ -44,10 +45,10 @@ plot_topoplot(
 # Set `colorbar.vertical = false` to switch to a horizontal orientation.
 
 plot_topoplot(
-    topo_array[:, 50, 1];
+    topo_array[:, tp, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time point 50"),
-    colorbar = (; vertical = false, width = 180),
+    axis = (; xlabel = "Time point $tp"),
+    colorbar = (; vertical = false, location =:bottom, width = 180),
 )
 
 # # Colormaps
@@ -72,10 +73,10 @@ begin
         c = mod(i - 1, 3) + 1   # column index (1 → 3)
 
         plot_topoplot!(f[r, c],
-            topo_array[:, 100, 1];
+            topo_array[:, tp, 1];
             positions = topo_positions,
-            axis = (; xlabel = "Time [100 ms]", title = string(cmap)),
-            colorbar = (; vertical = false, width = 180),
+            axis = (; xlabel = "Time [$tp ms]", title = string(cmap)),
+            colorbar = (; vertical = false, location =:bottom, width = 180),
             visual = (; colormap = cmap, contours = false),
         )
     end
@@ -91,11 +92,11 @@ labels = ["s$i" for i = 1:size(topo_array, 1)]
 
 with_theme(Theme(; fontsize = 25, fonts = (; regular = "Ubuntu Mono"))) do
     plot_topoplot(
-        topo_array[:, 340, 1];
+        topo_array[:, tp, 1];
         labels,
         positions = topo_positions,
         visual = (; label_text = true),
-        axis = (; xlabel = "340 ms"),
+        axis = (; xlabel = "$tp ms"),
     )
 end
 
@@ -114,9 +115,9 @@ sizes[1:2] .= (14, 14)
 strokes[1:2] .= (3, 3)
 
 plot_topoplot(
-    topo_array[:, 50, 1];
+    topo_array[:, tp, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time point 50"),
+    axis = (; xlabel = "Time point $tp"),
     visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256),
     topo_attributes = (;
         label_scatter = (;
@@ -137,18 +138,18 @@ plot_topoplot(
 begin
     f = Figure()
     uncert_norm =
-        (topo_array[:, 340, 2] .- minimum(topo_array[:, 340, 2])) ./
-        (maximum(topo_array[:, 340, 2]) - minimum(topo_array[:, 340, 2]))
+        (topo_array[:, tp, 2] .- minimum(topo_array[:, tp, 2])) ./
+        (maximum(topo_array[:, tp, 2]) - minimum(topo_array[:, tp, 2]))
     rotations = -uncert_norm .* π # radians in [-2π, 0], negaitve - clockwise rotation
 
     arrow_symbols = ['↑', '↗', '→', '↘', '↓'] # 5 levels of uncertainty
 
-    angles = range(extrema(topo_array[:, 340, 2])...; length = 5)
+    angles = range(extrema(topo_array[:, tp, 2])...; length = 5)
     labels = ["$(round(a, digits = 2))" for a in angles] # correspons to uncertainty levels
 
     plot_topoplot!(
         f[1:6, 1],
-        topo_array[:, 340, 1];
+        topo_array[:, tp, 1];
         positions = topo_positions,
         topo_attributes = (;
             label_scatter = (;
@@ -158,7 +159,7 @@ begin
                 rotation = rotations,
             )
         ),
-        axis = (; xlabel = "Time point 50", xlabelsize = 24, ylabelsize = 24),
+        axis = (; xlabel = "Time point $tp", xlabelsize = 24, ylabelsize = 24),
         visual = (; colormap = :diverging_tritanopic_cwr_75_98_c20_n256, contours = false),
         colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
@@ -177,9 +178,9 @@ end
 
 # Marker size change
 plot_topoplot(
-    topo_array[:, 50, 1];
+    topo_array[:, tp, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time point 50"),
+    axis = (; xlabel = "Time point $tp"),
     topo_attributes = (;
         label_scatter = (; markersize = rand(64) .* 2π, marker = :circle, color = :black)
     ),
@@ -189,20 +190,20 @@ plot_topoplot(
 # Topoplots can be used to visualize any measure that can be mapped to sensors locations. For example, you can plot statistical values (t-values, F-values, p-values), frequency band power, connectivity measures etc.
 # Here we plot different uncertatinty estimates using topoplot.
 
-topo_se = topo_array[:, 50, 2] ./ sqrt(length(topo_array[:, 50, 2])) # standard error
-topo_tvalues = topo_array[:, 50, 1] ./ topo_se
-topo_pvalues = -log10.(clamp.(topo_array[:, 50, 3], eps(eltype(topo_array)), 1))
+topo_se = topo_array[:, tp, 2] ./ sqrt(length(topo_array[:, tp, 2])) # standard error
+topo_tvalues = topo_array[:, tp, 1] ./ topo_se
+topo_pvalues = -log10.(clamp.(topo_array[:, tp, 3], eps(eltype(topo_array)), 1))
 
 begin
     f = Figure(size = (600, 600))
     ax = Axis(f[1:2, 1:2]; titlesize = 22, subtitlesize = 18, 
-        title = "Uncertainty measures on topoplots", subtitle = "Time point 50")
+        title = "Uncertainty measures on topoplots", subtitle = "Time point $tp")
     hidedecorations!(ax); hidespines!(ax)
 
     panels = [
-        (topo_array[:, 50, 2], "Standard deviation"),
-        (topo_se .* 1e2, "Standard error (×10⁻²)"),
-        (topo_tvalues, "t-values"),
+        (topo_array[:, tp, 2], "Standard deviation"),
+        (topo_se, "Standard error"),
+        (abs.(topo_tvalues), "|t-values|"),
         (topo_pvalues, "p-values (-log₁₀ scale)"),
             ]
 
@@ -214,7 +215,7 @@ begin
             vals;
             positions = topo_positions,
             axis = (; xlabel = ""),
-            colorbar = (; vertical = false, width = 180, label = cblabel),
+            colorbar = (; vertical = false, location =:bottom, width = 180, label = cblabel),
             visual = (; colormap = :viridis, contours = false),
         )
     end
@@ -227,4 +228,3 @@ end
 # ```@docs
 # plot_topoplot
 # ```
-
