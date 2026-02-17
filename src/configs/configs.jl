@@ -66,6 +66,7 @@ function PlotConfig(T::Val{:circtopos})
             labelrotation = -π / 2,
             label = "Voltage [µV]",
             colormap = Reverse(:RdBu),
+            location = :right,
         ),
         mapping = (;),
         axis = (; aspect = 1),
