@@ -127,7 +127,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
     end
     if config.layout.use_colorbar
         cb_pos = if location == :right
-            great_axis[plot_rows, plot_cols.stop + 1]
+            great_axis[plot_rows, plot_cols.stop+1]
         elseif location == :left
             great_axis[plot_rows, plot_cols.start-1]
         elseif location == :top
