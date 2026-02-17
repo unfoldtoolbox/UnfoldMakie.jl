@@ -183,18 +183,7 @@ function _configure_toposeries_colorbar!(config::PlotConfig, data)
     end
 
     estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
-    shared_range = if haskey(config.visual, :colorrange)
-        config.visual.colorrange
-    elseif haskey(config.visual, :limits)
-        config.visual.limits
-    elseif any(<(0), estimate_column)
-        p01 = _percentile(0.01, estimate_column)
-        p99 = _percentile(0.99, estimate_column)
-        m = max(abs(p01), abs(p99))
-        (-m, m)
-    else
-        (minimum(estimate_column), maximum(estimate_column))
-    end
+    shared_range = topo_shared_range(estimate_column, config.visual)
     config_kwargs!(config, visual = (; colorrange = shared_range))
 
     if !haskey(config.colorbar, :ticks)
