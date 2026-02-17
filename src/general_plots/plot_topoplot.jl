@@ -129,7 +129,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
         cb_pos = if location == :right
             great_axis[plot_rows, plot_cols.stop + 1]
         elseif location == :left
-            great_axis[plot_rows, plot_cols.start - 1]
+            great_axis[plot_rows, plot_cols.start-1]
         elseif location == :top
             great_axis[plot_rows.start - 1, plot_cols]
         else
