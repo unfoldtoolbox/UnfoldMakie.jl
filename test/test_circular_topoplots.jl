@@ -38,11 +38,11 @@ d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
     end
 end
 
-@testset "testing calculate_global_max_values" begin
+@testset "testing shared_percentile_ranges" begin
     # notice: this function uses the 0.01 and the 0.99 quantile
     pred = repeat(1:3, inner = 5)
     val = [1:5...; 6:10...; 11:15...]
-    a, b = UnfoldMakie.calculate_global_max_values(val, pred)
+    a, b = UnfoldMakie.shared_percentile_ranges(val, pred)
     @test isapprox(a, -14.96)
     @test isapprox(b, 14.96)
 
