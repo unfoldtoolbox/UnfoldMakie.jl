@@ -76,7 +76,7 @@ begin
             topo_array[:, tp, 1];
             positions = topo_positions,
             axis = (; xlabel = "Time [$tp ms]", title = string(cmap)),
-            colorbar = (; vertical = false, location =:bottom, width = 180),
+            colorbar = (; vertical = false, location = :bottom, width = 180),
             visual = (; colormap = cmap, contours = false),
         )
     end
