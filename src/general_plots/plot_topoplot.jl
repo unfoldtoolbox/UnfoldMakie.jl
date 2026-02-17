@@ -88,22 +88,7 @@ function plot_topoplot!(
     # Resolve a single range source, then link it to the topoplot + colorbar.
     # Keep colorrange in Float32 to match Makie internals; avoids first tick being
     # dropped due to Float64 ↔ Float32 rounding at the limits.
-    shared_range = if haskey(config.visual, :colorrange)
-        Observable(Float32.(config.visual.colorrange))
-        elseif haskey(config.visual, :limits)
-            Observable(Float32.(config.visual.limits))
-        else
-            @lift begin
-                if any(<(0), $data)
-                    p01 = _percentile(0.01, $data)
-                    p99 = _percentile(0.99, $data)
-                    m = max(abs(p01), abs(p99))
-                    Float32.((-m, m))
-                else
-                    Float32.((minimum($data), maximum($data)))
-                end
-            end
-    end
+    shared_range = topo_shared_range(data, config.visual)
     config_kwargs!(config, visual = (; colorrange = shared_range))
 
     location = get(config.colorbar, :location, nothing)

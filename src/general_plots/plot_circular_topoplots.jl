@@ -93,8 +93,8 @@ function plot_circular_topoplots!(
     plot_circular_axis!(ax, predictor_bounds, center_label)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
 
-    min, max = calculate_global_max_values(data[:, config.mapping.y], predictor_values)
-    cb_ticks = LinRange(min, max, 5)
+    lo, hi = shared_percentile_ranges(data[:, config.mapping.y], predictor_values)
+    cb_ticks = LinRange(lo, hi, 5)
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
@@ -104,7 +104,7 @@ function plot_circular_topoplots!(
     end
     cb_pos = location == :left ? f[1, 0] : f[1, 2]
     cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :location)...)
-    Colorbar(cb_pos; colorrange = (min, max), cb_kwargs...)
+    Colorbar(cb_pos; colorrange = (lo, hi), cb_kwargs...)
     topo_axis =
         update_axis(supportive_defaults(:topo_default_single_circular); topo_axis...)
     topo_attributes =
@@ -124,15 +124,6 @@ function plot_circular_topoplots!(
         topo_axis,
     )
     return f
-end
-
-function calculate_global_max_values(data, predictor)
-    x = combine(
-        groupby(DataFrame(:e => data, :p => predictor), :p),
-        :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :local_max_val,
-    )
-    global_max_val = maximum(x.local_max_val)
-    return (-global_max_val, global_max_val)
 end
 
 function plot_circular_axis!(ax, predictor_bounds, center_label)
