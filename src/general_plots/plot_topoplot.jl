@@ -156,7 +156,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
             colgap!(great_axis, location == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
             colsize!(great_axis, location == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
         end
-    end 
+    end
     apply_layout_settings!(config; fig = f)
     return f
 end
