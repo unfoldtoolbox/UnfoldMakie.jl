@@ -4,7 +4,7 @@ using TopoPlots
 using CairoMakie, MakieThemes
 using UnfoldMakie, UnfoldSim
 
-# You need 3 vectors to add labels to topoplots: of channel labels, of channel positions, and of voltage estimates.
+# You need 3 vectors to add labels to topoplots: channel labels, channel positions, and voltage estimates.
 # Here we simulate all three vectors using Hartmut head model. 
 # You can also use your own data and positions, but make sure they correspond to each other.
 
@@ -25,7 +25,6 @@ plot_topoplot(
     visual = (; label_text = true, label_scatter = false),
     axis = (; xlabel = ""),
 )
-############
 
 
 # Let's add some customizations:

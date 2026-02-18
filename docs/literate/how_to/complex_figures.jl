@@ -357,7 +357,7 @@ function complex_figure4(
             xlabelsize = 24,
             ylabelsize = 24,
         ),
-        colorbar = (; vertical = false, width = 180, labelsize = 24, ticklabelsize = 18),
+        colorbar = (; location = :bottom, vertical = false, width = 180, labelsize = 24, ticklabelsize = 18),
         visual = (; contours = false),
     )
 
