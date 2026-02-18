@@ -55,6 +55,7 @@ include("configs/layout_helper.jl")
 include("configs/relative_axis.jl")
 
 include("data/eeg_positions.jl")
+include("data/get_positions.jl")
 
 include("unfold_plots/plot_splines.jl")
 include("unfold_plots/plot_designmatrix.jl")
