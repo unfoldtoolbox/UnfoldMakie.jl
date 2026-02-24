@@ -9,6 +9,10 @@ mat = Matrix(reduce(hcat, [group.estimate for group in grouped])')
     #save("dev/UnfoldMakie/default_butterfly.png", f)
 end
 
+@testset "butterfly: allow colormap = nothing" begin
+   plot_butterfly(df; positions = pos, visual = (; colormap = nothing))
+end
+
 @testset "butterfly: Matrix as data input" begin
     plot_butterfly(mat; positions = pos)
 end

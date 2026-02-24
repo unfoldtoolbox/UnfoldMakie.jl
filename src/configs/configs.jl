@@ -188,7 +188,7 @@ function PlotConfig(T::Val{:butterfly})
             xtickformat = x -> string.(round.(x; digits = 2)),
             ytickformat = x -> string.(round.(x; digits = 2)),
         ),
-        visual = (; color = nothing),
+        visual = (; color = nothing, colormap = nothing),
     )
     return cfg
 end
