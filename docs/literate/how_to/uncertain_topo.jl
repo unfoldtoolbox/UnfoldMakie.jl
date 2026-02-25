@@ -43,6 +43,10 @@ rng = MersenneTwister(1);
 # # Adjacent topoplot
 # In this case we already have two data vectors: `vec_estimate` with mean estimates and `vec_uncert` with standard deviation.
 
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# `
 begin
     f = Figure()
     ax = Axis(
@@ -66,6 +70,7 @@ begin
             ticklabelsize = 18,
             vertical = false,
             width = 180,
+            location = :bottom,
         ),
     )
     plot_topoplot!(
@@ -80,15 +85,23 @@ begin
             ticklabelsize = 18,
             vertical = false,
             width = 180,
+            location = :bottom,
         ),
     )
-    f
 end
-
+# ```@raw html
+# </details >
+# ```
+f
 
 # # Uncertainty via marker size
 # We show uncertainty using donut-shaped electrode markers.
 # The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.
+
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# `
 begin
     f = Figure()
     uncert_norm =
@@ -122,8 +135,100 @@ begin
         framevisible = false,
         labelsize = 18, titlesize = 20,
         orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
-    f
 end
+# ```@raw html
+# </details >
+# ```
+f
+
+# # Uncertainty via confidence intervals
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# `
+function _percentile(p::Real, v::AbstractVector)
+    n = length(v)
+    n == 0 && throw(ArgumentError("percentile of empty collection"))
+    s = sort(v)
+    idx = clamp(ceil(Int, p * n), 1, n)
+    return s[idx]
+end
+
+begin
+    f = Figure(; resolution = (900, 650))
+    gf = f[1, 1] = GridLayout()
+    pTopos = GridLayout()
+    gf[1:2, 1:3] = pTopos
+
+    pA  = pTopos[1, 2]
+    pB  = pTopos[2, 1]
+    pC  = pTopos[2, 3]
+    pcb = gf[:, 4]              # colorbar spans both rows
+
+    lims = begin
+        p01 = _percentile(0.01, vec_estimate)
+        p99 = _percentile(0.99, vec_estimate)
+        m = max(abs(p01), abs(p99))
+        Float32.((-m, m))
+    end
+
+    visual = (; limits = lims, colormap = cgrad(:RdBu, 10; categorical = true, rev = true))
+
+    ticks5 = begin
+        lo, hi = visual.limits
+        pos = Float32[lo, lo/2, 0f0, hi/2, hi]                 
+        lab = string.(round.(Float64.(pos); sigdigits = 2)) 
+        (pos, lab)
+    end
+
+    plot_topoplot!(
+        pA, vec_estimate;
+        positions = positions,
+        axis = (; xlabelsize = 24, xlabel = "Mean"),
+        layout = (; use_colorbar = false),
+        visual = visual,
+    )
+
+    plot_topoplot!(
+        pB, vec_estimate .- vec_uncert;
+        positions = positions,
+        axis = (; xlabelsize = 24, xlabel = "Mean - SE"),
+        layout = (; use_colorbar = false),
+        visual = visual,
+    )
+
+    plot_topoplot!(
+        pC, vec_estimate .+ vec_uncert;
+        positions = positions,
+        axis = (; xlabelsize = 24, xlabel = "Mean + SE"),
+        layout = (; use_colorbar = false),
+        visual = visual,
+    )
+
+    Colorbar(
+        pcb;
+        colormap = visual.colormap,
+        limits   = visual.limits,
+        ticks    = ticks5,
+        label = "Voltage [µV]",
+        labelsize = 24,
+        ticklabelsize = 18,
+        vertical = true,
+        height = 300,
+        flipaxis = true,
+        labelrotation = -π/2,
+    )
+
+    rowgap!(pTopos, -90)
+    colgap!(pTopos, -90)
+    colgap!(gf, 10)
+    colsize!(gf, 4, Auto(0.15))  
+
+end
+# ```@raw html
+# </details >
+# ```
+f
 
 # # Uncertainty via animation 
 
