@@ -222,7 +222,7 @@ begin
     rowgap!(pTopos, -90)
     colgap!(pTopos, -90)
     colgap!(gf, 10)
-    colsize!(gf, 4, Auto(0.15))  
+    colsize!(gf, 4, Auto(0.15))
 
 end
 # ```@raw html
