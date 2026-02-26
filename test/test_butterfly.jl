@@ -10,7 +10,7 @@ mat = Matrix(reduce(hcat, [group.estimate for group in grouped])')
 end
 
 @testset "butterfly: allow colormap = nothing" begin
-   plot_butterfly(df; positions = pos, visual = (; colormap = nothing))
+    plot_butterfly(df; positions = pos, visual = (; colormap = nothing))
 end
 
 @testset "butterfly: Matrix as data input" begin
