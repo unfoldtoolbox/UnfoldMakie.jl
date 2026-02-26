@@ -82,10 +82,8 @@ function plot_butterfly!(
             colors = config.visual.colormap
             un = length(unique(plot_data[:, config.mapping.color]))
             colors = cgrad(config.visual.colormap, un, categorical = true)
-            @debug "Colors for topoplot legend: ???" 
          else
             colors = get_topo_color(all_positions, topopositions_to_color)
-            @debug "Colors for topoplot legend: "
         end 
     end
 

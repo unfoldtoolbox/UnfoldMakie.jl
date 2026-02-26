@@ -163,7 +163,7 @@ begin
     pA = pTopos[1, 2]
     pB = pTopos[2, 1]
     pC = pTopos[2, 3]
-    pcb = gf[:, 4]              # colorbar spans both rows
+    pcb = gf[:, 4]
 
     lims = begin
         p01 = _percentile(0.01, vec_estimate)
