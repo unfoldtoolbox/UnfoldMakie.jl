@@ -160,9 +160,9 @@ begin
     pTopos = GridLayout()
     gf[1:2, 1:3] = pTopos
 
-    pA  = pTopos[1, 2]
-    pB  = pTopos[2, 1]
-    pC  = pTopos[2, 3]
+    pA = pTopos[1, 2]
+    pB = pTopos[2, 1]
+    pC = pTopos[2, 3]
     pcb = gf[:, 4]              # colorbar spans both rows
 
     lims = begin
