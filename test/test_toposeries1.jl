@@ -45,6 +45,24 @@ end
     )
 end
 
+@testset "toposeries: invalid colorbar location" begin
+    @test_throws ErrorException plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        colorbar = (; location = :center),
+    )
+end
+
+@testset "toposeries: colorbar custom ticks" begin
+    @test_nowarn plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        colorbar = (; ticks = ([-0.5, 0.0, 0.5], ["-0.5", "0", "0.5"])),
+    )
+end
+
 
 @testset "toposeries: bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions, axis = (; xlabel = "test"))
