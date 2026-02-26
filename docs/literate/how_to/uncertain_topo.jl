@@ -46,7 +46,7 @@ rng = MersenneTwister(1);
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
-# `
+# ```
 begin
     f = Figure()
     ax = Axis(
@@ -101,7 +101,7 @@ f
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
-# `
+# ```
 begin
     f = Figure()
     uncert_norm =
@@ -145,7 +145,7 @@ f
 # ```@raw html
 # <details>
 # <summary>Click to expand</summary>
-# `
+# ```
 function _percentile(p::Real, v::AbstractVector)
     n = length(v)
     n == 0 && throw(ArgumentError("percentile of empty collection"))
@@ -242,7 +242,6 @@ f
 # <summary>Click to expand for supportive functions</summary>
 # ```
 
-# ```@example uncertain_topo
 # function for easing - smooth transition between frames in animation.
 # `update_ratio` - transition ratio between time1 and time2.
 # `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
@@ -266,7 +265,6 @@ function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     end
     return out
 end
-# ```
 # ```@raw html
 # </details >
 # ```
