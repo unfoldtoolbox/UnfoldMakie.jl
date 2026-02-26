@@ -242,10 +242,10 @@ f
 # <summary>Click to expand for supportive functions</summary>
 # ```
 
+# ```@example uncertain_topo
 # function for easing - smooth transition between frames in animation.
 # `update_ratio` - transition ratio between time1 and time2.
 # `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
-
 function ease_between(old, new, update_ratio; easing_function = sineio())
     anim = Animation(0, old, 1, new; defaulteasing = easing_function)
     return at(anim, update_ratio)
@@ -255,7 +255,6 @@ end
 # sampling independently per channel: μ + SE * randn().
 function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     n_boot::Int = 10, rng = MersenneTwister(1))
-
     T = float(promote_type(eltype(mean_vec), eltype(se_vec)))
     μ = convert(Vector{T}, mean_vec)
     se = convert(Vector{T}, se_vec)
@@ -267,6 +266,7 @@ function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     end
     return out
 end
+# ```
 # ```@raw html
 # </details >
 # ```
