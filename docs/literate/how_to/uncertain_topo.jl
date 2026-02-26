@@ -176,8 +176,8 @@ begin
 
     ticks5 = begin
         lo, hi = visual.limits
-        pos = Float32[lo, lo/2, 0f0, hi/2, hi]                 
-        lab = string.(round.(Float64.(pos); sigdigits = 2)) 
+        pos = Float32[lo, lo/2, 0.0f0, hi/2, hi]
+        lab = string.(round.(Float64.(pos); sigdigits = 2))
         (pos, lab)
     end
 
