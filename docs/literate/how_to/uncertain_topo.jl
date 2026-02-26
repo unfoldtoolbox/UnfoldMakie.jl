@@ -208,8 +208,8 @@ begin
     Colorbar(
         pcb;
         colormap = visual.colormap,
-        limits   = visual.limits,
-        ticks    = ticks5,
+        limits = visual.limits,
+        ticks = ticks5,
         label = "Voltage [µV]",
         labelsize = 24,
         ticklabelsize = 18,
