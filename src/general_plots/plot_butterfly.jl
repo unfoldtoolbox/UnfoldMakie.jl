@@ -84,7 +84,7 @@ function plot_butterfly!(
             colors = cgrad(config.visual.colormap, un, categorical = true)
          else
             colors = get_topo_color(all_positions, topopositions_to_color)
-        end 
+        end
     end
 
     # Categorical mapping
