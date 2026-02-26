@@ -15,11 +15,7 @@ results, positions = UnfoldMakie.example_data("TopoPlots.jl");
 
 # Simpliest way to change the colors is to use `visual.colormap` argument.
 
-plot_butterfly(
-    results;
-    positions = positions,
-    visual = (; colormap = :viridis),
-)
+plot_butterfly(results; positions = positions, visual = (; colormap = :viridis))
 
 # But as you may notice it is not the correct way to do it: color is changing from center to periphery, but not according to the position of the electrodes.
 
