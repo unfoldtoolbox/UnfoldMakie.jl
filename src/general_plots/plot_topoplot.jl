@@ -160,11 +160,3 @@ Note: The identical min and max may cause an interpolation error when plotting t
     apply_layout_settings!(config; fig = f)
     return f
 end
-
-function _percentile(p::Real, v::AbstractVector)
-    n = length(v)
-    n == 0 && throw(ArgumentError("percentile of empty collection"))
-    s = sort(v)
-    idx = clamp(ceil(Int, p * n), 1, n)
-    return s[idx]
-end

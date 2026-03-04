@@ -146,14 +146,6 @@ f
 # <details>
 # <summary>Click to expand</summary>
 # ```
-function _percentile(p::Real, v::AbstractVector)
-    n = length(v)
-    n == 0 && throw(ArgumentError("percentile of empty collection"))
-    s = sort(v)
-    idx = clamp(ceil(Int, p * n), 1, n)
-    return s[idx]
-end
-
 begin
     f = Figure(; resolution = (900, 650))
     gf = f[1, 1] = GridLayout()
@@ -166,8 +158,7 @@ begin
     pcb = gf[:, 4]
 
     lims = begin
-        p01 = _percentile(0.01, vec_estimate)
-        p99 = _percentile(0.99, vec_estimate)
+        p01, p99 = quantile(vec_estimate, [0.01, 0.99])
         m = max(abs(p01), abs(p99))
         Float32.((-m, m))
     end

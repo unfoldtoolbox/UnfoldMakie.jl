@@ -9,8 +9,7 @@ end
 
 function _topo_range_from_values(values)
     if any(<(0), values)
-        p01 = _percentile(0.01, values)
-        p99 = _percentile(0.99, values)
+        p01, p99 = quantile(values, [0.01, 0.99])
         m = max(abs(p01), abs(p99))
         return Float32.((-m, m))
     else
