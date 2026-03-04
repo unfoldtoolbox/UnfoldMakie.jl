@@ -173,7 +173,7 @@ function plot_topoplotseries!(
     return f
 end
 
-function _configure_toposeries_colorbar!(config::PlotConfig, data)
+function _configure_toposeries_colorbar!(config::PlotConfig, data::Union{<:Observable{<:DataFrame},AbstractDataFrame})
     if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
         error(
             "Topoplot series uses a shared color range between the plots and colorbar. " *
@@ -187,12 +187,22 @@ function _configure_toposeries_colorbar!(config::PlotConfig, data)
     config_kwargs!(config, visual = (; colorrange = shared_range))
 
     if !haskey(config.colorbar, :ticks)
-        cb_ticks = LinRange(shared_range[1], shared_range[2], 5)
-        rounded_ticks = round.(cb_ticks, digits = 2)
-        config_kwargs!(
-            config;
-            colorbar = (; limits = shared_range, ticks = (cb_ticks, string.(rounded_ticks))),
-        )
+        if shared_range isa Observable
+            cb_ticks = @lift LinRange($shared_range[1], $shared_range[2], 5)
+            rounded_ticks = @lift round.($cb_ticks, digits = 2)
+            tick_labels = @lift string.($rounded_ticks)
+            config_kwargs!(
+                config;
+                colorbar = (; limits = shared_range, ticks = (cb_ticks, tick_labels)),
+            )
+        else
+            cb_ticks = LinRange(shared_range[1], shared_range[2], 5)
+            rounded_ticks = round.(cb_ticks, digits = 2)
+            config_kwargs!(
+                config;
+                colorbar = (; limits = shared_range, ticks = (cb_ticks, string.(rounded_ticks))),
+            )
+        end
     else
         config_kwargs!(config; colorbar = (; limits = shared_range))
     end
