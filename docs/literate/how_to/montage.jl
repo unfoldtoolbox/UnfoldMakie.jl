@@ -4,11 +4,9 @@ using CairoMakie
 # There are dozens of standard and arbitrary ways to set electrodes. 
 # Using PyMNE package you can get 27 predefined montages with corresponding lavels and channel positions. 
 builtin_montages = PyMNE.channels.get_builtin_montages(descriptions = true)
+pyconvert(Vector{Tuple{String,String}}, builtin_montages)
 
-for (name, desc) in builtin_montages
-    println("$(name): $(desc)")
-end
-
+# This demonstration will show how could motages differ from each other
 
 begin
     f = Figure(size = (1200, 800))
