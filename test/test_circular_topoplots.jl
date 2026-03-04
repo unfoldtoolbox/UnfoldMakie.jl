@@ -6,7 +6,7 @@ df = DataFrame(
     :circularVariable => [0, 50, 80, 120, 180, 210],
     :time => 100:40:300,
 )
-labels = ["s$i" for i = 1:size(dat, 1)]
+labels_64 = ["s$i" for i = 1:size(dat, 1)]
 df = flatten(df, :estimate)
 
 d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
@@ -74,14 +74,14 @@ end
     )
 end
 
-@testset "circularplot colorbar location left" begin
+@testset "circularplot colorbar position left" begin
     plot_circular_topoplots(
         df;
         positions = pos,
         center_label = "Visual angle [°]",
         predictor = :time,
         predictor_bounds = [80, 320],
-        colorbar = (; location = :left),
+        colorbar = (; position = :left),
     )
 end
 
@@ -95,7 +95,7 @@ end
         center_label = "Visual angle [°]",
         predictor = :time,
         predictor_bounds = [80, 320],
-        labels = labels,
+        labels = labels_64,
         plot_radius = 0.99,
     )
     f
@@ -131,14 +131,3 @@ end
         topo_attributes = (label_scatter = false,),
     )
 end
-
-#@testset "circularplot: change backgroundcolor" begin
-plot_circular_topoplots(
-    d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-    positions = positions,
-    predictor = :time,
-    predictor_bounds = [-0.3, 0.5],
-    axis = (; backgroundcolor = colorant"#F4F3EF",),
-    topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
-)
-#end

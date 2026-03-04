@@ -136,17 +136,17 @@ function plot_topoplotseries!(
     # overkill as we would only need to check the xlabel ;) 
 
     main_gl = f[1, 1] = GridLayout()
-    location = get(config.colorbar, :location, :right)
-    if !(location in (:right, :left, :top, :bottom))
-        error("colorbar.location must be :right, :left, :top, or :bottom for plot_topoplotseries")
+    position = get(config.colorbar, :position, :right)
+    if !(position in (:right, :left, :top, :bottom))
+        error("colorbar.position must be :right, :left, :top, or :bottom for plot_topoplotseries")
     end
 
-    if location in (:top, :bottom)
+    if position in (:top, :bottom)
         config_kwargs!(config, colorbar = (; vertical = false, labelrotation = 2π))
     end
 
-    row_offset = location == :top ? 1 : 0
-    col_offset = location == :left ? 1 : 0
+    row_offset = position == :top ? 1 : 0
+    col_offset = position == :left ? 1 : 0
     plot_row = 1 + row_offset
     plot_col = 1 + col_offset
 
@@ -155,16 +155,16 @@ function plot_topoplotseries!(
         (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)..., # what it this??
     )
     if config.layout.use_colorbar == true
-        cb_pos = if location == :left
+        cb_pos = if position == :left
             f[1, 0]
-        elseif location == :right
+        elseif position == :right
             f[1, 2]
-        elseif location == :top
+        elseif position == :top
             f[0, :]
         else
             f[2, 1]
         end
-        cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :location)...)
+        cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :position)...)
         Colorbar(cb_pos; colormap = config.visual.colormap, cb_kwargs...)
     end
    # @debug  config.colorbar

@@ -26,31 +26,31 @@ end
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
 
-@testset "toposeries: colorbar location left" begin
+@testset "toposeries: colorbar position left" begin
     plot_topoplotseries(
         df;
         bin_num = 5,
         nrows = 3,
         positions = positions,
-        colorbar = (; location = :left, flipaxis = false, labelrotation = π/2),
+        colorbar = (; position = :left, flipaxis = false, labelrotation = π/2),
     )
 end
 
-@testset "toposeries: colorbar location top" begin
+@testset "toposeries: colorbar position top" begin
     plot_topoplotseries(
         df;
         bin_num = 5,
         positions = positions,
-        colorbar = (; width = 300, location = :top, vertical = false),
+        colorbar = (; width = 300, position = :top, vertical = false),
     )
 end
 
-@testset "toposeries: invalid colorbar location" begin
+@testset "toposeries: invalid colorbar position" begin
     @test_throws ErrorException plot_topoplotseries(
         df;
         bin_num = 5,
         positions = positions,
-        colorbar = (; location = :center),
+        colorbar = (; position = :center),
     )
 end
 

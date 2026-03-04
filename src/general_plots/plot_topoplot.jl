@@ -91,13 +91,13 @@ function plot_topoplot!(
     shared_range = topo_shared_range(data, config.visual)
     config_kwargs!(config, visual = (; colorrange = shared_range))
 
-    location = get(config.colorbar, :location, nothing)
-    if !(location === nothing || location in (:right, :left, :top, :bottom))
-        error("colorbar.location must be one of :right, :left, :top, :bottom")
+    position = get(config.colorbar, :position, nothing)
+    if !(position === nothing || position in (:right, :left, :top, :bottom))
+        error("colorbar.position must be one of :right, :left, :top, :bottom")
     end
 
-    row_offset = location == :top ? 1 : 0
-    col_offset = location == :left ? 1 : 0
+    row_offset = position == :top ? 1 : 0
+    col_offset = position == :left ? 1 : 0
     plot_rows = (1 + row_offset):(4 + row_offset)
     plot_cols = (1 + col_offset):(2 + col_offset)
 
@@ -126,11 +126,11 @@ Note: The identical min and max may cause an interpolation error when plotting t
         end
     end
     if config.layout.use_colorbar
-        cb_pos = if location == :right
+        cb_pos = if position == :right
             great_axis[plot_rows, plot_cols.stop+1]
-        elseif location == :left
+        elseif position == :left
             great_axis[plot_rows, plot_cols.start-1]
-        elseif location == :top
+        elseif position == :top
             great_axis[plot_rows.start - 1, plot_cols]
         else
             great_axis[plot_rows.stop + 1, plot_cols]
@@ -142,19 +142,19 @@ Note: The identical min and max may cause an interpolation error when plotting t
 
         # When linking a colorbar to a plot object, Makie forbids passing limits/colorrange.
         cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar)
-                        if !(k in (:limits, :colorrange, :location)))...)
+                        if !(k in (:limits, :colorrange, :position)))...)
         cb = Colorbar(cb_pos, h; cb_kwargs...)
     
-        if location == :top
+        if position == :top
             rowgap!(great_axis, plot_rows.start - 1, 0)
             rowsize!(great_axis, plot_rows.start - 1, Auto(0.1))
-        elseif location == :bottom
+        elseif position == :bottom
             rowgap!(great_axis, plot_rows.stop, 10)
             rowsize!(great_axis, plot_rows.stop + 1, Auto(0.1))
             outer_axis.xlabelpadding = -6
-        elseif location == :left || location == :right
-            colgap!(great_axis, location == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
-            colsize!(great_axis, location == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
+        elseif position == :left || position == :right
+            colgap!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
+            colsize!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
         end
     end
     apply_layout_settings!(config; fig = f)
