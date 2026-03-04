@@ -141,7 +141,7 @@ function plot_topoplotseries!(
         error("colorbar.location must be :right, :left, :top, or :bottom for plot_topoplotseries")
     end
 
-    if location in (:top, :bottom) 
+    if location in (:top, :bottom)
         config_kwargs!(config, colorbar = (; vertical = false, labelrotation = 2π))
     end
 
