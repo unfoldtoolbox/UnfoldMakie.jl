@@ -1,5 +1,6 @@
 using PyMNE
-using Makie
+using UnfoldMakie
+using CairoMakie
 # There are dozens of standard and arbitrary ways to set electrodes. 
 # Using PyMNE package you can get 27 predefined montages with corresponding lavels and channel positions. 
 builtin_montages = PyMNE.channels.get_builtin_montages(descriptions = true)
