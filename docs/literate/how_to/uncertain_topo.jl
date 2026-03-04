@@ -70,7 +70,7 @@ begin
             ticklabelsize = 18,
             vertical = false,
             width = 180,
-            location = :bottom,
+            position = :bottom,
         ),
     )
     plot_topoplot!(
@@ -85,7 +85,7 @@ begin
             ticklabelsize = 18,
             vertical = false,
             width = 180,
-            location = :bottom,
+            position = :bottom,
         ),
     )
 end

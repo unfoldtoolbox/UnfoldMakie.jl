@@ -114,19 +114,17 @@ end
     )
 end
 
-@testset "topoplot: colorbar location" begin
+@testset "topoplot: colorbar position" begin
     f = Figure()
 
-    plot_topoplot!(f[1, 1], dat[:, tp, 1]; positions, colorbar = (; labelrotation = π/2, flipaxis = false, location = :left))
-    plot_topoplot!(f[1, 2], dat[:, tp, 1]; positions, colorbar = (; location = :right))
-    plot_topoplot!(f[2, 1], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = true, location = :top, vertical = false))
-    plot_topoplot!(f[2, 2], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, location = :bottom, vertical = false))
+    plot_topoplot!(f[1, 1], dat[:, tp, 1]; positions, colorbar = (; labelrotation = π/2, flipaxis = false, position = :left))
+    plot_topoplot!(f[1, 2], dat[:, tp, 1]; positions, colorbar = (; position = :right))
+    plot_topoplot!(f[2, 1], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = true, position = :top, vertical = false))
+    plot_topoplot!(f[2, 2], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, position = :bottom, vertical = false))
     colsize!(f.layout, 1, Fixed(200))  
     f
 end
 
-#plot_topoplot(dat[:, tp, 1]; positions, colorbar = (; width = 140, location = :top, vertical = false))
-#plot_topoplot(dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, location = :bottom, vertical = false))
 
 @testset "topoplot: colorbar limits and colorrange blocked" begin
     msg = "Topoplot uses a shared color range between the plot and colorbar. " *
