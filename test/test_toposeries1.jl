@@ -153,7 +153,7 @@ end
     )
 end
 
-@testset "error checking: different length of channel names gand positions" begin
+@testset "error checking: different length of channel names and positions" begin
     msg = "The length of `labels` differs from the length of `position`. Please make sure they are the same length."
     @test_throws ErrorException(msg) plot_topoplotseries(
         df;
