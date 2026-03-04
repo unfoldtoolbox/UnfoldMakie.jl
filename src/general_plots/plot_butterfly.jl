@@ -78,23 +78,22 @@ function plot_butterfly!(
     else
         all_positions = get_topo_positions(; positions = positions, labels = labels)
         if (config.visual.colormap !== nothing)
+            get_topo_color(all_positions, topopositions_to_color)
             colors = config.visual.colormap
             un = length(unique(plot_data[:, config.mapping.color]))
             colors = cgrad(config.visual.colormap, un, categorical = true)
-        else
+         else
             colors = get_topo_color(all_positions, topopositions_to_color)
         end
     end
 
     # Categorical mapping
     # convert color column into string to prevent wrong grouping
-    if (:group ∈ keys(config.mapping))
-        config.mapping =
-            merge(config.mapping, (; group = config.mapping.group => nonnumeric))
-    end
-    if (:color ∈ keys(config.mapping))
-        config.mapping =
-            merge(config.mapping, (; color = config.mapping.color => nonnumeric))
+    for key in (:group, :color)
+        if key ∈ keys(config.mapping)
+            config.mapping =
+                merge(config.mapping, (; key => getindex(config.mapping, key) => nonnumeric))
+        end
     end
     if (
         :col ∈ keys(config.mapping) &&
@@ -114,7 +113,13 @@ function plot_butterfly!(
     mapping_others = deleteKeys(config.mapping, [:x, :y, :positions, :lables])
     xy_mapp =
         AlgebraOfGraphics.mapping(config.mapping.x, config.mapping.y; mapping_others...)
-    basic = visual(Lines; config.visual...) * xy_mapp
+    visual_kwargs = config.visual
+    # filter out visual.colormap if it is nothing, otherwise it will override the colors for topoplot legend
+    if haskey(visual_kwargs, :colormap) && visual_kwargs.colormap === nothing
+        visual_kwargs =
+            (; (k => v for (k, v) in pairs(visual_kwargs) if k != :colormap)...)
+    end
+    basic = visual(Lines; visual_kwargs...) * xy_mapp
     basic = basic * data(plot_data)
     plot_equation = basic * mapp
 

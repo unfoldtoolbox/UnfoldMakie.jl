@@ -131,28 +131,82 @@ function plot_topoplotseries!(
         positions,
         labels,
     )
-    estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
-    cb_limits = (minimum(estimate_column), maximum(estimate_column)) # set limits for colorbar
-    cb_ticks = LinRange(cb_limits[1], cb_limits[2], 5) # set ticklables for colorbar
-    rounded_ticks = round.(cb_ticks, digits = 2)
-
-    config_kwargs!(
-        config;
-        colorbar = (; limits = cb_limits, ticks = (cb_ticks, string.(rounded_ticks))),
-    )
+    _configure_toposeries_colorbar!(config, data)
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;) 
 
+    main_gl = f[1, 1] = GridLayout()
+    position = get(config.colorbar, :position, :right)
+    if !(position in (:right, :left, :top, :bottom))
+        error("colorbar.position must be :right, :left, :top, or :bottom for plot_topoplotseries")
+    end
+
+    if position in (:top, :bottom)
+        config_kwargs!(config, colorbar = (; vertical = false, labelrotation = 2π))
+    end
+
+    row_offset = position == :top ? 1 : 0
+    col_offset = position == :left ? 1 : 0
+    plot_row = 1 + row_offset
+    plot_col = 1 + col_offset
+
     ax = Axis(
-        f[1, 1];
+        main_gl[plot_row, plot_col];
         (p for p in pairs(config.axis) if p[1] != :xlim_topo && p[1] != :ylim_topo)..., # what it this??
     )
     if config.layout.use_colorbar == true
-        Colorbar(f[1, 2]; colormap = config.visual.colormap, config.colorbar...)
+        cb_pos = if position == :left
+            f[1, 0]
+        elseif position == :right
+            f[1, 2]
+        elseif position == :top
+            f[0, :]
+        else
+            f[2, 1]
+        end
+        cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :position)...)
+        Colorbar(cb_pos; colormap = config.visual.colormap, cb_kwargs...)
     end
+   # @debug  config.colorbar
 
     apply_layout_settings!(config; fig = f, ax = ax)
     return f
+end
+
+function _configure_toposeries_colorbar!(config::PlotConfig, data::Union{<:Observable{<:DataFrame},AbstractDataFrame})
+    if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
+        error(
+            "Topoplot series uses a shared color range between the plots and colorbar. " *
+            "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+            "instead of `colorbar = (; limits/colorrange = ...)`.",
+        )
+    end
+
+    estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
+    shared_range = topo_shared_range(estimate_column, config.visual)
+    config_kwargs!(config, visual = (; colorrange = shared_range))
+
+    if !haskey(config.colorbar, :ticks)
+        if shared_range isa Observable
+            cb_ticks = @lift LinRange($shared_range[1], $shared_range[2], 5)
+            rounded_ticks = @lift round.($cb_ticks, digits = 2)
+            tick_labels = @lift string.($rounded_ticks)
+            config_kwargs!(
+                config;
+                colorbar = (; limits = shared_range, ticks = (cb_ticks, tick_labels)),
+            )
+        else
+            cb_ticks = LinRange(shared_range[1], shared_range[2], 5)
+            rounded_ticks = round.(cb_ticks, digits = 2)
+            config_kwargs!(
+                config;
+                colorbar = (; limits = shared_range, ticks = (cb_ticks, string.(rounded_ticks))),
+            )
+        end
+    else
+        config_kwargs!(config; colorbar = (; limits = shared_range))
+    end
+    return nothing
 end
 
 #round(323434.2323; (; sigdigits = 3)...) - other way to implement it

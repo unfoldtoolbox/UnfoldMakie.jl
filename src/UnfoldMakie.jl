@@ -55,6 +55,7 @@ include("configs/layout_helper.jl")
 include("configs/relative_axis.jl")
 
 include("data/eeg_positions.jl")
+include("data/get_positions.jl")
 
 include("unfold_plots/plot_splines.jl")
 include("unfold_plots/plot_designmatrix.jl")
@@ -64,7 +65,6 @@ include("general_plots/plot_topoplotseries.jl")
 include("general_plots/plot_topoplotseries_support.jl")
 include("general_plots/plot_erp.jl")
 include("general_plots/plot_butterfly.jl")
-include("general_plots/erp_butterfly_common.jl")
 include("general_plots/plot_topoplot.jl")
 include("general_plots/plot_erpimage.jl")
 include("general_plots/plot_parallel_coordinates.jl")
@@ -73,7 +73,9 @@ include("general_plots/plot_circular_topoplots.jl")
 include("general_plots/plot_erpgrid.jl")
 include("general_plots/plot_channelimage.jl")
 
-
+# functions shared by multiple plot types
+include("general_plots/shared_lines.jl")
+include("general_plots/shared_topos.jl")
 
 # extension functions
 example_data(args...; kwargs...) =

@@ -1,7 +1,7 @@
 # taken from: https://raw.githubusercontent.com/sappelhoff/eeg_positions/main/data/Nz-T10-Iz-T9/standard_1005_2D.tsv
 # license: https://github.com/sappelhoff/eeg_positions/blob/main/LICENSE
 
-standard_1005_2D = Dict(
+_standard_1005_2D = Dict(
     [
         ("AF1", (-0.1025, 0.5139))
         ("AF10", (0.5878, 0.809))
@@ -353,106 +353,213 @@ standard_1005_2D = Dict(
         ("TTP9H", (-0.8436, -0.1336))
     ],
 )
+#= 
+positions_64 = [
+            Point2f(0.40898308, 0.688676),
+            Point2f(0.59101695, 0.688676),
+            Point2f(0.3344946, 0.6886467),
+            Point2f(0.6655054, 0.6886467),
+            Point2f(0.5, 0.6890863),
+            Point2f(0.4275366, 0.4789898),
+            Point2f(0.5724634, 0.4789898),
+            Point2f(0.3562854, 0.4747461),
+            Point2f(0.6437146, 0.4747461),
+            Point2f(0.29862565, 0.46863514),
+            Point2f(0.70137435, 0.46863514),
+            Point2f(0.42468497, 0.4017335),
+            Point2f(0.575315, 0.4017335),
+            Point2f(0.35392877, 0.39871672),
+            Point2f(0.6460712, 0.39871672),
+            Point2f(0.2993921, 0.39173192),
+            Point2f(0.7006079, 0.39173192),
+            Point2f(0.5, 0.40468895),
+            Point2f(0.5, 0.48341024),
+            Point2f(0.4396238, 0.6172625),
+            Point2f(0.5603762, 0.6172625),
+            Point2f(0.38268125, 0.61371076),
+            Point2f(0.61731875, 0.61371076),
+            Point2f(0.33295065, 0.61091906),
+            Point2f(0.66704935, 0.61091906),
+            Point2f(0.2873606, 0.6146442),
+            Point2f(0.7126394, 0.6146442),
+            Point2f(0.43331987, 0.5484627),
+            Point2f(0.56668013, 0.5484627),
+            Point2f(0.3703128, 0.544495),
+            Point2f(0.6296872, 0.544495),
+            Point2f(0.3112036, 0.54025),
+            Point2f(0.6887964, 0.54025),
+            Point2f(0.5, 0.5487227),
+            Point2f(0.26434278, 0.5351597),
+            Point2f(0.7356572, 0.5351597),
+            Point2f(0.4064175, 0.7393271),
+            Point2f(0.5935825, 0.7393271),
+            Point2f(0.5, 0.75079894),
+            Point2f(0.5, 0.61854494),
+            Point2f(0.41237643, 0.1800997),
+            Point2f(0.58762354, 0.1800997),
+            Point2f(0.5, 0.17388615),
+            Point2f(0.43175313, 0.32118306),
+            Point2f(0.762792, 0.24206254),
+            Point2f(0.56824684, 0.32118306),
+            Point2f(0.37118444, 0.31696838),
+            Point2f(0.62881553, 0.31696838),
+            Point2f(0.32142067, 0.31221828),
+            Point2f(0.67857933, 0.31221828),
+            Point2f(0.28502196, 0.29891628),
+            Point2f(0.71497804, 0.29891628),
+            Point2f(0.23720804, 0.24206254),
+            Point2f(0.40443534, 0.23899242),
+            Point2f(0.59556466, 0.23899242),
+            Point2f(0.3358569, 0.22770977),
+            Point2f(0.6641431, 0.22770977),
+            Point2f(0.5, 0.24332547),
+            Point2f(0.5, 0.32256585),
+            Point2f(0.25054252, 0.45768857),
+            Point2f(0.7494575, 0.45768857),
+            Point2f(0.25292397, 0.37572253),
+            Point2f(0.74707603, 0.37572253),
+            Point2f(0.5, 0.10441694),
+        ] =#
+_biosemi_32 =
+            UnfoldMakie.Point{2, Float32,}.([
+                (-92, -72),
+                (-74, -65),
+                (-92, -36),
+                (-60, -51),
+                (-32, -45),
+                (-72, -21),
+                (-92, 0),
+                (-46, 0),
+                (-32, 45),
+                (-72, 21),
+                (-92, 36),
+                (-60, 51),
+                (46, -90),
+                (-74, 65),
+                (-92, 72),
+                (92, -90),
+                (92, -72),
+                (74, -65),
+                (60, -51),
+                (92, -36),
+                (72, -21),
+                (32, -45),
+                (46, 0),
+                (92, 0),
+                (72, 21),
+                (32, 45),
+                (60, 51),
+                (92, 36),
+                (74, 65),
+                (92, 72),
+                (46, 90),
+                (0, 0),
+            ])
+_biosemi_32 =
+            UnfoldMakie.Point{2, Float32,}.([
+                (-92, -72),
+                (-74, -65),
+                (-92, -36),
+                (-60, -51),
+                (-32, -45),
+                (-72, -21),
+                (-92, 0),
+                (-46, 0),
+                (-32, 45),
+                (-72, 21),
+                (-92, 36),
+                (-60, 51),
+                (46, -90),
+                (-74, 65),
+                (-92, 72),
+                (92, -90),
+                (92, -72),
+                (74, -65),
+                (60, -51),
+                (92, -36),
+                (72, -21),
+                (32, -45),
+                (46, 0),
+                (92, 0),
+                (72, 21),
+                (32, 45),
+                (60, 51),
+                (-92, -54),
+                (-74, -65),
+                (-50, -68),
+                (-60, -51),
+                (-75, -41),
+                (-92, -36),
+                (-92, -18),
+                (-72, -21),
+                (-50, -28),
+                (-32, -45),
+                (-23, 0),
+                (-46, 0),
+                (-69, 0),
+                (-92, 0),
+                (-92, 18),
+                (-72, 21),
+                (-50, 28),
+                (-32, 45),
+                (-50, 68),
+                (-60, 51),
+                (-75, 41),
+                (-92, 36),
+                (-115, 36),
+                (-92, 54),
+                (-74, 65),
+                (-92, 72),
+                (115, -90),
+                (92, -90),
+                (69, -90),
+                (46, -90),
+                (23, -90),
+                (92, 90),
+                (92, 72),
+                (92, 54),
+                (74, 65),
+                (69, 90),
+                (46, 90),
+                (50, 68),
+                (60, 51),
+                (75, 41),
+                (92, 36),
+                (92, 18),
+                (72, 21),
+                (50, 28),
+                (32, 45),
+                (23, 90),
+                (0, 0),
+                (23, 0),
+                (46, 0),
+                (69, 0),
+                (92, 0),
+                (92, -18),
+                (72, -21),
+                (50, -28),
+                (32, -45),
+                (50, -68),
+                (60, -51),
+                (75, -41),
+                (92, -36),
+                (115, -36),
+                (92, -54),
+                (74, -65),
+                (92, -72),
+            ])
+_labels_64 = [
+            "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7", "FC5", "FC3", "FC1",
+            "C1", "C3", "C5", "T7", "TP7", "CP5", "CP3", "CP1", "P1", "P3", "P5", "P7", "P9",
+            "PO7", "PO3", "O1", "Iz", "Oz", "POz", "Pz", "CPz", "Fpz", "Fp2", "AF8", "AF4",
+            "AFz", "Fz", "F2", "F4", "F6", "F8", "FT8", "FC6", "FC4", "FC2", "FCz", "Cz",
+            "C2", "C4", "C6", "T8", "TP8", "CP6", "CP4", "CP2", "P2", "P4", "P6", "P8",
+            "P10", "PO8", "PO4", "O2",
+        ]
 
-function get_label_pos(label)
-    l = uppercase(label)
-    #change value range from [-1,1] to [0,1]
-    return (standard_1005_2D[l][1] / 2.0 + 0.5, standard_1005_2D[l][2] / 2.0 + 0.5)
-end
-
-label_in_channel_order = [
-    "FP1",
-    "F3",
-    "F7",
-    "FC3",
-    "C3",
-    "C5",
+_labels_32 = [
+    "Fp1", "AF3", "F7", "F3", "FC1", "FC5", "T7", "C3", "CP1", "CP5", "P7",
     "P3",
-    "P7",
-    "P9",
-    "PO7",
-    "PO3",
-    "O1",
-    "Oz",
-    "Pz",
-    "CPz",
-    "FP2",
-    "Fz",
-    "F4",
-    "F8",
-    "FC4",
-    "FCz",
-    "Cz",
-    "C4",
-    "C6",
-    "P4",
-    "P8",
-    "P10",
-    "PO8",
-    "PO4",
-    "O2",
-    "HEOG_left",
-    "HEOG_right",
-    "VEOG_lower",
+    "Pz", "PO3", "O1", "Oz", "O2", "PO4", "P4", "P8", "CP6", "CP2", "C4", "T8",
+    "FC6", "FC2", "F4", "F8", "AF4", "Fp2", "Fz", "Cz",
 ]
-
-function channel_to_label(channel)
-    return label_in_channel_order[channel]
-end
-
-"""
-    cart3d_to_spherical(x, y, z)
-Convert x, y, z electrode positions on a scalp to spherical coordinate representation. 
-
-**Return Value:** `Matrix`.
-"""
-function cart3d_to_spherical(x, y, z)
-    sph = SphericalFromCartesian().(SVector.(x, y, z))
-    sph = [vcat(s.r, s.θ, π / 2 - s.ϕ) for s in sph]
-    sph = hcat(sph...)'
-    return sph
-end
-
-"""
-	to_positions(x, y, z; sphere = [0, 0, 0.])
-	to_positions(pos::AbstractMatrix; sphere = [0, 0, 0.])
-  
-Projects 3D electrode positions to a 2D layout.
-Reimplementation of the MNE algorithm.
-
-Assumes `size(pos) = (3, nChannels)` when input is `AbstractMatrix`.
-
-Tip: You can get positions directly from an MNE object after loading PyMNE and enabling the UnfoldMakie PyMNE extension.
-
-**Return Value:** `Vector{Point2{Float64}}`. 
-"""
-to_positions(pos::AbstractMatrix; kwargs...) =
-    to_positions(pos[1, :], pos[2, :], pos[3, :]; kwargs...)
-function to_positions(x, y, z; sphere = [0, 0, 0.0])
-    #cart3d_to_spherical(x,y,z)
-
-    # translate to sphere origin
-    x .-= sphere[1]
-    y .-= sphere[2]
-    z .-= sphere[3]
-
-    # convert to spherical coordinates
-    sph = cart3d_to_spherical(x, y, z)
-
-    # get rid of of the radius for now
-    pol_a = sph[:, 3]
-    pol_b = sph[:, 2]
-
-    # use only theta & phi, convert back to cartesian coordinates
-    p_x = pol_a .* cos.(pol_b)
-    p_y = pol_a .* sin.(pol_b)
-
-    # scale by the radius
-    p_x .*= sph[:, 1] ./ (π / 2)
-    p_y .*= sph[:, 1] ./ (π / 2)
-
-    # move back by the sphere coordinates
-    p_x .+= sphere[1]
-    p_y .+= sphere[2]
-    return Point2f.(p_x, p_y)
-end

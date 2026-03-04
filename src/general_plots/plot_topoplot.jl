@@ -22,9 +22,15 @@ Plot a topoplot.
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 $(_docstring(:topoplot))
 
-To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
+To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`,  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
 To set different sizes for each electrode, provide a vector of sizes with length equal 
 to the number of electrodes.
+
+Colorbar limits behavior:
+- If you pass `colorbar = (; limits = (lo, hi))` or `colorbar = (; colorrange = (lo, hi))`, that range is used.\\
+- If neither is provided and the data includes negative values, the range is symmetric around zero using 1st/99th percentiles:
+  `p01 = percentile(0.01, data)`, `p99 = percentile(0.99, data)`, `m = max(abs(p01), abs(p99))`, then `(-m, m)`.
+- If the data is non-negative, the range defaults to `(minimum(data), maximum(data))`.
 
 **Return Value:** `Figure` displaying the Topoplot.
 """
@@ -52,13 +58,11 @@ function plot_topoplot!(
     topo_axis = (;),
     kwargs...,
 )
+
     config = PlotConfig(:topoplot)
     config_kwargs!(config; kwargs...) # potentially should be combined
 
     great_axis = f[1, 1] = GridLayout()
-    outer_axis = Axis(great_axis[1:4, 1:2]; config.axis...)
-    hidespines!(outer_axis)
-    hidedecorations!(outer_axis, label = false)
 
     if !(data isa Vector || data isa Observable{<:AbstractVector})
         config.mapping = resolve_mappings(data, config.mapping)
@@ -72,9 +76,36 @@ function plot_topoplot!(
     topo_attributes =
         update_axis(supportive_defaults(:topo_default_attributes); topo_attributes...)
     topo_axis = update_axis(supportive_defaults(:topo_default_single); topo_axis...)
-    inner_axis = Axis(great_axis[1:4, 1:2]; topo_axis...)
 
-    eeg_topoplot!(
+    if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
+        error(
+            "Topoplot uses a shared color range between the plot and colorbar. " *
+            "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+            "instead of `colorbar = (; limits/colorrange = ...)`.",
+        )
+    end
+
+    # Resolve a single range source, then link it to the topoplot + colorbar.
+    # Keep colorrange in Float32 to match Makie internals; avoids first tick being
+    # dropped due to Float64 ↔ Float32 rounding at the limits.
+    shared_range = topo_shared_range(data, config.visual)
+    config_kwargs!(config, visual = (; colorrange = shared_range))
+
+    position = get(config.colorbar, :position, nothing)
+    if !(position === nothing || position in (:right, :left, :top, :bottom))
+        error("colorbar.position must be one of :right, :left, :top, :bottom")
+    end
+
+    row_offset = position == :top ? 1 : 0
+    col_offset = position == :left ? 1 : 0
+    plot_rows = (1 + row_offset):(4 + row_offset)
+    plot_cols = (1 + col_offset):(2 + col_offset)
+
+    outer_axis = Axis(great_axis[plot_rows, plot_cols]; config.axis...)
+    hidespines!(outer_axis); hidedecorations!(outer_axis, label = false)
+
+    inner_axis = Axis(great_axis[plot_rows, plot_cols]; topo_axis...)
+    h = eeg_topoplot!(
         inner_axis,
         data;
         labels = labels,
@@ -82,43 +113,48 @@ function plot_topoplot!(
         config.visual...,
         topo_attributes...,
     )
-
-    # Set the color limits (`clims`) either from the config if specified by user or dynamically based on the data.
-    if haskey(config.visual, :limits)
-        clims = Observable(config.visual.limits)
-    else
-        clims = @lift (min($data...), max($data...))
-    end
-
-    if clims[][1] ≈ clims[][2]
+    if shared_range[][1] ≈ shared_range[][2]
         @warn """The min and max of the value represented by the color are the same, it seems that the data values are identical. 
 We disable the color bar in this figure.
 Note: The identical min and max may cause an interpolation error when plotting the topoplot."""
         config_kwargs!(config, layout = (; use_colorbar = false))
     else
-
-        ticks = @lift LinRange($clims[1], $clims[2], 5)
-        rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
-        @lift config_kwargs!(
-            config,
-            colorbar = (; ticks = ($ticks, $rounded_ticks), limits = $clims),
-        )
+        if !haskey(config.colorbar, :ticks)
+            ticks = @lift LinRange($shared_range[1], $shared_range[2], 5)
+            rounded_ticks = @lift string.(round.($ticks, digits = 2))  # Round to 2 decimal places
+            @lift config_kwargs!(config, colorbar = (; ticks = ($ticks, $rounded_ticks)))
+        end
     end
-    if config.layout.use_colorbar == true
-        if config.colorbar.vertical == true
-            Colorbar(
-                great_axis[1:4, 2];
-                colormap = config.visual.colormap,
-                config.colorbar...,
-            )
+    if config.layout.use_colorbar
+        cb_pos = if position == :right
+            great_axis[plot_rows, plot_cols.stop+1]
+        elseif position == :left
+            great_axis[plot_rows, plot_cols.start-1]
+        elseif position == :top
+            great_axis[plot_rows.start - 1, plot_cols]
         else
-            config_kwargs!(config, colorbar = (; labelrotation = 2π, flipaxis = false))
-            Colorbar(
-                great_axis[5, 1:2];
-                colormap = config.visual.colormap,
-                config.colorbar...,
-            )
-            rowgap!(great_axis, 4, 0)
+            great_axis[plot_rows.stop + 1, plot_cols]
+        end
+
+        if !get(config.colorbar, :vertical, true)
+            config_kwargs!(config, colorbar = (; labelrotation = 2π))
+        end
+
+        # When linking a colorbar to a plot object, Makie forbids passing limits/colorrange.
+        cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar)
+                        if !(k in (:limits, :colorrange, :position)))...)
+        cb = Colorbar(cb_pos, h; cb_kwargs...)
+    
+        if position == :top
+            rowgap!(great_axis, plot_rows.start - 1, 0)
+            rowsize!(great_axis, plot_rows.start - 1, Auto(0.1))
+        elseif position == :bottom
+            rowgap!(great_axis, plot_rows.stop, 10)
+            rowsize!(great_axis, plot_rows.stop + 1, Auto(0.1))
+            outer_axis.xlabelpadding = -6
+        elseif position == :left || position == :right
+            colgap!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
+            colsize!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
         end
     end
     apply_layout_settings!(config; fig = f)
