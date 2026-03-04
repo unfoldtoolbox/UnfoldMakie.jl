@@ -10,7 +10,7 @@ end
 
 
 begin
-    f = Figure(size = (1200, 800))
+    f = Makie.Figure(size = (1200, 800))
 
     montages = [
         ("Biosemi", "biosemi64"),
