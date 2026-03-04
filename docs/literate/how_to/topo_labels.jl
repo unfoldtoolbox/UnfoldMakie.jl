@@ -4,11 +4,12 @@ using TopoPlots
 using CairoMakie, MakieThemes
 using UnfoldMakie, UnfoldSim
 
-# You need 3 vectors to add labels to topoplots: channel labels, channel positions, and voltage estimates.
-# Here we simulate all three vectors using Hartmut head model. 
+# Three vectors are important to define topoplots with labels:channel labels, channel positions, and voltage estimates.
+# Here we get all three vectors using Hartmut head model. 
 # You can also use your own data and positions, but make sure they correspond to each other.
 
 hart = Hartmut()
+# Hartmut has > 270 channels, we'll select some common ones.
 idx_64 = findall(l -> l in UnfoldMakie._labels_64, hart.electrodes["label"])
 hart_estimate = hart.cortical["leadfield"][idx_64, 312, :] * [0.2, 0.4, 0.4]
 positions_64 =
