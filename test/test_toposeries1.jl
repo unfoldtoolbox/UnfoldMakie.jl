@@ -11,7 +11,7 @@ end
 
 @testset "eeg_topoplot_series" begin
     matrix = rand(64, 5) # simulated data
-    UnfoldMakie.eeg_topoplot_series(
+    a, b = UnfoldMakie.eeg_topoplot_series(
         matrix;
         layout = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
         positions = positions,
@@ -25,6 +25,44 @@ end
 @testset "toposeries: bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions)
 end
+
+@testset "toposeries: colorbar position left" begin
+    plot_topoplotseries(
+        df;
+        bin_num = 5,
+        nrows = 3,
+        positions = positions,
+        colorbar = (; position = :left, flipaxis = false, labelrotation = π/2),
+    )
+end
+
+@testset "toposeries: colorbar position top" begin
+    plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        colorbar = (; width = 300, position = :top, vertical = false),
+    )
+end
+
+@testset "toposeries: invalid colorbar position" begin
+    @test_throws ErrorException plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        colorbar = (; position = :center),
+    )
+end
+
+@testset "toposeries: colorbar custom ticks" begin
+    @test_nowarn plot_topoplotseries(
+        df;
+        bin_num = 5,
+        positions = positions,
+        colorbar = (; ticks = ([-0.5, 0.0, 0.5], ["-0.5", "0", "0.5"])),
+    )
+end
+
 
 @testset "toposeries: bin_num" begin
     plot_topoplotseries(df; bin_num = 5, positions = positions, axis = (; xlabel = "test"))
@@ -74,6 +112,24 @@ end
     )
 end
 
+@testset "error checking: colorbar limits and colorrange blocked" begin
+    msg = "Topoplot series uses a shared color range between the plots and colorbar. " *
+          "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
+          "instead of `colorbar = (; limits/colorrange = ...)`."
+    @test_throws ErrorException(msg) plot_topoplotseries(
+        df;
+        bin_width = 80,
+        positions = positions,
+        colorbar = (; limits = (-1, 1)),
+    )
+    @test_throws ErrorException(msg) plot_topoplotseries(
+        df;
+        bin_width = 80,
+        positions = positions,
+        colorbar = (; colorrange = (-1, 1)),
+    )
+end
+
 @testset "toposeries: channel names true" begin
     plot_topoplotseries(
         df;
@@ -97,24 +153,15 @@ end
     )
 end
 
-@testset "error checking: different length of channel names gand positions" begin
-    err1 = nothing
-    t() = error(
-        plot_topoplotseries(
-            df;
-            bin_width = 80,
-            nrows = 3,
-            positions = positions,
-            labels = channels_30,
-            visual = (; label_text = true),
-        ),
-    )
-    try
-        t()
-    catch err1
-    end
-    @test err1 == ErrorException(
-        "The length of `labels` differs from the length of `position`. Please make sure they are the same length.",
+@testset "error checking: different length of channel names and positions" begin
+    msg = "The length of `labels` differs from the length of `position`. Please make sure they are the same length."
+    @test_throws ErrorException(msg) plot_topoplotseries(
+        df;
+        bin_width = 80,
+        nrows = 3,
+        positions = positions,
+        labels = channels_30,
+        visual = (; label_text = true),
     )
 end
 
@@ -341,21 +388,6 @@ end
     )
     f
 end
-
-@testset "toposeries: colorrange" begin
-    plot_topoplotseries(
-        df;
-        bin_width = 80,
-        positions = positions,
-        visual = (; colorrange = [-5, 0.5]),
-        colorbar = (;
-            label = "p-value",
-            limits = (0, 0.1),
-            ticks = ([0.0, 0.1], ["0", "0.1"]),
-        ),
-    )
-end
-
 
 @testset "toposeries: dynamic mapping.y" begin
     df = DataFrame(

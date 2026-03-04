@@ -2,7 +2,7 @@
 
 # You want to change the colors of the lines and markers on the inserted topoplot.
 # To do that you need to change the color scheme (aka color map) of the butterfly plot. 
-# You can find th elist of colormaps for Makie [here](https://docs.makie.org/v0.21/explanations/colors). 
+# You can find the list of colormaps for Makie [here](https://docs.makie.org/v0.21/explanations/colors). 
 
 # # Setup
 
@@ -12,7 +12,14 @@ using DataFramesMeta
 using Colors
 
 results, positions = UnfoldMakie.example_data("TopoPlots.jl");
-# By default the plot looks like this:
+
+# Simpliest way to change the colors is to use `visual.colormap` argument.
+
+plot_butterfly(results; positions = positions, visual = (; colormap = :viridis))
+
+# But as you may notice it is not the correct way to do it: color is changing from center to periphery, but not according to the position of the electrodes.
+
+# By default we use `romaO` colormap using the methods described below:
 plot_butterfly(results; positions = positions)
 
 # # Color schemes
@@ -20,13 +27,12 @@ plot_butterfly(results; positions = positions)
 
 # We can change the color scale by specifying a function that maps from an `(x, y)` tuple to a color. 
 # `UnfoldMakie` currently provides three different color scales: 
-# - `pos2colorRGB` (same as MNE-Python), 
-# - `pos2colorHSV` (HSV color space), 
-# - `pos2colorRomaO`. 
+# - `pos_to_color_RGB` (same as MNE-Python), 
+# - `pos_to_color_HSV` (HSV color space), 
+# - `pos_to_color_RomaO`. 
 
 # While `RGB` & `HSV` have the advantage of being 2D color maps, `Roma0` has the advantage of being perceptually uniform.
 # Also you can specify a uniform color.
-
 
 plot_butterfly(
     results;

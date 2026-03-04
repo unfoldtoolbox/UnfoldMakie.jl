@@ -43,6 +43,10 @@ rng = MersenneTwister(1);
 # # Adjacent topoplot
 # In this case we already have two data vectors: `vec_estimate` with mean estimates and `vec_uncert` with standard deviation.
 
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 begin
     f = Figure()
     ax = Axis(
@@ -66,6 +70,7 @@ begin
             ticklabelsize = 18,
             vertical = false,
             width = 180,
+            position = :bottom,
         ),
     )
     plot_topoplot!(
@@ -80,15 +85,23 @@ begin
             ticklabelsize = 18,
             vertical = false,
             width = 180,
+            position = :bottom,
         ),
     )
-    f
 end
-
+# ```@raw html
+# </details >
+# ```
+f
 
 # # Uncertainty via marker size
 # We show uncertainty using donut-shaped electrode markers.
 # The donut keeps the estimate color visible while the marker size reflects uncertainty — larger donuts mean higher uncertainty.
+
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
 begin
     f = Figure()
     uncert_norm =
@@ -109,6 +122,7 @@ begin
         colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
+    markerlables = round.(range(extrema(vec_uncert)...; length = 5); digits = 2)
 
     group_size = [
         MarkerElement(
@@ -116,13 +130,96 @@ begin
             color = :transparent, strokecolor = :black, strokewidth = ms ÷ 5,
             markersize = ms) for ms in markersizes
     ]
-    Legend(f[5, 1], group_size, ["$ms" for ms in markersizes], "Standard\ndeviation",
+    Legend(f[5, 1], group_size, ["$ms" for ms in markerlables], "Standard\ndeviation",
         patchsize = (maximum(markersizes) * 0.8, maximum(markersizes) * 0.8),
         framevisible = false,
         labelsize = 18, titlesize = 20,
         orientation = :horizontal, titleposition = :left, margin = (90, 0, 0, 0))
-    f
 end
+# ```@raw html
+# </details >
+# ```
+f
+
+# # Uncertainty via confidence intervals
+# ```@raw html
+# <details>
+# <summary>Click to expand</summary>
+# ```
+begin
+    f = Figure(; resolution = (900, 650))
+    gf = f[1, 1] = GridLayout()
+    pTopos = GridLayout()
+    gf[1:2, 1:3] = pTopos
+
+    pA = pTopos[1, 2]
+    pB = pTopos[2, 1]
+    pC = pTopos[2, 3]
+    pcb = gf[:, 4]
+
+    lims = begin
+        p01, p99 = quantile(vec_estimate, [0.01, 0.99])
+        m = max(abs(p01), abs(p99))
+        Float32.((-m, m))
+    end
+
+    visual = (; limits = lims, colormap = cgrad(:RdBu, 10; categorical = true, rev = true))
+
+    ticks5 = begin
+        lo, hi = visual.limits
+        pos = Float32[lo, lo/2, 0.0f0, hi/2, hi]
+        lab = string.(round.(Float64.(pos); sigdigits = 2))
+        (pos, lab)
+    end
+
+    plot_topoplot!(
+        pA, vec_estimate;
+        positions = positions,
+        axis = (; xlabelsize = 24, xlabel = "Mean"),
+        layout = (; use_colorbar = false),
+        visual = visual,
+    )
+
+    plot_topoplot!(
+        pB, vec_estimate .- vec_uncert;
+        positions = positions,
+        axis = (; xlabelsize = 24, xlabel = "Mean - SE"),
+        layout = (; use_colorbar = false),
+        visual = visual,
+    )
+
+    plot_topoplot!(
+        pC, vec_estimate .+ vec_uncert;
+        positions = positions,
+        axis = (; xlabelsize = 24, xlabel = "Mean + SE"),
+        layout = (; use_colorbar = false),
+        visual = visual,
+    )
+
+    Colorbar(
+        pcb;
+        colormap = visual.colormap,
+        limits = visual.limits,
+        ticks = ticks5,
+        label = "Voltage [µV]",
+        labelsize = 24,
+        ticklabelsize = 18,
+        vertical = true,
+        height = 300,
+        flipaxis = true,
+        labelrotation = -π/2,
+    )
+
+    rowgap!(pTopos, -90)
+    colgap!(pTopos, -90)
+    colgap!(gf, 10)
+    colsize!(gf, 4, Auto(0.15))
+
+end
+# ```@raw html
+# </details >
+# ```
+f
 
 # # Uncertainty via animation 
 
@@ -135,99 +232,19 @@ end
 # <details>
 # <summary>Click to expand for supportive functions</summary>
 # ```
-# With this function we will bootstrap the data.
-# `rng` - random number generated. Be sure to send the same rng from outside the function.
-bootstrap_toposeries(df; kwargs...) = bootstrap_toposeries(MersenneTwister(), df; kwargs...)
-function bootstrap_toposeries(rng::AbstractRNG, df)
-    df1 = groupby(df, [:time, :channel])
-    len_estimate = length(df1[1].estimate)
-    bootstrap_ix = rand(rng, 1:len_estimate, len_estimate) # random sample with replacement
-    tmp = vcat([d.estimate[bootstrap_ix] for d in df1]...)
-    df1 = DataFrame(df1)
-
-    df1.estimate .= tmp
-    return df1
-end
 
 # function for easing - smooth transition between frames in animation.
 # `update_ratio` - transition ratio between time1 and time2.
 # `at` - create animation object: 0 and 1 are time points, old and new are data vectors.
-
 function ease_between(old, new, update_ratio; easing_function = sineio())
     anim = Animation(0, old, 1, new; defaulteasing = easing_function)
     return at(anim, update_ratio)
 end
-# ```@raw html
-# </details >
-# ```
 
-dat_obs = Observable(df_toposeries1)
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    dat_obs;
-    bin_num = 5,
-    nrows = 2,
-    positions = pos_toposeries,
-    visual = (; contours = false),
-    axis = (; xlabel = "Time [msec]"),
-)
-
-# Basic toposeries.
-
-record(f, "bootstrap_toposeries_nocontours.mp4"; framerate = 2) do io
-    for i = 1:10
-        dat_obs[] = bootstrap_toposeries(rng, df_toposeries1)
-        recordframe!(io)
-    end
-end;
-# ![](bootstrap_toposeries_nocontours.mp4)
-
-# Toposeries with easing.
-# Easing means smooth transition between frames.
-dat_obs = Observable(bootstrap_toposeries(rng, df_toposeries1))
-f = Figure()
-plot_topoplotseries!(
-    f[1, 1],
-    dat_obs;
-    bin_num = 5,
-    nrows = 2,
-    positions = pos_toposeries,
-    visual = (; contours = false),
-    axis = (; xlabel = "Time [msec]"),
-)
-record(f, "bootstrap_toposeries_easing.mp4"; framerate = 10) do io
-    for n_bootstrapping = 1:10
-        recordframe!(io)
-        new_df = bootstrap_toposeries(rng, df_toposeries1)
-        old_estimate = deepcopy(dat_obs.val.estimate)
-        for update_ratio in range(0, 1, length = 8)
-
-            dat_obs.val.estimate .=
-                ease_between(old_estimate, new_df.estimate, update_ratio)
-            notify(dat_obs)
-            recordframe!(io)
-        end
-    end
-end;
-
-# ![](bootstrap_toposeries_easing.mp4)
-
-# # Single topoplot with easing animation
-
-# ```@raw html
-# <details>
-# <summary>Click to expand for supportive functions</summary>
-# ```
-"""
-param_bootstrap_means(mean_vec, se_vec; n_boot, rng)
-
-Return (n_channels × n_boot) matrix of bootstrap mean vectors,
-sampling independently per channel: μ + SE * randn().
-"""
+# Return (n_channels × n_boot) matrix of bootstrap mean vectors,
+# sampling independently per channel: μ + SE * randn().
 function param_bootstrap_means(mean_vec::AbstractVector, se_vec::AbstractVector;
     n_boot::Int = 10, rng = MersenneTwister(1))
-
     T = float(promote_type(eltype(mean_vec), eltype(se_vec)))
     μ = convert(Vector{T}, mean_vec)
     se = convert(Vector{T}, se_vec)
@@ -243,9 +260,8 @@ end
 # </details >
 # ```
 
-se_vec = vec_uncert ./ sqrt(15) # 15 subject according to paper
 n_boot = 20
-boot_means = param_bootstrap_means(vec_estimate, se_vec; n_boot = n_boot, rng = rng)
+boot_means = param_bootstrap_means(vec_estimate, vec_uncert; n_boot = n_boot, rng = rng)
 
 obs = Observable(boot_means[:, 1])
 f = Figure()

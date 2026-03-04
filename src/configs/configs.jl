@@ -66,6 +66,7 @@ function PlotConfig(T::Val{:circtopos})
             labelrotation = -π / 2,
             label = "Voltage [µV]",
             colormap = Reverse(:RdBu),
+            position = :right,
         ),
         mapping = (;),
         axis = (; aspect = 1),
@@ -96,7 +97,7 @@ function PlotConfig(T::Val{:topoplot})
             positions = (:pos, :positions, :position, nothing), # Point / Array / Tuple
             labels = (:labels, :label, :sensor, nothing), # String
         ),
-        colorbar = (; flipaxis = true, label = "Voltage [µV]"),
+        colorbar = (; flipaxis = true, label = "Voltage [µV]", position = :right, labelrotation = -π / 2),
         axis = (; xlabel = "Time", aspect = DataAspect()),
     )
     return cfg
@@ -187,7 +188,7 @@ function PlotConfig(T::Val{:butterfly})
             xtickformat = x -> string.(round.(x; digits = 2)),
             ytickformat = x -> string.(round.(x; digits = 2)),
         ),
-        visual = (; color = nothing),
+        visual = (; color = nothing, colormap = nothing),
     )
     return cfg
 end

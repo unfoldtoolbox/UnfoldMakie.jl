@@ -6,7 +6,7 @@ df = DataFrame(
     :circularVariable => [0, 50, 80, 120, 180, 210],
     :time => 100:40:300,
 )
-labels = ["s$i" for i = 1:size(dat, 1)]
+labels_64 = ["s$i" for i = 1:size(dat, 1)]
 df = flatten(df, :estimate)
 
 d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
@@ -38,11 +38,11 @@ d_topo, positions = UnfoldMakie.example_data("TopoPlots.jl")
     end
 end
 
-@testset "testing calculate_global_max_values" begin
+@testset "testing shared_percentile_ranges" begin
     # notice: this function uses the 0.01 and the 0.99 quantile
     pred = repeat(1:3, inner = 5)
     val = [1:5...; 6:10...; 11:15...]
-    a, b = UnfoldMakie.calculate_global_max_values(val, pred)
+    a, b = UnfoldMakie.shared_percentile_ranges(val, pred)
     @test isapprox(a, -14.96)
     @test isapprox(b, 14.96)
 
@@ -74,6 +74,17 @@ end
     )
 end
 
+@testset "circularplot colorbar position left" begin
+    plot_circular_topoplots(
+        df;
+        positions = pos,
+        center_label = "Visual angle [°]",
+        predictor = :time,
+        predictor_bounds = [80, 320],
+        colorbar = (; position = :left),
+    )
+end
+
 @testset "circularplot plot in GridLayout with labels" begin
     f = Figure()
     ga = f[1, 1] = GridLayout()
@@ -84,7 +95,7 @@ end
         center_label = "Visual angle [°]",
         predictor = :time,
         predictor_bounds = [80, 320],
-        labels = labels,
+        labels = labels_64,
         plot_radius = 0.99,
     )
     f
@@ -120,14 +131,3 @@ end
         topo_attributes = (label_scatter = false,),
     )
 end
-
-#@testset "circularplot: change backgroundcolor" begin
-plot_circular_topoplots(
-    d_topo[in.(d_topo.time, Ref(-0.3:0.1:0.5)), :];
-    positions = positions,
-    predictor = :time,
-    predictor_bounds = [-0.3, 0.5],
-    axis = (; backgroundcolor = colorant"#F4F3EF",),
-    topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
-)
-#end

@@ -35,6 +35,8 @@ Plot a circular EEG topoplot.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
+- `colorbar.position = :right`\\
+     Possible options: `:right`, `:left`. Sets position of the colorbar.\\
 
 $(_docstring(:circtopos))
 
@@ -91,12 +93,20 @@ function plot_circular_topoplots!(
     plot_circular_axis!(ax, predictor_bounds, center_label)
     limits!(ax, -3.5, 3.5, -3.5, 3.5)
 
-    min, max = calculate_global_max_values(data[:, config.mapping.y], predictor_values)
-    cb_ticks = LinRange(min, max, 5)
+    lo, hi = shared_percentile_ranges(data[:, config.mapping.y], predictor_values)
+    cb_ticks = LinRange(lo, hi, 5)
     rounded_cb_ticks = string.(round.(cb_ticks, digits = 2))
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
-    Colorbar(f[1, 2]; colorrange = (min, max), config.colorbar...)
+    position = get(config.colorbar, :position, :right)
+    if !(position in (:right, :left))
+        error("colorbar.position must be :right or :left for plot_circular_topoplots")
+    end
+    position = get(config.colorbar, :position, :right)
+
+    cb_pos = position == :left ? f[1, 0] : f[1, 2]
+    cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :position)...)
+    Colorbar(cb_pos; colorrange = (lo, hi), cb_kwargs...)
     topo_axis =
         update_axis(supportive_defaults(:topo_default_single_circular); topo_axis...)
     topo_attributes =
@@ -108,23 +118,14 @@ function plot_circular_topoplots!(
         positions,
         predictor_values,
         predictor_bounds,
-        min,
-        max,
+        lo,
+        hi,
         labels,
         plot_radius,
         topo_attributes,
         topo_axis,
     )
     return f
-end
-
-function calculate_global_max_values(data, predictor)
-    x = combine(
-        groupby(DataFrame(:e => data, :p => predictor), :p),
-        :e => (x -> maximum(abs.(quantile!(x, [0.01, 0.99])))) => :local_max_val,
-    )
-    global_max_val = maximum(x.local_max_val)
-    return (-global_max_val, global_max_val)
 end
 
 function plot_circular_axis!(ax, predictor_bounds, center_label)

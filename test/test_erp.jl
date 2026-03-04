@@ -7,6 +7,7 @@ results = coeftable(m)
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)
 res_effects3 = effects(Dict(:condition => ["car", "face"], :continuous => 75:20:300), m)
+res_effects4 = effects(Dict(:eventnames => ["A", "B"]), m)
 topo_array, positions = TopoPlots.example_data()
 p1, evts = UnfoldSim.predef_eeg(; noiselevel = 8)
 
@@ -278,4 +279,18 @@ end
 
 @testset "erp: xtickformat usage" begin
     plot_erp(results; axis = (; xtickformat = "{:.2f}ms"))
+end
+
+@testset "ERP plot: colorbar and right yaxis collision" begin
+    f = Figure(size = (1000, 600))
+    ax2 = Axis(f[1, 1], yaxisposition = :right, xticklabelsvisible = false,
+        xticksvisible = false, yticklabelcolor = :dodgerblue, rightspinecolor = :dodgerblue, ytickcolor = :dodgerblue)
+
+    plot_erp!(f[1, 1], results, mapping = (; color = :time, group = :time))
+    f
+end
+
+@testset "ERP plot: single-color lines" begin
+    plot_erp(subset(res_effects4, :eventnames => ByRow(==("B"))))
+    plot_erp(subset(res_effects4, :eventnames => ByRow(==("B"))), visual = (; color = :blue))
 end
