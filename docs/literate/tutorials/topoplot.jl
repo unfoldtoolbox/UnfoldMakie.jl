@@ -27,11 +27,11 @@ tp = 100; # time point
 
 # # Plot a topoplot
 
-# Let's select a time point in `tp` and the mean estimate. 
+# Let's select the mean estimate at time point `tp`.
 plot_topoplot(
     topo_array[:, tp, 1];
     positions = topo_positions,
-    axis = (; xlabel = "Time [$tp ms]"),
+    axis = (; xlabel = "Time point $tp"),
     colorbar = (; height = 350),
 )
 
@@ -75,7 +75,7 @@ begin
         plot_topoplot!(f[r, c],
             topo_array[:, tp, 1];
             positions = topo_positions,
-            axis = (; xlabel = "Time [$tp ms]", title = string(cmap)),
+            axis = (; xlabel = "Time point $tp", title = string(cmap)),
             colorbar = (; vertical = false, position = :bottom, width = 180),
             visual = (; colormap = cmap, contours = false),
         )
@@ -96,7 +96,7 @@ with_theme(Theme(; fontsize = 25, fonts = (; regular = "Ubuntu Mono"))) do
         labels,
         positions = topo_positions,
         visual = (; label_text = true),
-        axis = (; xlabel = "$tp ms"),
+        axis = (; xlabel = "Time point $tp"),
     )
 end
 
