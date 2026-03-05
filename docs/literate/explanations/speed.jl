@@ -94,10 +94,9 @@ framerate = 50
 
 # **UnfoldMakie with .gif**
 vals = vec(dat[:, :, 1])
-p01 = _percentile(0.01, vals)
-p99 = _percentile(0.99, vals)
+p01, p99 = quantile(vals, [0.01, 0.99])
 m = max(abs(p01), abs(p99))
-cr = (-m, m)
+cr = Float32.((-m, m))
 @benchmark begin
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
