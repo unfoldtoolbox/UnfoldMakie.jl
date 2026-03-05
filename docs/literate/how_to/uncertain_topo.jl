@@ -267,10 +267,9 @@ obs = Observable(boot_means[:, 1])
 begin
     m = maximum(abs, boot_means)          # boot_means is nchan × n_boot
     vals = vec(boot_means)
-    p01 = _percentile(0.01, vals)
-    p99 = _percentile(0.99, vals)
+    p01, p99 = quantile(vals, [0.01, 0.99])
     m = max(abs(p01), abs(p99))
-    cr = (-m, m) # saymmetrical colorbars over zero
+    cr = Float32.((-m, m)) # symmetrical colorbars over zero
     f = Figure()
     plot_topoplot!(
         f[1, 1],
