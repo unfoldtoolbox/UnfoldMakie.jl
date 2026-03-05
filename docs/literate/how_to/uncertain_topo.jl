@@ -30,7 +30,7 @@ using Animations
 # Data for customized topoplots:
 dat, positions = TopoPlots.example_data()
 vec_estimate = dat[:, 340, 1];
-vec_uncert = dat[:, 340, 2];
+vec_sd = dat[:, 340, 2]; # Here we use SD as uncertatinty measure
 # Data for animation:
 
 df_toposeries, pos_toposeries =
@@ -41,7 +41,7 @@ rng = MersenneTwister(1);
 # `noiselevel` is important for adding variability it your data.
 
 # # Adjacent topoplot
-# In this case we already have two data vectors: `vec_estimate` with mean estimates and `vec_uncert` with standard deviation.
+# In this case we already have two data vectors: `vec_estimate` with mean estimates and `vec_sd` with standard deviation.
 
 # ```@raw html
 # <details>
@@ -75,7 +75,7 @@ begin
     )
     plot_topoplot!(
         f[1, 2],
-        vec_uncert;
+        vec_sd;
         positions = positions,
         visual = (; colormap = (:viridis), contours = false),
         axis = (; xlabel = "", xlabelsize = 24, ylabelsize = 24),
@@ -105,7 +105,7 @@ f
 begin
     f = Figure()
     uncert_norm =
-        (vec_uncert .- minimum(vec_uncert)) ./ (maximum(vec_uncert) - minimum(vec_uncert))
+        (vec_sd .- minimum(vec_sd)) ./ (maximum(vec_sd) - minimum(vec_sd))
     uncert_scaled = uncert_norm * 30 .+ 10
 
     plot_topoplot!(
@@ -122,7 +122,7 @@ begin
         colorbar = (; labelsize = 24, ticklabelsize = 18),
     )
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
-    markerlables = round.(range(extrema(vec_uncert)...; length = 5); digits = 2)
+    markerlables = round.(range(extrema(vec_sd)...; length = 5); digits = 2)
 
     group_size = [
         MarkerElement(
@@ -181,7 +181,7 @@ begin
     )
 
     plot_topoplot!(
-        pB, vec_estimate .- vec_uncert;
+        pB, vec_estimate .- vec_sd;
         positions = positions,
         axis = (; xlabelsize = 24, xlabel = "Mean - SE"),
         layout = (; use_colorbar = false),
@@ -189,7 +189,7 @@ begin
     )
 
     plot_topoplot!(
-        pC, vec_estimate .+ vec_uncert;
+        pC, vec_estimate .+ vec_sd;
         positions = positions,
         axis = (; xlabelsize = 24, xlabel = "Mean + SE"),
         layout = (; use_colorbar = false),
@@ -261,18 +261,27 @@ end
 # ```
 
 n_boot = 20
-boot_means = param_bootstrap_means(vec_estimate, vec_uncert; n_boot = n_boot, rng = rng)
-
+vec_se = vec_sd ./ sqrt(15) # 15 subject according to paper
+boot_means = param_bootstrap_means(vec_estimate, vec_se; n_boot = n_boot, rng = rng)
 obs = Observable(boot_means[:, 1])
-f = Figure()
-plot_topoplot!(
-    f[1, 1],
-    obs;
-    positions = positions,
-    visual = (; contours = false),
-    axis = (; xlabel = "Time [100 msec]"),
-)
-
+begin
+    m = maximum(abs, boot_means)          # boot_means is nchan × n_boot
+    vals = vec(boot_means)
+    p01 = _percentile(0.01, vals)
+    p99 = _percentile(0.99, vals)
+    m = max(abs(p01), abs(p99))
+    cr = (-m, m) # saymmetrical colorbars over zero
+    f = Figure()
+    plot_topoplot!(
+        f[1, 1],
+        obs;
+        positions = positions,
+        visual = (; contours = false, colormap = cgrad(:RdYlBu, 10; categorical = true), colorrange = cr),
+        colorbar = (; labelsize = 24, ticklabelsize = 18, height = 350),
+        axis = (; xlabel = "Time window 100", xlabelsize = 24, ylabelsize = 24),
+    )
+    f
+end
 record(f, "bootstrap_single_topo.mp4"; framerate = 12) do io
     recordframe!(io)  # first frame (original)
     for i_boot = 1:(n_boot-1)          # number of bootstrap targets
