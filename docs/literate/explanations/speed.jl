@@ -12,6 +12,7 @@ using TopoPlots
 using BenchmarkTools
 using Observables
 using CairoMakie
+using Statistics
 using PythonPlot;
 using PyMNE;
 
@@ -93,11 +94,14 @@ timestamps = range(1, 50, step = 1)
 framerate = 50
 
 # **UnfoldMakie with .gif**
-
+vals = vec(dat[:, :, 1])
+p01, p99 = quantile(vals, [0.01, 0.99])
+m = max(abs(p01), abs(p99))
+cr = Float32.((-m, m))
 @benchmark begin
     f = Makie.Figure()
     dat_obs = Observable(dat[:, 1, 1])
-    plot_topoplot!(f[1, 1], dat_obs, positions = positions)
+    plot_topoplot!(f[1, 1], dat_obs, positions = positions, visual = (; contours = false, colorrange = cr),)
     record(f, "topoplot_animation_UM.gif", timestamps; framerate = framerate) do t
         dat_obs[] = @view(dat[:, t, 1])
     end
