@@ -12,6 +12,7 @@ using TopoPlots
 using BenchmarkTools
 using Observables
 using CairoMakie
+using Statistics
 using PythonPlot;
 using PyMNE;
 
