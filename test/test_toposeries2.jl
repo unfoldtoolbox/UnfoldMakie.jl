@@ -185,6 +185,19 @@ end
     data_obs3[] = UnfoldMakie.eeg_array_to_dataframe(rand(10, 20))
 end
 
+@testset "closest_electrode_index" begin
+    positions = Point2f[
+        Point2f(0.0, 0.0),
+        Point2f(1.0, 0.0),
+        Point2f(0.0, 1.0),
+        Point2f(1.0, 1.0),
+    ]
+
+    @test UnfoldMakie.closest_electrode_index(Point2f(0.1, 0.1), positions) == 1
+    @test UnfoldMakie.closest_electrode_index(Point2f(0.9, 0.2), positions) == 2
+    @test UnfoldMakie.closest_electrode_index(Point2f(0.2, 0.8), positions) == 3
+    @test UnfoldMakie.closest_electrode_index(Point2f(0.8, 0.9), positions) == 4
+end
 
 @testset "toposeries: differend combine functions for categorical" begin
     df = UnfoldMakie.eeg_array_to_dataframe(dat[:, 1:2, 1], string.(1:length(positions)))
