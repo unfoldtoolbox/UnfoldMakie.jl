@@ -148,7 +148,6 @@ function scatter_management(
     interactive_scatter,
 )
     if highlight_scatter != false || interactive_scatter != nothing
-        #strokecolor = Observable(repeat([:black], length(to_value(single_y))))
         strokecolor = Observable(repeat([:black], length(to_value(single_y)))) # black
         highlight_feature = (; strokecolor = strokecolor)
 
@@ -162,25 +161,6 @@ function scatter_management(
     end
     return topo_attributes
 end
-
-#= function interactive_toposeries(interactive_scatter, single_topoplot, r, c)
-    if interactive_scatter != nothing
-        @assert isa(interactive_scatter, Observable)
-    end
-    if interactive_scatter != false
-        on(events(single_topoplot).mousebutton) do event
-            if event.button == Mouse.left && event.action == Mouse.press
-                plt, p = pick(single_topoplot)
-                if isa(plt, Makie.Scatter) && plt == single_topoplot.plots[1].plots[3]
-                    plt.strokecolor[] .= Makie.to_color(:black)
-                    plt.strokecolor[][p] = Makie.to_color(:white)
-                    notify(plt.strokecolor) # not sure why this is necessary, but oh well..
-                    interactive_scatter[] = (r, c, p)
-                end
-            end
-        end
-    end
-end =#
 
 function interactive_toposeries(interactive_scatter, ax, single_topoplot, positions, r, c)
     (interactive_scatter === nothing || interactive_scatter === false) && return
