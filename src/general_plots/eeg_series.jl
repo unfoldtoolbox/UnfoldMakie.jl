@@ -187,12 +187,12 @@ function interactive_toposeries(interactive_scatter, ax, single_topoplot, positi
     @assert interactive_scatter isa Observable
 
     scatter_plot = single_topoplot.plots[1].plots[3]  # fragile, but current working version
-
     black = Makie.to_color(:black)
     white = Makie.to_color(:white)
 
     on(events(ax.scene).mousebutton) do event
         if event.button == Mouse.left && event.action == Mouse.press
+            Makie.is_mouseinside(ax.scene) || return
             mouse_pos = mouseposition(ax.scene)
             electrode_idx = closest_electrode_index(mouse_pos, positions)
 
