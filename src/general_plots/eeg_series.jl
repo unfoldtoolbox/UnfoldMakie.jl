@@ -111,7 +111,7 @@ function eeg_topoplot_series!(
         if rasterize_heatmaps
             single_topoplot.plots[1].plots[1].rasterize = true
         end
-        interactive_toposeries(interactive_scatter, single_topoplot, r, c) #TODO
+        interactive_toposeries(interactive_scatter, ax, single_topoplot, positions, r, c)
         push!(axlist, ax)
 
     end
@@ -148,7 +148,7 @@ function scatter_management(
     interactive_scatter,
 )
     if highlight_scatter != false || interactive_scatter != nothing
-        strokecolor = Observable(repeat([:black], length(to_value(single_y))))
+        strokecolor = Observable(repeat([:black], length(to_value(single_y)))) # black
         highlight_feature = (; strokecolor = strokecolor)
 
         if :label_scatter ∈ keys(topo_attributes) &&
@@ -162,23 +162,46 @@ function scatter_management(
     return topo_attributes
 end
 
-function interactive_toposeries(interactive_scatter, single_topoplot, r, c)
-    if interactive_scatter != nothing
-        @assert isa(interactive_scatter, Observable)
-    end
-    if interactive_scatter != false
-        on(events(single_topoplot).mousebutton) do event
-            if event.button == Mouse.left && event.action == Mouse.press
-                plt, p = pick(single_topoplot)
-                if isa(plt, Makie.Scatter) && plt == single_topoplot.plots[1].plots[3]
-                    plt.strokecolor[] .= :black
-                    plt.strokecolor[][p] = :white
-                    notify(plt.strokecolor) # not sure why this is necessary, but oh well..
-                    interactive_scatter[] = (r, c, p)
-                end
-            end
+function interactive_toposeries(interactive_scatter, ax, single_topoplot, positions, r, c)
+    (interactive_scatter === nothing || interactive_scatter === false) && return
+    @assert interactive_scatter isa Observable
+
+    scatter_plot = single_topoplot.plots[1].plots[3]  # fragile, but current working version
+    black = Makie.to_color(:black)
+    white = Makie.to_color(:white)
+
+    on(events(ax.scene).mousebutton) do event
+        if event.button == Mouse.left && event.action == Mouse.press
+            Makie.is_mouseinside(ax.scene) || return
+            mouse_pos = mouseposition(ax.scene)
+            electrode_idx = closest_electrode_index(mouse_pos, positions)
+
+            stroke_colors = scatter_plot.strokecolor[]
+            stroke_colors .= black
+            stroke_colors[electrode_idx] = white
+            notify(scatter_plot.strokecolor)
+
+            interactive_scatter[] = (r, c, electrode_idx)
         end
     end
+end
+
+function closest_electrode_index(mouse_pos, positions)
+    best_idx = 1
+    best_dist_sq = Inf
+
+    for i in eachindex(positions)
+        dx = positions[i][1] - mouse_pos[1]
+        dy = positions[i][2] - mouse_pos[2]
+        dist_sq = dx * dx + dy * dy
+
+        if dist_sq < best_dist_sq
+            best_dist_sq = dist_sq
+            best_idx = i
+        end
+    end
+
+    return best_idx
 end
 
 """
