@@ -1,5 +1,3 @@
-#using ScatteredInterpolation
-#import ScatteredInterpolation: interpolate, evaluate 
 import TopoPlots: GeomExtrapolation, enclosing_geometry, points2mat
 using GeometryBasics: Point2f, Rect2f, decompose
 using UnfoldMakie
@@ -71,7 +69,7 @@ function bivariate_colormatrix_range(; n_rows::Int=4, n_cols::Int=9,
     neg=colorant"#2166ac", mid=colorant"#f0f0f0", pos=colorant"#f46d43",
     chroma_range::Tuple{Real,Real}=(1.0, 0.25),
     lightness_offsets::Tuple{Real,Real}=(0.0, 15.0),
-    order_uncertainty::Symbol = :low_to_high,
+    order_vertical::Symbol = :low_to_high,
     base_cols::Union{Nothing,AbstractVector{<:Colorant}}=nothing
 )::Matrix{RGB}
 
@@ -85,10 +83,10 @@ function bivariate_colormatrix_range(; n_rows::Int=4, n_cols::Int=9,
     cs_vec = collect(range(float(chroma_range[1]), float(chroma_range[2]); length=n_rows))
     dL_vec = collect(range(float(lightness_offsets[1]), float(lightness_offsets[2]); length=n_rows))
 
-    if order_uncertainty == :high_to_low
+    if order_vertical == :high_to_low
         cs_vec = reverse(cs_vec); dL_vec = reverse(dL_vec)
-    elseif order_uncertainty != :low_to_high
-        @warn "order_uncertainty should be :low_to_high or :high_to_low; using :low_to_high"
+    elseif order_vertical != :low_to_high
+        @warn "order_vertical should be :low_to_high or :high_to_low; using :low_to_high"
     end
 
     M = Matrix{RGB}(undef, n_rows, n_cols)

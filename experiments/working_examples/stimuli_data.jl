@@ -116,22 +116,22 @@ function plot_erp_subject_grid(
             (; xlabel = "subj $subj")
 
         plot_topoplot!(gl_est[row, 1], df.estimate;
-            labels = df.label,
+            labels = df.labels,
             visual = (; colormap = Reverse(:RdYlBu)),
             axis = est_axis,
             colorbar = (; label = "", position = :bottom, vertical = false, width = 125)
         )
 
         plot_topoplot!(gl_se[row, 1], df.se;
-            labels = df.label,
+            labels = df.labels,
             visual = (; colormap = :viridis),
             axis = se_axis,
             colorbar = (; label = "", position = :bottom, vertical = false, width = 125)
         )
 
         plot_bivariate_corner!(gl_biv[row, 1], df.estimate, df.se;
-            labels = df.label,
-            ylabel = "SE"
+            labels = df.labels,
+            uncert_label = "SE"
         )
     end
 

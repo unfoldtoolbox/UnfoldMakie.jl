@@ -2,6 +2,7 @@ using Base: padding
 using UnfoldSim
 using LinearAlgebra
 using ColorSchemes
+using Animations
 include("../usable/bivariate_maps.jl")
 include("../usable/overrider.jl")
 include("../usable/overrider_bivariate.jl")
@@ -15,7 +16,7 @@ function plot_adjacent!(
     vec_uncert;
     positions=nothing,
     labels=nothing,
-    enable_contour=false,
+    enable_contour=true,
     uncert_label="Uncertainty",
     BG=:white,
 )
@@ -84,6 +85,7 @@ function plot_adjacent(vec_estimate, vec_uncert; positions=nothing, labels=nothi
     return f
 end
 
+test = load_erp_subject("MMN"; subject=20, timepoint=96, condition=1)
 plot_adjacent(test.estimate, test.se; labels = test.labels, uncert_label = "SE")
 
 function plot_bivariate_corner!(
@@ -95,7 +97,10 @@ function plot_bivariate_corner!(
     uncert_label = "SD",
     order_vertical = :low_to_high
 )
-    gl = f isa GridLayout ? f : f isa Figure ? (f[1, 1] = GridLayout()) : (f[] = GridLayout())
+    gl = f isa Figure ? f.layout :
+         f isa GridLayout ? f :
+         (f[] = GridLayout())
+
     n_cb = 5
     colorbox = bivariate_colormatrix_corners(
         n_cb, n_cb;
@@ -125,12 +130,14 @@ function plot_bivariate_corner!(
         gl[1, 2],
         aspect = DataAspect(),
         xlabel = "Voltage [µV]", ylabel = uncert_label, title = "",
-        xlabelsize = 24, ylabelsize = 24, titlesize = 24, titlealign = :center,
-        xticklabelsize = 18,
-        yticklabelsize = 18,
+        xlabelsize = 16, ylabelsize = 16,
+        xticklabelsize = 12,
+        yticklabelsize = 12,
+        ylabelpadding = 0,
         xticks = (collect(1:n_cb), xticks_label),
         yticks = (collect(1:n_cb), yticks_label),
-        width = 140, height = 140)
+        width = 130, height = 130
+    )
 
     heatmap!(ax, (colorbox'); colormap = vec(colorbox))
     hidedecorations!(ax, label = false, ticks = false, ticklabels = false)
@@ -140,10 +147,10 @@ function plot_bivariate_corner!(
         gl[1, 1],
         aspect = DataAspect(),
         xlabel = "",
-        xlabelsize = 24,
-        width = 250,
-        height = 250,
+        width = 300, height = 300,
+        limits = (-1.25, 1.25, -1.25, 1.2),
     )
+
     set_topoplot_bivariate!(;
         colorbox     = colorbox,
         norm_method  = :robust_minmax,
@@ -162,10 +169,11 @@ function plot_bivariate_corner!(
         topo_args...,
         contours = true,
     )
-    hidedecorations!(topo_axis, label = false)
-    hidespines!(topo_axis)
+    hidedecorations!(topo_axis, label = false); hidespines!(topo_axis)
+    colgap!(gl, 5)
     return gl
 end
+
 
 function plot_bivariate_corner(vec_estimate, vec_uncert; positions=nothing, labels=nothing, kwargs...)
     f = Figure()
@@ -175,6 +183,12 @@ end
 
 plot_bivariate_corner(test.estimate, test.se; labels = test.labels, uncert_label = "SE")
 
+begin
+    f = Figure(size = (500, 300), #figure_padding = (0, 0, -20, 10)
+    )
+    plot_bivariate_corner!(f, test.estimate, test.se; labels = test.labels, uncert_label = "SE")
+    f
+end
 
 function plot_bivariate_range!(
     f::Union{GridPosition, GridLayout, Figure},
@@ -185,9 +199,11 @@ function plot_bivariate_range!(
     n_cb=5,
     uncert_label="Uncertainty",
     order_vertical = :low_to_high,
-    enable_contour=false,
+    enable_contour=true,
 )
-    gl = f isa GridLayout ? f : f isa Figure ? (f[1, 1] = GridLayout()) : (f[] = GridLayout())
+    gl = f isa Figure ? f.layout :
+         f isa GridLayout ? f :
+         (f[] = GridLayout())
 
     colorbox = bivariate_colormatrix_range(
         n_rows = n_cb,
@@ -219,9 +235,8 @@ function plot_bivariate_range!(
         gl[1, 1],
         aspect = DataAspect(),
         xlabel = "",
-        xlabelsize = 24,
-        width = 250,
-        height = 250,
+        width = 300, height = 300,
+        limits = (-1.25, 1.25, -1.25, 1.2),
     )
 
     set_topoplot_bivariate!(;
@@ -230,6 +245,7 @@ function plot_bivariate_range!(
         norm_qrange = (0.005, 0.995),
         norm_flip_v = false,
         sample_mode = :nearest,
+        contours = (; lab_bins = (16,16,16), linestyle = :dot)
     )
 
     TopoPlots.eeg_topoplot!(
@@ -247,21 +263,19 @@ function plot_bivariate_range!(
         xlabel = "Voltage [µV]",
         ylabel = uncert_label,
         title = "",
-        xlabelsize = 24,
-        ylabelsize = 24,
-        titlesize = 24,
-        xticklabelsize = 18,
-        yticklabelsize = 18,
+        xlabelsize = 16, ylabelsize = 16,
+        xticklabelsize = 12,
+        yticklabelsize = 12,
+        ylabelpadding = 0,
         xticks = (collect(1:n_cb), xticks_label),
         yticks = (collect(1:n_cb), yticks_label),
-        width = 140,
-        height = 140,
+        width = 130, height = 130
     )
 
     heatmap!(ax, colorbox'; colormap = vec(colorbox))
     hidedecorations!(ax, label=false, ticks=false, ticklabels=false)
     hidespines!(ax)
-
+    colgap!(gl, 5)
     return gl
 end
 
@@ -270,7 +284,6 @@ function plot_bivariate_range(vec_estimate, vec_uncert; positions=nothing, label
     plot_bivariate_range!(f, vec_estimate, vec_uncert; positions=positions, labels=labels, kwargs...)
     return f
 end
-
 
 plot_bivariate_range(test.estimate .- 4.55, test.se; labels = test.labels, uncert_label = "SE")
 
@@ -287,8 +300,9 @@ function plot_vsp!(
     reverse_vsp_rows = true,
     colormap_vsp = :RdYlBu,
 )
-    gl = f isa GridLayout ? f : f isa Figure ? (f[1, 1] = GridLayout()) : (f[] = GridLayout())
-
+    gl = f isa Figure ? f.layout :
+         f isa GridLayout ? f :
+         (f[] = GridLayout())
     vec_estimate_c = UnfoldMakie._topo_range_from_values(vec_estimate)
 
     uncert_labels = string.(round.(collect(range(extrema(vec_uncert)...; length = 5)), digits = 2))
@@ -299,24 +313,18 @@ function plot_vsp!(
             round(maximum(vec_estimate_c), digits = 2),
         ]
     ))
-
+     
     vsp_axis = PolarAxis(
-        gl[1:4, 3:4];
-        width = 250,
-        height = 220,
+        gl[2:3, 3:4];
+        width = 200, height = 170,
         thetalimits = (-π / 5, π / 5),
-        theta_0 = π / 2,
-        thetaticklabelsize = 20,
-        rticklabelsize = 20,
+        theta_0 = π / 2, thetaticklabelsize = 12, rticklabelsize = 12,
+        halign = :right,# clipcolor = :green
     )
-
+    
     vsup_cmap = vsup_colormatrix(;
-        cmap = cgrad(colormap_vsp; rev = true),
-        n_uncertainty = 4,
-        max_desat = 0.8,
-        pow_desat = 1.0,
-        max_light = 0.7,
-        pow_light = 1,
+        cmap = cgrad(colormap_vsp; rev = true), n_uncertainty = 4,
+        max_desat = 0.8, pow_desat = 1.0, max_light = 0.7, pow_light = 1,
     )
 
     vsp_rows = reverse([(vsup_cmap'[:, i]) for i = 1:size(vsup_cmap', 2)])
@@ -330,34 +338,15 @@ function plot_vsp!(
     vsp_polar_legend!(
         vsp_axis;
         vsp_rows = vsp_rows,
-        value_labels = value_labels,
-        uncert_labels = uncert_labels,
-        thetalims = (-π / 5, π / 5),
-        theta0 = π / 2,
+        value_labels = value_labels, uncert_labels = uncert_labels,
+        thetalims = (-π / 5, π / 5), theta0 = π / 2,
     )
-
-    ax_dummy = Axis(
-        gl[1:4, 3:4];
-        xlabel = "Voltage [µV]",
-        ylabel = uncert_label,
-        yaxisposition = :right,
-        xaxisposition = :bottom,
-        xlabelpadding = 2,
-        xlabelsize = 24,
-        ylabelsize = 24,
-        width = 230,
-        height = 210,
-    )
-    hide_axis!(ax_dummy)
-
     topo_axis = Axis(
-        gl[1:4, 1:2];
-        aspect = DataAspect(),
-        xlabel = "",
-        xlabelsize = 24,
+        gl[1:4, 1:2]; aspect = DataAspect(),
+        xlabel = "", width = 300, height = 300,
+        limits = (-1.25, 1.25, -1.25, 1.2),
     )
-    hidedecorations!(topo_axis, label = false)
-    hidespines!(topo_axis)
+    hidedecorations!(topo_axis, label = false); hidespines!(topo_axis)
 
     set_topoplot_bivariate!(;
         colorbox    = vsp_rows_to_colorbox(vsp_rows),
@@ -379,7 +368,20 @@ function plot_vsp!(
         contours = enable_contour,
     )
 
+
+    lx = Label(gl[2:3, 3:4], "Voltage [µV]", tellwidth = false, padding = (100, 0, 160, 0))
+    ly = Label(gl[2:3, 3:4], uncert_label, tellheight = false, rotation = pi/3, padding = (0, -210, -80, 0))
+    translate!(lx.blockscene, 0, 0, 10_000)
+    translate!(ly.blockscene, 0, 0, 10_000)
+    translate!(topo_axis.blockscene, 0, 0, 10_000)
+    colgap!(gl, -100)
     return gl
+end
+
+begin
+    f = Figure(size = (500, 300), figure_padding = (16, -10, 16, 10))
+    plot_vsp!(f, test.estimate, test.se; labels = test.labels, uncert_label = "|t|-value")
+    f
 end
 
 function plot_vsp(vec_estimate, vec_uncert; positions=nothing, labels=nothing, kwargs...)
@@ -398,7 +400,7 @@ function plot_uncert_markers!(
     positions = nothing,
     labels = nothing,
     uncert_label = "Uncertainty",
-    enable_contour = false,
+    enable_contour = true,
 )
     gl = f isa GridLayout ? f : f isa Figure ? (f[1, 1] = GridLayout()) : (f[] = GridLayout())
 
@@ -421,14 +423,17 @@ function plot_uncert_markers!(
                 markersize = uncert_scaled,
                 color = :transparent,
                 strokecolor = :black,
-                strokewidth = uncert_scaled .* 0.25,
-            )
+                strokewidth = uncert_scaled .* 0.25,   
+            ),
+        ),
+        topo_axis = (; #backgroundcolor = :pink, 
+        limits = (-1.25, 1.25, -1.3, 1.15),
         ),
         visual = (;
             colormap = cgrad(:RdYlBu, 10; categorical=true, rev=true),
             contours = enable_contour,
         ),
-        colorbar = (; labelsize = 24, ticklabelsize = 18),
+        colorbar = (; labelsize = 24, ticklabelsize = 18, height = 220),
     )
 
     markersizes = round.(Int, range(extrema(uncert_scaled)...; length = 5))
@@ -456,9 +461,14 @@ function plot_uncert_markers!(
         titlesize = 20,
         orientation = :horizontal,
         titleposition = :left,
-        margin = (90, 0, 0, 0),
+        colgap = 5,
+        margin = (90, 10, -8, 0),
     )
-
+    rowsize!(gl, 1, Relative(0.35))
+    rowsize!(gl, 2, Relative(0.3))
+    rowsize!(gl, 3, Relative(0.3))
+    rowsize!(gl, 4, Auto(0.15))
+    rowgap!(gl, -10)
     return gl
 end
 
@@ -468,8 +478,13 @@ function plot_uncert_markers(vec_estimate, vec_uncert; positions=nothing, labels
     return f
 end
 
-plot_uncert_markers(test.estimate .- 4.55, test.t; labels = test.labels, uncert_label = "|t|-value")
+plot_uncert_markers(test.estimate .- 4.55, test.abs_t; labels = test.labels, uncert_label = "|t|-value")
 
+begin
+    f = Figure(size = (500, 300))
+    plot_uncert_markers!(f, test.estimate .- 4.55, test.abs_t; labels = test.labels, uncert_label = "|t|-value")
+    f
+end
 
 function plot_triple_CI!(
     f::Union{GridPosition,GridLayout,Figure},
@@ -523,7 +538,7 @@ function plot_triple_CI!(
         pA,
         vec_estimate;
         topo_args...,
-        axis = (; backgroundcolor=BG, ylabelsize=24, ylabel="", xlabel=""),
+        axis = (; backgroundcolor=BG, ylabelsize=16, ylabel="", xlabel=""),
         topo_axis = (; backgroundcolor=BG),
         layout = (; use_colorbar=false),
         visual = visual,
@@ -533,7 +548,7 @@ function plot_triple_CI!(
         pB,
         vec_estimate .- vec_uncert;
         topo_args...,
-        axis = (; backgroundcolor=BG, xlabelsize=24, xlabel="Mean - $uncert_label"),
+        axis = (; backgroundcolor=BG, xlabelsize=16, xlabel="Mean - $uncert_label"),
         topo_axis = (; backgroundcolor=BG),
         visual = visual,
         layout = (; use_colorbar=false),
@@ -544,30 +559,34 @@ function plot_triple_CI!(
         vec_estimate .+ vec_uncert;
         topo_args...,
         topo_axis = (; backgroundcolor=BG),
-        axis = (; backgroundcolor=BG, xlabelsize=24, xlabel="Mean + $uncert_label"),
+        axis = (; backgroundcolor=BG, xlabelsize=16, xlabel="Mean + $uncert_label"),
         visual = visual,
         layout = (; use_colorbar=false),
     )
 
     Colorbar(
         pcb,
-        colormap = visual.colormap,
-        limits = visual.limits,
-        ticks = ticks5,
-        label = "Voltage [µV]",
+        colormap = visual.colormap, limits = visual.limits,
+        ticks = ticks5, label = "Voltage [µV]",
         labelsize = 24,
-        ticklabelsize = 18,
+        ticklabelsize = 12,
         vertical = true,
-        height = 300,
+        height = 240,
         flipaxis = true,
         labelrotation = -π/2,
     )
 
-    rowgap!(pTopos, -90)
+    rowgap!(pTopos, -50)
     colgap!(pTopos, -90)
     rowgap!(gl, 0)
 
     return gl
+end
+
+begin
+    f = Figure(size = (500, 300), figure_padding = (16, 16, 16, 10))
+    plot_triple_CI!(f, test.estimate, test.se; labels = test.labels, uncert_label = "SE")
+    f
 end
 
 function plot_triple_CI(vec_estimate, vec_uncert; positions=nothing, labels=nothing, kwargs...)
@@ -613,7 +632,7 @@ function plot_HOP(
         obs;
         topo_args...,
         topo_axis = (; backgroundcolor=BG),
-        visual = (; contours=false, colormap=cgrad(:RdYlBu, 10; categorical=true), colorrange=cr),
+        visual = (; contours=true, colormap=cgrad(:RdYlBu, 10; categorical=true, rev = true), colorrange=cr),
         colorbar = (; labelsize=24, ticklabelsize=18, height=300),
         axis = (; backgroundcolor=BG, xlabel="$uncert_label", xlabelsize=24, ylabelsize=24),
     )
@@ -621,65 +640,27 @@ function plot_HOP(
     return f, obs, boot_means
 end
 
-f, obs, boot_means = plot_HOP(test.estimate .- 4.55, test.se; labels = test.labels, uncert_label = "SE")
+f, obs, boot_means = plot_HOP(test.estimate, test.se; labels = test.labels, uncert_label = "SE")
 
+function ease_between(old, new, update_ratio; easing_function = sineio())
+    anim = Animation(0, old, 1, new; defaulteasing = easing_function)
+    return at(anim, update_ratio)
+end
 
-record(f, "anim.mp4"; framerate = 12) do io
-    recordframe!(io)  # first frame (original)
-    for i_boot = 1:(n_boot-1)          # number of bootstrap targets
-        new_v = boot_means[:, i_boot+1]
-        old_v = copy(obs[])
-        for u in range(0, 1, length = 10)   # easing steps
-            obs[] = ease_between(old_v, new_v, u)
-            recordframe!(io)
+function create_HOP_gif(f, obs, boot_means; filepath = "anim.gif")
+    n_boot = 10
+    record(f, filepath; framerate = 12) do io
+        recordframe!(io)  # first frame (original)
+        for i_boot = 1:(n_boot-1)          # number of bootstrap targets
+            new_v = boot_means[:, i_boot+1]
+            old_v = copy(obs[])
+            for u in range(0, 1, length = 10)   # easing steps
+                obs[] = ease_between(old_v, new_v, u)
+                recordframe!(io)
+            end
         end
     end
 end
 
-combined_uncerts_cat(test.estimate .- 4.55, test.se; labels = test.labels, uncert_label = "SE")
-combined_uncerts_cat(test.estimate .- 4.55, test.abs_t; labels = test.labels, tv = true, uncert_label = "|t|-value")
-function combined_uncerts_cat(
-    vec_estimate,
-    vec_uncert;
-    positions=nothing,
-    labels=nothing,
-    enable_contour=false,
-    uncert_label="Standard deviation",
-    tv=false,
-)
-    BG = RGBf(0.98, 0.98, 0.98)
-    f = Figure(backgroundcolor=BG, size=(1200, 1100), figure_padding=(20, 20, 20, 50))
+create_HOP_gif(f, obs, boot_means)
 
-    ga = f[1, 1] = GridLayout(); gb = f[1, 2] = GridLayout()
-    gc = f[2, 1] = GridLayout(); gd = f[2, 2] = GridLayout()
-    ge = f[3, 1] = GridLayout(); gf = f[3, 2] = GridLayout()
-
-    common = (; positions, labels, uncert_label)
-    range_order = tv ? :high_to_low : :low_to_high
-    vsp_reverse = tv ? true : false
-
-    plot_adjacent!(ga, vec_estimate, vec_uncert; common..., enable_contour, BG)
-    plot_bivariate_corner!(gb, vec_estimate, vec_uncert; common...)
-    plot_bivariate_range!(gc, vec_estimate, vec_uncert; common..., order_vertical=range_order, enable_contour)
-    plot_uncert_markers!(ge, vec_estimate, vec_uncert; common..., enable_contour)
-
-    tv ?
-        plot_vsp!(gd, vec_estimate, vec_uncert; common..., enable_contour, reverse_vsp_rows=vsp_reverse) :
-        plot_triple_CI!(gf, vec_estimate, vec_uncert; common..., BG)
-
-    labs, lays = tv ?
-        (["A. Adjacent", "B. Bivariate corners", "C. Bivariate range", "D. Value-suppressing palette", "E. Marker size change"],
-         [ga, gb, gc, gd, ge]) :
-        (["A. Adjacent", "B. Bivariate corners", "C. Bivariate range", "D. Marker size change", "E. Confidence intervals"],
-         [ga, gb, gc, ge, gf])
-
-    for (lab, lay) in zip(labs, lays)
-        Label(
-            lay[1, 1, TopLeft()], lab;
-            fontsize=26, font=:bold, padding=(20, -15, 20, 0),
-            halign=:left, tellwidth=false, tellheight=false,
-        )
-    end
-
-    f
-end

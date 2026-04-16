@@ -415,7 +415,7 @@ function draw_bivariate_path!(p, xg, yg, geometry, padded_pos_data_bb, mask)
     if !isnothing(_attrs) && !(p.interpolation[] isa NullInterpolator)
         copt = bivar_contours_options(p)  # reads bivariate.contours = (lab_bins=..., color=..., ...)
         draw_bivariate_contours!(p, img, x_end, y_end, copt.nL, copt.nA, copt.nB,
-            copt.color, copt.linealpha, copt.linewidth)
+            copt.color, copt.linealpha, copt.linewidth, copt.linestyle)
     end
 
     return (UVnorm, opts)
