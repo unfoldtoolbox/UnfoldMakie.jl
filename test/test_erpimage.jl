@@ -218,3 +218,13 @@ end
 @testset "ERP image: yticklabelsvisible" begin
     plot_erpimage(dat; axis = (; yticklabelsvisible = false))
 end
+
+@testset "ERP image with 3D input" begin
+    err1 = nothing
+    try
+        plot_erpimage(rand(15, 20, 3))
+    catch err1
+    end
+    @test err1 isa ErrorException
+    @test occursin("3D array", err1.msg)
+end
