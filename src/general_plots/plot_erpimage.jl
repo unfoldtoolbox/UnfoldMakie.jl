@@ -49,10 +49,10 @@ $(_docstring(:erpimage))
 function plot_erpimage(data::AbstractArray{<:Real,3}; kwargs...)
     error(
         "plot_erpimage received 3D array of size $(size(data)) " *
-        "(channels, time, trials). " *
+        "likely (channels, time, trials). " *
         "Select or fix a single channel first. " *
-        "Format should follow `plot_erpimage(data[x, :, :])`, " *
-        " where x is a constant."
+        "E.g. via  `plot_erpimage(data[x, :, :])`, " *
+        " where x is a integer."
     )
 end
 
