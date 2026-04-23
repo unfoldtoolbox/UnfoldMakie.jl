@@ -226,5 +226,5 @@ end
     catch err1
     end
     @test err1 isa ErrorException
-    @test occursin("3D array", err1.msg)
+    @test occursin("3-dimensional array", err1.msg)
 end
