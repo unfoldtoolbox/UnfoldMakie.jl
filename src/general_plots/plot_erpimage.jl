@@ -44,7 +44,6 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
-# Catching 3d input + helpful error for user
 function plot_erpimage(data::AbstractArray{<:Real,3}; kwargs...)
     error(
         "plot_erpimage received 3-dimensional array of size $(size(data)).\n" *
