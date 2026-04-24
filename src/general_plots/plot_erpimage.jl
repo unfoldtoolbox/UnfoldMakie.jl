@@ -44,6 +44,14 @@ $(_docstring(:erpimage))
 
 **Return Value:** `Figure` displaying the ERP image. 
 """
+function plot_erpimage(data::AbstractArray{<:Real,3}; kwargs...)
+    error(
+        "plot_erpimage received 3-dimensional array of size $(size(data)).\n" *
+        "Select a single channel first.\n" *
+        "E.g. via `plot_erpimage(data[x, :, :])`, where x is an integer."
+    )
+end
+
 plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
 
 plot_erpimage(
