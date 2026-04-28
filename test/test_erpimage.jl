@@ -228,3 +228,13 @@ end
     @test err1 isa ErrorException
     @test occursin("3-dimensional array", err1.msg)
 end
+
+@testset "ERP image with missing input" begin
+    err1 = nothing
+    try
+        plot_erpimage(Matrix{Union{Missing, Float64}}(missing, 7, 4))
+    catch err1
+    end
+    @test err1 isa ErrorException
+    @test occursin("missing", err1.msg)
+end

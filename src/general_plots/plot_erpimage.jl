@@ -52,7 +52,15 @@ function plot_erpimage(data::AbstractArray{<:Real,3}; kwargs...)
     )
 end
 
+function plot_erpimage(data::AbstractMatrix{>:Missing}; kwargs...)
+    error(
+        "plot_erpimage received matrix containing missing values.\n" *
+        "Remove or replace missing values first."
+    )
+end
+
 plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
+
 
 plot_erpimage(
     times::AbstractVector,
