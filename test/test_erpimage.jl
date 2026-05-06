@@ -247,16 +247,6 @@ end
     end
     @test err1 isa ErrorException
     @test occursin("Inf", err1.msg)
-end
-
-@testset "ERP image with Inf input" begin
-    err1 = nothing
-    try
-        plot_erpimage(fill(Inf, 7, 4))
-    catch err1
-    end
-    @test err1 isa ErrorException
-    @test occursin("Inf", err1.msg)
     err2 = nothing
     try
         plot_erpimage(fill(-Inf, 4, 7))
@@ -264,5 +254,6 @@ end
     end
     @test err2 isa ErrorException
     @test occursin("Inf", err2.msg)
+    
     @test_nowarn plot_erpimage(fill(NaN, 7, 4))
 end
