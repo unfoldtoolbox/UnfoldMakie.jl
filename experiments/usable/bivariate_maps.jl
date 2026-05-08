@@ -186,3 +186,9 @@ function nice_ticks(x; n=5, digits=2, upper_lim = 5)
     ]
     return (t2, labels)
 end
+
+function hide_axis!(ax)
+    hidedecorations!(ax, label = false)
+    hidespines!(ax)
+    return ax
+end

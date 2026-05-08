@@ -139,7 +139,7 @@ function plot_erp_subject_grid(
 
     return f
 end
-
+#= 
 plot_erp_subject_grid(
     [20, 25, 26]; timepoint=96, task="MMN",
     condition=3, figure_size=(850, 760),
@@ -154,3 +154,4 @@ plot_erp_subject_grid(
     [26, 5, 12]; timepoint=105, task="N170",
     condition=2, figure_size=(850, 760),
 )
+ =#

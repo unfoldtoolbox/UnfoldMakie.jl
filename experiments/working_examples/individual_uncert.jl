@@ -95,15 +95,10 @@ function plot_bivariate_corner!(
     positions = nothing,
     labels = nothing,
     uncert_label = "SD",
-    order_vertical = :low_to_high
-)
-    gl = f isa Figure ? f.layout :
-         f isa GridLayout ? f :
-         (f[] = GridLayout())
-
-    n_cb = 5
+    order_vertical = :low_to_high,
+    wireframe = false,
     colorbox = bivariate_colormatrix_corners(
-        n_cb, n_cb;
+        5, 5;
         top_left = colorant"#564f9d",
         top_right = colorant"#ec7429",
         bot_right = colorant"#e50a7d",
@@ -111,12 +106,17 @@ function plot_bivariate_corner!(
         mid = colorant"#FFFFBF",          # neutral center for the horizontal diverging
         order_vertical = order_vertical,     # top→bottom gets “stronger”
     )
+)
+    gl = f isa Figure ? f.layout :
+         f isa GridLayout ? f :
+         (f[] = GridLayout())
+    n_rows, n_cols = size(colorbox)
+    
+    xticks = round.(collect(range(UnfoldMakie._topo_range_from_values(vec_estimate)...; length = n_cols)), digits = 2)
+    yticks = (round.(collect(range(extrema(vec_uncert)...; length = n_rows)), digits = 2))
 
-    xticks = round.(collect(range(UnfoldMakie._topo_range_from_values(vec_estimate)...; length = n_cb)), digits = 2)
-    yticks = (round.(collect(range(extrema(vec_uncert)...; length = n_cb)), digits = 2))
-
-    label_inds_x = [1, 3, n_cb]
-    label_inds_y = [1, 3, n_cb]
+    label_inds_x = [1, 3, n_cols]
+    label_inds_y = [1, 3, n_rows]
     xticks_label = [
         i in label_inds_x ? string(vec_estimate) : "" for
         (i, vec_estimate) in enumerate(xticks)
@@ -134,12 +134,29 @@ function plot_bivariate_corner!(
         xticklabelsize = 12,
         yticklabelsize = 12,
         ylabelpadding = 0,
-        xticks = (collect(1:n_cb), xticks_label),
-        yticks = (collect(1:n_cb), yticks_label),
+        xticks = (collect(1:n_cols), xticks_label),
+        yticks = (collect(1:n_rows), yticks_label),
         width = 130, height = 130
     )
 
     heatmap!(ax, (colorbox'); colormap = vec(colorbox))
+    heatmap!(ax, (colorbox'); colormap = vec(colorbox))
+
+    if wireframe # wireframe / cell borders
+        for x in 0.5:1:(n_cols + 0.5)
+            lines!(ax, [x, x], [0.5, n_rows + 0.5];
+                color = (:black, 1),
+                linewidth = 0.8,
+            )
+        end
+
+        for y in 0.5:1:(n_rows + 0.5)
+            lines!(ax, [0.5, n_cols + 0.5], [y, y];
+                color = (:black, 1),
+                linewidth = 0.8,
+            )
+        end
+    end
     hidedecorations!(ax, label = false, ticks = false, ticklabels = false)
     hidespines!(ax)
 
@@ -189,6 +206,17 @@ begin
     plot_bivariate_corner!(f, test.estimate, test.se; labels = test.labels, uncert_label = "SE")
     f
 end
+plot_bivariate_corner(test.estimate, test.se; labels = test.labels, uncert_label = "SE",
+     colorbox = bivariate_colormatrix_corners(
+        5, 5;
+        top_left  = colorant"#3B4CC0",
+        top_right = colorant"#E6AB02",
+        bot_left  = colorant"#1A9850",
+        bot_right = colorant"#762A83",
+        mid       = colorant"#F7F7F7",
+                order_vertical = :low_to_high,
+            )
+)
 
 function plot_bivariate_range!(
     f::Union{GridPosition, GridLayout, Figure},
@@ -199,20 +227,22 @@ function plot_bivariate_range!(
     n_cb=5,
     uncert_label="Uncertainty",
     order_vertical = :low_to_high,
+    wireframe = false,
     enable_contour=true,
-)
-    gl = f isa Figure ? f.layout :
-         f isa GridLayout ? f :
-         (f[] = GridLayout())
-
     colorbox = bivariate_colormatrix_range(
-        n_rows = n_cb,
-        n_cols = n_cb,
+        n_rows = 5,
+        n_cols = 5,
         neg = colorant"#2166ac",
         mid = colorant"#FFFFBF",
         pos = colorant"#f46d43",
         order_vertical = order_vertical,
     )
+)
+    gl = f isa Figure ? f.layout :
+         f isa GridLayout ? f :
+         (f[] = GridLayout())
+
+   
 
     xticks = round.(
         collect(range(UnfoldMakie._topo_range_from_values(vec_estimate)...; length=n_cb)),
@@ -238,6 +268,21 @@ function plot_bivariate_range!(
         width = 300, height = 300,
         limits = (-1.25, 1.25, -1.25, 1.2),
     )
+    if wireframe == true # wireframe / cell borders
+        for x in 0.5:1:(n_cols + 0.5)
+            lines!(ax, [x, x], [0.5, n_rows + 0.5];
+                color = (:black, 1),
+                linewidth = 0.8,
+            )
+        end
+
+        for y in 0.5:1:(n_rows + 0.5)
+            lines!(ax, [0.5, n_cols + 0.5], [y, y];
+                color = (:black, 1),
+                linewidth = 0.8,
+            )
+        end
+    end
 
     set_topoplot_bivariate!(;
         colorbox    = colorbox,
@@ -516,8 +561,7 @@ function plot_triple_CI!(
             vec_estimate .- vec_uncert,
             vec_estimate .+ vec_uncert,
         )
-        p01 = _percentile(0.01, allvals)
-        p99 = _percentile(0.99, allvals)
+        p01, p99 = quantile(allvals, [0.01, 0.99])
         m = max(abs(p01), abs(p99))
         Float32.((-m, m))
     end
@@ -533,7 +577,7 @@ function plot_triple_CI!(
         lab = string.(round.(Float64.(pos); sigdigits=2))
         (pos, lab)
     end
-
+# better to use eeg_topoplot!!!!!
     plot_topoplot!(
         pA,
         vec_estimate;
