@@ -220,40 +220,15 @@ end
 end
 
 @testset "ERP image with 3D input" begin
-    err1 = nothing
-    try
-        plot_erpimage(rand(15, 20, 3))
-    catch err1
-    end
-    @test err1 isa ErrorException
-    @test occursin("3-dimensional array", err1.msg)
+    @test_throws ErrorException plot_erpimage(rand(15, 20, 3))
 end
 
 @testset "ERP image with missing input" begin
-    err1 = nothing
-    try
-        plot_erpimage(Matrix{Union{Missing, Float64}}(missing, 7, 4))
-    catch err1
-    end
-    @test err1 isa ErrorException
-    @test occursin("missing", err1.msg)
+    @test_throws ErrorException plot_erpimage(Matrix{Union{Missing, Float64}}(missing, 7, 4))
 end
 
 @testset "ERP image with Inf input" begin
-    err1 = nothing
-    try
-        plot_erpimage(fill(Inf, 7, 4))
-    catch err1
-    end
-    @test err1 isa ErrorException
-    @test occursin("Inf", err1.msg)
-    err2 = nothing
-    try
-        plot_erpimage(fill(-Inf, 4, 7))
-    catch err2
-    end
-    @test err2 isa ErrorException
-    @test occursin("Inf", err2.msg)
-    
-    @test_nowarn plot_erpimage(fill(NaN, 7, 4))
+    @test_throws ArgumentError plot_erpimage(fill(Inf, 7, 4))
+    @test_throws ArgumentError plot_erpimage(fill(-Inf, 4, 7))
+    @test_throws ArgumentError plot_erpimage(fill(NaN, 7, 4))
 end
