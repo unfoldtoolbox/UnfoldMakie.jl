@@ -62,7 +62,7 @@ end
 function plot_erpimage(data::AbstractMatrix{<:Real}; kwargs...)
     if any(x -> !isfinite(x), data)
         throw(ArgumentError(
-            "plot_erpimage received data containing NaN, Inf, or -Inf values. " *
+            "plot_erpimage received data containing NaN, Inf, or -Inf values.\n" *
             "Remove or replace non-finite values before plotting."
         ))
     end
