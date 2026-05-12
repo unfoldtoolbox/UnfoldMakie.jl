@@ -64,6 +64,5 @@ end
 #Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(uf)})
 
 @testset "dm: no deconvolution" begin
-    uf = UnfoldMakie.example_data("UnfoldLinearModel")
     plot_designmatrix(designmatrix(uf)[1])
 end
