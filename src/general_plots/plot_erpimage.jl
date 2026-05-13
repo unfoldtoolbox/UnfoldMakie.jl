@@ -52,7 +52,25 @@ function plot_erpimage(data::AbstractArray{<:Real,3}; kwargs...)
     )
 end
 
+function plot_erpimage(data::AbstractMatrix{>:Missing}; kwargs...)
+    error(
+        "plot_erpimage received matrix containing missing values.\n" *
+        "Remove or replace missing values first."
+    )
+end
+
+function plot_erpimage(data::AbstractMatrix{<:Real}; kwargs...)
+    if any(x -> !isfinite(x), data)
+        throw(ArgumentError(
+            "plot_erpimage received data containing NaN, Inf, or -Inf values.\n" *
+            "Remove or replace non-finite values before plotting."
+        ))
+    end
+    return plot_erpimage!(Figure(), data; kwargs...)
+end
+
 plot_erpimage(data; kwargs...) = plot_erpimage!(Figure(), data; kwargs...)
+
 
 plot_erpimage(
     times::AbstractVector,
