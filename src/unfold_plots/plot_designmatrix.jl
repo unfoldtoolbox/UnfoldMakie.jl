@@ -66,7 +66,7 @@ function plot_designmatrix!(
     xlabels_raw = replace.(Unfold.get_coefnames(data), r"\s*:" => ":")
 
     xlabel_terms_n = length(split(xlabels_raw[1], ": "))
-    if xlabel_terms_n > 2
+    if xlabel_terms_n > 1
         xlabels = map(x -> join(split(x, ": ")[end]), xlabels_raw)
         #xlabels = parse.(Float64, xlabels)
         labels_top1 = Unfold.extract_coef_info(Unfold.get_coefnames(data), 2)
