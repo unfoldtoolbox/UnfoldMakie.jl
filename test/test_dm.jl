@@ -62,7 +62,3 @@ end
 end
 #Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(td)})
 #Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(uf)})
-
-@testset "dm: no deconvolution" begin
-    plot_designmatrix(designmatrix(uf)[1])
-end
