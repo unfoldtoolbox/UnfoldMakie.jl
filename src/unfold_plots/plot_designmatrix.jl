@@ -57,7 +57,11 @@ function plot_designmatrix!(
             @warn "Sorting does not make sense for time-expanded designmatrices. sort_data has been set to `false`"
             sort_data = false
         end
-        designmat = Matrix(designmat[end÷2-2000:end÷2+2000, :]) # needs a size(designmat) of at least 4000 x Any
+        if size(designmat, 1) > 4000
+            designmat = Matrix(designmat[end÷2-2000:end÷2+2000, :])
+        else
+            designmat = Matrix(designmat)
+        end
     end
 
     if sort_data
