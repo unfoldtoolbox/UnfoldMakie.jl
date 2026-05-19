@@ -62,3 +62,12 @@ end
 end
 #Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(td)})
 #Unfold.SimpleTraits.istrait(Unfold.ContinuousTimeTrait{typeof(uf)})
+
+@testset "dm: small designmatrix dim" begin
+    data, evts = UnfoldSim.predef_eeg(sfreq = 5, n_repeats = 1)
+    basisfunction = firbasis(τ = (-1, 2), sfreq = 5, scale_duration = true)
+    f = @formula 0 ~ 1 + condition
+    bf_vec = [Any => (f, basisfunction)]
+    m = fit(UnfoldModel, bf_vec, evts, data)
+    plot_designmatrix(designmatrix(m))
+end
