@@ -113,6 +113,9 @@ export plot_channelimage
 export plot_channelimage!
 
 export to_positions
+export get_montage
+export standard_positions
+export list_montages
 export eeg_array_to_dataframe
 export eeg_topoplot_series
 export nonnumeric # reexport from AoG

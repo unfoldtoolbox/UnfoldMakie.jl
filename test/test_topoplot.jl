@@ -206,3 +206,17 @@ end
 @testset "topoplot: categorical color" begin
     plot_topoplot(dat[:, tp, 1]; positions, visual = (; colormap = cgrad(:managua, 10; categorical = true, rev = true)))
 end
+
+@testset "montage: get_montage default" begin
+    m = UnfoldMakie.get_montage()
+    @test length(m.labels) == length(m.positions)
+    i = findfirst(==("Cz"), m.labels)
+    @test isapprox(m.positions[i][1], 0; atol = 1e-3)
+    @test isapprox(m.positions[i][2], 0; atol = 1e-3)
+end
+
+@testset "montage: standard_positions" begin
+    pos = UnfoldMakie.standard_positions(["Cz", "Fpz", "Oz"])
+    @test length(pos) == 3
+    @test_throws ErrorException UnfoldMakie.standard_positions(["NotARealElectrode"])
+end
