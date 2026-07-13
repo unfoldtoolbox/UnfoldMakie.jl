@@ -59,3 +59,7 @@ end
 @testset "Complex plots" begin
     include("test_complexplots.jl")
 end
+
+@testset "Montage" begin
+    include("test_montage.jl")
+end
