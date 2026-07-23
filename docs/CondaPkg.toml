@@ -1,4 +1,5 @@
 channels = ["conda-forge"]
 
 [deps]
-python = ">=3.11,<3.14"
+python = "3.12.*"
+matplotlib = "3.8.*"
