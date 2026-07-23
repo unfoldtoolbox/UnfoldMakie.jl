@@ -1,11 +1,8 @@
 using UnfoldMakie
 using Documenter
-using DocStringExtensions
 
 # preload once
-
 using CairoMakie
-using AlgebraOfGraphics
 using Unfold
 using DataFrames
 using DataFramesMeta
