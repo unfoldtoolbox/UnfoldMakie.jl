@@ -6,6 +6,14 @@ function get_label_pos(label)
 end
 
 
+"""
+    channel_to_label(channel)
+
+Return the electrode label associated with `channel` by indexing
+`label_in_channel_order`.
+
+**Return Value:** `String`.
+"""
 function channel_to_label(channel)
     return label_in_channel_order[channel]
 end
@@ -73,7 +81,7 @@ const montage_dir = joinpath(@__DIR__, "..", "montages")
 """
     list_montages()
 
-Lists names of montages UnfoldMakie features.
+Lists names of montages supported by UnfoldMakie.
 
 **Return Value:** `Vector{String}`.
 """
@@ -83,9 +91,15 @@ function list_montages()
     return unique([replace(f, r"\.(txt|tsv|sfp|elc|csd)$" => "") for f in files])
 end
 
-# Normalize each electrode onto the unit sphere
-# .txt/.tsv already store unit vectors
-#Note that .sfp/.elc store real mm/cm
+
+# Normalize each electrode position to the unit sphere. 
+# Positions from `.sfp` and `.elc` files are physical coordinates expressed in
+# millimetres or centimetres and therefore require normalization.
+# Although positions read  from `.txt` and `.tsv` files are expected to be 
+# unit vectors, normalization ensures a consistent magnitude despite possible
+# numerical imprecision.
+#
+# **Return Value:** `Matrix{Float64}`.
 function _to_unit_sphere!(pos3d)
     for j in axes(pos3d, 2)
         n = sqrt(sum(abs2, @view pos3d[:,j]))
@@ -95,8 +109,16 @@ function _to_unit_sphere!(pos3d)
     return pos3d
 end
 
-# .txt format/header: Name Theta Phi
-# spherical angles -> unit sphere
+# The file begins with a header, and each subsequent row contains an electrode
+# label followed by its spherical coordinates:
+#
+#     Name Theta Phi
+#
+# The spherical angles are converted to Cartesian coordinates on the unit
+# sphere. The function returns a tuple containing the electrode labels and a
+# `3 × N` matrix of Cartesian coordinates.
+#
+# **Return Value:** `Tuple{Vector{String}, Matrix{Float64}}`.
 function _read_theta_phi(file)
     labels, thetas, phis = String[], Float64[], Float64[]
     for (i, line) in enumerate(eachline(file))
@@ -115,8 +137,15 @@ function _read_theta_phi(file)
     return labels, permutedims(hcat(x, y, z))
 end
 
-# .tsv format: label x y z
-# xyz correspond to coordinates (bypasses theta/phi conversion)
+# Each row contains an electrode label followed by its Cartesian coordinates:
+#
+#     Label X Y Z
+#
+# The Cartesian coordinates are read directly, bypassing spherical-coordinate
+# conversion. The function returns a tuple containing the electrode labels and
+# a `3 × N` matrix of Cartesian coordinates normalized to the unit sphere.
+#
+# **Return Value:** `Tuple{Vector{String}, Matrix{Float64}}`.
 function _read_xyz_tsv(file)
     labels, xs, ys, zs = String[], Float64[], Float64[], Float64[]
     for (i, line) in enumerate(eachline(file))
@@ -132,8 +161,14 @@ function _read_xyz_tsv(file)
     return labels, permutedims(hcat(xs, ys, zs))
 end
 
-# no header
-# format is label x y z
+# The file has no header. Each row contains an electrode label followed by its
+# Cartesian coordinates:
+#
+#     Label X Y Z
+# The function returns a tuple containing the electrode labels and a `3 × N`
+# matrix of Cartesian coordinates normalized to the unit sphere.
+#
+# **Return Value:** `Tuple{Vector{String}, Matrix{Float64}}`.
 function _read_sfp(file)
     labels, xs, ys, zs = String[], Float64[], Float64[], Float64[]
     for line in eachline(file)
@@ -149,8 +184,14 @@ function _read_sfp(file)
     return labels, _to_unit_sphere!(permutedims(hcat(xs, ys, zs)))
 end
 
-# .elc format is head block and then positions block of
-# xyz lines in mm, then a Labels block of names in the same order
+# The `.elc` format consists of a header followed by a `Positions` block of
+# Cartesian coordinates (`X`, `Y`, `Z`) in millimetres and a `Labels` block
+# containing the corresponding electrode labels in the same order.
+#
+# The function returns a tuple containing the electrode labels and a `3 × N`
+# matrix of Cartesian coordinates normalized to the unit sphere.
+#
+# **Return Value:** `Tuple{Vector{String}, Matrix{Float64}}`.
 function _read_elc(file)
     labels, xs, ys, zs = String[], Float64[], Float64[], Float64[]
     mode = :none
@@ -181,10 +222,15 @@ function _read_elc(file)
     return labels, _to_unit_sphere!(permutedims(hcat(xs, ys, zs)))
 end
 
-# .csd is only 1 montage file
-#with format:
-# Label Theta Phi Radius X Y Z "off sphere surface"
-# function uses X Y Z
+# The `EGI_256` montage is currently the only bundled montage stored in `.csd`
+# format. Each row follows the structure:
+#
+#     Label Theta Phi Radius X Y Z "off sphere surface"
+#
+# Only the Cartesian coordinates (`X`, `Y`, `Z`) are used. 
+# **Return Value:** `Tuple{Vector{String}, Matrix{Float64}}`.
+# The tuple contains the electrode labels and a `3 × N` matrix of Cartesian
+# coordinates normalized to the unit sphere.
 function _read_csd(file)
     labels, xs, ys, zs = String[], Float64[], Float64[], Float64[]
     for line in eachline(file)
@@ -204,10 +250,20 @@ end
 """
     get_montage(name::AbstractString = "brainproducts-RNP-BA-128")
 
-Reads a built-in montage and returns its electrode labels together with their
-2D positions, through `to_positions`. Five file formats are supported (everything from PyMNE):
-`.txt` (spherical angles), `.tsv` (cartesian xyz, unit sphere),
-`.sfp` (label + xyz in mm/cm) and `.elc` (ASA electrode file), and `.csd` (label, XYZ).
+Reads a built-in montage and returns its electrode labels and their
+2D positions, through `to_positions`. Five file formats are supported:
+
+- `.txt` — Electrode positions specified using spherical coordinates, typically
+  azimuth and elevation angles.
+- `.tsv` — Tab-separated electrode positions specified as Cartesian coordinates
+  (`X`, `Y`, `Z`) normalized to the unit sphere.
+- `.sfp` — Electrode labels and associated Cartesian coordinates (`X`, `Y`, `Z`),
+  typically expressed in millimetres or centimetres.
+- `.elc` — ASA™ electrode-coordinate format containing electrode labels,
+  Cartesian positions, measurement units, and associated metadata.
+- `.csd` — Electrode labels and associated Cartesian coordinates
+  (`X`, `Y`, `Z`).
+
 Use `list_montages()` to see specific names.
 
 **Return Value:** `NamedTuple` consisting of `labels::Vector{String}` and `positions::Vector{Point2f}`.
