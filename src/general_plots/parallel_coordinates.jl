@@ -1,5 +1,4 @@
 
-
 function parallel_coordinates(
     f::Union{<:Figure,<:GridPosition,<:GridLayout},
     outer_axis,
@@ -173,7 +172,7 @@ end
 function suppress_inner_labels(val)
     lbl = Makie.get_ticklabels(Makie.automatic, val)
     if length(lbl) > 2
-        lbl[2:end-1] .= ""
+        lbl[2:(end-1)] .= ""
     end
     return lbl
 end
