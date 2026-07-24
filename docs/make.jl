@@ -1,9 +1,7 @@
 using UnfoldMakie
 using Documenter
-using DocStringExtensions
 
 # preload once
-
 using CairoMakie
 using Unfold
 using DataFrames
