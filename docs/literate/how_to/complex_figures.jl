@@ -25,6 +25,8 @@ topo_array, _ = TopoPlots.example_data()
 toposeries_data =
     UnfoldMakie.eeg_array_to_dataframe(topo_array[:, :, 1], string.(1:length(positions)));
 biosemi32 = get_montage("biosemi32");
+# Exclude the three fiducial landmarks: Nz, LPA, and RPA.
+biosemi32 = (; labels = biosemi32.labels[1:32], positions = biosemi32.positions[1:32]);
 
 continuous_time_model = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
 linear_model = UnfoldMakie.example_data("UnfoldLinearModel");
