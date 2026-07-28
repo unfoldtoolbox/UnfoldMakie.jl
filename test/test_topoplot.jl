@@ -36,6 +36,18 @@ end
     plot_topoplot(dat[:, tp, 1]; positions = positions, layout = (; use_colorbar = false))
 end
 
+@testset "topoplot: return objects" begin
+    objects = plot_topoplot(
+        dat[:, tp, 1];
+        positions,
+        return_objects = true,
+    )
+    @test objects.figure isa Figure
+    @test objects.axis isa Axis
+    @test objects.topo_axis isa Axis
+    @test objects.colorbar isa Colorbar
+end
+
 @testset "topoplot: xlabel" begin
     plot_topoplot(dat[:, tp, 1]; positions = positions, axis = (; xlabel = "[$tp ms]"))
 end

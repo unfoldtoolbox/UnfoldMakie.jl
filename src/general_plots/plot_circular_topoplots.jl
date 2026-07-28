@@ -36,6 +36,9 @@ Plot a circular series of EEG topoplots.
 - `colorbar::NamedTuple = (;)`\\
     Colorbar attributes. Set `position` to `:right`, `:left`, `:top`, or
     `:bottom`. Colorbars at the top or bottom are horizontal automatically.
+- `return_objects::Bool = false`\\
+    Return a named tuple containing the created axis and colorbar.\\
+    Helpful for colorbar tweaking. If `false`, returns the figure.
 
 $(_docstring(:circtopos))
 
@@ -57,6 +60,7 @@ function plot_circular_topoplots!(
     plot_radius = 0.8,
     topo_attributes = (;),
     topo_axis = (;),
+    return_objects = false,
     kwargs...,
 )
     config = PlotConfig(:circtopos)
@@ -117,7 +121,7 @@ function plot_circular_topoplots!(
         f[2, 1]
     end
     cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :position)...)
-    Colorbar(cb_pos; colorrange = (lo, hi), cb_kwargs...)
+    cb = Colorbar(cb_pos; colorrange = (lo, hi), cb_kwargs...)
     topo_axis =
         update_axis(supportive_defaults(:topo_default_single_circular); topo_axis...)
     topo_attributes =
@@ -136,7 +140,7 @@ function plot_circular_topoplots!(
         topo_attributes,
         topo_axis,
     )
-    return f
+    return return_objects ? (; figure = f, axis = ax, colorbar = cb) : f
 end
 
 function plot_circular_axis!(ax, predictor_bounds, center_label)

@@ -1,4 +1,3 @@
-using Unfold: coefnames
 # # Complex figures
 
 #=
@@ -10,7 +9,7 @@ This section discusses how users can incorporate multiple plots into a single fi
 
 using UnfoldMakie;
 using CairoMakie
-using DataFramesMeta
+using DataFrames
 using UnfoldSim
 using Unfold
 using MakieThemes
@@ -23,30 +22,28 @@ using TopoPlots;
 # ```
 topo_df, positions = UnfoldMakie.example_data("TopoPlots.jl")
 topo_array, _ = TopoPlots.example_data()
-toposeries_df =
+toposeries_data =
     UnfoldMakie.eeg_array_to_dataframe(topo_array[:, :, 1], string.(1:length(positions)));
-labels_30 = UnfoldMakie.example_montage("labels_30");
+biosemi32 = get_montage("biosemi32");
 
-uf_deconv = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
-uf = UnfoldMakie.example_data("UnfoldLinearModel");
-results = coeftable(uf)
-uf_5chan = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel");
+continuous_time_model = UnfoldMakie.example_data("UnfoldLinearModelContinuousTime")
+linear_model = UnfoldMakie.example_data("UnfoldLinearModel");
+multichannel_model = UnfoldMakie.example_data("UnfoldLinearModelMultiChannel");
 
-dat_e, evts, times = UnfoldMakie.example_data("sort_data")
-d_singletrial, _ = UnfoldSim.predef_eeg(; return_epoched = true);
+erpimage_data, events, time_points = UnfoldMakie.example_data("sort_data")
+epoched_data, _ = UnfoldSim.predef_eeg(; return_epoched = true);
 
-m = UnfoldMakie.example_data("UnfoldLinearModel");
-results = coeftable(m);
-results.coefname =
-    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car");
-results = filter(row -> row.coefname != "continuous", results);
+coefficient_table = coeftable(linear_model);
+coefficient_table.coefname =
+    replace(coefficient_table.coefname, "condition: face" => "face", "(Intercept)" => "car");
+coefficient_table = filter(row -> row.coefname != "continuous", coefficient_table);
 
-df_circ = DataFrame(
+circular_topo_data = DataFrame(
     :estimate => eachcol(Float64.(topo_array[:, 100:40:300, 1])),
     :circular_variable => [0, 50, 80, 120, 180, 210],
     :time => 100:40:300,
 );
-df_circ = flatten(df_circ, :estimate);
+circular_topo_data = flatten(circular_topo_data, :estimate);
 # ```@raw html
 # </details >
 # ```
@@ -64,12 +61,12 @@ f = Figure(size = (750, 500))
 with_theme(theme_ggthemr(:fresh)) do
     plot_erp!(
         f[1, 1],
-        coeftable(uf_deconv);
+        coeftable(continuous_time_model);
         mapping = (; color = :coefname => "Conditions"),
     )
     plot_erp!(
         f[1, 2],
-        effects(Dict(:condition => ["car", "face"]), uf_deconv),
+        effects(Dict(:condition => ["car", "face"]), continuous_time_model),
         mapping = (; y = :yhat, color = :condition => "Conditions"),
     )
     plot_butterfly!(f[2, 1:2], topo_df; positions = positions,
@@ -99,9 +96,9 @@ begin
         to = [0.2, 0.5], # if coefname not specified, line should be black
         coefname = ["(Intercept)", "category: face"],
     )
-    plot_erp!(f[2, 1:2], results, significance = pvals, stderror = true)
+    plot_erp!(f[2, 1:2], coefficient_table, significance = pvals, stderror = true)
 
-    plot_designmatrix!(f[2, 3], designmatrix(uf))
+    plot_designmatrix!(f[2, 3], designmatrix(linear_model))
 
     plot_topoplot!(f[3, 1], topo_array[:, 150, 1]; positions = positions)
     plot_topoplotseries!(
@@ -112,7 +109,7 @@ begin
         mapping = (; label = :channel),
     )
 
-    res_effects = effects(Dict(:continuous => -5:0.5:5), uf_deconv)
+    res_effects = effects(Dict(:continuous => -5:0.5:5), continuous_time_model)
 
     plot_erp!(
         f[2, 4:5],
@@ -121,9 +118,13 @@ begin
         legend = (; nbanks = 2),
     )
 
-    plot_parallelcoordinates(f[3, 2:3], uf_5chan; mapping = (; color = :coefname))
+    plot_parallelcoordinates(
+        f[3, 2:3],
+        multichannel_model;
+        mapping = (; color = :coefname),
+    )
 
-    plot_erpimage!(f[1, 4:5], times, d_singletrial)
+    plot_erpimage!(f[1, 4:5], time_points, epoched_data)
     plot_circular_topoplots!(
         f[3:4, 4:5],
         topo_df[in.(topo_df.time, Ref(-0.3:0.1:0.5)), :];
@@ -147,29 +148,31 @@ function complex_figure3(
     topo_df,
     topo_array,
     positions,
-    toposeries_df,
-    labels_30,
-    results,
-    df_circ,
-    dat_e,
-    evts,
-    times,
+    toposeries_data,
+    biosemi32,
+    coefficient_table,
+    circular_topo_data,
+    erpimage_data,
+    events,
+    time_points,
 )
     f = Figure(size = (1200, 1700))
-    (ga, gc, ge, gg, gi) = (f[1, 1], f[2, 1], f[3, 1], f[4, 1], f[5:6, 1])
-    (gb, gd, gf, gh, gj) = (f[1, 2], f[2, 2], f[3, 2], f[4, 2], f[5:6, 2])
+    (panel_a, panel_c, panel_e, panel_g, panel_i) =
+        (f[1, 1], f[2, 1], f[3, 1], f[4, 1], f[5:6, 1])
+    (panel_b, panel_d, panel_f, panel_h, panel_j) =
+        (f[1, 2], f[2, 2], f[3, 2], f[4, 2], f[5:6, 2])
 
     plot_erp!(
-        ga,
-        results;
-        :stderror => true,
+        panel_a,
+        coefficient_table;
+        stderror = true,
         mapping = (; color = :coefname => "Conditions"),
         axis = (; backgroundcolor = colorant"#F4F3EF", xlabel = "Time [ms]"),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     plot_butterfly!(
-        gb,
+        panel_b,
         topo_df;
         positions = positions,
         topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
@@ -178,7 +181,7 @@ function complex_figure3(
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
     plot_topoplot!(
-        gc,
+        panel_c,
         topo_array[:, 340, 1];
         positions = positions,
         topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
@@ -186,8 +189,8 @@ function complex_figure3(
     )
 
     plot_topoplotseries!(
-        gd,
-        toposeries_df;
+        panel_d,
+        toposeries_data;
         bin_width = 80,
         positions = positions,
         visual = (label_scatter = false, contours = false),
@@ -197,7 +200,7 @@ function complex_figure3(
     )
 
     plot_erpgrid!(
-        ge,
+        panel_e,
         topo_array[:, :, 1],
         positions;
         indicator_grid_axis = (;
@@ -208,16 +211,16 @@ function complex_figure3(
     )
 
     plot_erpimage!(
-        gf,
-        times,
-        dat_e;
-        sortvalues = evts.Δlatency,
+        panel_f,
+        time_points,
+        erpimage_data;
+        sortvalues = events.Δlatency,
         axis = (; xlabel = "Time [ms]"),
     )
-    m1 = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
+    spline_model = UnfoldMakie.example_data("UnfoldLinearModelwith1Spline")
     plot_splines!(
-        gg,
-        m1;
+        panel_g,
+        spline_model;
         spline_axis = (; backgroundcolor = colorant"#F4F3EF"),
         density_axis = (; backgroundcolor = colorant"#F4F3EF"),
     )
@@ -228,7 +231,7 @@ function complex_figure3(
     parallel_df_b.estimate .+= 0.1
     parallel_df = vcat(parallel_df, parallel_df_b)
     plot_parallelcoordinates(
-        gh,
+        panel_h,
         parallel_df;
         mapping = (; color = :coefname),
         normalize = :minmax,
@@ -237,8 +240,8 @@ function complex_figure3(
     )
 
     plot_circular_topoplots!(
-        gi,
-        df_circ;
+        panel_i,
+        circular_topo_data;
         positions = positions,
         center_label = "Time [s]",
         predictor = :time,
@@ -249,17 +252,18 @@ function complex_figure3(
         colorbar = (; height = 180),
     )
     plot_channelimage!(
-        gj,
-        topo_array[1:30, :, 1],
-        positions[1:30],
-        labels_30;
+        panel_j,
+        topo_array[1:32, :, 1],
+        biosemi32.positions,
+        biosemi32.labels;
         axis = (; xlabel = "Time [ms]"),
     )
 
     for (label, layout) in
         zip(
         ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
-        [ga, gb, gc, gd, ge, gf, gg, gh, gi, gj],
+        [panel_a, panel_b, panel_c, panel_d, panel_e, 
+        panel_f, panel_g, panel_h, panel_i, panel_j],
     )
         Label(
             layout[1, 1, TopLeft()],
@@ -280,13 +284,13 @@ with_theme(Theme(; backgroundcolor = colorant"#F4F3EF")) do
         topo_df,
         topo_array,
         positions,
-        toposeries_df,
-        labels_30,
-        results,
-        df_circ,
-        dat_e,
-        evts,
-        times,
+        toposeries_data,
+        biosemi32,
+        coefficient_table,
+        circular_topo_data,
+        erpimage_data,
+        events,
+        time_points,
     )
 end
 
@@ -296,36 +300,40 @@ end
 # <details>
 # <summary>Click to expand</summary>
 # ```
-results = coeftable(m)
-results.coefname =
-    replace(results.coefname, "condition: face" => "face", "(Intercept)" => "car")
-results = filter(row -> row.coefname != "continuous", results)
-
 function complex_figure4(
     topo_df,
     topo_array,
     positions,
-    toposeries_df,
-    labels_30,
-    results,
-    df_circ,
-    dat_e,
-    evts,
-    times,
+    toposeries_data,
+    biosemi32,
+    coefficient_table,
+    circular_topo_data,
+    erpimage_data,
+    events,
+    time_points,
 )
     f = Figure(size = (1800, 1000))
+    panel_background = colorant"#F4F3EF"
+    axis_fontsizes = (;
+        xlabelsize = 24,
+        ylabelsize = 24,
+        xticklabelsize = 18,
+        yticklabelsize = 18,
+    )
+    colorbar_style = (; labelsize = 24, ticklabelsize = 18)
 
     top_row = f[1, 1] = GridLayout()
     bottom_row = f[2, 1] = GridLayout()
 
-    (ga, gb, gc, gd) =
+    (panel_a, panel_b, panel_c, panel_d) =
         (top_row[1, 1], top_row[1, 2], top_row[1, 3], top_row[1, 4])
-    (ge, gf, gh) = (bottom_row[1, 1], bottom_row[1, 2], bottom_row[1, 4])
-    gg = bottom_row[1, 3] = GridLayout()
+    (panel_e, panel_f, panel_h) =
+        (bottom_row[1, 1], bottom_row[1, 2], bottom_row[1, 4])
+    panel_g = bottom_row[1, 3] = GridLayout()
 
     plot_erp!(
-        ga,
-        results;
+        panel_a,
+        coefficient_table;
         :stderror => true,
         mapping = (; color = :coefname => "Conditions:"),
         legend = (;
@@ -336,14 +344,18 @@ function complex_figure4(
             titlesize = 20,
             nbanks = 2,
         ),
-        axis = (; backgroundcolor = colorant"#F4F3EF", xlabel = "Time [ms]", width = 350,
-            xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18, yticklabelsize = 18),
+        axis = (;
+            axis_fontsizes...,
+            backgroundcolor = panel_background,
+            xlabel = "Time [ms]",
+            width = 350,
+        ),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
 
     plot_butterfly!(
-        gb,
+        panel_b,
         topo_df;
         positions = positions,
         topo_axis = (;
@@ -352,49 +364,54 @@ function complex_figure4(
             tellwidth = false,
             tellheight = false,
         ),
-        axis = (; backgroundcolor = colorant"#F4F3EF",
-            xlabel = "Time [ms]", xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18,
-            yticklabelsize = 18),
+        axis = (; axis_fontsizes..., backgroundcolor = panel_background, xlabel = "Time [ms]"),
     )
     hlines!(0, color = :gray, linewidth = 1)
     vlines!(0, color = :gray, linewidth = 1)
 
-    plot_topoplot!(
-        ge,
+    panel_e_objects = plot_topoplot!(
+        panel_e,
         topo_array[:, 340, 1];
         positions = positions,
-        topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        return_objects = true,
+        topo_axis = (; backgroundcolor = panel_background),
         axis = (;
             xlabel = "[340 ms]",
-            backgroundcolor = colorant"#F4F3EF",
+            backgroundcolor = panel_background,
             xlabelsize = 24,
             ylabelsize = 24,
         ),
-        colorbar = (; position = :bottom, vertical = false, width = 180, labelsize = 24, ticklabelsize = 18),
+        colorbar = (;
+            colorbar_style...,
+            position = :bottom,
+            vertical = false,
+            width = 240,
+        ),
         visual = (; contours = false),
     )
+    translate!(panel_e_objects.colorbar.blockscene, 0, -30, 100)
 
     plot_topoplotseries!(
-        gf,
-        toposeries_df;
-        bin_width = 80,
-        nrows = 3,
+        panel_f,
+        toposeries_data;
+        bin_num = 4,
+        nrows = 2,
         positions = positions,
         visual = (label_scatter = false, contours = false),
         layout = (; use_colorbar = true),
-        topo_axis = (; backgroundcolor = colorant"#F4F3EF", xlabelsize = 18),
+        topo_axis = (; backgroundcolor = panel_background, xlabelsize = 18),
         axis = (;
-            xlabelpadding = 70,
-            backgroundcolor = colorant"#F4F3EF",
+            xlabelpadding = 50,
+            backgroundcolor = panel_background,
             xlabel = "        Time [ms]",
             xlabelsize = 24,
             ylabelsize = 24,
         ),
-        colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
+        colorbar = (; colorbar_style..., height = 180),
     )
 
     plot_erpgrid!(
-        gc,
+        panel_c,
         topo_array[:, :, 1],
         positions;
         indicator_grid_axis = (;
@@ -402,66 +419,61 @@ function complex_figure4(
             text_x_kwargs = (; text = "s", fontsize = 24),
             text_y_kwargs = (; text = "µV", fontsize = 24),
         ),
-        axis = (; backgroundcolor = colorant"#F4F3EF",),
-        colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
+        axis = (; backgroundcolor = panel_background),
+        colorbar = (; colorbar_style..., height = 180),
     )
 
     plot_erpimage!(
-        gd,
-        times,
-        dat_e;
-        sortvalues = evts.Δlatency,
+        panel_d,
+        time_points,
+        erpimage_data;
+        sortvalues = events.Δlatency,
         axis = (;
+            axis_fontsizes...,
             xlabel = "Time [ms]",
-            xlabelsize = 24,
-            ylabelsize = 24,
-            xticklabelsize = 18,
-            yticklabelsize = 18,
         ),
-        colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
+        colorbar = (; colorbar_style..., height = 180),
     )
 
-    plot_circular_topoplots!(
-        gg,
-        df_circ;
+    panel_g_objects = plot_circular_topoplots!(
+        panel_g,
+        circular_topo_data;
         positions = positions,
+        return_objects = true,
         center_label = "Time [ms]",
         predictor = :time,
         plot_radius = 0.9,
         topo_attributes = (; label_scatter = false, contours = false),
         topo_axis = (;
-            backgroundcolor = colorant"#F4F3EF",
+            backgroundcolor = panel_background,
             width = Relative(0.3),
             height = Relative(0.3),
         ),
-        axis = (; backgroundcolor = colorant"#F4F3EF", xlabelsize = 24, ylabelsize = 24),
+        axis = (; backgroundcolor = panel_background, xlabelsize = 24, ylabelsize = 24),
         predictor_bounds = [80, 320],
         colorbar = (;
             position = :bottom,
             vertical = false,
             valign = :bottom,
-            labelsize = 24,
-            ticklabelsize = 18,
+            colorbar_style...,
+            width = 240,
         ),
     )
-    colsize!(gg, 1, Relative(1))
-    rowsize!(gg, 1, Relative(0.88))
-    rowsize!(gg, 2, Relative(0.12))
-    rowgap!(gg, 5)
+    translate!(panel_g_objects.colorbar.blockscene, 0, -30, 100)
+    colsize!(panel_g, 1, Relative(1))
+    rowsize!(panel_g, 1, Relative(0.99))
+    rowgap!(panel_g, 5)
 
     plot_channelimage!(
-        gh,
-        topo_array[1:30, :, 1],
-        positions[1:30],
-        labels_30;
+        panel_h,
+        topo_array[1:32, :, 1],
+        biosemi32.positions,
+        biosemi32.labels;
         axis = (;
+            axis_fontsizes...,
             xlabel = "Time [ms]",
-            xlabelsize = 24,
-            ylabelsize = 24,
-            xticklabelsize = 18,
-            yticklabelsize = 18,
         ),
-        colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
+        colorbar = (; colorbar_style..., height = 180),
     )
 
     for row_layout in (top_row, bottom_row), column in 1:4
@@ -471,7 +483,7 @@ function complex_figure4(
     for (label, layout) in
         zip(
         ["A", "B", "C", "D", "E", "F", "G", "H"],
-        [ga, gb, gc, gd, ge, gf, gg, gh],
+        [panel_a, panel_b, panel_c, panel_d, panel_e, panel_f, panel_g, panel_h],
     )
         Label(
             layout[1, 1, Top()],
@@ -492,13 +504,13 @@ f = with_theme(Theme(; backgroundcolor = colorant"#F4F3EF")) do
         topo_df,
         topo_array,
         positions,
-        toposeries_df,
-        labels_30,
-        results,
-        df_circ,
-        dat_e,
-        evts,
-        times,
+        toposeries_data,
+        biosemi32,
+        coefficient_table,
+        circular_topo_data,
+        erpimage_data,
+        events,
+        time_points,
     )
 end
 

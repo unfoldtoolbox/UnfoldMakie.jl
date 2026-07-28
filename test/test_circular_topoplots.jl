@@ -85,6 +85,19 @@ end
     )
 end
 
+@testset "circularplot return objects" begin
+    objects = plot_circular_topoplots(
+        df;
+        positions = pos,
+        predictor = :time,
+        predictor_bounds = [80, 320],
+        return_objects = true,
+    )
+    @test objects.figure isa Figure
+    @test objects.axis isa Axis
+    @test objects.colorbar isa Colorbar
+end
+
 @testset "circularplot horizontal colorbar positions" begin
     for position in (:top, :bottom)
         plot_circular_topoplots(
