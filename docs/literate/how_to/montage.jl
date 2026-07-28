@@ -105,7 +105,7 @@ plot_topoplot(
     positions = montage.positions,
     labels = montage.labels,
     axis = (; title = "BioSemi 16", xlabel = "Time window"),
-    visual = (; label_text =  true),
+    visual = (; label_text = true),
 )
 
 # ## Use a subset of standard positions
