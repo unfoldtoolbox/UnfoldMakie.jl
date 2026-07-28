@@ -222,11 +222,14 @@ function complex_figure3(
         density_axis = (; backgroundcolor = colorant"#F4F3EF"),
     )
 
-    topo_df.coefname .= "B" # create a second category
-    topo_df.estimate .+= rand(length(topo_df.estimate)) * 0.1
+    parallel_df = subset(topo_df, :channel => x -> x .< 8, :time => x -> x .< 0)
+    parallel_df_b = copy(parallel_df)
+    parallel_df_b.coefname .= "B"
+    parallel_df_b.estimate .+= 0.1
+    parallel_df = vcat(parallel_df, parallel_df_b)
     plot_parallelcoordinates(
         gh,
-        subset(topo_df, :channel => x -> x .< 8, :time => x -> x .< 0);
+        parallel_df;
         mapping = (; color = :coefname),
         normalize = :minmax,
         ax_labels = ["FP1", "F3", "F7", "FC3", "C3", "C5", "P3", "P7"],
@@ -312,8 +315,13 @@ function complex_figure4(
 )
     f = Figure(size = (1800, 1000))
 
-    (ga, gb, gc, gd) = (f[1, 1], f[1, 2], f[1, 3], f[1, 4])
-    (ge, gf, gg, gh) = (f[2, 1], f[2, 2], f[2, 3], f[2, 4])
+    top_row = f[1, 1] = GridLayout()
+    bottom_row = f[2, 1] = GridLayout()
+
+    (ga, gb, gc, gd) =
+        (top_row[1, 1], top_row[1, 2], top_row[1, 3], top_row[1, 4])
+    (ge, gf, gh) = (bottom_row[1, 1], bottom_row[1, 2], bottom_row[1, 4])
+    gg = bottom_row[1, 3] = GridLayout()
 
     plot_erp!(
         ga,
@@ -338,7 +346,12 @@ function complex_figure4(
         gb,
         topo_df;
         positions = positions,
-        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        topo_axis = (;
+            height = Relative(0.4),
+            width = Relative(0.4),
+            tellwidth = false,
+            tellheight = false,
+        ),
         axis = (; backgroundcolor = colorant"#F4F3EF",
             xlabel = "Time [ms]", xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18,
             yticklabelsize = 18),
@@ -414,12 +427,28 @@ function complex_figure4(
         positions = positions,
         center_label = "Time [ms]",
         predictor = :time,
+        plot_radius = 0.9,
         topo_attributes = (; label_scatter = false, contours = false),
-        topo_axis = (; backgroundcolor = colorant"#F4F3EF"),
+        topo_axis = (;
+            backgroundcolor = colorant"#F4F3EF",
+            width = Relative(0.3),
+            height = Relative(0.3),
+        ),
         axis = (; backgroundcolor = colorant"#F4F3EF", xlabelsize = 24, ylabelsize = 24),
         predictor_bounds = [80, 320],
-        colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
+        colorbar = (;
+            position = :bottom,
+            vertical = false,
+            valign = :bottom,
+            labelsize = 24,
+            ticklabelsize = 18,
+        ),
     )
+    colsize!(gg, 1, Relative(1))
+    rowsize!(gg, 1, Relative(0.88))
+    rowsize!(gg, 2, Relative(0.12))
+    rowgap!(gg, 5)
+
     plot_channelimage!(
         gh,
         topo_array[1:30, :, 1],
@@ -435,18 +464,22 @@ function complex_figure4(
         colorbar = (; height = 180, labelsize = 24, ticklabelsize = 18),
     )
 
+    for row_layout in (top_row, bottom_row), column in 1:4
+        colsize!(row_layout, column, Relative(1 / 4))
+    end
+
     for (label, layout) in
         zip(
         ["A", "B", "C", "D", "E", "F", "G", "H"],
         [ga, gb, gc, gd, ge, gf, gg, gh],
     )
         Label(
-            layout[1, 1, TopLeft()],
+            layout[1, 1, Top()],
             label,
             fontsize = 26,
             font = :bold,
             padding = (20, 20, 22, 0),
-            halign = :right,
+            halign = :left,
         )
     end
     f
@@ -468,6 +501,5 @@ f = with_theme(Theme(; backgroundcolor = colorant"#F4F3EF")) do
         times,
     )
 end
-
 
 #save("complex_figure4.png", f)
