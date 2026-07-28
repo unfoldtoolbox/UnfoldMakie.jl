@@ -105,7 +105,7 @@ plot_topoplot(
     positions = montage.positions,
     labels = montage.labels,
     axis = (; title = "BioSemi 16", xlabel = "Time window"),
-    visual = (; label_text = true),
+    visual = (; label_text =  true),
 )
 
 # ## Use a subset of standard positions
@@ -150,3 +150,28 @@ plot_topoplot(
     axis = (; title = "Custom montage"),
     visual = (; label_text = true),
 )
+
+# ## Use a montage in a topoplot series
+
+montage = get_montage("biosemi128")
+montage_data = [
+    x * cos(2π * time / 100) for x in first.(montage.positions), time in 1:100
+]
+montage_df = eeg_array_to_dataframe(montage_data, montage.labels)
+
+# Plot one time point to verify the BioSemi 128 electrode and label positions.
+plot_topoplotseries(
+    montage_df;
+    bin_num = 4, nrows = 2,
+    positions = montage.positions,
+    labels = montage.labels,
+    axis = (; xlabel = "Time windows [s]"),
+    visual = (; label_text = (; align = (:center, :center))),
+)
+
+#md # !!! note
+#md #     For larger montages, center-align the channel labels to place each
+#md #     label directly on its electrode position. This will help to avoids 
+#md #     a systematic lower-left offset. Use
+#md #     `visual = (; label_text = (; align = (:center, :center)))`.
+
