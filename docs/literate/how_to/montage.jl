@@ -157,7 +157,7 @@ montage = get_montage("biosemi128")
 montage_data = [
     x * cos(2π * time / 100) for x in first.(montage.positions), time in 1:100
 ]
-montage_df = eeg_array_to_dataframe(montage_data, montage.labels)
+montage_df = eeg_array_to_dataframe(montage_data, montage.labels);
 
 # Plot one time point to verify the BioSemi 128 electrode and label positions.
 plot_topoplotseries(
