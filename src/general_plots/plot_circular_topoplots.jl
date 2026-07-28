@@ -1,46 +1,45 @@
 """
     plot_circular_topoplots!(f, data::DataFrame; kwargs...)
-using ColorSchemes: topo
-using ColorSchemes: topo
-using ColorSchemes: topo
     plot_circular_topoplots(data::DataFrame; kwargs...)
 
-Plot a circular EEG topoplot.
+Plot a circular series of EEG topoplots.
+
 ## Arguments
 
 - `f::Union{GridPosition, GridLayout, Figure}`\\
-    `Figure`, `GridLayout`, or `GridPosition` to draw the plot.\\
+    Layout container in which to draw the plot.
 - `data::DataFrame`\\
-    DataFrame with data keys (columns `:y, :yhat, :estimate`), and :position (columns `:pos, :position, :positions`).
+    Data containing an amplitude column (`:y`, `:yhat`, or `:estimate`) and
+    values for the circular predictor.
 
 ## Keyword arguments (kwargs)
-- `predictor::Vector{Any} = :predictor`\\
-    The circular predictor value, defines position of topoplot across the circle.
-    Mapped around `predictor_bounds`.
-- `predictor_bounds::Vector{Int64} = [0, 360]`\\
-    The bounds of the predictor. Relevant for the axis labels.
+- `predictor::Symbol = :predictor`\\
+    Column containing the predictor values that determine the positions of the
+    topoplots around the circle.
+- `predictor_bounds::AbstractVector = [0, 360]`\\
+    Lower and upper bounds used to map predictor values onto the circular axis.
 - `positions::Vector{Point{2, Float32}} = nothing`\\
-    Positions of the [`plot_topoplot`](@ref topo_vis).
+    Two-dimensional electrode positions used by [`plot_topoplot`](@ref topo_vis).
 - `center_label::String = ""`\\
-    The text in the center of the cricle.
-- `plot_radius::String = 0.8`\\
-    The radius of the circular topoplot series plot calucalted by formula: `radius = (minwidth * plot_radius) / 2`.
+    Text displayed at the centre of the circular axis.
+- `plot_radius::Real = 0.8`\\
+    Relative radius of the circular arrangement, calculated as
+    `(minimum_layout_dimension * plot_radius) / 2`.
 - `labels::Vector{String} = nothing`\\
-    Labels for the [`plot_topoplots`](@ref topo_vis).
+    Electrode labels used to obtain positions when `positions` is not supplied.
 - `topo_axis::NamedTuple = (;)`\\
-    Here you can flexibly change configurations of the topoplot axis.\\
-    To see all options just type `?Axis` in REPL.\\
+    Attributes passed to each topoplot axis. See `?Axis` for available options.\\
     Defaults: $(supportive_defaults(:topo_default_single_circular))
 - `topo_attributes::NamedTuple = (;)`\\
-    Here you can flexibly change configurations of the topoplot interoplation.\\
-    To see all options just type `?Topoplot.topoplot` in REPL.\\
+    Attributes controlling topoplot interpolation and appearance.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
-- `colorbar.position = :right`\\
-     Possible options: `:right`, `:left`. Sets position of the colorbar.\\
+- `colorbar::NamedTuple = (;)`\\
+    Colorbar attributes. Set `position` to `:right`, `:left`, `:top`, or
+    `:bottom`. Colorbars at the top or bottom are horizontal automatically.
 
 $(_docstring(:circtopos))
 
-**Return Value:** `Figure` displaying the Circular topoplot series.
+**Return Value:** `Figure`.
 
 """
 plot_circular_topoplots(data::DataFrame; kwargs...) =
@@ -99,12 +98,24 @@ function plot_circular_topoplots!(
     config_kwargs!(config, colorbar = (; ticks = (cb_ticks, rounded_cb_ticks)))
 
     position = get(config.colorbar, :position, :right)
-    if !(position in (:right, :left))
-        error("colorbar.position must be :right or :left for plot_circular_topoplots")
+    if !(position in (:right, :left, :top, :bottom))
+        error(
+            "colorbar.position must be :right, :left, :top, or :bottom for plot_circular_topoplots",
+        )
     end
-    position = get(config.colorbar, :position, :right)
+    if position in (:top, :bottom)
+        config_kwargs!(config, colorbar = (; vertical = false, labelrotation = 2π))
+    end
 
-    cb_pos = position == :left ? f[1, 0] : f[1, 2]
+    cb_pos = if position == :left
+        f[1, 0]
+    elseif position == :right
+        f[1, 2]
+    elseif position == :top
+        f[0, 1]
+    else
+        f[2, 1]
+    end
     cb_kwargs = (; (k => v for (k, v) in pairs(config.colorbar) if k != :position)...)
     Colorbar(cb_pos; colorrange = (lo, hi), cb_kwargs...)
     topo_axis =

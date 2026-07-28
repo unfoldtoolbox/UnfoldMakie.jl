@@ -85,6 +85,19 @@ end
     )
 end
 
+@testset "circularplot horizontal colorbar positions" begin
+    for position in (:top, :bottom)
+        plot_circular_topoplots(
+            df;
+            positions = pos,
+            center_label = "Visual angle [°]",
+            predictor = :time,
+            predictor_bounds = [80, 320],
+            colorbar = (; position),
+        )
+    end
+end
+
 @testset "circularplot plot in GridLayout with labels" begin
     f = Figure()
     ga = f[1, 1] = GridLayout()
