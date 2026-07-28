@@ -29,6 +29,7 @@ makedocs(;
         canonical = "https://unfoldtoolbox.github.io/UnfoldMakie.jl",
         assets = String[],
         sidebar_sitename = false,
+        example_size_threshold = 0,
     ),
     pages = [
         "Home" => "index.md",
