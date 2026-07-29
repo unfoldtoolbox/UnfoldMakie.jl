@@ -1,4 +1,4 @@
-# # Visualize uncertainty in topoplots
+# # [Visualize uncertainty in topoplots](@id uncertain_topoplots)
 
 # ```@raw html
 # <details>

@@ -20,6 +20,10 @@ Plot a topoplot.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
+- `return_objects::Bool = false`\\
+    Return a named tuple containing the created axis and colorbar.\\
+    Helpful for colorbar tweaking. If `false`, returns the figure.
+
 $(_docstring(:topoplot))
 
 To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`,  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
@@ -56,6 +60,7 @@ function plot_topoplot!(
     positions = nothing,
     topo_attributes = (;),
     topo_axis = (;),
+    return_objects = false,
     kwargs...,
 )
 
@@ -125,6 +130,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
             @lift config_kwargs!(config, colorbar = (; ticks = ($ticks, $rounded_ticks)))
         end
     end
+    cb = nothing
     if config.layout.use_colorbar
         cb_pos = if position == :right
             great_axis[plot_rows, plot_cols.stop+1]
@@ -158,5 +164,13 @@ Note: The identical min and max may cause an interpolation error when plotting t
         end
     end
     apply_layout_settings!(config; fig = f)
-    return f
+    return return_objects ?
+           (;
+        figure = f,
+        layout = great_axis,
+        axis = outer_axis,
+        topo_axis = inner_axis,
+        plot = h,
+        colorbar = cb,
+    ) : f
 end
