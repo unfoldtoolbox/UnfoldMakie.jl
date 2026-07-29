@@ -27,7 +27,7 @@
     },
     {
       "login": "Link250",
-      "name": "Quantum",
+      "name": "Daniel Baumgartner",
       "avatar_url": "https://avatars.githubusercontent.com/u/4541950?v=4",
       "profile": "https://github.com/Link250",
       "contributions": [
@@ -53,7 +53,7 @@
     },
     {
       "login": "NiklasMGaertner",
-      "name": "NiklasMGaertner",
+      "name": "Niklas Gaertner",
       "avatar_url": "https://avatars.githubusercontent.com/u/54365174?v=4",
       "profile": "https://github.com/NiklasMGaertner",
       "contributions": [
@@ -63,7 +63,7 @@
     },
     {
       "login": "SorenDoring",
-      "name": "SorenDoring",
+      "name": "Soren Doring",
       "avatar_url": "https://avatars.githubusercontent.com/u/54365184?v=4",
       "profile": "https://github.com/SorenDoring",
       "contributions": [
@@ -73,7 +73,7 @@
     },
     {
       "login": "lokmanfl",
-      "name": "lokmanfl",
+      "name": "Fadil Furkan Lokman",
       "avatar_url": "https://avatars.githubusercontent.com/u/44772645?v=4",
       "profile": "https://github.com/lokmanfl",
       "contributions": [
@@ -99,6 +99,18 @@
       "profile": "https://reneskukies.de/",
       "contributions": [
         "doc"
+      ]
+    },
+    {
+      "login": "kbelgal02",
+      "name": "Kiran Belgal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/253596950?v=4",
+      "profile": "https://github.com/kbelgal02",
+      "contributions": [
+        "bug",
+        "code",
+        "maintenance",
+        "test",
       ]
     }
   ],
