@@ -45,7 +45,45 @@ end
     @test objects.figure isa Figure
     @test objects.axis isa Axis
     @test objects.topo_axis isa Axis
+    @test objects.axis === objects.topo_axis
     @test objects.colorbar isa Colorbar
+end
+
+@testset "topoplot: no extra axis space with left colorbar" begin
+    vals = dat[:, tp, 1]
+    labels = string.(eachindex(vals))
+    f = Figure(size = (520, 240), backgroundcolor = :yellow)
+    objects = plot_topoplot!(
+        f[1, 1],
+        vals;
+        positions,
+        labels,
+        axis = (; title = "debug", backgroundcolor = :magenta),
+        topo_axis = (; backgroundcolor = :cyan, width = 250, height = 190),
+        topo_attributes = (;
+            interpolation = TopoPlots.NullInterpolator(),
+            label_text = false,
+        ),
+        visual = (;
+            colormap = :RdBu,
+            contours = false,
+            colorrange_mode = :diverging_balanced,
+        ),
+        colorbar = (;
+            label = "Voltage [µV]",
+            position = :left,
+            vertical = true,
+            height = 180,
+        ),
+        return_objects = true,
+    )
+
+    topo_bbox = objects.topo_axis.layoutobservables.computedbbox[]
+    colorbar_bbox = objects.colorbar.layoutobservables.computedbbox[]
+
+    @test count(content -> content isa Axis, f.content) == 1
+    @test topo_bbox.widths ≈ Vec2f(250, 190)
+    @test colorbar_bbox.origin[1] + colorbar_bbox.widths[1] <= topo_bbox.origin[1]
 end
 
 @testset "topoplot: xlabel" begin
