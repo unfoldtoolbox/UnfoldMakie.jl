@@ -252,12 +252,8 @@ end</code></pre><img src="e6f986cf.png" alt="Example block output"/><h1 id="Comp
 )
     f = Figure(size = (1800, 1000))
     panel_background = colorant&quot;#F4F3EF&quot;
-    axis_fontsizes = (;
-        xlabelsize = 24,
-        ylabelsize = 24,
-        xticklabelsize = 18,
-        yticklabelsize = 18,
-    )
+    axis_fontsizes =
+        (; xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18, yticklabelsize = 18)
     colorbar_style = (; labelsize = 24, ticklabelsize = 18)
 
     top_row = f[1, 1] = GridLayout()
@@ -319,12 +315,7 @@ end</code></pre><img src="e6f986cf.png" alt="Example block output"/><h1 id="Comp
             xlabelsize = 24,
             ylabelsize = 24,
         ),
-        colorbar = (;
-            colorbar_style...,
-            position = :bottom,
-            vertical = false,
-            width = 240,
-        ),
+        colorbar = (; colorbar_style..., position = :bottom, vertical = false, width = 240),
         visual = (; contours = false),
     )
     translate!(panel_e_objects.colorbar.blockscene, 0, -30, 100)
@@ -414,12 +405,11 @@ end</code></pre><img src="e6f986cf.png" alt="Example block output"/><h1 id="Comp
         colorbar = (; colorbar_style..., height = 180),
     )
 
-    for row_layout in (top_row, bottom_row), column in 1:4
+    for row_layout in (top_row, bottom_row), column = 1:4
         colsize!(row_layout, column, Relative(1 / 4))
     end
 
-    for (label, layout) in
-        zip(
+    for (label, layout) in zip(
         [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;],
         [panel_a, panel_b, panel_c, panel_d, panel_e, panel_f, panel_g, panel_h],
     )
@@ -448,4 +438,4 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
     )
 end
 
-#save(&quot;complex_figure4.png&quot;, f)</code></pre><img src="0bdbb97f.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/videos/">« Videos</a><a class="docs-footer-nextpage" href="../hide_deco/">Hide decorations and axis spines »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Tuesday 28 July 2026 15:48">Tuesday 28 July 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+#save(&quot;complex_figure4.png&quot;, f)</code></pre><img src="0bdbb97f.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/videos/">« Videos</a><a class="docs-footer-nextpage" href="../hide_deco/">Hide decorations and axis spines »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Wednesday 29 July 2026 10:10">Wednesday 29 July 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
