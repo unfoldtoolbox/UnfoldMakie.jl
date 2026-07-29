@@ -316,12 +316,8 @@ function complex_figure4(
 )
     f = Figure(size = (1800, 1000))
     panel_background = colorant"#F4F3EF"
-    axis_fontsizes = (;
-        xlabelsize = 24,
-        ylabelsize = 24,
-        xticklabelsize = 18,
-        yticklabelsize = 18,
-    )
+    axis_fontsizes =
+        (; xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18, yticklabelsize = 18)
     colorbar_style = (; labelsize = 24, ticklabelsize = 18)
 
     top_row = f[1, 1] = GridLayout()
