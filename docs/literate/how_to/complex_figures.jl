@@ -383,12 +383,7 @@ function complex_figure4(
             xlabelsize = 24,
             ylabelsize = 24,
         ),
-        colorbar = (;
-            colorbar_style...,
-            position = :bottom,
-            vertical = false,
-            width = 240,
-        ),
+        colorbar = (; colorbar_style..., position = :bottom, vertical = false, width = 240),
         visual = (; contours = false),
     )
     translate!(panel_e_objects.colorbar.blockscene, 0, -30, 100)
