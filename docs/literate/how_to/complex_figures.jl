@@ -482,8 +482,7 @@ function complex_figure4(
         colsize!(row_layout, column, Relative(1 / 4))
     end
 
-    for (label, layout) in
-        zip(
+    for (label, layout) in zip(
         ["A", "B", "C", "D", "E", "F", "G", "H"],
         [panel_a, panel_b, panel_c, panel_d, panel_e, panel_f, panel_g, panel_h],
     )
