@@ -478,7 +478,7 @@ function complex_figure4(
         colorbar = (; colorbar_style..., height = 180),
     )
 
-    for row_layout in (top_row, bottom_row), column in 1:4
+    for row_layout in (top_row, bottom_row), column = 1:4
         colsize!(row_layout, column, Relative(1 / 4))
     end
 
