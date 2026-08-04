@@ -1,6 +1,6 @@
-dat, positions = TopoPlots.example_data()
+eeg_data_matrix, positions = TopoPlots.example_data()
 tp = 340
-data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
+eeg_data_df = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 
 @testset "eeg_topoplot: colorbar" begin
     f, a, h = TopoPlots.eeg_topoplot(1:10, positions = rand(Point2f, 10))
@@ -9,12 +9,12 @@ data_for_topoplot = UnfoldMakie.eeg_array_to_dataframe(rand(10)')
 end
 
 @testset "topoplot: basic" begin
-    plot_topoplot(dat[:, tp, 1]; positions)
+    plot_topoplot(eeg_data_matrix[:, tp, 1]; positions)
 end
 
 @testset "topoplot: data input as DataFrame" begin
     plot_topoplot(
-        data_for_topoplot;
+        eeg_data_df;
         positions = positions[1:10],
         axis = (; title = "Topoplot"),
     )
@@ -32,36 +32,72 @@ end
     plot_topoplot(d1; positions = rand(Point2f, 10))
 end
 
-@testset "topoplot: no legend" begin
-    plot_topoplot(dat[:, tp, 1]; positions = positions, layout = (; use_colorbar = false))
+@testset "topoplot: without colorbar" begin
+    plot_topoplot(eeg_data_matrix[:, tp, 1]; positions = positions, layout = (; use_colorbar = false))
 end
 
 @testset "topoplot: return objects" begin
     objects = plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions,
         return_objects = true,
     )
     @test objects.figure isa Figure
     @test objects.axis isa Axis
     @test objects.topo_axis isa Axis
+    @test objects.axis === objects.topo_axis
     @test objects.colorbar isa Colorbar
 end
 
-@testset "topoplot: xlabel" begin
-    plot_topoplot(dat[:, tp, 1]; positions = positions, axis = (; xlabel = "[$tp ms]"))
+# prevents layout regression
+@testset "topoplot: no extra axis space with left colorbar" begin
+    f = Figure(size = (520, 240))
+    objects = plot_topoplot!(
+        f[1, 1],
+        eeg_data_matrix[:, tp, 1];
+        positions,
+        topo_axis = (; width = 250, height = 190),
+        topo_attributes = (;
+            interpolation = TopoPlots.NullInterpolator(),
+        ),
+        visual = (;
+            contours = false,
+        ),
+        colorbar = (;
+            position = :left,
+            vertical = true,
+            height = 180,
+        ),
+        return_objects = true,
+    )
+
+    topo_bbox = objects.topo_axis.layoutobservables.computedbbox[]
+    colorbar_bbox = objects.colorbar.layoutobservables.computedbbox[]
+
+    # A redundant wrapper axis would reserve space and shift the visible topoplot.
+    @test count(content -> content isa Axis, f.content) == 1
+
+    # The layout must preserve the explicitly requested topoplot dimensions.
+    @test topo_bbox.widths ≈ Vec2f(250, 190)
+
+    # The colorbar's right edge must stay left of the topoplot's left edge.
+    @test colorbar_bbox.origin[1] + colorbar_bbox.widths[1] <= topo_bbox.origin[1]
 end
 
-@testset "topoplot: GridLayout" begin
+@testset "topoplot: xlabel" begin
+    plot_topoplot(eeg_data_matrix[:, tp, 1]; positions = positions, axis = (; xlabel = "[$tp ms]"))
+end
+
+@testset "topoplot: GridPosition" begin
     f = Makie.Figure()
-    plot_topoplot!(f[1, 1], dat[:, tp, 1]; positions = positions)
+    plot_topoplot!(f[1, 1], eeg_data_matrix[:, tp, 1]; positions = positions)
     f
 end
 
-@testset "topoplot: labels" begin
-    labels = ["s$i" for i = 1:size(dat[:, tp, 1], 1)]
+@testset "topoplot: channel labels" begin
+    labels = ["s$i" for i = 1:size(eeg_data_matrix[:, tp, 1], 1)]
     plot_topoplot(
-        dat[:, tp, 1],
+        eeg_data_matrix[:, tp, 1],
         positions = positions;
         labels = labels,
         visual = (; label_text = true),
@@ -72,101 +108,101 @@ end
     f = Makie.Figure()
     plot_topoplot!(
         f[1, 1][1, 1],
-        data_for_topoplot;
+        eeg_data_df;
         positions = rand(Point2f, 10),
         labels = string.(1:10),
     )
     f
 end
 
-@testset "topoplot: positions through labels" begin
+@testset "topoplot: infer positions from labels" begin
     plot_topoplot(
-        dat[1:19, tp, 1];
+        eeg_data_matrix[1:19, tp, 1];
         labels = TopoPlots.CHANNELS_10_20,
         visual = (; label_text = true),
     )
 end
 
-@testset "topoplot: change interpolation" begin
+@testset "topoplot: Delaunay interpolation" begin
     plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions = positions,
         topo_attributes = (; interpolation = DelaunayMesh()),
     )
 end
 
 
-@testset "topoplot: change interpolation" begin
+@testset "topoplot: no interpolation" begin
     plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions = positions,
         topo_attributes = (; interpolation = NullInterpolator()),
     )
 end
 
 
-@testset "topoplot: change aspect" begin
-    plot_topoplot(dat[:, tp, 1]; positions = positions, topo_axis = (; aspect = 2))
+@testset "topoplot: custom axis aspect" begin
+    plot_topoplot(eeg_data_matrix[:, tp, 1]; positions = positions, topo_axis = (; aspect = 2))
 end
 
-@testset "topoplot: observable" begin
-    dat_obs = Observable(dat[:, tp, 1])
+@testset "topoplot: Observable input and update" begin
+    dat_obs = Observable(eeg_data_matrix[:, tp, 1])
     plot_topoplot(dat_obs; positions = positions)
-    dat_obs[] = dat[:, tp, 1]
+    dat_obs[] = eeg_data_matrix[:, tp, 1]
     plot_topoplot(dat_obs; positions = positions)
 end
 
 
 @testset "topoplot: horizontal colorbar" begin
     plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions,
         colorbar = (; vertical = false, width = 180),
         axis = (; xlabel = ""),
     )
 end
 
-@testset "topoplot: colorbar position" begin
+@testset "topoplot: colorbar positions" begin
     f = Figure()
 
-    plot_topoplot!(f[1, 1], dat[:, tp, 1]; positions, colorbar = (; labelrotation = π/2, flipaxis = false, position = :left))
-    plot_topoplot!(f[1, 2], dat[:, tp, 1]; positions, colorbar = (; position = :right))
-    plot_topoplot!(f[2, 1], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = true, position = :top, vertical = false))
-    plot_topoplot!(f[2, 2], dat[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, position = :bottom, vertical = false))
+    plot_topoplot!(f[1, 1], eeg_data_matrix[:, tp, 1]; positions, colorbar = (; labelrotation = π/2, flipaxis = false, position = :left))
+    plot_topoplot!(f[1, 2], eeg_data_matrix[:, tp, 1]; positions, colorbar = (; position = :right))
+    plot_topoplot!(f[2, 1], eeg_data_matrix[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = true, position = :top, vertical = false))
+    plot_topoplot!(f[2, 2], eeg_data_matrix[:, tp, 1]; positions, colorbar = (; width = 140, flipaxis = false, position = :bottom, vertical = false))
     colsize!(f.layout, 1, Fixed(200))  
     f
 end
 
 
-@testset "topoplot: colorbar limits and colorrange blocked" begin
+@testset "topoplot: reject colorbar limits and colorrange" begin
     msg = "Topoplot uses a shared color range between the plot and colorbar. " *
           "Set `visual = (; colorrange = (lo, hi))` (or `visual = (; limits = ...)`) " *
           "instead of `colorbar = (; limits/colorrange = ...)`."
     @test_throws ErrorException(msg) plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions,
         colorbar = (; limits = (-1, 1)),
     )
 
     @test_throws ErrorException(msg) plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions,
         colorbar = (; colorrange = (-1, 1)),
     )
 end
 
-@testset "topoplot: std errors" begin
+@testset "topoplot: standard-error plot" begin
     f = Figure()
     plot_topoplot!(
         f[:, 1],
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions,
         colorbar = (; vertical = false, width = 180),
         axis = (; xlabel = ""),
     )
     plot_topoplot!(
         f[:, 2],
-        dat[:, tp, 2];
+        eeg_data_matrix[:, tp, 2];
         positions,
         colorbar = (; vertical = false, width = 180, label = "Voltage uncertainty"),
         axis = (; xlabel = "50 ms"),
@@ -176,7 +212,7 @@ end
     f
 end
 
-@testset "topoplot: shared colorbars" begin
+@testset "topoplot: shared color range with one colorbar" begin
     data_1, positions = TopoPlots.example_data()
     data_2 = data_1 .* 100
     _min, _max = minimum(data_2[:, 5, 1]), maximum(data_2[:, 5, 1])
@@ -198,10 +234,10 @@ end
     f
 end
 
-@testset "topoplot: markers as random arrows" begin
+@testset "topoplot: randomly rotated arrow markers" begin
     random_rotations = rand(64) .* 2π
     plot_topoplot(
-        dat[:, tp, 1];
+        eeg_data_matrix[:, tp, 1];
         positions,
         axis = (; xlabel = "50 ms"),
         topo_attributes = (;
@@ -215,8 +251,8 @@ end
     )
 end
 
-@testset "topoplot: categorical color" begin
-    plot_topoplot(dat[:, tp, 1]; positions, visual = (; colormap = cgrad(:managua, 10; categorical = true, rev = true)))
+@testset "topoplot: categorical colormap" begin
+    plot_topoplot(eeg_data_matrix[:, tp, 1]; positions, visual = (; colormap = cgrad(:managua, 10; categorical = true, rev = true)))
 end
 
 @testset "montage: get_montage default" begin

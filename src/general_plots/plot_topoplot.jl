@@ -103,15 +103,17 @@ function plot_topoplot!(
 
     row_offset = position == :top ? 1 : 0
     col_offset = position == :left ? 1 : 0
-    plot_rows = (1 + row_offset):(4 + row_offset)
-    plot_cols = (1 + col_offset):(2 + col_offset)
+    plot_rows = (1+row_offset):(4+row_offset)
+    plot_cols = (1+col_offset):(2+col_offset)
 
-    outer_axis = Axis(great_axis[plot_rows, plot_cols]; config.axis...)
-    hidespines!(outer_axis); hidedecorations!(outer_axis, label = false)
+    # A single axis owning both the topoplot and its decorations. 
+    axis_attributes = merge(config.axis, topo_axis)
+    topo_axis_object = Axis(great_axis[plot_rows, plot_cols]; axis_attributes...)
+    hidespines!(topo_axis_object)
+    hidedecorations!(topo_axis_object, label = false)
 
-    inner_axis = Axis(great_axis[plot_rows, plot_cols]; topo_axis...)
     h = eeg_topoplot!(
-        inner_axis,
+        topo_axis_object,
         data;
         labels = labels,
         positions,
@@ -157,7 +159,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
         elseif position == :bottom
             rowgap!(great_axis, plot_rows.stop, 10)
             rowsize!(great_axis, plot_rows.stop + 1, Auto(0.1))
-            outer_axis.xlabelpadding = -6
+            topo_axis_object.xlabelpadding = -6
         elseif position == :left || position == :right
             colgap!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
             colsize!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
@@ -168,8 +170,8 @@ Note: The identical min and max may cause an interpolation error when plotting t
            (;
         figure = f,
         layout = great_axis,
-        axis = outer_axis,
-        topo_axis = inner_axis,
+        axis = topo_axis_object,
+        topo_axis = topo_axis_object,
         plot = h,
         colorbar = cb,
     ) : f
