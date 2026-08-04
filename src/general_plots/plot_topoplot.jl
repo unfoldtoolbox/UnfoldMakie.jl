@@ -103,8 +103,8 @@ function plot_topoplot!(
 
     row_offset = position == :top ? 1 : 0
     col_offset = position == :left ? 1 : 0
-    plot_rows = (1 + row_offset):(4 + row_offset)
-    plot_cols = (1 + col_offset):(2 + col_offset)
+    plot_rows = (1+row_offset):(4+row_offset)
+    plot_cols = (1+col_offset):(2+col_offset)
 
     # A single axis owning both the topoplot and its decorations. 
     axis_attributes = merge(config.axis, topo_axis)
