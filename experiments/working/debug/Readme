@@ -1,0 +1,39 @@
+In this folder we will create checkers to be sure that all stimulii were creted correctly
+
+1. Topoplots look like targets
+Visual check: each generated topoplot should clearly resemble its intended target pattern.
+For this we will plot in pdf all and 30 selected topplots. 
+
+search_stimuli.jl
+
+2. Topoplots are diverging over zero
+
+The color range should be centered around zero, for example (-max(abs(values)), +max(abs(values))).
+search_stimuli.jl
+
+3. Rereferencing is correct
+
+After average rereferencing, the mean of the new voltage values across channels should be approximately zero for each subject/timepoint/condition.
+
+debug_rereferencing.jl
+
+4. SNR shows influence of both SE and signal
+
+Check that SNR is not only determined by signal amplitude. Even a small SE influence is enough if weak-signal and high-SNR regions can differ. This may be more visible on smaller grid regions.
+
+debug_sss.jl (signal, se, SNR) - topoplots
+debug_sss_peaks.jl - table with peaks
+debug_sss_peaks_by_regions.jl - table with region peaks
+debug_sss_peaks_topo.jl - panel-7-style region-score topoplots for estimate vs SNR
+
+5. All indvidaul plots are plotted correctly for all cases
+
+debug_plots.jl
+
+6. Check pypeline
+
+Check every step of pypeline in which se adn signal are transformed into regions and scores
+
+7. Scores match interpretation
+
+If I select the regions with the highest scores, I should get the regions with the best expected results according to the intended interpretation.
