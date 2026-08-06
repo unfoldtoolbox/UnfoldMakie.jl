@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Complex figures · UnfoldMakie.jl</title><meta name="title" content="Complex figures · UnfoldMakie.jl"/><meta property="og:title" content="Complex figures · UnfoldMakie.jl"/><meta property="twitter:title" content="Complex figures · UnfoldMakie.jl"/><meta name="description" content="Documentation for UnfoldMakie.jl."/><meta property="og:description" content="Documentation for UnfoldMakie.jl."/><meta property="twitter:description" content="Documentation for UnfoldMakie.jl."/><meta property="og:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/generated/how_to/complex_figures/"/><meta property="twitter:url" content="https://unfoldtoolbox.github.io/UnfoldMakie.jl/generated/how_to/complex_figures/"/><link rel="canonical" href="https://unfoldtoolbox.github.io/UnfoldMakie.jl/generated/how_to/complex_figures/"/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.svg" alt="UnfoldMakie.jl logo"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><a class="tocitem" href="../../explanations/installation/">Installing Julia &amp; UnfoldMakie.jl</a></li><li><span class="tocitem">Tutorials</span><ul><li><input class="collapse-toggle" id="menuitem-3-1" type="checkbox"/><label class="tocitem" for="menuitem-3-1"><span class="docs-label">ERP Visualizations</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/erp/">ERP plot</a></li><li><a class="tocitem" href="../../tutorials/butterfly/">Butterfly plot</a></li><li><a class="tocitem" href="../../tutorials/topoplot/">Topoplot</a></li><li><a class="tocitem" href="../../tutorials/topoplotseries/">Topoplot series</a></li><li><a class="tocitem" href="../../tutorials/erp_grid/">ERP grid</a></li><li><a class="tocitem" href="../../tutorials/erpimage/">ERP image</a></li><li><a class="tocitem" href="../../tutorials/channel_image/">Channel image</a></li><li><a class="tocitem" href="../../tutorials/parallelcoordinates/">Parallel coordinates</a></li><li><a class="tocitem" href="../../tutorials/circ_topo/">Circular topoplots</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3-2" type="checkbox"/><label class="tocitem" for="menuitem-3-2"><span class="docs-label">Unfold-specific Visualisations</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/designmatrix/">Design matrix</a></li><li><a class="tocitem" href="../../tutorials/splines/">Spline plot</a></li></ul></li><li><a class="tocitem" href="../../tutorials/videos/">Videos</a></li></ul></li><li><span class="tocitem">How To Do</span><ul><li class="is-active"><a class="tocitem" href>Complex figures</a><ul class="internal"><li class="toplevel"><a class="tocitem" href="#Setup"><span>Setup</span></a></li><li class="toplevel"><a class="tocitem" href="#Basic-complex-figure"><span>Basic complex figure</span></a></li><li class="toplevel"><a class="tocitem" href="#A-very-complex-figure"><span>A very complex figure</span></a></li><li class="toplevel"><a class="tocitem" href="#Complex-figure-in-two-columns-and-with-background-color"><span>Complex figure in two columns and with background color</span></a></li><li class="toplevel"><a class="tocitem" href="#Complex-figure-in-four-columns-and-with-background-color"><span>Complex figure in four columns and with background color</span></a></li></ul></li><li><a class="tocitem" href="../hide_deco/">Hide decorations and axis spines</a></li><li><a class="tocitem" href="../position2color/">Butterfly: colormap</a></li><li><a class="tocitem" href="../topo_labels/">Topoplot: labels and positions</a></li><li><a class="tocitem" href="../uncertain_topo/">Topoplot: uncertainty</a></li><li><a class="tocitem" href="../montage/">Topoplot: montage</a></li><li><a class="tocitem" href="../positions/">Topoplot: 3D to 2D</a></li></ul></li><li><span class="tocitem">Explanations</span><ul><li><a class="tocitem" href="../../explanations/plot_types/">Plot types</a></li><li><a class="tocitem" href="../../explanations/key_features/">Key features</a></li><li><a class="tocitem" href="../../explanations/code_principles/">Code principles</a></li></ul></li><li><span class="tocitem">Reference</span><ul><li><a class="tocitem" href="../../explanations/speed/">Benchmarks</a></li><li><a class="tocitem" href="../../../api/">API: Functions</a></li><li><a class="tocitem" href="../../../helper/">API: Utilities</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">How To Do</a></li><li class="is-active"><a href>Complex figures</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Complex figures</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/blob/main/docs/literate/how_to/complex_figures.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Complex-figures"><a class="docs-heading-anchor" href="#Complex-figures">Complex figures</a><a id="Complex-figures-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figures" title="Permalink"></a></h1><p>This section discusses how users can incorporate multiple plots into a single figure.</p><h1 id="Setup"><a class="docs-heading-anchor" href="#Setup">Setup</a><a id="Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Setup" title="Permalink"></a></h1><p><strong>Library load</strong></p><pre><code class="language-julia hljs">using UnfoldMakie;
+using CairoMakie
+using DataFrames
+using UnfoldSim
+using Unfold
+using MakieThemes
+using TopoPlots;</code></pre><p><strong>Data input</strong></p><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">topo_df, positions = UnfoldMakie.example_data(&quot;TopoPlots.jl&quot;)
+topo_array, _ = TopoPlots.example_data()
+toposeries_data =
+    UnfoldMakie.eeg_array_to_dataframe(topo_array[:, :, 1], string.(1:length(positions)));
+biosemi32 = get_montage(&quot;biosemi32&quot;);</code></pre><p>Exclude the three fiducial landmarks: Nz, LPA, and RPA.</p><pre><code class="language-julia hljs">biosemi32 = (; labels = biosemi32.labels[1:32], positions = biosemi32.positions[1:32]);
+
+continuous_time_model = UnfoldMakie.example_data(&quot;UnfoldLinearModelContinuousTime&quot;)
+linear_model = UnfoldMakie.example_data(&quot;UnfoldLinearModel&quot;);
+multichannel_model = UnfoldMakie.example_data(&quot;UnfoldLinearModelMultiChannel&quot;);
+
+erpimage_data, events, time_points = UnfoldMakie.example_data(&quot;sort_data&quot;)
+epoched_data, _ = UnfoldSim.predef_eeg(; return_epoched = true);
+
+coefficient_table = coeftable(linear_model);
+coefficient_table.coefname =
+    replace(coefficient_table.coefname, &quot;condition: face&quot; =&gt; &quot;face&quot;, &quot;(Intercept)&quot; =&gt; &quot;car&quot;);
+coefficient_table = filter(row -&gt; row.coefname != &quot;continuous&quot;, coefficient_table);
+
+circular_topo_data = DataFrame(
+    :estimate =&gt; eachcol(Float64.(topo_array[:, 100:40:300, 1])),
+    :circular_variable =&gt; [0, 50, 80, 120, 180, 210],
+    :time =&gt; 100:40:300,
+);
+circular_topo_data = flatten(circular_topo_data, :estimate);</code></pre></details ><h1 id="Basic-complex-figure"><a class="docs-heading-anchor" href="#Basic-complex-figure">Basic complex figure</a><a id="Basic-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-complex-figure" title="Permalink"></a></h1><p>By using the !-version of the plotting function and inserting a grid position instead of an entire figure, we can create complex plot that combines several figures. We will start by creating a figure with <code>Makie.Figure</code>.</p><p>Now any plot can be added to <code>f</code> by placing a grid position, such as <code>f[1, 1]</code>. Also we used a specified theme <code>fresh</code>.</p><pre><code class="language-julia hljs">f = Figure(size = (750, 500))
+with_theme(theme_ggthemr(:fresh)) do
+    plot_erp!(
+        f[1, 1],
+        coeftable(continuous_time_model);
+        mapping = (; color = :coefname =&gt; &quot;Conditions&quot;),
+    )
+    plot_erp!(
+        f[1, 2],
+        effects(Dict(:condition =&gt; [&quot;car&quot;, &quot;face&quot;]), continuous_time_model),
+        mapping = (; y = :yhat, color = :condition =&gt; &quot;Conditions&quot;),
+    )
+    plot_butterfly!(f[2, 1:2], topo_df; positions = positions,
+        topo_attributes = (; label_scatter = (; markersize = 5)),
+        topo_axis = (; height = Relative(0.5), width = Relative(0.5)))
+end
+f</code></pre><img src="3d00ef76.png" alt="Example block output"/><h1 id="A-very-complex-figure"><a class="docs-heading-anchor" href="#A-very-complex-figure">A very complex figure</a><a id="A-very-complex-figure-1"></a><a class="docs-heading-anchor-permalink" href="#A-very-complex-figure" title="Permalink"></a></h1><p>We can create a large figure with any type of plot using predefined data.</p><p>With so many plots at once, it&#39;s better to set a fixed resolution in your image to arrange the plots evenly.</p><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">begin
+    f = Figure(size = (2000, 2000))
+
+    plot_butterfly!(f[1, 1:3], topo_df; positions = positions)
+
+    pvals = DataFrame(
+        from = [0.1, 0.15],
+        to = [0.2, 0.5], # if coefname not specified, line should be black
+        coefname = [&quot;(Intercept)&quot;, &quot;category: face&quot;],
+    )
+    plot_erp!(f[2, 1:2], coefficient_table, significance = pvals, stderror = true)
+
+    plot_designmatrix!(f[2, 3], designmatrix(linear_model))
+
+    plot_topoplot!(f[3, 1], topo_array[:, 150, 1]; positions = positions)
+    plot_topoplotseries!(
+        f[4, 1:3],
+        topo_df;
+        bin_width = 0.1,
+        positions = positions,
+        mapping = (; label = :channel),
+    )
+
+    res_effects = effects(Dict(:continuous =&gt; -5:0.5:5), continuous_time_model)
+
+    plot_erp!(
+        f[2, 4:5],
+        res_effects;
+        mapping = (; y = :yhat, color = :continuous, group = :continuous =&gt; nonnumeric),
+        legend = (; nbanks = 2),
+    )
+
+    plot_parallelcoordinates(
+        f[3, 2:3],
+        multichannel_model;
+        mapping = (; color = :coefname),
+    )
+
+    plot_erpimage!(f[1, 4:5], time_points, epoched_data)
+    plot_circular_topoplots!(
+        f[3:4, 4:5],
+        topo_df[in.(topo_df.time, Ref(-0.3:0.1:0.5)), :];
+        positions = positions,
+        predictor = :time,
+        predictor_bounds = [-0.3, 0.5],
+    )
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridPosition(GridLayout[4, 5] (9 children), GridLayoutBase.Span(3:4, 4:5), GridLayoutBase.Inner())</code></pre></details ><pre><code class="language-julia hljs">f</code></pre><img src="3f9187a2.png" alt="Example block output"/><h1 id="Complex-figure-in-two-columns-and-with-background-color"><a class="docs-heading-anchor" href="#Complex-figure-in-two-columns-and-with-background-color">Complex figure in two columns and with background color</a><a id="Complex-figure-in-two-columns-and-with-background-color-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-two-columns-and-with-background-color" title="Permalink"></a></h1><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function complex_figure3(
+    topo_df,
+    topo_array,
+    positions,
+    toposeries_data,
+    biosemi32,
+    coefficient_table,
+    circular_topo_data,
+    erpimage_data,
+    events,
+    time_points,
+)
+    f = Figure(size = (1200, 1700))
+    (panel_a, panel_c, panel_e, panel_g, panel_i) =
+        (f[1, 1], f[2, 1], f[3, 1], f[4, 1], f[5:6, 1])
+    (panel_b, panel_d, panel_f, panel_h, panel_j) =
+        (f[1, 2], f[2, 2], f[3, 2], f[4, 2], f[5:6, 2])
+
+    plot_erp!(
+        panel_a,
+        coefficient_table;
+        stderror = true,
+        mapping = (; color = :coefname =&gt; &quot;Conditions&quot;),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, xlabel = &quot;Time [ms]&quot;),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    plot_butterfly!(
+        panel_b,
+        topo_df;
+        positions = positions,
+        topo_axis = (; height = Relative(0.4), width = Relative(0.4)),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, xlabel = &quot;Time [ms]&quot;),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+    plot_topoplot!(
+        panel_c,
+        topo_array[:, 340, 1];
+        positions = positions,
+        topo_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        axis = (; xlabel = &quot;[340 ms]&quot;),
+    )
+
+    plot_topoplotseries!(
+        panel_d,
+        toposeries_data;
+        bin_width = 80,
+        positions = positions,
+        visual = (label_scatter = false, contours = false),
+        layout = (; use_colorbar = true),
+        topo_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, xlabel = &quot;Time [ms]&quot;),
+    )
+
+    plot_erpgrid!(
+        panel_e,
+        topo_array[:, :, 1],
+        positions;
+        indicator_grid_axis = (;
+            ylim = [-0.05, 0.6], xlim = [-0.04, 1], text_x_kwargs = (; text = &quot;s&quot;),
+            text_y_kwargs = (; text = &quot;µV&quot;),
+        ),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;,),
+    )
+
+    plot_erpimage!(
+        panel_f,
+        time_points,
+        erpimage_data;
+        sortvalues = events.Δlatency,
+        axis = (; xlabel = &quot;Time [ms]&quot;),
+    )
+    spline_model = UnfoldMakie.example_data(&quot;UnfoldLinearModelwith1Spline&quot;)
+    plot_splines!(
+        panel_g,
+        spline_model;
+        spline_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        density_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+    )
+
+    parallel_df = subset(topo_df, :channel =&gt; x -&gt; x .&lt; 8, :time =&gt; x -&gt; x .&lt; 0)
+    parallel_df_b = copy(parallel_df)
+    parallel_df_b.coefname .= &quot;B&quot;
+    parallel_df_b.estimate .+= 0.1
+    parallel_df = vcat(parallel_df, parallel_df_b)
+    plot_parallelcoordinates(
+        panel_h,
+        parallel_df;
+        mapping = (; color = :coefname),
+        normalize = :minmax,
+        ax_labels = [&quot;FP1&quot;, &quot;F3&quot;, &quot;F7&quot;, &quot;FC3&quot;, &quot;C3&quot;, &quot;C5&quot;, &quot;P3&quot;, &quot;P7&quot;],
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;, ylabel = &quot;Time [ms]&quot;),
+    )
+
+    plot_circular_topoplots!(
+        panel_i,
+        circular_topo_data;
+        positions = positions,
+        center_label = &quot;Time [s]&quot;,
+        predictor = :time,
+        topo_attributes = (; label_scatter = false,),
+        topo_axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        axis = (; backgroundcolor = colorant&quot;#F4F3EF&quot;),
+        predictor_bounds = [80, 320],
+        colorbar = (; height = 180),
+    )
+    plot_channelimage!(
+        panel_j,
+        topo_array[1:32, :, 1],
+        biosemi32.positions,
+        biosemi32.labels;
+        axis = (; xlabel = &quot;Time [ms]&quot;),
+    )
+
+    for (label, layout) in
+        zip(
+        [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;],
+        [panel_a, panel_b, panel_c, panel_d, panel_e,
+        panel_f, panel_g, panel_h, panel_i, panel_j],
+    )
+        Label(
+            layout[1, 1, TopLeft()],
+            label,
+            fontsize = 26,
+            font = :bold,
+            padding = (20, 20, 22, 0),
+            halign = :right,
+        )
+    end
+    f
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">complex_figure3 (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">with_theme(Theme(; backgroundcolor = colorant&quot;#F4F3EF&quot;)) do
+    complex_figure3(
+        topo_df,
+        topo_array,
+        positions,
+        toposeries_data,
+        biosemi32,
+        coefficient_table,
+        circular_topo_data,
+        erpimage_data,
+        events,
+        time_points,
+    )
+end</code></pre><img src="bc71aa3c.png" alt="Example block output"/><h1 id="Complex-figure-in-four-columns-and-with-background-color"><a class="docs-heading-anchor" href="#Complex-figure-in-four-columns-and-with-background-color">Complex figure in four columns and with background color</a><a id="Complex-figure-in-four-columns-and-with-background-color-1"></a><a class="docs-heading-anchor-permalink" href="#Complex-figure-in-four-columns-and-with-background-color" title="Permalink"></a></h1><details>
+<summary>Click to expand</summary><pre><code class="language-julia hljs">function complex_figure4(
+    topo_df,
+    topo_array,
+    positions,
+    toposeries_data,
+    biosemi32,
+    coefficient_table,
+    circular_topo_data,
+    erpimage_data,
+    events,
+    time_points,
+)
+    f = Figure(size = (1800, 1000))
+    panel_background = colorant&quot;#F4F3EF&quot;
+    axis_fontsizes =
+        (; xlabelsize = 24, ylabelsize = 24, xticklabelsize = 18, yticklabelsize = 18)
+    colorbar_style = (; labelsize = 24, ticklabelsize = 18)
+
+    top_row = f[1, 1] = GridLayout()
+    bottom_row = f[2, 1] = GridLayout()
+
+    (panel_a, panel_b, panel_c, panel_d) =
+        (top_row[1, 1], top_row[1, 2], top_row[1, 3], top_row[1, 4])
+    (panel_e, panel_f, panel_h) =
+        (bottom_row[1, 1], bottom_row[1, 2], bottom_row[1, 4])
+    panel_g = bottom_row[1, 3] = GridLayout()
+
+    plot_erp!(
+        panel_a,
+        coefficient_table;
+        :stderror =&gt; true,
+        mapping = (; color = :coefname =&gt; &quot;Conditions:&quot;),
+        legend = (;
+            orientation = :horizontal,
+            titleposition = :left,
+            position = :bottom,
+            labelsize = 18,
+            titlesize = 20,
+            nbanks = 2,
+        ),
+        axis = (;
+            axis_fontsizes...,
+            backgroundcolor = panel_background,
+            xlabel = &quot;Time [ms]&quot;,
+            width = 350,
+        ),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+
+    plot_butterfly!(
+        panel_b,
+        topo_df;
+        positions = positions,
+        topo_axis = (;
+            height = Relative(0.4),
+            width = Relative(0.4),
+            tellwidth = false,
+            tellheight = false,
+        ),
+        axis = (; axis_fontsizes..., backgroundcolor = panel_background, xlabel = &quot;Time [ms]&quot;),
+    )
+    hlines!(0, color = :gray, linewidth = 1)
+    vlines!(0, color = :gray, linewidth = 1)
+
+    panel_e_objects = plot_topoplot!(
+        panel_e,
+        topo_array[:, 340, 1];
+        positions = positions,
+        return_objects = true,
+        topo_axis = (; backgroundcolor = panel_background),
+        axis = (;
+            xlabel = &quot;[340 ms]&quot;,
+            backgroundcolor = panel_background,
+            xlabelsize = 24,
+            ylabelsize = 24,
+        ),
+        colorbar = (; colorbar_style..., position = :bottom, vertical = false, width = 240),
+        visual = (; contours = false),
+    )
+    translate!(panel_e_objects.colorbar.blockscene, 0, -30, 100)
+
+    plot_topoplotseries!(
+        panel_f,
+        toposeries_data;
+        bin_num = 4,
+        nrows = 2,
+        positions = positions,
+        visual = (label_scatter = false, contours = false),
+        layout = (; use_colorbar = true),
+        topo_axis = (; backgroundcolor = panel_background, xlabelsize = 18),
+        axis = (;
+            xlabelpadding = 50,
+            backgroundcolor = panel_background,
+            xlabel = &quot;        Time [ms]&quot;,
+            xlabelsize = 24,
+            ylabelsize = 24,
+        ),
+        colorbar = (; colorbar_style..., height = 180),
+    )
+
+    plot_erpgrid!(
+        panel_c,
+        topo_array[:, :, 1],
+        positions;
+        indicator_grid_axis = (;
+            ylim = [-0.05, 0.6], xlim = [-0.07, 1],
+            text_x_kwargs = (; text = &quot;s&quot;, fontsize = 24),
+            text_y_kwargs = (; text = &quot;µV&quot;, fontsize = 24),
+        ),
+        axis = (; backgroundcolor = panel_background),
+        colorbar = (; colorbar_style..., height = 180),
+    )
+
+    plot_erpimage!(
+        panel_d,
+        time_points,
+        erpimage_data;
+        sortvalues = events.Δlatency,
+        axis = (;
+            axis_fontsizes...,
+            xlabel = &quot;Time [ms]&quot;,
+        ),
+        colorbar = (; colorbar_style..., height = 180),
+    )
+
+    panel_g_objects = plot_circular_topoplots!(
+        panel_g,
+        circular_topo_data;
+        positions = positions,
+        return_objects = true,
+        center_label = &quot;Time [ms]&quot;,
+        predictor = :time,
+        plot_radius = 0.9,
+        topo_attributes = (; label_scatter = false, contours = false),
+        topo_axis = (;
+            backgroundcolor = panel_background,
+            width = Relative(0.3),
+            height = Relative(0.3),
+        ),
+        axis = (; backgroundcolor = panel_background, xlabelsize = 24, ylabelsize = 24),
+        predictor_bounds = [80, 320],
+        colorbar = (;
+            position = :bottom,
+            vertical = false,
+            valign = :bottom,
+            colorbar_style...,
+            width = 240,
+        ),
+    )
+    translate!(panel_g_objects.colorbar.blockscene, 0, -30, 100)
+    colsize!(panel_g, 1, Relative(1))
+    rowsize!(panel_g, 1, Relative(0.99))
+    rowgap!(panel_g, 5)
+
+    plot_channelimage!(
+        panel_h,
+        topo_array[1:32, :, 1],
+        biosemi32.positions,
+        biosemi32.labels;
+        axis = (;
+            axis_fontsizes...,
+            xlabel = &quot;Time [ms]&quot;,
+        ),
+        colorbar = (; colorbar_style..., height = 180),
+    )
+
+    for row_layout in (top_row, bottom_row), column = 1:4
+        colsize!(row_layout, column, Relative(1 / 4))
+    end
+
+    for (label, layout) in zip(
+        [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;],
+        [panel_a, panel_b, panel_c, panel_d, panel_e, panel_f, panel_g, panel_h],
+    )
+        Label(
+            layout[1, 1, Top()],
+            label,
+            fontsize = 26,
+            font = :bold,
+            padding = (20, 20, 22, 0),
+            halign = :left,
+        )
+    end
+    f
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">complex_figure4 (generic function with 1 method)</code></pre></details ><pre><code class="language-julia hljs">f = with_theme(Theme(; backgroundcolor = colorant&quot;#F4F3EF&quot;)) do
+    complex_figure4(
+        topo_df,
+        topo_array,
+        positions,
+        toposeries_data,
+        biosemi32,
+        coefficient_table,
+        circular_topo_data,
+        erpimage_data,
+        events,
+        time_points,
+    )
+end
+
+#save(&quot;complex_figure4.png&quot;, f)</code></pre><img src="580912b9.png" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/videos/">« Videos</a><a class="docs-footer-nextpage" href="../hide_deco/">Hide decorations and axis spines »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Thursday 6 August 2026 14:52">Thursday 6 August 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
