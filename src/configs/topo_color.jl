@@ -1,7 +1,12 @@
-function get_topo_positions(; labels = nothing, positions = nothing)
+function get_topo_positions(; labels = nothing, positions = nothing, montage = nothing)
     # positions have priority over labels
     if isnothing(positions) && !isnothing(labels)
-        positions = get_label_pos.(labels)
+        if isnothing(montage)
+            positions = get_label_pos.(labels)                          #hardcoded standard_1005 dict
+        else
+            raw = standard_positions(labels, montage)                   # any of our bundled montages
+            positions = [(p[1]/2 + 0.5, p[2]/2 + 0.5) for p in raw]
+        end
     end
     @assert !isnothing(positions) "No positions found, did you forget to provide them via positions=XX, or labels=YY?"
     return positions .|> (p -> Point2f(p[1], p[2]))
