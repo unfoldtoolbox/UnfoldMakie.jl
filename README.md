@@ -141,8 +141,9 @@ If you use these visualizations, please cite:
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jschepers"><img src="https://avatars.githubusercontent.com/u/22366977?v=4?s=100" width="100px;" alt="Judith Schepers"/><br /><sub><b>Judith Schepers</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/issues?q=author%3Ajschepers" title="Bug reports">🐛</a> <a href="#ideas-jschepers" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=jschepers" title="Documentation">📖</a></td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://reneskukies.de/"><img src="https://avatars.githubusercontent.com/u/57703446?v=4?s=100" width="100px;" alt="René Skukies"/><br /><sub><b>René Skukies</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=ReneSkukies" title="Documentation">📖</a></td>
-    </tr>
+  <td align="center" valign="top" width="14.28%"><a href="https://reneskukies.de/"><img src="https://avatars.githubusercontent.com/u/57703446?v=4?s=100" width="100px;" alt="René Skukies"/><br /><sub><b>René Skukies</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=ReneSkukies" title="Documentation">📖</a></td>
+  <td align="center" valign="top" width="14.28%"><a href="https://github.com/kbelgal02"><img src="https://avatars.githubusercontent.com/u/253596950?v=4?s=100" width="100px;" alt="Kiran Belgal"/><br /><sub><b>Kiran Belgal</b></sub></a><br /><a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/issues?q=author%3Akbelgal02" title="Bug reports">🐛</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=kbelgal02" title="Code">💻</a> <a href="#maintenance-kbelgal02" title="Maintenance">🚧</a> <a href="https://github.com/unfoldtoolbox/UnfoldMakie.jl/commits?author=kbelgal02" title="Tests">⚠️</a></td>
+</tr>
   </tbody>
 </table>
 
