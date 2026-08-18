@@ -44,7 +44,7 @@ plot_erp(
 
 # # Additional features
 
-# ## Choosing line colors
+# ## Changing line colors
 
 # Color behavior depends on the data mapped by `mapping.color`.
 #
