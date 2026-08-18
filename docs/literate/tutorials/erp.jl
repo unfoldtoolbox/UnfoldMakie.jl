@@ -44,14 +44,57 @@ plot_erp(
 
 # # Additional features
 
-# ## Effect plot
+# ## Choosing line colors
 
-# Effect plot shows how the ERP is affected by variation of some variable (here: `:continuous`).
+# Color behavior depends on the data mapped by `mapping.color`.
+#
+# | Goal | `mapping.color` | Color setting | Guide |
+# |:-----|:----------------|:--------------|:------|
+# | Continuous gradient | Numeric column | `visual.colormap` | Colorbar |
+# | Categorical conditions | String, Boolean, or `=> nonnumeric` column | Vector `visual.color` | Legend |
+# | One solid color | `nothing` | Scalar `visual.color` | None |
+
+# ### Continuous color mapping
+
+# This effect plot shows how the ERP varies with the numeric predictor `:continuous`.
+# Because that column is mapped to color, `visual.colormap` controls the gradient.
 
 plot_erp(
     res_effects;
     mapping = (; y = :yhat, color = :continuous, group = :continuous),
-    layout = (; use_colorbar = true),
+    visual = (; colormap = :berlin),
+    layout = (; use_colorbar = true, use_legend = false),
+    axis = (; xlabel = "Time [s]"),
+)
+
+# ### Categorical color mapping
+
+# `:coefname` contains category labels, so `visual.color` is interpreted as a discrete
+# palette. Its length should match the number of categories.
+
+coefficient_palette = Makie.wong_colors()[5:5+length(unique(results.coefname))-1]
+plot_erp(
+    results;
+    mapping = (; color = :coefname, group = :coefname),
+    visual = (; color = coefficient_palette),
+    layout = (; use_colorbar = false, use_legend = true),
+    axis = (; xlabel = "Time [s]"),
+)
+
+# A numeric column can be treated as categorical with
+# `mapping = (; color = :continuous => nonnumeric)`. In that case, use
+# `visual.color`, not `visual.colormap`.
+
+# ### Solid color
+
+# To use one color for all lines, disable the color mapping explicitly. Keep `group`
+# when the data contains multiple curves so that they remain separate.
+
+plot_erp(
+    results;
+    mapping = (; color = nothing, group = :coefname),
+    visual = (; color = :black),
+    layout = (; use_colorbar = false, use_legend = false),
     axis = (; xlabel = "Time [s]"),
 )
 
