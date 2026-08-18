@@ -40,8 +40,10 @@ Plot an ERP plot.
 - `mapping = (;)`\\
     Specify `color`, `col` (column), `linestyle`, `group`.\\
     F.e. `mapping = (; col = :group)` will make a column for each group.
-- `visual = (; color = Makie.wong_colors, colormap = :roma)`\\
-    For categorical color use `visual.color`, for continuous - `visual.colormap`.\\
+- `visual = (; color = Makie.wong_colors(), colormap = :roma)`\\
+    With a numeric `mapping.color`, use `visual.colormap` to select a continuous gradient.\\
+    With a categorical `mapping.color`, use `visual.color` to provide a discrete palette.\\
+    For one solid color, set `mapping.color = nothing` and pass a scalar `visual.color`.\\
 - `sigifnicance_visual::Symbol = :vspan`\\
     How to display significance intervals. Options:\\
     * `:vspan` – draw vertical shaded spans (default);\\
@@ -151,16 +153,15 @@ function plot_erp!(
     else
         # Determine color mapping
         is_symbolic_color = isa(config.mapping.color, Symbol)
-        color_type =
-            is_symbolic_color ? AlgebraOfGraphics.nonnumeric : config.mapping.color[2]
+        color_type = is_symbolic_color ? nothing : config.mapping.color[2]
 
         # Check if the color data is categorical
         color_mapper = is_symbolic_color ? config.mapping.color : config.mapping.color[1]
         color_data = plot_data[:, color_mapper]
         is_categorical =
-            isa(color_data[1], String) ||
             isa(color_data[1], Bool) ||
-            color_type == AlgebraOfGraphics.nonnumeric
+            !isa(color_data[1], Number) ||
+            color_type === AlgebraOfGraphics.nonnumeric
     end
 
     # remove x / y
@@ -195,8 +196,15 @@ function plot_erp!(
     f_grid = f[1, 1] = GridLayout()
 
     # Draw the plot accordingly
-    drawing = if is_categorical
-        draw!(f_grid, plot_equation; axis = config.axis)  # Categorical case
+    drawing = if is_categorical && haskey(config.mapping, :color)
+        draw!(
+            f_grid,
+            plot_equation,
+            scales(Color = (; palette = config.visual.color));
+            axis = config.axis,
+        )  # Categorical case
+    elseif is_categorical
+        draw!(f_grid, plot_equation; axis = config.axis)  # No color mapping
     else
         draw!(
             f_grid,
