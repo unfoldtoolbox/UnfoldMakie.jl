@@ -150,7 +150,7 @@ function plot_erp!(
             #By default we used `black` color for lines. If you need something else, please specify `config.visual.color`.
         end
         is_categorical = true
-     else
+    else
         # Determine color mapping
         is_symbolic_color = isa(config.mapping.color, Symbol)
         color_type = is_symbolic_color ? nothing : config.mapping.color[2]
