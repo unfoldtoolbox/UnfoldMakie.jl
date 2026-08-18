@@ -239,3 +239,8 @@ end
     labels = ["Fp1","Fp2","F3","F4","Fz","C3","C4","Cz","P3","P4","Pz","O1","O2","Oz","T7","T8"]
     plot_butterfly(randn(length(labels), 100); labels = labels, montage = "standard_1005")
 end
+
+@testset "butterfly: labels path with montage biosemi16" begin
+    montage = get_montage("biosemi16")
+    plot_butterfly(randn(length(montage.labels), 100); labels = montage.labels, montage = "biosemi16")
+end
