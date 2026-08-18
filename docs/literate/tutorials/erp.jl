@@ -72,7 +72,7 @@ plot_erp(
 # `:coefname` contains category labels, so `visual.color` is interpreted as a discrete
 # palette. Its length should match the number of categories.
 
-coefficient_palette = Makie.wong_colors()[5:5+length(unique(results.coefname))-1]
+coefficient_palette = Makie.wong_colors()[5:(5+length(unique(results.coefname))-1)]
 plot_erp(
     results;
     mapping = (; color = :coefname, group = :coefname),
