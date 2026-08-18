@@ -22,6 +22,9 @@ Plot a Butterfly plot.
 - `positions::Array = []` \\
     Adds a topoplot as an inset legend to the provided channel positions. Must be the same length as `plot_data`.  
     To change the colors of the channel lines use the `topoposition_to_color` function.
+- `montage::Union{Nothing, String} = nothing`\\
+    Check channel `labels` against a bundled montage such as `"standard_1020"` or `"biosemi64"`.
+    Call `list_montages()` for every possible option. Default is standard_1005.
 - `nticks::Union{Int,Tuple{Int,Int}, NamedTuple{(:x,:y),Tuple{Int,Int}}}` = 5\\
     Set the number of tick positions (x,y). Acepts 3 types fo arguments: 6 (=both axes are 6), (5,7), or (x=5, y=7). 
     Controls positions only (use xtickformat/ytickformat for labels).
@@ -54,6 +57,7 @@ function plot_butterfly!(
     plot_data::Union{<:AbstractDataFrame,AbstractMatrix};
     positions = nothing,
     labels = nothing,
+    montage = nothing,
     topolegend = true,
     topopositions_to_color = x -> pos_to_color_RomaO(x),
     topo_axis = (;),
@@ -76,7 +80,7 @@ function plot_butterfly!(
         topolegend = false
         colors = nothing
     else
-        all_positions = get_topo_positions(; positions = positions, labels = labels)
+        all_positions = get_topo_positions(; positions = positions, labels = labels, montage = montage)
         if (config.visual.colormap !== nothing)
             get_topo_color(all_positions, topopositions_to_color)
             colors = config.visual.colormap
