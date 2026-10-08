@@ -51,6 +51,44 @@ plot_topoplot(
     colorbar = (; vertical = false, position = :bottom, width = 180),
 )
 
+# # Colorbar position
+# The colorbar can sit on any side of the topoplot with `colorbar.position`:
+# `:right` (default), `:left`, `:top` or `:bottom`. Each colorbar stays attached to its own topoplot, so different positions can be combined in one figure without
+# messing up neighbouring plots.
+
+begin
+    f = Figure(size = (800, 750))
+    plot_topoplot!(
+        f[1, 1],
+        topo_array[:, tp, 1];
+        positions = topo_positions,
+        axis = (; xlabel = "position = :left"),
+        colorbar = (; position = :left, flipaxis = false, labelrotation = π / 2),
+    )
+    plot_topoplot!(
+        f[1, 2],
+        topo_array[:, tp, 1];
+        positions = topo_positions,
+        axis = (; xlabel = "position = :right"),
+        colorbar = (; position = :right),
+    )
+    plot_topoplot!(
+        f[2, 1],
+        topo_array[:, tp, 1];
+        positions = topo_positions,
+        axis = (; xlabel = "position = :top"),
+        colorbar = (; position = :top, vertical = false, flipaxis = true, width = 180),
+    )
+    plot_topoplot!(
+        f[2, 2],
+        topo_array[:, tp, 1];
+        positions = topo_positions,
+        axis = (; xlabel = "position = :bottom"),
+        colorbar = (; position = :bottom, vertical = false, flipaxis = false, width = 180),
+    )
+    f
+end
+
 # # Colormaps
 # When choosing a colormap for topoplots, it should:
 # 1) Be “scientific”: perceptually linear, with a meaningful and ordered color scale;
