@@ -244,3 +244,9 @@ end
     montage = get_montage("biosemi16")
     plot_butterfly(randn(length(montage.labels), 100); labels = montage.labels, montage = "biosemi16")
 end
+
+@testset "butterfly: montage without labels uses full montage" begin
+    montage = get_montage("biosemi16")
+    f = plot_butterfly(randn(length(montage.labels), 100); montage = "biosemi16")
+    @test count(c -> c isa Axis, f.content) == 2
+end

@@ -7,8 +7,12 @@ function get_topo_positions(; labels = nothing, positions = nothing, montage = n
             raw = standard_positions(labels, montage)                   # any of our bundled montages
             positions = [(p[1]/2 + 0.5, p[2]/2 + 0.5) for p in raw]
         end
+    elseif isnothing(positions) && !isnothing(montage)
+        # montage without labels: use the full montage
+        raw = get_montage(montage).positions
+        positions = [(p[1]/2 + 0.5, p[2]/2 + 0.5) for p in raw]
     end
-    @assert !isnothing(positions) "No positions found, did you forget to provide them via positions=XX, or labels=YY?"
+    @assert !isnothing(positions) "No positions found. Did you forget to pass them through positions=XX, labels=YY, or montage=ZZ?"
     return positions .|> (p -> Point2f(p[1], p[2]))
 end
 

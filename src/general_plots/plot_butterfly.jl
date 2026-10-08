@@ -76,7 +76,7 @@ function plot_butterfly!(
     end
     plot_data, config = erp_butterfly_mapping(plot_data, config, nticks)
 
-    if isnothing(positions) && isnothing(labels)
+    if isnothing(positions) && isnothing(labels) && isnothing(montage)
         topolegend = false
         colors = nothing
     else
