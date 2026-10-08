@@ -66,6 +66,7 @@ include("general_plots/plot_topoplotseries_support.jl")
 include("general_plots/plot_erp.jl")
 include("general_plots/plot_butterfly.jl")
 include("general_plots/plot_topoplot.jl")
+include("general_plots/plot_triple_CI.jl")
 include("general_plots/plot_erpimage.jl")
 include("general_plots/plot_parallel_coordinates.jl")
 include("general_plots/parallel_coordinates.jl")
@@ -97,6 +98,8 @@ export plot_erp!
 export plot_erpimage
 export plot_erpimage!
 export plot_topoplot
+export plot_triple_CI
+export plot_triple_CI!
 export plot_topoplot!
 export plot_parallelcoordinates
 
