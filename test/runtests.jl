@@ -63,3 +63,7 @@ end
 @testset "Montage" begin
     include("test_montage.jl")
 end
+
+@testset "Triple CI" begin
+    include("test_triple_CI.jl")
+end
