@@ -1,7 +1,7 @@
 name = "UnfoldMakie"
 uuid = "69a5ce3b-64fb-4f22-ae69-36dd4416af2a"
-authors = ["Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner", "Furkan Lokman", "Benedikt Ehinger"]
 version = "0.5.27"
+authors = ["Vladimir Mikheev", "Daniel Baumgartner", "Sören Döring", "Niklas Gärtner", "Furkan Lokman", "Benedikt Ehinger"]
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
@@ -46,7 +46,7 @@ Colors = "0.12, 0.13"
 CoordinateTransformations = "0.6"
 DataFrames = "1"
 DataStructures = "0.18, 0.19"
-DocStringExtensions = "0.9"
+DocStringExtensions = "0.9, 0.10"
 GeometryBasics = "0.4, 0.5"
 GridLayoutBase = "0.9, 0.10, 0.11"
 ImageFiltering = "0.7"
