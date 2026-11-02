@@ -1,0 +1,33 @@
+Base.@kwdef struct RegionGrid64Config
+    canvas_size::Tuple{Int,Int} = (300, 300)
+    template_center::Tuple{Float32,Float32} = (150.0f0, 150.0f0)
+    template_radius::Float32 = 150.0f0
+    parser_head_center::Tuple{Float32,Float32} = (0.0f0, -0.08f0)
+    parser_head_radius::Float32 = 1.33f0
+    boundary_samples::Int = 192
+    radial_counts::NTuple{5,Int} = (4, 8, 12, 16, 24)
+    centroidal_iterations::Int = 12
+    capacity_outer_iterations::Int = 8
+    capacity_inner_iterations::Int = 96
+    centroidal_move_fraction::Float64 = 0.82
+    capacity_move_fraction::Float64 = 0.20
+    capacity_step::Float64 = 0.08
+    area_tolerance::Float64 = 0.025
+    movement_tolerance::Float64 = 1.0e-3
+    random_seed::Int = 64
+    stroke_width::Float32 = 0.9f0
+    outline_width::Float32 = 1.6f0
+    preview_padding::Float32 = 0.10f0
+    output_dir::String = joinpath(dirname(dirname(@__DIR__)), "figures", "task2_topo_regions_64")
+    basename::String = "task2_topo_regions_64"
+    region_const_name::String = "TOPO_REGIONS_64"
+    php_function_name::String = "topo_polygons_64"
+    digits::Int = 3
+    pipeline_task::String = "N170"
+    pipeline_subject::Int = 26
+    pipeline_timepoint::Int = 105
+    pipeline_condition::Int = 2
+    pipeline_n_bins::Int = 8
+    pipeline_stage_width::Int = 340
+    pipeline_stage_height::Int = 260
+end
