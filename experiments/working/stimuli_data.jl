@@ -1,6 +1,29 @@
+# One-time setup for a standalone copy of this file:
+# import Pkg; Pkg.add(["MAT", "OpenScienceFramework"])
 using MAT
-function load_erp(subj, task)
-    local_name = joinpath("/scratch/users/mikheev/erpcore", "erpcore_$(subj)_$(task).erp")
+using OpenScienceFramework
+
+const task_osf_dict = Dict(
+    "P3" => "etdkz",
+    "N2pc" => "yefrq",
+    "N170" => "pfde9",
+    "MMN" => "5q4xs",
+)
+
+const ERPCORE_CACHE_DIR = get(
+    ENV,
+    "ERPCORE_CACHE_DIR",
+    isdir("/scratch/users/mikheev") ?
+        "/scratch/users/mikheev/erpcore" :
+        joinpath(@__DIR__, "data", "erpcore"),
+)
+
+function load_erp(subj, task; cache_dir=ERPCORE_CACHE_DIR)
+    haskey(task_osf_dict, task) ||
+        throw(ArgumentError("Unknown task $(repr(task)); choose one of $(join(keys(task_osf_dict), ", "))."))
+
+    mkpath(cache_dir)
+    local_name = joinpath(cache_dir, "erpcore_$(subj)_$(task).erp")
     isfile(local_name) && return MAT.matread(local_name)["ERP"]
 
     osf_dataset = task_osf_dict[task]
@@ -62,10 +85,9 @@ end
     subject,
     timepoint=92,
     condition=1,
-    cache_dir="/scratch/users/mikheev/erpcore",
+    cache_dir=ERPCORE_CACHE_DIR,
 )
-    file = joinpath(cache_dir, "erpcore_$(subject)_$(task).erp")
-    erp = MAT.matread(file)["ERP"]
+    erp = load_erp(subject, task; cache_dir)
 
     if condition == 3
         vec_est = erp["bindata"][1:end-7, timepoint, 1] .- erp["bindata"][1:end-7, timepoint, 2]
@@ -96,7 +118,7 @@ function load_erp_subject_or_nothing(
     subject,
     timepoint=92,
     condition=1,
-    cache_dir="/scratch/users/mikheev/erpcore",
+    cache_dir=ERPCORE_CACHE_DIR,
 )
     try
         load_erp_subject(
