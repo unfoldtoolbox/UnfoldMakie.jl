@@ -127,7 +127,7 @@ function plot_combined_uncerts(
     vec_uncert;
     positions = nothing,
     labels = nothing,
-    corner_colorbox = c,
+    corner_colorbox = nothing,
     range_colorbox = nothing,
     enable_contour = true,
     colorrange_mode = :diverging_balanced,
