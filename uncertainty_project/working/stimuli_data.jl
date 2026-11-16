@@ -91,6 +91,16 @@ end
 
     if condition == 3
         vec_est = erp["bindata"][1:end-7, timepoint, 1] .- erp["bindata"][1:end-7, timepoint, 2]
+        # KNOWN ISSUE, deliberately not fixed. The SE of a difference wave
+        # (deviant - standard, independent trials) should be
+        #     sqrt.(se1 .^ 2 .+ se2 .^ 2)
+        # not se1 - se2. The correct SE is ~2.4-3.5x larger with a moderately
+        # different spatial pattern (checked for all 10 MMN survey stimuli,
+        # 2026-11-16). We keep se1 - se2 because the survey stimuli (MMN only)
+        # were generated with it and participants already saw them; changing it
+        # would make the code disagree with the shown stimuli. Plots rescale SE
+        # to its own range, so only the pattern differs. Fix this for any new
+        # stimuli or analyses, and mention it in the paper's methods.
         vec_se  = erp["binerror"][1:end-7, timepoint, 1] .- erp["binerror"][1:end-7, timepoint, 2]
     else
         vec_est = erp["bindata"][1:end-7, timepoint, condition]
