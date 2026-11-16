@@ -19,7 +19,6 @@ git-filter-repo
 # pdf_reports/ debug reports)
 /uncertainty_project/figures/
 /uncertainty_project/stimuli/
-/uncertainty_project/target stimuli/
 /stimuli/
 
 # Experiment scratch and archive (local only)

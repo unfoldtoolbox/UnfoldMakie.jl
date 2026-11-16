@@ -102,8 +102,10 @@ function combined_uncerts_cat_save(
                                             (16, 16, 16, 10)
         f = Figure(size=fig_size, backgroundcolor=BG, figure_padding=pad)
         plotfun(f[1, 1])
-        filename = "$(file_name)_$(name)"
-        path = joinpath(outdir, filename)
+        # One subfolder per plot type, e.g. stimuli/adjacent/MMN_1_adjacent.png
+        plot_dir = joinpath(outdir, first(splitext(name)))
+        mkpath(plot_dir)
+        path = joinpath(plot_dir, "$(file_name)_$(name)")
         save(path, f)
         push!(saved, path)
     end
@@ -151,7 +153,7 @@ end
 function save_basic_stimulus_topoplot(
     cfg;
     subject,
-    outdir = joinpath("uncertainty_project", "stimuli"),
+    outdir = joinpath("uncertainty_project", "stimuli", "basic"),
 )
     subject_data = load_stimulus_subject_avgref_or_nothing(cfg; subject = subject)
     isnothing(subject_data) && return nothing
@@ -189,7 +191,7 @@ end
 
 function save_basic_stimuli(
     configs = task_configs_30;
-    outdir = joinpath("uncertainty_project", "stimuli"),
+    outdir = joinpath("uncertainty_project", "stimuli", "basic"),
 )
     saved = String[]
 
