@@ -1,5 +1,4 @@
 
-
 function parallel_coordinates(
     f::Union{<:Figure,<:GridPosition,<:GridLayout},
     outer_axis,
@@ -128,7 +127,7 @@ function parallel_coordinates(
 
         tickformater = Makie.automatic # default
         if ax_ticklabels == :outmost || (i != 1 && ax_ticklabels == :left)
-            tickformater = surpress_inner_labels
+            tickformater = suppress_inner_labels
         end
         if ax_ticklabels == :none
             tickformater = x -> repeat([""], length(x))
@@ -170,10 +169,10 @@ function parallel_coordinates(
     return f, outer_axis, axlist, hlines
 end
 
-function surpress_inner_labels(val)
-    lbl = Makie.Showoff.showoff(val)
+function suppress_inner_labels(val)
+    lbl = Makie.get_ticklabels(Makie.automatic, val)
     if length(lbl) > 2
-        lbl[2:end-1] .= ""
+        lbl[2:(end-1)] .= ""
     end
     return lbl
 end

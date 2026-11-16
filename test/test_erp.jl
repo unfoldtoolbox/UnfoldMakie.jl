@@ -1,5 +1,3 @@
-using Unfold: stderror
-using AlgebraOfGraphics: group
 m = UnfoldMakie.example_data("UnfoldLinearModel")
 
 results = coeftable(m)
@@ -41,6 +39,39 @@ end
 
 @testset "ERP plot: zero matrix with solid color" begin
     plot_erp(zeros(10, 10), mapping = (; color = nothing), visual = (; color = "red"))
+end
+
+@testset "ERP plot: continuous colormap change" begin
+    test_colormap = :berlin
+    f = plot_erp(
+        res_effects;
+        mapping = (; color = :continuous, group = :continuous),
+        visual = (; colormap = test_colormap),
+    )
+
+    ax = only(filter(x -> x isa Axis, f.content))
+    line_plots = filter(p -> p isa Lines, ax.scene.plots)
+    actual_colors = Set(RGBA{Float32}(first(p.color[])) for p in line_plots)
+    expected_colors =
+        Set(Makie.resample_cmap(test_colormap, length(unique(res_effects.continuous))))
+
+    @test all(p -> p.colormap[] == test_colormap, line_plots)
+    @test actual_colors == expected_colors
+end
+
+@testset "ERP plot: categorical color palette change" begin
+    palette = Makie.resample_cmap(:roma, length(unique(results.coefname)))
+    f = plot_erp(
+        results;
+        mapping = (; color = :coefname, group = :coefname),
+        visual = (; color = palette),
+    )
+
+    ax = only(filter(x -> x isa Axis, f.content))
+    line_plots = filter(p -> p isa Lines, ax.scene.plots)
+    actual_colors = Set(RGBA{Float32}(p.color[]) for p in line_plots)
+
+    @test actual_colors == Set(palette)
 end
 
 @testset "ERP plot: rename xlabel" begin

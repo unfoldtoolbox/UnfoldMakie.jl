@@ -62,7 +62,7 @@ plot_topoplotseries(
 
 ### 3. Advanced topics
 📌 Goal: Learn about advanced customization
-🔗 [Visualize uncertainty in topoplot series](@ref)
+🔗 [Visualize uncertainty in topoplots](generated/how_to/uncertain_topo.md)
 
 
 ## Statement of need

@@ -31,7 +31,7 @@ Plot an ERP image.
     Defaults: $(supportive_defaults(:labels_grid_default))
 - `indicator_grid_axis::NamedTuple = (;)`\\
     Here you can change configurations of inidcator axis.\\
-    Defaults: $(supportive_defaults(:indicator_grid_default))
+    Defaults: $(replace(string(supportive_defaults(:indicator_grid_default)), "_" => "\\_"))
 - `subaxes::NamedTuple = (;)`\\
     Here you can flexibly change configurations of all subaxes. F.e. make them wider or shorter\\
     To see all options just type `?Axis` in REPL.\\

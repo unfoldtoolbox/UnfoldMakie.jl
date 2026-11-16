@@ -1,5 +1,3 @@
-using Unfold: eventnames
-using AlgebraOfGraphics: group
 m = UnfoldMakie.example_data("UnfoldLinearModel")
 res_effects = effects(Dict(:continuous => -5:0.5:5), m)
 res_effects2 = effects(Dict(:condition => ["car", "face"], :continuous => -5:5), m)

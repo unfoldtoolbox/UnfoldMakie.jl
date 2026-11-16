@@ -1,11 +1,8 @@
 using UnfoldMakie
 using Documenter
-using DocStringExtensions
 
 # preload once
-
 using CairoMakie
-using AlgebraOfGraphics
 using Unfold
 using DataFrames
 using DataFramesMeta
@@ -32,6 +29,8 @@ makedocs(;
         canonical = "https://unfoldtoolbox.github.io/UnfoldMakie.jl",
         assets = String[],
         sidebar_sitename = false,
+        size_threshold = 20_000_000,
+        example_size_threshold = 0,
     ),
     pages = [
         "Home" => "index.md",

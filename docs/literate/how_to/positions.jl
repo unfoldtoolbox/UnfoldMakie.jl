@@ -3,21 +3,30 @@
 
 using UnfoldMakie
 using CairoMakie
-using TopoPlots
-using PyMNE;
 
-# # Get positions from MNE
+# # Generate example 3D positions
 
-# Generate an MNE structure [taken from mne documentation](https://mne.tools/0.24/auto_examples/visualization/eeglab_head_sphere.html)
+# Generate deterministic electrode-like positions on a sphere.
 
-biosemi_montage = PyMNE.channels.make_standard_montage("biosemi64")
+azimuths = range(0, 2π; length = 17)[1:end-1]
+inclinations = range(π / 8, 3π / 8; length = 4)
+
+pos3d = hcat([
+    [
+        sin(inclination) * cos(azimuth),
+        sin(inclination) * sin(azimuth),
+        cos(inclination),
+    ] for inclination in inclinations for azimuth in azimuths
+]...)
 
 # # Projecting from 3D montage to 2D
-pos3d = hcat(values(pyconvert(Dict, biosemi_montage.get_positions()["ch_pos"]))...)
 pos2d = to_positions(pos3d)
 
-f = Figure(size = (600, 300))
-scatter(f[1, 1], pos3d[1:2, :], axis = (title = "Dropping third dimension",))
-scatter(f[1, 2], pos2d, axis = (title = "Projection form 3D to 2D",))
-f
+begin
+    f = Makie.Figure(size = (600, 300))
+    Makie.scatter(f[1, 1], pos3d[1:2, :], axis = (title = "Dropping third dimension",))
+    Makie.scatter(f[1, 2], pos2d, axis = (title = "Projection from 3D to 2D",))
+    f
+end
 # As you can see, the "naive" transformation of simply dropping the third dimension does not really work (left). Instead, we have to project the channels onto a sphere and unfold it (right).
+

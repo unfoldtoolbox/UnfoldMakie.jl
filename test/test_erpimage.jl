@@ -218,3 +218,17 @@ end
 @testset "ERP image: yticklabelsvisible" begin
     plot_erpimage(dat; axis = (; yticklabelsvisible = false))
 end
+
+@testset "ERP image with 3D input" begin
+    @test_throws ErrorException plot_erpimage(rand(15, 20, 3))
+end
+
+@testset "ERP image with missing input" begin
+    @test_throws ErrorException plot_erpimage(Matrix{Union{Missing, Float64}}(missing, 7, 4))
+end
+
+@testset "ERP image with Inf input" begin
+    @test_throws ArgumentError plot_erpimage(fill(Inf, 7, 4))
+    @test_throws ArgumentError plot_erpimage(fill(-Inf, 4, 7))
+    @test_throws ArgumentError plot_erpimage(fill(NaN, 7, 4))
+end

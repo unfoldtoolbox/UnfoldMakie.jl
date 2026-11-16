@@ -32,8 +32,8 @@ Makie.hidespines!(ax::AxisEntries, args...) = Makie.hidespines!.(ax.axis, args..
 """
     default_tick_positions(values; nticks::Int=5)
 
-Compute `nticks` evenly spaced tick positions spanning `values`.
-If all values are equal, widens the range by a tiny epsilon.
+Compute `nticks` tick positions spanning `values` using Makie's
+optimize_ticks for clean, human-readable tick placement.
 
 **Return Value:** `Vector{Float64}` of tick positions.
 """
@@ -44,5 +44,15 @@ function default_tick_positions(values; nticks::Int = 5)
         vmin -= 1e-6
         vmax += 1e-6
     end
-    collect(range(vmin, vmax; length = nticks))
+    return Makie.PlotUtils.optimize_ticks(
+        vmin,
+        vmax;
+        k_min = nticks - 2,
+        k_max = nticks + 2,
+        Q = [(1.0, 1.0), (5.0, 0.9), (2.0, 0.7), (2.5, 0.5), (3.0, 0.2)],
+        granularity_weight = 1.0,
+        simplicity_weight = 1/6,
+        coverage_weight = 1/3,
+        niceness_weight = 1/4,
+    )[1]
 end

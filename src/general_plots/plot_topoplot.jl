@@ -21,8 +21,9 @@ Plot a topoplot.
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
 - `return_objects::Bool = false`\\
-  Return a named tuple containing the created axis and colorbar.\\
-  Helpful for colorbar tweaking. If `false`, returns the figure.
+    Return a named tuple containing the created axis and colorbar.\\
+    Helpful for colorbar tweaking. If `false`, returns the figure.
+
 $(_docstring(:topoplot))
 
 To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`,  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
@@ -103,9 +104,10 @@ function plot_topoplot!(
 
     row_offset = position == :top ? 1 : 0
     col_offset = position == :left ? 1 : 0
-    plot_rows = (1 + row_offset):(4 + row_offset)
-    plot_cols = (1 + col_offset):(2 + col_offset)
+    plot_rows = (1+row_offset):(4+row_offset)
+    plot_cols = (1+col_offset):(2+col_offset)
 
+    # A single axis owning both the topoplot and its decorations. 
     axis_attributes = merge(config.axis, topo_axis)
     topo_axis_object = Axis(great_axis[plot_rows, plot_cols]; axis_attributes...)
     hidespines!(topo_axis_object)

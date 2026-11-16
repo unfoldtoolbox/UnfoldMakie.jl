@@ -44,22 +44,30 @@ function plot_splines!(
 
     ga = f[1, 1] = GridLayout()
 
-    terms = reduce(vcat, Unfold.terms.(getfield.(Unfold.formulas(m), :rhs)))
-    spl_title = join(terms, " + ")
+    terms_by_event = Unfold.terms.(getfield.(Unfold.formulas(m), :rhs))
+    # Show only spline-containing formulas and omit duplicated display terms.
+    spline_event_terms = filter(
+        event_terms -> any(term -> term isa Unfold.AbstractSplineTerm, event_terms),
+        terms_by_event,
+    )
+    @assert !isempty(spline_event_terms) "No spline term is found in UnfoldModel. Does your UnfoldModel really have a `spl(...)` or other `AbstractSplineTerm`?"
+    spl_title = join(unique(reduce(vcat, spline_event_terms)), " + ")
 
     splFunction = Base.get_extension(Unfold, :UnfoldBSplineKitExt).splFunction
-    spl_ix = findall(isa.(terms, Unfold.AbstractSplineTerm))
-    @assert !isempty(spl_ix) "No spline term is found in UnfoldModel. Does your UnfoldModel really have a `spl(...)` or other `AbstractSplineTerm`?"
-
-    spline_terms = [terms[i] for i in spl_ix]
-    subplot_id = 1
-    for spline_term in spline_terms
+    # Keep each spline paired with its event table so its predictor comes from the correct event.
+    spline_terms_and_events = [
+        (term, event) for (event_terms, event) in
+        zip(terms_by_event, Unfold.events(designmatrix(m))) for term in event_terms if
+        term isa Unfold.AbstractSplineTerm
+    ]
+    for (subplot_id, (spline_term, event)) in enumerate(spline_terms_and_events)
         x_range = range(
-            spline_term.breakpoints[1],
-            stop = spline_term.breakpoints[end],
+            first(spline_term.breakpoints),
+            last(spline_term.breakpoints);
             length = 100,
         )
         basis_set = splFunction(x_range, spline_term)
+        basis_curves = basis_set'
 
         if subplot_id > 1
             spline_axis = update_axis(spline_axis; ylabelvisible = false)
@@ -67,25 +75,25 @@ function plot_splines!(
         end
         a1 = Axis(ga[1, subplot_id]; title = string(spline_term), spline_axis...)
         series!(
+            a1,
             x_range,
-            basis_set',
-            color = resample_cmap(config.visual.colormap, size(basis_set')[1]),
+            basis_curves,
+            color = resample_cmap(config.visual.colormap, size(basis_curves, 1)),
         ) # continuous color map used
         vlines!(
+            a1,
             spline_term.breakpoints;
-            ymin = extrema(basis_set')[1],
-            ymax = extrema(basis_set')[2],
             linestyle = :dash,
         )
         a2 = Axis(ga[2, subplot_id]; xlabel = string(spline_term.term.sym), density_axis...)
         density!(
-            Unfold.events(designmatrix(m))[1][:, spline_term.term.sym];
+            a2,
+            event[!, spline_term.term.sym];
             color = :transparent,
             strokecolor = :black,
             strokewidth = 1,
         )
         linkxaxes!(a1, a2)
-        subplot_id = subplot_id + 1
     end
     Label(ga[1, 1:end, Top()], spl_title; superlabel_config...)
     apply_layout_settings!(config; fig = f)
