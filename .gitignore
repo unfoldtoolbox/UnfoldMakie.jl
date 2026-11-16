@@ -15,10 +15,9 @@
 anim.gif
 git-filter-repo
 
-# Uncertainty study: generated outputs (code in /uncertainty_project/working/
-# and small inputs in /uncertainty_project/data/ are tracked)
+# Uncertainty study: generated outputs (tracked: working/ code, data/ inputs,
+# pdf_reports/ debug reports)
 /uncertainty_project/figures/
-/uncertainty_project/pdf_reports/
 /uncertainty_project/stimuli/
 /uncertainty_project/target stimuli/
 /stimuli/
