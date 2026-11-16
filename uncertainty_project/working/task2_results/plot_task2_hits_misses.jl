@@ -14,6 +14,8 @@
 #   region fill  - ground truth (region score, or share of trials it was the peak)
 #   dot area     - share of responses that selected the region
 #   orange core  - hits (selected region = peak); grey ring - misses
+#   (hit / near hit / miss figures: light orange = near hit, i.e. the selected
+#   region shares a border with the peak region)
 #
 # Outputs: figures/study_results/*.png and *.pdf.
 
@@ -52,6 +54,9 @@ const T2_MISS = colorant"#3d3c3a"
 const T2_INK = colorant"#0b0b0b"
 const T2_INK2 = colorant"#52514e"
 const T2_PEAK_STROKE = colorant"#eb6834"
+# Near hit = selected region borders the peak. Lighter step of the hit hue so
+# hit > near hit > miss reads as an ordered scale (lightness carries it).
+const T2_NEAR = colorant"#f7b996"
 
 # Dot diameter in template units (head is 300 units across) for share = 1.
 const T2_DOT_SCALE = 68.0
@@ -75,7 +80,22 @@ function t2_load_regions(path = T2_SVG)
     sort(collect(keys(regions))) == 1:64 ||
         error("Expected regions R01..R64 in $path, found $(length(regions)).")
     polys = [regions[k] for k in 1:64]
-    (; polys, centroids = t2_centroid.(polys), head = t2_head(polys))
+    (; polys, centroids = t2_centroid.(polys), head = t2_head(polys), adj = t2_adjacency(polys))
+end
+
+# Neighbours = regions sharing a border (>= 2 common vertices). The SVG cells
+# are a partition with identical shared vertices, so exact matching works;
+# cells that touch only at a single corner are not neighbours.
+function t2_adjacency(polys)
+    sets = [Set(p) for p in polys]
+    adj = [Int[] for _ in polys]
+    for i in eachindex(polys), j in (i + 1):lastindex(polys)
+        if length(intersect(sets[i], sets[j])) >= 2
+            push!(adj[i], j); push!(adj[j], i)
+        end
+    end
+    any(isempty, adj) && error("Region without neighbours: check polygon geometry.")
+    adj
 end
 
 function t2_centroid(poly)
@@ -352,6 +372,170 @@ function t2_pattern_vistype_figure(reg, stim, geo; panel = 165)
 end
 
 # ---------------------------------------------------------------------------
+# Hit / near hit / miss
+# ---------------------------------------------------------------------------
+
+# Region class for one stimulus: :hit (peak), :near (borders a peak), :miss.
+function t2_region_classes(geo, peaks)
+    cls = fill(:miss, 64)
+    for k in peaks, j in geo.adj[k]
+        cls[j] = :near
+    end
+    cls[peaks] .= :hit
+    cls
+end
+
+const T2_CLASS_COLORS = Dict(:hit => T2_HIT, :near => T2_NEAR, :miss => T2_MISS)
+const T2_CLASS_LABELS = Dict(:hit => "Hit", :near => "Near hit", :miss => "Miss")
+
+# Long table: one row per stimulus x vistype with hit / near / miss counts.
+function t2_hit_near_miss_counts(stim, geo)
+    rows = NamedTuple[]
+    for g in groupby(stim, [:pattern, :stimulus, :vistype])
+        d = sort(g, :region_number)
+        cls = t2_region_classes(geo, d.region_number[d.is_peak])
+        push!(rows, (pattern = d.pattern[1], stimulus = d.stimulus[1], vistype = d.vistype[1],
+            n_trials = d.n_trials[1],
+            hit = sum(d.n_selected[cls .== :hit]),
+            near = sum(d.n_selected[cls .== :near]),
+            miss = sum(d.n_selected[cls .== :miss])))
+    end
+    out = DataFrame(rows)
+    all(out.hit .+ out.near .+ out.miss .== out.n_trials) || error("Class counts do not sum to n_trials.")
+    out
+end
+
+function t2_panel_classes!(ax, geo; fill, prop_selected, cls)
+    hidedecorations!(ax); hidespines!(ax)
+    ax.aspect = DataAspect()
+    ax.backgroundcolor = :transparent
+    c, r = geo.head.center, geo.head.radius
+    limits!(ax, c[1] - 1.04r, c[1] + 1.04r, c[2] - 1.04r, c[2] + 1.13r)
+    for k in 1:64
+        poly!(ax, geo.polys[k]; color = get(T2_TRUTH_CMAP, fill[k]), strokecolor = :white, strokewidth = 0.6)
+    end
+    for k in findall(==(:near), cls)
+        poly!(ax, geo.polys[k]; color = :transparent, strokecolor = T2_NEAR, strokewidth = 1.6)
+    end
+    for k in findall(==(:hit), cls)
+        poly!(ax, geo.polys[k]; color = :transparent, strokecolor = T2_PEAK_STROKE, strokewidth = 2.2)
+    end
+    t2_draw_head!(ax, geo.head)
+    sel = findall(>(0), prop_selected)
+    isempty(sel) || scatter!(ax, geo.centroids[sel];
+        markersize = T2_DOT_SCALE .* sqrt.(prop_selected[sel]), markerspace = :data,
+        color = [T2_CLASS_COLORS[cls[k]] for k in sel], strokecolor = :white, strokewidth = 0.7)
+    ax
+end
+
+# Figure 4: every stimulus (pooled over visualizations), hit / near hit / miss.
+function t2_near_stimulus_figure(stim, counts, geo; panel = 150)
+    all_df = filter(:vistype => ==("all"), stim)
+    allc = filter(:vistype => ==("all"), counts)
+    fig = Figure(size = (10 * panel + 120, 3 * (panel + 40) + 170), backgroundcolor = :white)
+    Label(fig[0, 1:11], "Task 2: hits, near hits (region bordering the peak) and misses for every stimulus (all visualizations pooled)";
+        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
+    for (row, pat) in enumerate(T2_PATTERNS)
+        pc = filter(:pattern => ==(pat), allc)
+        pc.hit_rate = pc.hit ./ pc.n_trials
+        pc.close_rate = (pc.hit .+ pc.near) ./ pc.n_trials  # hit or near hit
+        sort!(pc, [order(:hit_rate, rev = true), order(:close_rate, rev = true), :stimulus])
+        # Rank by hit rate; ties broken by hit-or-near-hit rate.
+        marks = t2_row_marks(pc.stimulus, pc.hit_rate, pc.close_rate)
+        Label(fig[row, 1], pat; rotation = π / 2, fontsize = 16, font = :bold, color = T2_INK)
+        for (col, s) in enumerate(pc.stimulus)
+            sdf = sort(filter(:stimulus => ==(s), all_df), :region_number)
+            cr = pc[col, :]
+            kind = get(marks, s, nothing)
+            t2_mark_box!(fig[row, col + 1], kind)
+            ax = Axis(fig[row, col + 1]; width = panel, height = panel,
+                title = s, titlesize = 13, titlecolor = T2_INK,
+                subtitle = @sprintf("hit %d%% · near %d%% · n = %d", round(Int, 100cr.hit / cr.n_trials),
+                    round(Int, 100cr.near / cr.n_trials), cr.n_trials),
+                subtitlesize = 11, subtitlecolor = T2_INK2, titlegap = 2)
+            t2_panel_classes!(ax, geo; fill = t2_vec(sdf, :score), prop_selected = t2_vec(sdf, :prop_selected),
+                cls = t2_region_classes(geo, sdf.region_number[sdf.is_peak]))
+        end
+    end
+    t2_near_legend!(fig[4, 1:11], geo; panel)
+    colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
+    resize_to_layout!(fig)
+    fig
+end
+
+function t2_near_legend!(slot, geo; panel)
+    gl = slot[] = GridLayout()
+    Colorbar(gl[1, 1]; colormap = T2_TRUTH_CMAP, limits = (0, 1), vertical = false,
+        label = "Region score (0 = weakest, 1 = peak)", labelsize = 13, ticklabelsize = 11,
+        width = 300, height = 10, labelcolor = T2_INK, ticklabelcolor = T2_INK2)
+    px_per_unit = panel / (2.08 * geo.head.radius)
+    ax = Axis(gl[1, 2]; width = 220 * px_per_unit, height = 110 * px_per_unit)
+    hidedecorations!(ax); hidespines!(ax)
+    xs = Float32[25, 90, 175]; shares = (0.05, 0.2, 0.5)
+    scatter!(ax, xs, fill(65f0, 3); markersize = T2_DOT_SCALE .* sqrt.(collect(shares)),
+        markerspace = :data, color = T2_MISS, strokecolor = :white, strokewidth = 0.7)
+    text!(ax, xs, fill(18f0, 3); text = [@sprintf("%d%%", round(Int, 100s)) for s in shares],
+        align = (:center, :center), fontsize = 11, color = T2_INK2)
+    limits!(ax, 0, 220, 0, 110)
+    Label(gl[1, 3], "share of\nresponses"; fontsize = 11, color = T2_INK2, halign = :left)
+    resp = Any[MarkerElement(marker = :circle, color = T2_CLASS_COLORS[c], markersize = 14) for c in (:hit, :near, :miss)]
+    resp_labels = ["Hit (peak region)", "Near hit (borders the peak)", "Miss"]
+    cells = Any[PolyElement(color = :transparent, strokecolor = T2_PEAK_STROKE, strokewidth = 2.2),
+                PolyElement(color = :transparent, strokecolor = T2_NEAR, strokewidth = 1.6)]
+    panels = Any[PolyElement(color = T2_MARKS[k].tint, strokecolor = T2_MARKS[k].stroke, strokewidth = 2.2)
+                 for k in (:best, :worst)]
+    Legend(gl[1, 4], [resp, cells, panels],
+        [resp_labels, ["Peak region", "Neighbouring regions"], ["Most correct in row", "Most missed in row"]],
+        ["Responses", "Regions", "Panels"];
+        framevisible = false, labelsize = 12, labelcolor = T2_INK, titlesize = 12,
+        titlecolor = T2_INK2, orientation = :horizontal, nbanks = 3, titleposition = :top)
+    colgap!(gl, 40); colgap!(gl, 2, 8)
+    gl
+end
+
+# Figure 5: share of hit / near hit / miss per visualization type, by pattern.
+function t2_near_vistype_figure(counts)
+    vc = filter(:vistype => !=("all"), counts)
+    agg(df) = combine(groupby(df, :vistype), [:hit, :near, :miss, :n_trials] .=> sum .=> [:hit, :near, :miss, :n])
+    facets = vcat([(p, agg(filter(:pattern => ==(p), vc))) for p in T2_PATTERNS], [("All patterns", agg(vc))])
+
+    fig = Figure(size = (1500, 520), backgroundcolor = :white)
+    Label(fig[0, 1:4], "Task 2: hits, near hits and misses by visualization type";
+        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
+    ys = length(T2_VISTYPES):-1:1  # first vistype on top
+    classes = (:hit, :near, :miss)
+    for (col, (name, d)) in enumerate(facets)
+        d = d[indexin(T2_VISTYPES, d.vistype), :]
+        shares = hcat([d[!, c] ./ d.n for c in classes]...)
+        ax = Axis(fig[1, col]; title = name, titlesize = 15, titlecolor = T2_INK,
+            yticks = (collect(ys), [T2_VISTYPE_LABELS[v] for v in T2_VISTYPES]),
+            yticklabelsvisible = col == 1, yticklabelcolor = T2_INK, xticklabelcolor = T2_INK2,
+            xticks = (0:0.25:1, ["0%", "25%", "50%", "75%", "100%"]), xgridcolor = RGBAf(0, 0, 0, 0.08),
+            ygridvisible = false, xlabel = col == 1 ? "Share of responses" : "", xlabelcolor = T2_INK2,
+            width = 290, height = 330)
+        hidespines!(ax, :t, :r, :l)
+        left = zeros(size(shares, 1))
+        for (ci, c) in enumerate(classes)
+            barplot!(ax, collect(ys), shares[:, ci]; offset = left, direction = :x, color = T2_CLASS_COLORS[c],
+                strokecolor = :white, strokewidth = 1.5, gap = 0.25)
+            mids = left .+ shares[:, ci] ./ 2
+            lab = [s >= 0.07 ? @sprintf("%d%%", round(Int, 100s)) : "" for s in shares[:, ci]]
+            text!(ax, mids, collect(ys); text = lab, align = (:center, :center), fontsize = 11,
+                color = c == :near ? T2_INK : :white)
+            left .+= shares[:, ci]
+        end
+        xlims!(ax, 0, 1)
+        Label(fig[2, col], @sprintf("n = %d responses per bar", d.n[1]); fontsize = 11, color = T2_INK2)
+    end
+    Legend(fig[3, 1:4], [PolyElement(color = T2_CLASS_COLORS[c]) for c in classes],
+        ["Hit (peak region)", "Near hit (borders the peak)", "Miss"];
+        framevisible = false, orientation = :horizontal, labelsize = 12, labelcolor = T2_INK)
+    colgap!(fig.layout, 40)
+    resize_to_layout!(fig)
+    fig
+end
+
+# ---------------------------------------------------------------------------
 # Run
 # ---------------------------------------------------------------------------
 
@@ -373,6 +557,17 @@ function t2_main()
         t2_save(t2_vistype_figure(stim, geo), "task2_hits_misses_stimulus_by_vistype"),
         t2_save(t2_pattern_vistype_figure(reg, stim, geo), "task2_hits_misses_pattern_by_vistype"),
     ]
+    counts = t2_hit_near_miss_counts(stim, geo)
+    push!(paths,
+        t2_save(t2_near_stimulus_figure(stim, counts, geo), "task2_hit_near_miss_by_stimulus"),
+        t2_save(t2_near_vistype_figure(counts), "task2_hit_near_miss_by_vistype"))
+    summary = combine(groupby(filter(:vistype => !=("all"), counts), :vistype),
+        [:hit, :near, :miss, :n_trials] .=> sum .=> [:hit, :near, :miss, :n])
+    for c in (:hit, :near, :miss)
+        summary[!, Symbol(c, :_pct)] = round.(100 .* summary[!, c] ./ summary.n; digits = 1)
+    end
+    println(summary)
+    println("Neighbours per region: ", extrema(length.(geo.adj)), ", mean ", round(mean(length.(geo.adj)); digits = 2))
     foreach(println, paths)
     paths
 end
