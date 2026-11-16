@@ -54,8 +54,10 @@ all(length(row.scores) == 64 for row in region_scores_30_balanced_new_grid) ||
     error("Expected 64 scored regions per row in region_scores_30_balanced_new_grid.")
 rk_new_grid = region_score_dict(region_scores_30_balanced_new_grid)
 
-# Build the same rounded normalized score table that panel 7 in
-# `64grid_30_cases_pipeline` displays, then compare it with `txt_new_grid`.
+# Recompute the scores with the pipeline figure's own panel-7 code
+# (`64grid_30_cases_pipeline`), independently of `make_region_score`, and check
+# that both agree. Tolerance: one rounding step, because the figure normalises
+# in Float32 and the table in Float64.
 function check_txt_new_grid_matches_64grid_pipeline_panel7(
     configs = task_configs_30_balanced;
     table_rows = region_scores_30_balanced_new_grid,
@@ -63,7 +65,6 @@ function check_txt_new_grid_matches_64grid_pipeline_panel7(
     panel7_rows = make_region_score_panel7(
         configs;
         regions = regions_64_eeg_pipeline28_points,
-        agg = :mean,
         template_center = cfg_64_eeg_pipeline28.template_center,
         template_radius = cfg_64_eeg_pipeline28.template_radius,
         head_center = cfg_64_eeg_pipeline28.parser_head_center,
@@ -73,7 +74,7 @@ function check_txt_new_grid_matches_64grid_pipeline_panel7(
     (
         panel7_rows = panel7_rows,
         table_rows = table_rows,
-        comparison = compare_region_score_rows(panel7_rows, table_rows),
+        comparison = compare_region_score_rows(panel7_rows, table_rows; atol = 0.01 + 1e-9),
     )
 end
 

@@ -114,7 +114,8 @@ function region_score(
         return quantile(vals, 0.90)
     elseif agg == :q95
         return quantile(vals, 0.95)
-        error("Unknown agg = $agg")
+    else
+        error("Unknown agg = $(repr(agg)); use :mean, :max, :median, :signed_peak, :q90 or :q95.")
     end
 end
 

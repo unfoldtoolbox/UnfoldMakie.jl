@@ -3,6 +3,7 @@ using Printf: @sprintf
 @isdefined(TOPO_REGIONS) || include("geometry.jl")
 @isdefined(load_erp_subject_avgref_or_nothing) || include("rereferencing.jl")
 @isdefined(region_weights_from_grid) || include("scoring.jl")
+@isdefined(pipeline_panel7_scores) || include("panel7_scores.jl")
 
 # Rescale region scores into the [0, 1] interval.
 function normalise_region_scores(raw_scores)
@@ -125,11 +126,13 @@ function make_region_score(
     rows
 end
 
-# Build pipeline-panel-7 style rounded normalized region scores for each stimulus.
+# Panel-7 scores for each stimulus, computed by the pipeline figure's own code
+# (`pipeline_panel7_scores` in panel7_scores.jl), rounded like the exported table.
+# This is an independent path from `subject_region_scores`, so comparing the two
+# checks that the exported scores match what the pipeline figure shows.
 function make_region_score_panel7(
     configs;
     regions = TOPO_REGIONS,
-    agg = :mean,
     template_center = (150.0f0, 150.0f0),
     template_radius = 150.0f0,
     head_center = (0.0f0, -0.08f0),
@@ -148,16 +151,15 @@ function make_region_score_panel7(
             )
             isnothing(subject_data) && continue
 
-            region_scores = subject_region_scores(
+            panel7 = pipeline_panel7_scores(
                 subject_data;
                 regions = regions,
-                agg = agg,
                 template_center = template_center,
                 template_radius = template_radius,
                 head_center = head_center,
                 head_radius = head_radius,
-                digits = digits,
             )
+            scores = Dict(String(label) => value for (label, value) in pairs(panel7.scores))
 
             push!(rows, (
                 stimulus = "$(cfg.task)_$(subject)",
@@ -165,8 +167,8 @@ function make_region_score_panel7(
                 subject = subject,
                 timepoint = cfg.timepoint,
                 condition = cfg.condition,
-                raw_scores = region_scores.raw_scores,
-                scores = region_scores.scores,
+                raw_scores = Dict(String(row.label) => Float64(row.raw_score) for row in panel7.rows),
+                scores = rounded_scores(scores; digits = digits),
             ))
         end
     end

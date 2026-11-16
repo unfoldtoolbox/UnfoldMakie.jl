@@ -2,6 +2,7 @@ include("geometry.jl")
 @isdefined(load_erp_subject_avgref_or_nothing) || include("rereferencing.jl")
 include("scoring.jl")
 include("plotting.jl")
+include("panel7_scores.jl")
 
 function plot_region_scoring_pipeline(
     task;
@@ -27,21 +28,6 @@ function plot_region_scoring_pipeline(
     )
     isnothing(subject_data) &&
         error("Processed avgref CSV is missing for task=$task, subject=$subject, timepoint=$timepoint, condition=$condition.")
-
-    normalise_zero_one(values) = begin
-        vals = Float32[Float32(value) for value in vec(values) if isfinite(value)]
-        isempty(vals) && return fill(0f0, size(values))
-
-        lo, hi = extrema(vals)
-        hi == lo && return fill(0f0, size(values))
-
-        out = similar(values, Float32)
-        for idx in eachindex(values)
-            value = values[idx]
-            out[idx] = isfinite(value) ? clamp(Float32((value - lo) / (hi - lo)), 0f0, 1f0) : Float32(value)
-        end
-        out
-    end
 
     original_signal = Float64.(subject_data.estimate)
     rereferenced_signal_values = avgref_signal(subject_data)
@@ -357,23 +343,16 @@ function plot_region_scoring_pipeline(
         colorrange = raw_snr_limits,
         display_limits = display_limits,
     )
-    xg, yg, _, Zmask = extract_topoplot_grid(h_score)
-    rows_t = region_weights_from_grid(
-        xg,
-        yg,
-        Zmask,
+    # Panel 7 scores come from the shared function that get_regions.jl checks against.
+    panel7 = pipeline_panel7_scores(
+        h_score,
         regions;
-        agg = :mean,
         template_center = template_center,
         template_radius = template_radius,
         head_center = head_center,
         head_radius = head_radius,
-        mask = h_score.plots[1].mask[],
-        topoplot_domain = display_head,
-        n_bins = 8,
-        binning = :quantile,
-        reverse = false,
     )
+    rows_t = panel7.rows
     raw_scores = Dict(r.label => r.raw_score for r in rows_t)
     raw_valid = filter(isfinite, collect(values(raw_scores)))
     raw_lo = minimum(raw_valid)
@@ -388,12 +367,7 @@ function plot_region_scoring_pipeline(
         ) for (label, score) in pairs(raw_scores)
     )
 
-    normalised_score_labels = [row.label for row in rows_t]
-    normalised_score_values = normalise_zero_one(Float64[row.raw_score for row in rows_t])
-    normalised_scores = Dict(
-        normalised_score_labels[idx] => Float64(normalised_score_values[idx])
-        for idx in eachindex(normalised_score_labels)
-    )
+    normalised_scores = panel7.scores
     normalised_score_palette = Dict(i => cgrad(:viridis, 10; categorical = true)[i] for i in 1:10)
     normalised_score_bins = Dict(
         label => clamp(floor(Int, score * 10) + 1, 1, 10)
