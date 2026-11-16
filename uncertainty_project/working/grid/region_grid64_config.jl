@@ -18,7 +18,7 @@ Base.@kwdef struct RegionGrid64Config
     stroke_width::Float32 = 0.9f0
     outline_width::Float32 = 1.6f0
     preview_padding::Float32 = 0.10f0
-    output_dir::String = joinpath(dirname(dirname(@__DIR__)), "figures_historical", "region_grids", "task2_topo_regions_64")
+    output_dir::String = joinpath(dirname(dirname(dirname(@__DIR__))), "experiments", "figures_historical", "region_grids", "task2_topo_regions_64")
     basename::String = "task2_topo_regions_64"
     region_const_name::String = "TOPO_REGIONS_64"
     php_function_name::String = "topo_polygons_64"

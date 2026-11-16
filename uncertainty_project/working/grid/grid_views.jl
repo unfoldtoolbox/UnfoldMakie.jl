@@ -37,7 +37,7 @@ function count_search_montage28_bundle(
 )
     region_count == 64 || error(
         "Only the 64-region survey grid is kept in uncertainty_project/data/regions; " *
-        "other counts are archived in uncertainty_project/figures_historical/region_grids.",
+        "other counts are archived in experiments/figures_historical/region_grids.",
     )
     cfg = saved_count_search_run_config(region_count)
     layout = load_survey_grid_layout(cfg)

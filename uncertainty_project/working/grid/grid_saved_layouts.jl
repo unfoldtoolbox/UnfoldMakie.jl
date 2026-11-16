@@ -74,7 +74,7 @@ end
 # Return the default config used for the saved EEG-aligned 64-region export (historical).
 function saved_eeg_aligned_config()
     RegionGrid64Config(
-        output_dir = joinpath(dirname(dirname(@__DIR__)), "figures_historical", "region_grids", "task2_topo_regions_64_eeg_aligned"),
+        output_dir = joinpath(dirname(dirname(dirname(@__DIR__))), "experiments", "figures_historical", "region_grids", "task2_topo_regions_64_eeg_aligned"),
         basename = "task2_topo_regions_64_eeg_aligned",
         region_const_name = "TOPO_REGIONS_64_EEG_ALIGNED",
     )
@@ -109,7 +109,8 @@ end
 function saved_count_search_run_config(
     region_count::Int;
     base_output_dir = joinpath(
-        dirname(dirname(@__DIR__)),
+        dirname(dirname(dirname(@__DIR__))),
+        "experiments",
         "figures_historical",
         "region_grids",
         "task2_topo_regions_eeg_aligned_count_search_pipeline28",
@@ -128,7 +129,8 @@ end
 function load_saved_count_search_regions(
     region_count::Int;
     base_output_dir = joinpath(
-        dirname(dirname(@__DIR__)),
+        dirname(dirname(dirname(@__DIR__))),
+        "experiments",
         "figures_historical",
         "region_grids",
         "task2_topo_regions_eeg_aligned_count_search_pipeline28",
@@ -145,7 +147,8 @@ end
 function load_saved_count_search_layout(
     region_count::Int;
     base_output_dir = joinpath(
-        dirname(dirname(@__DIR__)),
+        dirname(dirname(dirname(@__DIR__))),
+        "experiments",
         "figures_historical",
         "region_grids",
         "task2_topo_regions_eeg_aligned_count_search_pipeline28",

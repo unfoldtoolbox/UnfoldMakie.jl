@@ -19,7 +19,7 @@ end
 
 # 2. The same pipeline idea, but using the saved EEG-aligned 64-region grid
 # instead of the default synthetic one.
-# Historical: reads the archived grid in uncertainty_project/figures_historical/region_grids.
+# Historical: reads the archived grid in experiments/figures_historical/region_grids.
 fig_64_eeg_aligned = saved_eeg_aligned_pipeline_figure()
 
 # 3. Run the whole saved N=64 -> montage28 -> SoSci export cookbook in one call.

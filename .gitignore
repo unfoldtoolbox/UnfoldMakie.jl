@@ -18,7 +18,6 @@ git-filter-repo
 # Uncertainty study: generated outputs (code in /uncertainty_project/working/
 # and small inputs in /uncertainty_project/data/ are tracked)
 /uncertainty_project/figures/
-/uncertainty_project/figures_historical/
 /uncertainty_project/pdf_reports/
 /uncertainty_project/stimuli/
 /uncertainty_project/target stimuli/
@@ -27,6 +26,7 @@ git-filter-repo
 # Experiment scratch and archive (local only)
 /experiments/playground/
 /experiments/old/
+/experiments/figures_historical/
 
 paper-UnfoldMakie/
 runner.jl

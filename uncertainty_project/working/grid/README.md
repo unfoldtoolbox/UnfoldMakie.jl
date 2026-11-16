@@ -124,7 +124,7 @@ This folder does not regenerate the EEG-aligned grid search by itself.
   (region scores) read it. It is geometrically identical to the count-search
   N=64 run. Previews: `uncertainty_project/figures/region_grids/`.
 - **Historical grids (local only, ignored):**
-  `uncertainty_project/figures_historical/region_grids/`: the default synthetic
+  `experiments/figures_historical/region_grids/`: the default synthetic
   64 grid, the first EEG-aligned 64 grid, and the count-search runs N48–N64.
   `saved_eeg_aligned_*` and `load_saved_count_search_*` still read from there.
 
