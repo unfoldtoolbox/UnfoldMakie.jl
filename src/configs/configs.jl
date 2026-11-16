@@ -91,6 +91,7 @@ function PlotConfig(T::Val{:topoplot})
             label_text = false,
             bounding_geometry = Circle,
             colormap = Reverse(:RdBu),
+            colorrange_mode = :diverging_balanced,
         ),
         mapping = (;
             x = (nothing),
@@ -102,6 +103,7 @@ function PlotConfig(T::Val{:topoplot})
     )
     return cfg
 end
+
 function PlotConfig(T::Val{:topoplotseries})
     cfg = PlotConfig(:topoplot)
     config_kwargs!(
@@ -129,6 +131,7 @@ function PlotConfig(T::Val{:topoplotseries})
             enlarge = 1,
             label_scatter = false,
             levels = nothing,
+            colorrange_mode = :diverging_balanced,
         ),
         mapping = (; col = (:time,), row = (nothing,)),
     )

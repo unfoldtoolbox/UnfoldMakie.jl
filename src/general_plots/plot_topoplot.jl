@@ -20,6 +20,9 @@ Plot a topoplot.
     Here you can flexibly change configurations of the topoplot interoplation.\\
     To see all options just type `?Topoplot.topoplot` in REPL.\\
     Defaults: $(replace(string(supportive_defaults(:topo_default_attributes; docstring = true)), "_" => "\\_"))
+- `return_objects::Bool = false`\\
+  Return a named tuple containing the created axis and colorbar.\\
+  Helpful for colorbar tweaking. If `false`, returns the figure.
 $(_docstring(:topoplot))
 
 To highlight some electrodes, you can use `topo_attributes = (; label_scatter = (; ...))`,  where `...` are the attributes for `scatter!` function.  For example, to change the marker size of all electrodes to 8,  use `topo_attributes = (; label_scatter = (; markersize = 15))`. 
@@ -28,9 +31,10 @@ to the number of electrodes.
 
 Colorbar limits behavior:
 - If you pass `colorbar = (; limits = (lo, hi))` or `colorbar = (; colorrange = (lo, hi))`, that range is used.\\
-- If neither is provided and the data includes negative values, the range is symmetric around zero using 1st/99th percentiles:
+- If `visual = (; colorrange_mode = :diverging_balanced)` (default) and the data includes negative values, the range is symmetric around zero using 1st/99th percentiles:
   `p01 = percentile(0.01, data)`, `p99 = percentile(0.99, data)`, `m = max(abs(p01), abs(p99))`, then `(-m, m)`.
-- If the data is non-negative, the range defaults to `(minimum(data), maximum(data))`.
+- If `visual = (; colorrange_mode = :diverging_balanced)` and the data is non-negative, the range defaults to `(minimum(data), maximum(data))`.
+- If `visual = (; colorrange_mode = :sequential)`, the colormap is `:viridis` and the range uses the 5th/95th percentiles.
 
 **Return Value:** `Figure` displaying the Topoplot.
 """
@@ -56,6 +60,7 @@ function plot_topoplot!(
     positions = nothing,
     topo_attributes = (;),
     topo_axis = (;),
+    return_objects = false,
     kwargs...,
 )
 
@@ -89,7 +94,7 @@ function plot_topoplot!(
     # Keep colorrange in Float32 to match Makie internals; avoids first tick being
     # dropped due to Float64 ↔ Float32 rounding at the limits.
     shared_range = topo_shared_range(data, config.visual)
-    config_kwargs!(config, visual = (; colorrange = shared_range))
+    plot_visual = update_axis(topo_resolved_visual(config.visual); colorrange = shared_range)
 
     position = get(config.colorbar, :position, nothing)
     if !(position === nothing || position in (:right, :left, :top, :bottom))
@@ -101,16 +106,17 @@ function plot_topoplot!(
     plot_rows = (1 + row_offset):(4 + row_offset)
     plot_cols = (1 + col_offset):(2 + col_offset)
 
-    outer_axis = Axis(great_axis[plot_rows, plot_cols]; config.axis...)
-    hidespines!(outer_axis); hidedecorations!(outer_axis, label = false)
+    axis_attributes = merge(config.axis, topo_axis)
+    topo_axis_object = Axis(great_axis[plot_rows, plot_cols]; axis_attributes...)
+    hidespines!(topo_axis_object)
+    hidedecorations!(topo_axis_object, label = false)
 
-    inner_axis = Axis(great_axis[plot_rows, plot_cols]; topo_axis...)
     h = eeg_topoplot!(
-        inner_axis,
+        topo_axis_object,
         data;
         labels = labels,
         positions,
-        config.visual...,
+        plot_visual...,
         topo_attributes...,
     )
     if shared_range[][1] ≈ shared_range[][2]
@@ -125,6 +131,7 @@ Note: The identical min and max may cause an interpolation error when plotting t
             @lift config_kwargs!(config, colorbar = (; ticks = ($ticks, $rounded_ticks)))
         end
     end
+    cb = nothing
     if config.layout.use_colorbar
         cb_pos = if position == :right
             great_axis[plot_rows, plot_cols.stop+1]
@@ -151,12 +158,20 @@ Note: The identical min and max may cause an interpolation error when plotting t
         elseif position == :bottom
             rowgap!(great_axis, plot_rows.stop, 10)
             rowsize!(great_axis, plot_rows.stop + 1, Auto(0.1))
-            outer_axis.xlabelpadding = -6
+            topo_axis_object.xlabelpadding = -6
         elseif position == :left || position == :right
             colgap!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop, 0)
             colsize!(great_axis, position == :left ? plot_cols.start - 1 : plot_cols.stop + 1, Auto(0.1))
         end
     end
     apply_layout_settings!(config; fig = f)
-    return f
+    return return_objects ?
+           (;
+        figure = f,
+        layout = great_axis,
+        axis = topo_axis_object,
+        topo_axis = topo_axis_object,
+        plot = h,
+        colorbar = cb,
+    ) : f
 end

@@ -143,6 +143,42 @@ end
     )
 end
 
+@testset "topoplot: colorrange modes" begin
+    vals = Float32[-8, -3, -1, 0, 2, 5, 9, 15]
+
+    default_range = UnfoldMakie.topo_shared_range(vals, (;))
+    diverging_range = UnfoldMakie.topo_shared_range(vals, (; colorrange_mode = :diverging_balanced))
+    p01, p99 = quantile(vals, [0.01, 0.99])
+    balanced_max = Float32(max(abs(p01), abs(p99)))
+    @test default_range == diverging_range
+    @test diverging_range == (-balanced_max, balanced_max)
+
+    sequential_range = UnfoldMakie.topo_shared_range(vals, (; colorrange_mode = :sequential))
+    @test sequential_range == Tuple(Float32.(quantile(vals, [0.05, 0.95])))
+
+    sequential_visual = UnfoldMakie.topo_resolved_visual((;
+        colorrange_mode = :sequential,
+        colormap = :plasma,
+        contours = false,
+    ))
+    @test sequential_visual.colormap == :plasma
+    @test !haskey(sequential_visual, :colorrange_mode)
+
+    default_sequential_visual = UnfoldMakie.topo_resolved_visual((;
+        colorrange_mode = :sequential,
+        colormap = UnfoldMakie.topo_default_diverging_colormap(),
+        contours = false,
+    ))
+    @test default_sequential_visual.colormap == UnfoldMakie.topo_sequential_colormap()
+    @test !haskey(default_sequential_visual, :colorrange_mode)
+
+    plot_topoplot(
+        vals;
+        positions = rand(Point2f, length(vals)),
+        visual = (; colorrange_mode = :sequential),
+    )
+end
+
 @testset "topoplot: std errors" begin
     f = Figure()
     plot_topoplot!(

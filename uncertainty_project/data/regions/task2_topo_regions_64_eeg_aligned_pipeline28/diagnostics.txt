@@ -1,0 +1,32 @@
+Selected region count: N = 64
+Selected candidate: M = 10
+Selected row scaffold: rows10_base
+Domain area: 3.950203
+Target area: 0.061722
+Number of regions: 64
+Number of midline seeds: 10
+Area CV: 0.002906
+Min area: 0.061307
+Max area: 0.061900
+Mean compactness: 0.821543
+Min compactness: 0.739982
+Compactness std: 0.033123
+Mean aspect ratio: 1.269907
+Max aspect ratio: 1.724871
+Aspect ratio std: 0.178621
+Worst-five mean aspect ratio: 1.659683
+Worst five regions by aspect ratio: R03 (1.725), R02 (1.720), R62 (1.644), R63 (1.640), R43 (1.568)
+Minimum electrode-to-boundary distance: 0.031144
+Electrodes too close: C3 (0.0311), C4 (0.0311), C5 (0.0357), C6 (0.0357), Oz (0.0354), P7 (0.0331), P8 (0.0331), PO7 (0.0346), PO8 (0.0346), Pz (0.0366)
+Left-right symmetry preserved: true
+Lateral cells kept out of the midline: true
+Required midline electrodes in midline cells: true
+All cells valid power cells: true
+
+Candidates tested:
+  N=64 | M=8 | rows8_base | CV 0.003268 | asp 1.330/1.632 | clr 0.008461 | too-close 14
+  N=64 | M=8 | rows8_base_tapered | CV 0.003060 | asp 1.347/1.648 | clr 0.007013 | too-close 15
+  N=64 | M=8 | rows8_boundary_balanced | CV 0.002646 | asp 1.318/2.524 | clr 0.014362 | too-close 9
+  N=64 | M=10 | rows10_base | CV 0.002906 | asp 1.270/1.725 | clr 0.031144 | too-close 10
+  N=64 | M=10 | rows10_boundary_balanced | CV 0.003201 | asp 1.257/1.825 | clr 0.005440 | too-close 14
+  N=64 | M=10 | rows10_cap_relief | CV 0.003018 | asp 1.411/2.261 | clr 0.004032 | too-close 11
