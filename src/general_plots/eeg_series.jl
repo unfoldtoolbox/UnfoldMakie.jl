@@ -109,7 +109,13 @@ function eeg_topoplot_series!(
         )
         single_topoplot = eeg_topoplot!(ax, single_y; positions, labels, topo_attributes...)
         if rasterize_heatmaps
-            single_topoplot.plots[1].plots[1].rasterize = true
+            try
+                # Makie ≤ 0.24.14: set it directly on the inner heatmap
+                single_topoplot.plots[1].plots[1].rasterize = true
+            catch
+                # Makie ≥ 0.24.16: the heatmap inherits `rasterize` from its parent topoplot
+                single_topoplot.plots[1].rasterize = true
+            end
         end
         interactive_toposeries(interactive_scatter, ax, single_topoplot, positions, r, c)
         push!(axlist, ax)
