@@ -215,39 +215,73 @@ t2_subtitle(rate, n, _kind = nothing) = @sprintf("%d%% hits · n = %d", round(In
 # Shared legend row
 # ---------------------------------------------------------------------------
 
-function t2_legend!(slot, geo; truth_label, colorrange, panel, shares = (0.05, 0.2, 0.5), show_peak = true)
-    gl = slot[] = GridLayout()
-    Colorbar(gl[1, 1]; colormap = T2_TRUTH_CMAP, limits = colorrange, vertical = false,
-        label = truth_label, labelsize = 13, ticklabelsize = 11, width = 300, height = 10,
-        labelcolor = T2_INK, ticklabelcolor = T2_INK2)
+const T2_LEGEND_RESPONSES = Dict(
+    :hit => "Hit (peak region)", :near => "Near hit (borders peak)", :miss => "Miss")
+const T2_LEGEND_REGIONS = Dict(
+    :peak => (T2_PEAK_STROKE, 2.2, "Peak region"), :near => (T2_NEAR, 1.6, "Neighbouring regions"))
+
+"""
+    t2_legend!(slot, geo; panel, truth_title, colorrange, classes, regions, panels)
+
+One legend row of equal-width, top-aligned blocks, each with the same title
+style: ground-truth colour scale | dot-size key | responses | regions | panels.
+`regions = ()` drops the Regions block (e.g. when no outlines are drawn).
+"""
+function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, :miss),
+                    regions = (:peak,), panels = true, shares = (0.05, 0.2, 0.5), block_width = 230)
+    gl = slot[] = GridLayout(; halign = :center, tellwidth = false)
+    ncol = Ref(0)
+    function block!(title)
+        ncol[] += 1
+        b = gl[1, ncol[]] = GridLayout(; valign = :top, halign = :left)
+        Label(b[1, 1], title; fontsize = 12, font = :bold, color = T2_INK2, halign = :left, tellwidth = false)
+        rowgap!(b, 8)
+        b
+    end
+    legend!(b, elements, labels) = Legend(b[2, 1], elements, labels;
+        framevisible = false, padding = (0, 0, 0, 0), rowgap = 5, patchsize = (16, 16), patchlabelgap = 8,
+        labelsize = 12, labelcolor = T2_INK, halign = :left, valign = :top, tellwidth = false)
+
+    b = block!(truth_title)
+    Colorbar(b[2, 1]; colormap = T2_TRUTH_CMAP, limits = colorrange, vertical = false,
+        width = block_width - 30, height = 10, ticklabelsize = 11, ticklabelcolor = T2_INK2,
+        halign = :left, tellwidth = false)
 
     # Dot size key drawn in data space at the panels' px-per-unit scale, so the
     # key dots are exactly as large as the same shares in the panels.
+    b = block!("Share of responses")
     px_per_unit = panel / (2.08 * geo.head.radius)  # matches limits! in t2_panel!
-    ax = Axis(gl[1, 2]; width = 220 * px_per_unit, height = 110 * px_per_unit)
+    ax = Axis(b[2, 1]; width = 220 * px_per_unit, height = 95 * px_per_unit, halign = :left, tellwidth = false)
     hidedecorations!(ax); hidespines!(ax)
     xs = Float32[25, 90, 175]
-    scatter!(ax, xs, fill(65f0, 3); markersize = T2_DOT_SCALE .* sqrt.(collect(shares)),
+    scatter!(ax, xs, fill(55f0, 3); markersize = T2_DOT_SCALE .* sqrt.(collect(shares)),
         markerspace = :data, color = T2_MISS, strokecolor = :white, strokewidth = 0.7)
-    text!(ax, xs, fill(18f0, 3); text = [@sprintf("%d%%", round(Int, 100s)) for s in shares],
+    text!(ax, xs, fill(10f0, 3); text = [@sprintf("%d%%", round(Int, 100s)) for s in shares],
         align = (:center, :center), fontsize = 11, color = T2_INK2)
-    limits!(ax, 0, 220, 0, 110)
-    Label(gl[1, 3], "share of\nresponses"; fontsize = 11, color = T2_INK2, halign = :left)
+    limits!(ax, 0, 220, 0, 95)
 
-    resp = Any[MarkerElement(marker = :circle, color = T2_HIT, markersize = 14),
-               MarkerElement(marker = :circle, color = T2_MISS, markersize = 14)]
-    resp_labels = ["Hit (peak region selected)", "Miss"]
-    if show_peak
-        push!(resp, PolyElement(color = :transparent, strokecolor = T2_PEAK_STROKE, strokewidth = 2.2))
-        push!(resp_labels, "Correct region (peak)")
+    b = block!("Responses")
+    legend!(b, Any[MarkerElement(marker = :circle, color = T2_CLASS_COLORS[c], markersize = 13) for c in classes],
+        [T2_LEGEND_RESPONSES[c] for c in classes])
+
+    if !isempty(regions)
+        b = block!("Regions")
+        legend!(b, Any[PolyElement(color = :transparent, strokecolor = T2_LEGEND_REGIONS[r][1],
+                    strokewidth = T2_LEGEND_REGIONS[r][2]) for r in regions],
+            [T2_LEGEND_REGIONS[r][3] for r in regions])
     end
-    panels = Any[PolyElement(color = T2_MARKS[k].tint, strokecolor = T2_MARKS[k].stroke, strokewidth = 2.2)
-                 for k in (:best, :worst)]
-    panel_labels = ["Most correct in row", "Most missed in row"]
-    Legend(gl[1, 4], [resp, panels], [resp_labels, panel_labels], ["Responses", "Panels"];
-        framevisible = false, labelsize = 12, labelcolor = T2_INK, titlesize = 12,
-        titlecolor = T2_INK2, orientation = :horizontal, nbanks = 2, titleposition = :top)
-    colgap!(gl, 40); colgap!(gl, 2, 8)
+
+    if panels
+        b = block!("Panels")
+        legend!(b, Any[PolyElement(color = T2_MARKS[k].tint, strokecolor = T2_MARKS[k].stroke, strokewidth = 2.2)
+                       for k in (:best, :worst)],
+            ["Most correct in row", "Most missed in row"])
+    end
+
+    for c in 1:ncol[]
+        colsize!(gl, c, Fixed(block_width))
+    end
+    colgap!(gl, 36)
     gl
 end
 
@@ -281,7 +315,7 @@ function t2_stimulus_figure(stim, geo; panel = 150)
                 peaks = sdf.region_number[sdf.is_peak])
         end
     end
-    t2_legend!(fig[4, 1:11], geo; truth_label = "Region score (0 = weakest, 1 = peak)", colorrange = (0, 1), panel)
+    t2_legend!(fig[4, 1:11], geo; panel, truth_title = "Region score (1 = peak)", colorrange = (0, 1))
     colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
     resize_to_layout!(fig)
     fig
@@ -329,8 +363,8 @@ function t2_vistype_figure(stim, geo; stimuli = t2_default_stimuli(stim), panel 
                 peaks = sdf.region_number[sdf.is_peak])
         end
     end
-    t2_legend!(fig[length(stimuli)+1, 1:length(cols)+1], geo;
-        truth_label = "Region score (0 = weakest, 1 = peak)", colorrange = (0, 1), panel)
+    t2_legend!(fig[length(stimuli)+1, 1:length(cols)+1], geo; panel,
+        truth_title = "Region score (1 = peak)", colorrange = (0, 1))
     colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
     resize_to_layout!(fig)
     fig
@@ -364,8 +398,8 @@ function t2_pattern_vistype_figure(reg, stim, geo; panel = 165)
                 prop_selected = t2_vec(rdf, :prop_selected), prop_hits = t2_vec(rdf, :prop_hits))
         end
     end
-    t2_legend!(fig[4, 1:8], geo; truth_label = "Share of trials where the region was the peak",
-        colorrange = (0, cmax), show_peak = false, panel)
+    t2_legend!(fig[4, 1:8], geo; panel, truth_title = "Share of trials region was peak",
+        colorrange = (0, cmax), regions = ())
     colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
     resize_to_layout!(fig)
     fig
@@ -457,40 +491,11 @@ function t2_near_stimulus_figure(stim, counts, geo; panel = 150)
                 cls = t2_region_classes(geo, sdf.region_number[sdf.is_peak]))
         end
     end
-    t2_near_legend!(fig[4, 1:11], geo; panel)
+    t2_legend!(fig[4, 1:11], geo; panel, truth_title = "Region score (1 = peak)", colorrange = (0, 1),
+        classes = (:hit, :near, :miss), regions = (:peak, :near))
     colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
     resize_to_layout!(fig)
     fig
-end
-
-function t2_near_legend!(slot, geo; panel)
-    gl = slot[] = GridLayout()
-    Colorbar(gl[1, 1]; colormap = T2_TRUTH_CMAP, limits = (0, 1), vertical = false,
-        label = "Region score (0 = weakest, 1 = peak)", labelsize = 13, ticklabelsize = 11,
-        width = 300, height = 10, labelcolor = T2_INK, ticklabelcolor = T2_INK2)
-    px_per_unit = panel / (2.08 * geo.head.radius)
-    ax = Axis(gl[1, 2]; width = 220 * px_per_unit, height = 110 * px_per_unit)
-    hidedecorations!(ax); hidespines!(ax)
-    xs = Float32[25, 90, 175]; shares = (0.05, 0.2, 0.5)
-    scatter!(ax, xs, fill(65f0, 3); markersize = T2_DOT_SCALE .* sqrt.(collect(shares)),
-        markerspace = :data, color = T2_MISS, strokecolor = :white, strokewidth = 0.7)
-    text!(ax, xs, fill(18f0, 3); text = [@sprintf("%d%%", round(Int, 100s)) for s in shares],
-        align = (:center, :center), fontsize = 11, color = T2_INK2)
-    limits!(ax, 0, 220, 0, 110)
-    Label(gl[1, 3], "share of\nresponses"; fontsize = 11, color = T2_INK2, halign = :left)
-    resp = Any[MarkerElement(marker = :circle, color = T2_CLASS_COLORS[c], markersize = 14) for c in (:hit, :near, :miss)]
-    resp_labels = ["Hit (peak region)", "Near hit (borders the peak)", "Miss"]
-    cells = Any[PolyElement(color = :transparent, strokecolor = T2_PEAK_STROKE, strokewidth = 2.2),
-                PolyElement(color = :transparent, strokecolor = T2_NEAR, strokewidth = 1.6)]
-    panels = Any[PolyElement(color = T2_MARKS[k].tint, strokecolor = T2_MARKS[k].stroke, strokewidth = 2.2)
-                 for k in (:best, :worst)]
-    Legend(gl[1, 4], [resp, cells, panels],
-        [resp_labels, ["Peak region", "Neighbouring regions"], ["Most correct in row", "Most missed in row"]],
-        ["Responses", "Regions", "Panels"];
-        framevisible = false, labelsize = 12, labelcolor = T2_INK, titlesize = 12,
-        titlecolor = T2_INK2, orientation = :horizontal, nbanks = 3, titleposition = :top)
-    colgap!(gl, 40); colgap!(gl, 2, 8)
-    gl
 end
 
 # Figure 5: share of hit / near hit / miss per visualization type, by pattern.
