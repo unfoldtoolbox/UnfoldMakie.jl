@@ -65,6 +65,19 @@ const T2_PEAK_STROKE = colorant"#eb6834"
 # hit > near hit > miss reads as an ordered scale (lightness carries it).
 const T2_NEAR = colorant"#f7b996"
 
+# Font sizes chosen for the final display size (Wilke ch. 24): the figures are
+# shown ~1100 px wide on the analysis site, so text stays >= ~11 px there.
+# Figures carry no in-figure title (Wilke ch. 22): the caption is the title.
+const T2_FS = (col = 15, subtitle = 13, row = 18, legend_title = 14, legend = 14, tick = 13)
+
+# Two-line column titles so long visualization names fit a panel width.
+const T2_VISTYPE_LABELS2 = Dict(
+    "all" => "All\nvisualizations", "adjacent" => "Adjacent\nplots", "animation" => "Animation\n ",
+    "bivariate_corner" => "Bivariate\ncorner", "bivariate_range" => "Bivariate\nrange",
+    "triple_CI" => "Confidence\nintervals", "uncert_markers" => "Uncertainty\nmarkers",
+    "basic" => "Basic\ntopoplot",
+)
+
 # Dot diameter in template units (head is 300 units across) for share = 1.
 const T2_DOT_SCALE = 68.0
 
@@ -228,32 +241,36 @@ const T2_LEGEND_REGIONS = Dict(
     :peak => (T2_PEAK_STROKE, 2.2, "Peak region"), :near => (T2_NEAR, 1.6, "Neighbouring regions"))
 
 """
-    t2_legend!(slot, geo; panel, truth_title, colorrange, classes, regions, panels)
+    t2_legend!(slot, geo; panel, truth_title, colorrange, classes, regions, panels, ncols)
 
-One legend row of equal-width, top-aligned blocks, each with the same title
-style: ground-truth colour scale | dot-size key | responses | regions | panels.
-`regions = ()` drops the Regions block (e.g. when no outlines are drawn).
+Legend of equal-width, top-aligned blocks, each with the same title style:
+ground-truth colour scale | dot-size key | responses | regions | panels.
+Blocks wrap after `ncols` columns. `regions = ()` drops the Regions block.
+`panel_scope` names what "most correct / most missed" is ranked within.
 """
 function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, :miss),
-                    regions = (:peak,), panels = true, shares = (0.05, 0.2, 0.5), block_width = 200)
+                    regions = (:peak,), panels = true, panel_scope = "row",
+                    shares = (0.05, 0.2, 0.5), block_width = 230, ncols = 5)
     gl = slot[] = GridLayout(; halign = :center, tellwidth = false)
-    ncol = Ref(0)
+    nblock = Ref(0)
     function block!(title)
-        ncol[] += 1
-        b = gl[1, ncol[]] = GridLayout(; valign = :top, halign = :left)
-        Label(b[1, 1], title; fontsize = 12, font = :bold, color = T2_INK2, halign = :left, tellwidth = false)
+        nblock[] += 1
+        r, c = cld(nblock[], ncols), mod1(nblock[], ncols)
+        b = gl[r, c] = GridLayout(; valign = :top, halign = :left)
+        Label(b[1, 1], title; fontsize = T2_FS.legend_title, font = :bold, color = T2_INK2,
+            halign = :left, tellwidth = false)
         rowgap!(b, 8)
         b
     end
     legend!(b, elements, labels) = Legend(b[2, 1], elements, labels;
-        framevisible = false, padding = (0, 0, 0, 0), rowgap = 5, patchsize = (16, 16), patchlabelgap = 8,
-        labelsize = 12, labelcolor = T2_INK, halign = :left, valign = :top, tellwidth = false)
+        framevisible = false, padding = (0, 0, 0, 0), rowgap = 5, patchsize = (18, 18), patchlabelgap = 8,
+        labelsize = T2_FS.legend, labelcolor = T2_INK, halign = :left, valign = :top, tellwidth = false)
 
     b = block!(truth_title)
     ticks = range(colorrange[1], colorrange[2]; length = T2_TRUTH_NBINS + 1)
     Colorbar(b[2, 1]; colormap = T2_TRUTH_CMAP, limits = colorrange, vertical = false,
         ticks = (collect(ticks), [@sprintf("%g", round(t; digits = 2)) for t in ticks]),
-        width = block_width - 30, height = 10, ticklabelsize = 11, ticklabelcolor = T2_INK2,
+        width = block_width - 30, height = 12, ticklabelsize = T2_FS.tick, ticklabelcolor = T2_INK2,
         halign = :left, tellwidth = false)
 
     # Dot size key drawn in data space at the panels' px-per-unit scale, so the
@@ -266,11 +283,11 @@ function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, 
     scatter!(ax, xs, fill(55f0, 3); markersize = T2_DOT_SCALE .* sqrt.(collect(shares)),
         markerspace = :data, color = T2_MISS, strokecolor = :white, strokewidth = 0.7)
     text!(ax, xs, fill(10f0, 3); text = [@sprintf("%d%%", round(Int, 100s)) for s in shares],
-        align = (:center, :center), fontsize = 11, color = T2_INK2)
+        align = (:center, :center), fontsize = T2_FS.tick, color = T2_INK2)
     limits!(ax, 0, 220, 0, 95)
 
     b = block!("Responses")
-    legend!(b, Any[MarkerElement(marker = :circle, color = T2_CLASS_COLORS[c], markersize = 13) for c in classes],
+    legend!(b, Any[MarkerElement(marker = :circle, color = T2_CLASS_COLORS[c], markersize = 15) for c in classes],
         [T2_LEGEND_RESPONSES[c] for c in classes])
 
     if !isempty(regions)
@@ -284,48 +301,68 @@ function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, 
         b = block!("Panels")
         legend!(b, Any[PolyElement(color = T2_MARKS[k].tint, strokecolor = T2_MARKS[k].stroke, strokewidth = 2.2)
                        for k in (:best, :worst)],
-            ["Most correct in row", "Most missed in row"])
+            ["Most correct in $panel_scope", "Most missed in $panel_scope"])
     end
 
-    for c in 1:ncol[]
+    for c in 1:min(nblock[], ncols)
         colsize!(gl, c, Fixed(block_width))
     end
     colgap!(gl, 28)
+    nblock[] > ncols && rowgap!(gl, 18)
     gl
+end
+
+# Stimulus figures: 10 stimuli per pattern wrap into 2 rows of 5, so panels
+# stay large enough for legible subtitles at the final display width.
+const T2_STIM_COLS = 5
+t2_stim_cell(p, i) = (2(p - 1) + cld(i, T2_STIM_COLS), mod1(i, T2_STIM_COLS) + 1)
+
+function t2_stim_row_labels!(fig)
+    for (p, pat) in enumerate(T2_PATTERNS)
+        Label(fig[2p-1:2p, 1], pat; rotation = π / 2, fontsize = T2_FS.row, font = :bold, color = T2_INK)
+    end
+end
+
+function t2_stim_gaps!(fig)
+    colgap!(fig.layout, 12)
+    rowgap!(fig.layout, 10)
+    for p in 1:length(T2_PATTERNS)-1
+        rowgap!(fig.layout, 2p, Fixed(34))   # extra space between pattern blocks
+    end
 end
 
 # ---------------------------------------------------------------------------
 # Figure 1: every stimulus, pooled over visualization types
 # ---------------------------------------------------------------------------
 
-function t2_stimulus_figure(stim, geo; panel = 150)
+function t2_stimulus_figure(stim, geo; panel = 200)
     all_df = filter(:vistype => ==("all"), stim)
-    fig = Figure(size = (10 * panel + 120, 3 * (panel + 40) + 170), backgroundcolor = :white)
-    Label(fig[0, 1:11], "Task 2: selected vs. correct region for every stimulus (all visualizations pooled)";
-        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
-    for (row, pat) in enumerate(T2_PATTERNS)
+    fig = Figure(size = (T2_STIM_COLS * panel + 200, 6 * (panel + 50) + 300), backgroundcolor = :white)
+    t2_stim_row_labels!(fig)
+    for (p, pat) in enumerate(T2_PATTERNS)
         pdf = filter(:pattern => ==(pat), all_df)
         order = combine(groupby(pdf, :stimulus), :stimulus_hit_rate => first => :h, :subject => first => :s)
         sort!(order, [:h, :s]; rev = [true, false])
         msc = [t2_mean_score(filter(:stimulus => ==(s), pdf)) for s in order.stimulus]
         marks = t2_row_marks(order.stimulus, order.h, msc)
-        Label(fig[row, 1], pat; rotation = π / 2, fontsize = 16, font = :bold, color = T2_INK)
-        for (col, s) in enumerate(order.stimulus)
+        for (i, s) in enumerate(order.stimulus)
             sdf = sort(filter(:stimulus => ==(s), pdf), :region_number)
             kind = get(marks, s, nothing)
-            t2_mark_box!(fig[row, col + 1], kind)
-            ax = Axis(fig[row, col + 1]; width = panel, height = panel,
-                title = s, titlesize = 13, titlecolor = T2_INK,
+            cell = fig[t2_stim_cell(p, i)...]
+            t2_mark_box!(cell, kind)
+            ax = Axis(cell; width = panel, height = panel,
+                title = s, titlesize = T2_FS.col, titlecolor = T2_INK,
                 subtitle = t2_subtitle(sdf.stimulus_hit_rate[1], sdf.n_trials[1], kind),
-                subtitlesize = 11, subtitlecolor = T2_INK2, titlegap = 2)
+                subtitlesize = T2_FS.subtitle, subtitlecolor = T2_INK2, titlegap = 2)
             prop = t2_vec(sdf, :prop_selected)
             t2_panel!(ax, geo; fill = t2_vec(sdf, :score), colorrange = (0, 1),
                 prop_selected = prop, prop_hits = prop .* sdf.is_peak,
                 peaks = sdf.region_number[sdf.is_peak])
         end
     end
-    t2_legend!(fig[4, 1:11], geo; panel, truth_title = "Region score (1 = peak)", colorrange = (0, 1))
-    colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
+    t2_legend!(fig[7, 1:T2_STIM_COLS+1], geo; panel, truth_title = "Region score (1 = peak)",
+        colorrange = (0, 1), ncols = 3, panel_scope = "pattern")
+    t2_stim_gaps!(fig)
     resize_to_layout!(fig)
     fig
 end
@@ -345,27 +382,24 @@ function t2_default_stimuli(stim)
     out
 end
 
-function t2_vistype_figure(stim, geo; stimuli = t2_default_stimuli(stim), panel = 150)
+function t2_vistype_figure(stim, geo; stimuli = t2_default_stimuli(stim), panel = 160)
     cols = vcat("all", T2_VISTYPES)
-    fig = Figure(size = (length(cols) * panel + 160, length(stimuli) * (panel + 30) + 170), backgroundcolor = :white)
-    Label(fig[0, 1:length(cols)+1],
-        "Task 2: the same stimulus across visualization types (easiest and hardest stimulus per pattern)";
-        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
+    fig = Figure(size = (length(cols) * panel + 160, length(stimuli) * (panel + 40) + 260), backgroundcolor = :white)
     for (row, s) in enumerate(stimuli)
         sdf_all = filter(:stimulus => ==(s), stim)
         # Rank only the 7 visualization types; the pooled column is a reference.
         vis = [filter(:vistype => ==(v), sdf_all) for v in T2_VISTYPES]
         marks = t2_row_marks(T2_VISTYPES, [d.stimulus_hit_rate[1] for d in vis], t2_mean_score.(vis))
-        Label(fig[row, 1], s; rotation = π / 2, fontsize = 15, font = :bold, color = T2_INK)
+        Label(fig[row, 1], s; rotation = π / 2, fontsize = T2_FS.row, font = :bold, color = T2_INK)
         for (col, v) in enumerate(cols)
             sdf = sort(filter(:vistype => ==(v), sdf_all), :region_number)
-            title = row == 1 ? T2_VISTYPE_LABELS[v] : ""
+            title = row == 1 ? T2_VISTYPE_LABELS2[v] : ""
             kind = get(marks, v, nothing)
             t2_mark_box!(fig[row, col + 1], kind)
             ax = Axis(fig[row, col + 1]; width = panel, height = panel,
-                title = title, titlesize = 13, titlecolor = T2_INK,
+                title = title, titlesize = T2_FS.col, titlecolor = T2_INK,
                 subtitle = t2_subtitle(sdf.stimulus_hit_rate[1], sdf.n_trials[1], kind),
-                subtitlesize = 11, subtitlecolor = T2_INK2, titlegap = 2)
+                subtitlesize = T2_FS.subtitle, subtitlecolor = T2_INK2, titlegap = 2)
             prop = t2_vec(sdf, :prop_selected)
             t2_panel!(ax, geo; fill = t2_vec(sdf, :score), colorrange = (0, 1),
                 prop_selected = prop, prop_hits = prop .* sdf.is_peak,
@@ -373,8 +407,8 @@ function t2_vistype_figure(stim, geo; stimuli = t2_default_stimuli(stim), panel 
         end
     end
     t2_legend!(fig[length(stimuli)+1, 1:length(cols)+1], geo; panel,
-        truth_title = "Region score (1 = peak)", colorrange = (0, 1))
-    colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
+        truth_title = "Region score (1 = peak)", colorrange = (0, 1), block_width = 220)
+    colgap!(fig.layout, 8); rowgap!(fig.layout, 12)
     resize_to_layout!(fig)
     fig
 end
@@ -385,31 +419,29 @@ end
 
 function t2_pattern_vistype_figure(reg, stim, geo; panel = 165)
     cmax = ceil(maximum(reg.prop_correct) * 10) / 10
-    fig = Figure(size = (7 * panel + 120, 3 * (panel + 40) + 170), backgroundcolor = :white)
-    Label(fig[0, 1:8], "Task 2: selected vs. correct regions by ERP pattern and visualization type (stimuli pooled)";
-        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
+    fig = Figure(size = (7 * panel + 120, 3 * (panel + 50) + 260), backgroundcolor = :white)
     for (row, pat) in enumerate(T2_PATTERNS)
         rate = [let d = filter(r -> r.pattern == pat && r.vistype == v, reg)
                     sum(d.n_hits) / d.n_trials[1] end for v in T2_VISTYPES]
         msc = [t2_mean_score(filter(r -> r.pattern == pat && r.vistype == v, stim)) for v in T2_VISTYPES]
         marks = t2_row_marks(T2_VISTYPES, rate, msc)
-        Label(fig[row, 1], pat; rotation = π / 2, fontsize = 16, font = :bold, color = T2_INK)
+        Label(fig[row, 1], pat; rotation = π / 2, fontsize = T2_FS.row, font = :bold, color = T2_INK)
         for (col, v) in enumerate(T2_VISTYPES)
             rdf = sort(filter(r -> r.pattern == pat && r.vistype == v, reg), :region_number)
             hits = sum(rdf.n_hits); n = rdf.n_trials[1]
             kind = get(marks, v, nothing)
             t2_mark_box!(fig[row, col + 1], kind)
             ax = Axis(fig[row, col + 1]; width = panel, height = panel,
-                title = row == 1 ? T2_VISTYPE_LABELS[v] : "", titlesize = 13, titlecolor = T2_INK,
+                title = row == 1 ? T2_VISTYPE_LABELS2[v] : "", titlesize = T2_FS.col, titlecolor = T2_INK,
                 subtitle = t2_subtitle(hits / n, n, kind),
-                subtitlesize = 11, subtitlecolor = T2_INK2, titlegap = 2)
+                subtitlesize = T2_FS.subtitle, subtitlecolor = T2_INK2, titlegap = 2)
             t2_panel!(ax, geo; fill = t2_vec(rdf, :prop_correct), colorrange = (0, cmax),
                 prop_selected = t2_vec(rdf, :prop_selected), prop_hits = t2_vec(rdf, :prop_hits))
         end
     end
     t2_legend!(fig[4, 1:8], geo; panel, truth_title = "Share of trials region was peak",
-        colorrange = (0, cmax), regions = ())
-    colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
+        colorrange = (0, cmax), regions = (), block_width = 250)
+    colgap!(fig.layout, 8); rowgap!(fig.layout, 12)
     resize_to_layout!(fig)
     fig
 end
@@ -472,80 +504,82 @@ function t2_panel_classes!(ax, geo; fill, prop_selected, cls)
 end
 
 # Figure 4: every stimulus (pooled over visualizations), hit / near hit / miss.
-function t2_near_stimulus_figure(stim, counts, geo; panel = 150)
+function t2_near_stimulus_figure(stim, counts, geo; panel = 200)
     all_df = filter(:vistype => ==("all"), stim)
     allc = filter(:vistype => ==("all"), counts)
-    fig = Figure(size = (10 * panel + 120, 3 * (panel + 40) + 170), backgroundcolor = :white)
-    Label(fig[0, 1:11], "Task 2: hits, near hits (region bordering the peak) and misses for every stimulus (all visualizations pooled)";
-        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
-    for (row, pat) in enumerate(T2_PATTERNS)
+    fig = Figure(size = (T2_STIM_COLS * panel + 200, 6 * (panel + 50) + 300), backgroundcolor = :white)
+    t2_stim_row_labels!(fig)
+    for (p, pat) in enumerate(T2_PATTERNS)
         pc = filter(:pattern => ==(pat), allc)
         pc.hit_rate = pc.hit ./ pc.n_trials
         pc.close_rate = (pc.hit .+ pc.near) ./ pc.n_trials  # hit or near hit
         sort!(pc, [order(:hit_rate, rev = true), order(:close_rate, rev = true), :stimulus])
         # Rank by hit rate; ties broken by hit-or-near-hit rate.
         marks = t2_row_marks(pc.stimulus, pc.hit_rate, pc.close_rate)
-        Label(fig[row, 1], pat; rotation = π / 2, fontsize = 16, font = :bold, color = T2_INK)
-        for (col, s) in enumerate(pc.stimulus)
+        for (i, s) in enumerate(pc.stimulus)
             sdf = sort(filter(:stimulus => ==(s), all_df), :region_number)
-            cr = pc[col, :]
+            cr = pc[i, :]
             kind = get(marks, s, nothing)
-            t2_mark_box!(fig[row, col + 1], kind)
-            ax = Axis(fig[row, col + 1]; width = panel, height = panel,
-                title = s, titlesize = 13, titlecolor = T2_INK,
+            cell = fig[t2_stim_cell(p, i)...]
+            t2_mark_box!(cell, kind)
+            ax = Axis(cell; width = panel, height = panel,
+                title = s, titlesize = T2_FS.col, titlecolor = T2_INK,
                 subtitle = @sprintf("hit %d%% · near %d%% · n = %d", round(Int, 100cr.hit / cr.n_trials),
                     round(Int, 100cr.near / cr.n_trials), cr.n_trials),
-                subtitlesize = 11, subtitlecolor = T2_INK2, titlegap = 2)
+                subtitlesize = T2_FS.subtitle, subtitlecolor = T2_INK2, titlegap = 2)
             t2_panel_classes!(ax, geo; fill = t2_vec(sdf, :score), prop_selected = t2_vec(sdf, :prop_selected),
                 cls = t2_region_classes(geo, sdf.region_number[sdf.is_peak]))
         end
     end
-    t2_legend!(fig[4, 1:11], geo; panel, truth_title = "Region score (1 = peak)", colorrange = (0, 1),
-        classes = (:hit, :near, :miss), regions = (:peak, :near))
-    colgap!(fig.layout, 6); rowgap!(fig.layout, 10)
+    t2_legend!(fig[7, 1:T2_STIM_COLS+1], geo; panel, truth_title = "Region score (1 = peak)", colorrange = (0, 1),
+        classes = (:hit, :near, :miss), regions = (:peak, :near), ncols = 3, panel_scope = "pattern")
+    t2_stim_gaps!(fig)
     resize_to_layout!(fig)
     fig
 end
 
-# Figure 5: share of hit / near hit / miss per visualization type, by pattern.
+# Figure 5: hits and near hits per visualization type, by pattern.
+# Side-by-side bars, each from zero (Wilke ch. 10: interior segments of a
+# stacked bar cannot be compared because both their ends move). Misses are the
+# remainder and are listed on the analysis page.
 function t2_near_vistype_figure(counts)
     vc = filter(:vistype => !=("all"), counts)
     agg(df) = combine(groupby(df, :vistype), [:hit, :near, :miss, :n_trials] .=> sum .=> [:hit, :near, :miss, :n])
-    facets = vcat([(p, agg(filter(:pattern => ==(p), vc))) for p in T2_PATTERNS], [("All patterns", agg(vc))])
+    facets = vcat([("All patterns", agg(vc))], [(p, agg(filter(:pattern => ==(p), vc))) for p in T2_PATTERNS])
+    shares_of(d) = (hit = d.hit ./ d.n, near = d.near ./ d.n)
+    xmax = ceil(maximum(maximum(vcat(shares_of(d).hit, shares_of(d).near)) for (_, d) in facets) * 10 + 0.5) / 10
 
-    # Extra right padding: the last facet's "100%" tick label overhangs the axis.
-    fig = Figure(size = (1500, 520), backgroundcolor = :white, figure_padding = (16, 36, 16, 16))
-    Label(fig[0, 1:4], "Task 2: hits, near hits and misses by visualization type";
-        fontsize = 18, font = :bold, color = T2_INK, halign = :left)
-    ys = length(T2_VISTYPES):-1:1  # first vistype on top
-    classes = (:hit, :near, :miss)
-    for (col, (name, d)) in enumerate(facets)
+    fig = Figure(size = (1150, 980), backgroundcolor = :white, figure_padding = (16, 30, 16, 16))
+    ys = Float64.(length(T2_VISTYPES):-1:1)  # first vistype on top
+    bw, off = 0.36, 0.19                      # bar width, offset of hit (up) / near (down)
+    for (k, (name, d)) in enumerate(facets)
         d = d[indexin(T2_VISTYPES, d.vistype), :]
-        shares = hcat([d[!, c] ./ d.n for c in classes]...)
-        ax = Axis(fig[1, col]; title = name, titlesize = 15, titlecolor = T2_INK,
-            yticks = (collect(ys), [T2_VISTYPE_LABELS[v] for v in T2_VISTYPES]),
-            yticklabelsvisible = col == 1, yticklabelcolor = T2_INK, xticklabelcolor = T2_INK2,
-            xticks = (0:0.25:1, ["0%", "25%", "50%", "75%", "100%"]), xgridcolor = RGBAf(0, 0, 0, 0.08),
-            ygridvisible = false, xlabel = col == 1 ? "Share of responses" : "", xlabelcolor = T2_INK2,
-            width = 290, height = 330)
+        s = shares_of(d)
+        r, c = cld(k, 2), mod1(k, 2)
+        ax = Axis(fig[r, c]; title = name, titlesize = 16, titlecolor = T2_INK,
+            subtitle = @sprintf("n = %d responses per bar", d.n[1]), subtitlesize = T2_FS.subtitle,
+            subtitlecolor = T2_INK2,
+            yticks = (ys, [T2_VISTYPE_LABELS[v] for v in T2_VISTYPES]), yticklabelsize = 14,
+            yticklabelsvisible = c == 1, yticklabelcolor = T2_INK, xticklabelcolor = T2_INK2, xticklabelsize = 13,
+            xticks = (0:0.1:xmax, [@sprintf("%d%%", round(Int, 100t)) for t in 0:0.1:xmax]),
+            xgridcolor = RGBAf(0, 0, 0, 0.08), ygridvisible = false,
+            xlabel = r == 2 ? "Share of responses" : "", xlabelcolor = T2_INK2, xlabelsize = 14,
+            width = 400, height = 330)
         hidespines!(ax, :t, :r, :l)
-        left = zeros(size(shares, 1))
-        for (ci, c) in enumerate(classes)
-            barplot!(ax, collect(ys), shares[:, ci]; offset = left, direction = :x, color = T2_CLASS_COLORS[c],
-                strokecolor = :white, strokewidth = 1.5, gap = 0.25)
-            mids = left .+ shares[:, ci] ./ 2
-            lab = [s >= 0.07 ? @sprintf("%d%%", round(Int, 100s)) : "" for s in shares[:, ci]]
-            text!(ax, mids, collect(ys); text = lab, align = (:center, :center), fontsize = 11,
-                color = c == :near ? T2_INK : :white)
-            left .+= shares[:, ci]
+        for (cls, dy) in ((:hit, off), (:near, -off))
+            v = getproperty(s, cls)
+            barplot!(ax, ys .+ dy, v; direction = :x, width = bw, color = T2_CLASS_COLORS[cls],
+                strokecolor = :white, strokewidth = 1)
+            text!(ax, v .+ 0.006, ys .+ dy; text = [@sprintf("%d%%", round(Int, 100x)) for x in v],
+                align = (:left, :center), fontsize = 12, color = T2_INK2)
         end
-        xlims!(ax, 0, 1)
-        Label(fig[2, col], @sprintf("n = %d responses per bar", d.n[1]); fontsize = 11, color = T2_INK2)
+        xlims!(ax, 0, xmax); ylims!(ax, 0.4, length(T2_VISTYPES) + 0.6)
     end
-    Legend(fig[3, 1:4], [PolyElement(color = T2_CLASS_COLORS[c]) for c in classes],
-        ["Hit (peak region)", "Near hit (borders the peak)", "Miss"];
-        framevisible = false, orientation = :horizontal, labelsize = 12, labelcolor = T2_INK)
-    colgap!(fig.layout, 40)
+    Legend(fig[3, 1:2], [PolyElement(color = T2_CLASS_COLORS[c]) for c in (:hit, :near)],
+        ["Hit (peak region)", "Near hit (borders the peak)"];
+        framevisible = false, orientation = :horizontal, labelsize = T2_FS.legend, labelcolor = T2_INK,
+        patchsize = (18, 18), colgap = 28)
+    colgap!(fig.layout, 36); rowgap!(fig.layout, 24)
     resize_to_layout!(fig)
     fig
 end
