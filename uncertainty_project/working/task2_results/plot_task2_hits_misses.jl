@@ -48,7 +48,14 @@ const T2_VISTYPE_LABELS = Dict(
 
 # Colors: one-hue sequential ramp for ground truth, orange for hits,
 # dark neutral for misses, text in neutral inks.
-const T2_TRUTH_CMAP = cgrad(["#f3f7fc", "#cde2fb", "#9ec5f4", "#6da7ec", "#4b92e8"])
+const T2_TRUTH_RAMP = cgrad(["#f3f7fc", "#cde2fb", "#9ec5f4", "#6da7ec", "#4b92e8"])
+# Ground truth is binned: 5 ticks -> 4 equal bins, lightest bin near-white.
+const T2_TRUTH_NBINS = 4
+const T2_TRUTH_BINS = [get(T2_TRUTH_RAMP, t) for t in range(0, 1; length = T2_TRUTH_NBINS)]
+const T2_TRUTH_CMAP = cgrad(T2_TRUTH_BINS, T2_TRUTH_NBINS; categorical = true)
+
+# Colour for a value already normalised to 0..1 (top edge falls in the last bin).
+t2_truth_color(x) = T2_TRUTH_BINS[clamp(floor(Int, x * T2_TRUTH_NBINS) + 1, 1, T2_TRUTH_NBINS)]
 const T2_HIT = colorant"#eb6834"
 const T2_MISS = colorant"#3d3c3a"
 const T2_INK = colorant"#0b0b0b"
@@ -148,7 +155,7 @@ function t2_panel!(ax, geo; fill, colorrange, prop_selected, prop_hits, peaks = 
 
     for k in 1:64
         poly!(ax, geo.polys[k];
-            color = get(T2_TRUTH_CMAP, (fill[k] - colorrange[1]) / (colorrange[2] - colorrange[1])),
+            color = t2_truth_color((fill[k] - colorrange[1]) / (colorrange[2] - colorrange[1])),
             strokecolor = :white, strokewidth = 0.6)
     end
     for k in peaks
@@ -228,7 +235,7 @@ style: ground-truth colour scale | dot-size key | responses | regions | panels.
 `regions = ()` drops the Regions block (e.g. when no outlines are drawn).
 """
 function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, :miss),
-                    regions = (:peak,), panels = true, shares = (0.05, 0.2, 0.5), block_width = 230)
+                    regions = (:peak,), panels = true, shares = (0.05, 0.2, 0.5), block_width = 200)
     gl = slot[] = GridLayout(; halign = :center, tellwidth = false)
     ncol = Ref(0)
     function block!(title)
@@ -243,7 +250,9 @@ function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, 
         labelsize = 12, labelcolor = T2_INK, halign = :left, valign = :top, tellwidth = false)
 
     b = block!(truth_title)
+    ticks = range(colorrange[1], colorrange[2]; length = T2_TRUTH_NBINS + 1)
     Colorbar(b[2, 1]; colormap = T2_TRUTH_CMAP, limits = colorrange, vertical = false,
+        ticks = (collect(ticks), [@sprintf("%g", round(t; digits = 2)) for t in ticks]),
         width = block_width - 30, height = 10, ticklabelsize = 11, ticklabelcolor = T2_INK2,
         halign = :left, tellwidth = false)
 
@@ -281,7 +290,7 @@ function t2_legend!(slot, geo; panel, truth_title, colorrange, classes = (:hit, 
     for c in 1:ncol[]
         colsize!(gl, c, Fixed(block_width))
     end
-    colgap!(gl, 36)
+    colgap!(gl, 28)
     gl
 end
 
@@ -446,7 +455,7 @@ function t2_panel_classes!(ax, geo; fill, prop_selected, cls)
     c, r = geo.head.center, geo.head.radius
     limits!(ax, c[1] - 1.04r, c[1] + 1.04r, c[2] - 1.04r, c[2] + 1.13r)
     for k in 1:64
-        poly!(ax, geo.polys[k]; color = get(T2_TRUTH_CMAP, fill[k]), strokecolor = :white, strokewidth = 0.6)
+        poly!(ax, geo.polys[k]; color = t2_truth_color(fill[k]), strokecolor = :white, strokewidth = 0.6)
     end
     for k in findall(==(:near), cls)
         poly!(ax, geo.polys[k]; color = :transparent, strokecolor = T2_NEAR, strokewidth = 1.6)
@@ -504,7 +513,8 @@ function t2_near_vistype_figure(counts)
     agg(df) = combine(groupby(df, :vistype), [:hit, :near, :miss, :n_trials] .=> sum .=> [:hit, :near, :miss, :n])
     facets = vcat([(p, agg(filter(:pattern => ==(p), vc))) for p in T2_PATTERNS], [("All patterns", agg(vc))])
 
-    fig = Figure(size = (1500, 520), backgroundcolor = :white)
+    # Extra right padding: the last facet's "100%" tick label overhangs the axis.
+    fig = Figure(size = (1500, 520), backgroundcolor = :white, figure_padding = (16, 36, 16, 16))
     Label(fig[0, 1:4], "Task 2: hits, near hits and misses by visualization type";
         fontsize = 18, font = :bold, color = T2_INK, halign = :left)
     ys = length(T2_VISTYPES):-1:1  # first vistype on top
