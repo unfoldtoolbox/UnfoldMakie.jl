@@ -2,13 +2,29 @@
 *.jl.cov
 *.jl.mem
 .vscode/
+.codex
+.codex/
 /test/Manifest.toml
 /docs/Manifest.toml
 /docs/.CondaPkg
 /Manifest.toml
 /docs/build/
 /docs/src/generated
-/experiments/
+
+# Local tools / scratch
+anim.gif
+git-filter-repo
+
+# Uncertainty study: generated outputs (tracked: working/ code, data/ inputs,
+# pdf_reports/ debug reports, figures/)
+/uncertainty_project/stimuli/
+/stimuli/
+
+# Experiment scratch and archive (local only)
+/experiments/playground/
+/experiments/old/
+/experiments/figures_historical/
+
 paper-UnfoldMakie/
 runner.jl
 Commands

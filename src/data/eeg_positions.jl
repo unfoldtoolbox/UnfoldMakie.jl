@@ -1,7 +1,7 @@
 # taken from: https://raw.githubusercontent.com/sappelhoff/eeg_positions/main/data/Nz-T10-Iz-T9/standard_1005_2D.tsv
 # license: https://github.com/sappelhoff/eeg_positions/blob/main/LICENSE
 
-_standard_1005_2D = Dict(
+standard_1005_2D = Dict(
     [
         ("AF1", (-0.1025, 0.5139))
         ("AF10", (0.5878, 0.809))

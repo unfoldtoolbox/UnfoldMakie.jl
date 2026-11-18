@@ -87,10 +87,12 @@ function plot_topoplotseries!(
     config = PlotConfig(:topoplotseries)
     # overwrite all defaults by user specified values
     config_kwargs!(config; kwargs...)
+    raw_visual = config.visual
+    resolved_visual = topo_resolved_visual(raw_visual)
     topo_attributes = update_axis(
         supportive_defaults(:topo_default_attributes);
         topo_attributes...,
-        config.visual...,
+        resolved_visual...,
     )
 
     if !isnothing(labels) && length(labels) != length(positions)
@@ -131,9 +133,14 @@ function plot_topoplotseries!(
         positions,
         labels,
     )
-    _configure_toposeries_colorbar!(config, data)
+    _configure_toposeries_colorbar!(config, data, raw_visual, resolved_visual)
     config_kwargs!(config; kwargs...)  #add the user specified once more, just if someone specifies the xlabel manually  
     # overkill as we would only need to check the xlabel ;) 
+    if haskey(config.visual, :colorrange)
+        config_kwargs!(config, visual = update_axis(resolved_visual; colorrange = config.visual.colorrange))
+    else
+        config_kwargs!(config, visual = resolved_visual)
+    end
 
     main_gl = f[1, 1] = GridLayout()
     position = get(config.colorbar, :position, :right)
@@ -173,7 +180,12 @@ function plot_topoplotseries!(
     return f
 end
 
-function _configure_toposeries_colorbar!(config::PlotConfig, data::Union{<:Observable{<:DataFrame},AbstractDataFrame})
+function _configure_toposeries_colorbar!(
+    config::PlotConfig,
+    data::Union{<:Observable{<:DataFrame},AbstractDataFrame},
+    raw_visual::NamedTuple,
+    resolved_visual::NamedTuple,
+)
     if haskey(config.colorbar, :limits) || haskey(config.colorbar, :colorrange)
         error(
             "Topoplot series uses a shared color range between the plots and colorbar. " *
@@ -183,8 +195,8 @@ function _configure_toposeries_colorbar!(config::PlotConfig, data::Union{<:Obser
     end
 
     estimate_column = to_value(data)[!, Symbol(config.mapping.y)]
-    shared_range = topo_shared_range(estimate_column, config.visual)
-    config_kwargs!(config, visual = (; colorrange = shared_range))
+    shared_range = topo_shared_range(estimate_column, raw_visual)
+    config_kwargs!(config, visual = update_axis(resolved_visual; colorrange = shared_range))
 
     if !haskey(config.colorbar, :ticks)
         if shared_range isa Observable

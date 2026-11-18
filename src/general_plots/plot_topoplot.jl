@@ -32,9 +32,10 @@ to the number of electrodes.
 
 Colorbar limits behavior:
 - If you pass `colorbar = (; limits = (lo, hi))` or `colorbar = (; colorrange = (lo, hi))`, that range is used.\\
-- If neither is provided and the data includes negative values, the range is symmetric around zero using 1st/99th percentiles:
+- If `visual = (; colorrange_mode = :diverging_balanced)` (default) and the data includes negative values, the range is symmetric around zero using 1st/99th percentiles:
   `p01 = percentile(0.01, data)`, `p99 = percentile(0.99, data)`, `m = max(abs(p01), abs(p99))`, then `(-m, m)`.
-- If the data is non-negative, the range defaults to `(minimum(data), maximum(data))`.
+- If `visual = (; colorrange_mode = :diverging_balanced)` and the data is non-negative, the range defaults to `(minimum(data), maximum(data))`.
+- If `visual = (; colorrange_mode = :sequential)`, the colormap is `:viridis` and the range uses the 5th/95th percentiles.
 
 **Return Value:** `Figure` displaying the Topoplot.
 """
@@ -94,7 +95,7 @@ function plot_topoplot!(
     # Keep colorrange in Float32 to match Makie internals; avoids first tick being
     # dropped due to Float64 ↔ Float32 rounding at the limits.
     shared_range = topo_shared_range(data, config.visual)
-    config_kwargs!(config, visual = (; colorrange = shared_range))
+    plot_visual = update_axis(topo_resolved_visual(config.visual); colorrange = shared_range)
 
     position = get(config.colorbar, :position, nothing)
     if !(position === nothing || position in (:right, :left, :top, :bottom))
@@ -117,7 +118,7 @@ function plot_topoplot!(
         data;
         labels = labels,
         positions,
-        config.visual...,
+        plot_visual...,
         topo_attributes...,
     )
     if shared_range[][1] ≈ shared_range[][2]
